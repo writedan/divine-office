@@ -1,0 +1,139 @@
+\documentclass[17pt,twoside]{extarticle}
+\usepackage{moresize}
+\usepackage{fontspec}
+\usepackage{aeguill}
+\usepackage{titlesec}
+\usepackage[maxlevel=3]{csquotes}
+\usepackage{lettrine}
+\usepackage{xifthen}
+\usepackage{yfonts}
+\usepackage{parskip}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hanging}
+\usepackage[autocompile,allowdeprecated=false]{gregoriotex}
+\usepackage[twoside]{geometry}
+\usepackage{multicol}
+\usepackage{paracol}
+\usepackage[latin,english]{babel}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\setlength{\columnseprule}{0.025pt}
+\setlength{\columnsep}{1.25em}
+\setlength{\topskip}{7pt}
+
+\makeatletter
+\patchcmd{\pcol@buildcolseprule}%
+{\hrule\@height\@tempdima\@width\columnseprule}%
+{\hrule\@height\dimexpr\@tempdima-0.5ex\@width\columnseprule\@depth-1pt}{}{}
+\makeatother
+
+\gredefsizedsymbol{GreCross}{greextra}{Cross}
+\gredefsizedsymbol{GreDagger}{greextra}{Dagger}
+\gredefsizedsymbol{GreCrossAlt}{greextra}{Cross.alt}
+\gredefsizedsymbol{GreStarHeight}{greextra}{StarHeight}
+\gredefsizedsymbol{greABar}{greextra}{ABar}
+\gredefsizedsymbol{greVBar}{greextra}{VBar}
+\gredefsizedsymbol{greRBar}{greextra}{RBar}
+
+\gresetspecial{r}{\textcolor{red}{\Rbar{}.}}
+\gresetspecial{v}{\textcolor{red}{\Vbar{}.}}
+\gresetspecial{+}{\textcolor{red}{\GreCross{17}}}
+\gresetspecial{1}{\textcolor{red}{\GreDagger{17}}}
+\gresetspecial{2}{\textcolor{red}{\GreCrossAlt{17}}}
+\gresetspecial{*}{\textcolor{red}{\GreStarHeight{17}}}
+
+\grechangestaffsize{30}
+%\grechangedim{abovelinestextheight}{0.25cm}{fixed}
+%\grechangedim{spacebeneathtext}{0.5cm}{fixed}
+\grechangedim{annotationseparation}{0.25cm}{fixed}
+
+\newcommand{\skiplines}[1]{\vspace*{#1\baselineskip}}
+
+\newcommand{\veformat}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\veant}[1]{\greannotation{#1. \color{red}\textbf{Ant.}}}
+\newcommand{\instruct}[1]{\textcolor{red}{\textit{#1}}}
+
+\newcommand{\whiteribbon}[0]{\textcolor{black}{\textbf{white ribbon}} }%
+\newcommand{\greenribbon}[0]{\textcolor{ForestGreen}{\textbf{green ribbon}} }%
+\newcommand{\redribbon}[0]{\textcolor{red}{\textbf{red ribbon}} }%
+\newcommand{\blueribbon}[0]{\textcolor{blue}{\textbf{blue ribbon}} }%
+
+
+%%% HEADERS %%%
+\newcommand{\vepart}[1]{%
+	\cleardoublepage%
+	\vspace*{\fill}%
+	\begin{center}%
+		{\Huge \color{red} \selectfont \uppercase{ \textbf{#1}}}%
+	\end{center}%
+	\vspace*{\fill}%
+}%
+\makeatother
+
+\newcommand{\vechapter}[1]{%
+	\cleardoublepage%
+	\begin{center}
+		{\LARGE \selectfont \color{red} \uppercase{ \textbf{#1}}}%
+	\end{center}
+	\skiplines{1}
+}%
+\makeatother
+
+\newcommand{\vesectionp}[1]{%
+	\skiplines{1}
+	\begin{center}
+		{\Large \selectfont \uppercase{ \textbf{#1}}}%
+	\end{center}
+	\skiplines{1}
+}%
+\makeatother
+
+\newcommand{\vesection}[1]{%
+	\clearpage\skiplines{-2}\vesectionp{#1}%
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\veheading}[1]{%
+	\skiplines{0.5}%
+	\begin{center}
+		{\selectfont \textit{#1}}%
+	\end{center}
+	\skiplines{0.5}
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\vecomment}[1]{%
+	\hfill{\small\selectfont \textit{#1}.}%
+}%
+\makeatother
+
+%%% OTHER FORMATS %%%
+
+\makeatletter
+\newcommand{\red}[1]{%
+	{\color{red} #1}%
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\chapter}[1]{%
+	\gresetinitiallines{1}%
+	\greannotation{\veformat{Chap.}}%
+	\greannotation{\veformat{Dir.}}%
+	\gabcsnippet{#1}%
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\resp}[2]{%
+	\vecomment{#1}
+	
+	\gresetinitiallines{1}%
+	\greannotation{\veformat{Resp.}}%
+	\greannotation{\veformat{#2.}}%
+}%
+\makeatother

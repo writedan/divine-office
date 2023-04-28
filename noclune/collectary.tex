@@ -1,0 +1,271 @@
+\documentclass[17pt,twoside]{extarticle}
+\usepackage{moresize}
+\usepackage{fontspec}
+\usepackage{aeguill}
+\usepackage{titlesec}
+\usepackage[maxlevel=3]{csquotes}
+\usepackage{lettrine}
+\usepackage{xifthen}
+\usepackage{yfonts}
+\usepackage{parskip}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{hanging}
+\usepackage[autocompile,allowdeprecated=false]{gregoriotex}
+\usepackage[twoside]{geometry}
+\usepackage{multicol}
+\usepackage{paracol}
+\usepackage[latin,english]{babel}
+
+\setlength{\columnseprule}{0.025pt}
+\setlength{\columnsep}{1.25em}
+\setlength{\topskip}{7pt}
+
+\makeatletter
+\patchcmd{\pcol@buildcolseprule}%
+{\hrule\@height\@tempdima\@width\columnseprule}%
+{\hrule\@height\dimexpr\@tempdima-0.5ex\@width\columnseprule\@depth-1pt}{}{}
+\makeatother
+
+\gredefsizedsymbol{GreCross}{greextra}{Cross}
+\gredefsizedsymbol{GreStarHeight}{greextra}{StarHeight}
+\gredefsizedsymbol{greABar}{greextra}{ABar}
+\gredefsizedsymbol{greVBar}{greextra}{VBar}
+\gredefsizedsymbol{greRBar}{greextra}{RBar}
+
+\gresetspecial{r}{\textcolor{red}{\Rbar{}}}
+\gresetspecial{v}{\textcolor{red}{\Vbar{}}}
+\gresetspecial{+}{\textcolor{red}{\GreCross{17}}}
+\gresetspecial{*}{\textcolor{red}{\GreStarHeight{17}}}
+
+% legacy support
+\gresetspecial{R/}{\textcolor{red}{\Rbar{}}}
+\gresetspecial{V/}{\textcolor{red}{\Vbar{}}}
+
+\grechangestaffsize{30}
+%\grechangedim{abovelinestextheight}{0.25cm}{fixed}
+%\grechangedim{spacebeneathtext}{0.5cm}{fixed}
+\grechangedim{annotationseparation}{0.25cm}{fixed}
+
+%%% FORMATTING %%%
+\newcommand{\greformat}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\skiplines}[1]{\vspace*{#1\baselineskip}}
+\newcommand{\scoreskip}[0]{\skiplines{0}}
+\newcommand{\instruct}[1]{\textcolor{red}{\textit{#1}}}
+\newcommand{\greant}[1]{\greannotation{#1. \color{red}\textbf{Ant.}}}
+\newcommand{\breakhere}[0]{}
+
+\newcommand{\whiteribbon}[0]{\textcolor{black}{\textbf{white ribbon}} }%
+\newcommand{\greenribbon}[0]{\textcolor{ForestGreen}{\textbf{green ribbon}} }%
+\newcommand{\redribbon}[0]{\textcolor{red}{\textbf{red ribbon}} }%
+\newcommand{\blueribbon}[0]{\textcolor{blue}{\textbf{blue ribbon}} }%
+
+\let\grescore\gregorioscore
+\renewcommand{\gregorioscore}[1]{\scoreskip\grescore{#1}}
+
+\let\gresnip\gabcsnippet
+\renewcommand{\gabcsnippet}[1]{\gresetinitiallines{1}\greannotation{\greformat{Coll.}}\greannotation{\greformat{Dir.}}\gresnip{#1}\gresetinitiallines{0}}
+
+%%% DIVISIONS %%%
+\makeatletter
+\newcommand{\vepart}[1]{%
+	\cleardoublepage%
+	\vspace*{\fill}
+	\centerline{\huge \selectfont \textbf{#1}}%
+	\vspace*{\fill}
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\vechapter}[1]{%
+	\cleardoublepage
+	%\centerline{\Large \selectfont \textbf{#1}}%
+	\begin{center}
+		\Large \selectfont \textbf{#1}
+	\end{center}
+	%\skiplines{0.5}
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\vesection}[1]{%
+	%\skiplines{0.5}%
+	\centerline{\large \selectfont \textbf{#1}}%
+	%\skiplines{0.5}%
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\veheading}[1]{%
+	\skiplines{0.5}%
+	\centerline{\selectfont \textit{#1}}%
+	%\skiplines{-0.5}
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\hyheading}[1]{%
+	%\skiplines{0.5}
+	\veheading{#1}
+	%\skiplines{-0.5}
+}%
+\makeatother
+
+\begin{document}
+	\newgeometry{margin=0pt}
+	\begin{titlepage}
+		\vspace*{\fill}
+		\centerline{\Huge\selectfont COLLECTARY}
+		
+		\vspace*{0.5\baselineskip}
+		
+		\centerline{\large\selectfont OF THE}
+		
+		\vspace*{0.5\baselineskip}
+		
+		\centerline{\Large\selectfont HOLY ROMAN CHURCH}
+		
+		\vspace*{\fill}
+		
+		\centerline{\LARGE\selectfont VOLUME I}
+		
+		\vspace*{1\baselineskip}
+		
+		\centerline{\large\selectfont I WINTER}
+		
+		\vspace*{\fill}
+		
+		\centerline{\normalsize\selectfont From the First Sunday in Advent until the Eve of the Epiphany}
+		
+		\vspace*{0.5\baselineskip}
+		
+		\centerline{\normalsize\selectfont November 27 until January 5}
+		
+		\vspace*{\fill}
+	\end{titlepage}
+	
+	\newgeometry{top=0.75in,bottom=0.75in,inner=0.75in,outer=0.75in,includefoot}
+	
+	\pagenumbering{arabic}
+	\gresetinitiallines{0}
+	
+	\vechapter{Brief Notes on Ceremony}
+	
+	If the minister is a priest, he should go before the altar, turn towards the people and give the salutation \enquote{The Lord be with you}, and then turning toward the altar say the versicle \enquote{O Lord hear my prayer}. But if he is a layman or deacon, he should only say the second versicle. After saying \enquote{Let us pray}, he should make a genuflection, then proclaim the prayer as appointed herein. After the people have responded \enquote{Amen}, he may return to his place, unless it is already the conclusion of the hour.
+	
+	This should also hold for the collect following the anthem of the Blessed Virgin Mary. Once the singing of the anthem is concluded, he proceeds before the altar, gives the appointed versicle, genuflects after \enquote{Let us pray}, and while still there concludes the hour.
+	
+	\vepart{Temporale}
+	
+	\vechapter{First Week in Advent}
+	
+	\gabcsnippet{(c4) Stir(g) up(h) thy(h) strength,(h) we(h) be(h)seech(h) thee,(h) O(h) Lord,(h) and(h) come:(g.) (;) that(g) we(h) who(h) by(h) rea(h)son(h) of(h) our(h) sins(h) are(h) set(h) in(h) the(h) midst(h) of(h) so(h) man(h)y(h) and(h) great(h) dan(h)gers,(h) by(h) thy(h) mer(h)ci(h)ful(h) pro(h)tec(h)tion(h) may(h) be(g) de(g)liv(h)ered.(h.) (:) Who(h) liv(h)est(h) and(h) reign(h)est(h) with(h) God(h) the(h) Fa(h)ther(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Second Week in Advent}
+	
+	\gabcsnippet{(c4) Stir(g) up(h) our(h) af(h)fec(h)tions,(h) O(h) Lord,(h) to(h) pre(h)pare(h) the(h) way(h) of(h) thine(h) on(h)ly-(h)be(h)got(h)ten(h) Son:(g.) (;) that(g) through(h) his(h) ad(h)vent(h) we(h) may(h) be(h) made(h) wor(h)thy(h) to(h) serve(h) thee(h) with(h) pure(h) and(g) clean(g) hearts.(h.) (:) Who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Third Week in Advent}
+	
+	\gabcsnippet{(c4) Lord,(g) we(h) be(h)seech(h) thee,(h) in(h)cline(h) thine(h) ear(h) to(h) our(h) prayer:(g.) (;) and(g) en(h)light(h)en(h) the(h) dark(h)ness(h) of(h) our(h) minds(h) by(h) the(h) grace(h) of(h) thy(h) vis(g)it(g)a(h)tion.(h.) (:) Who(h) liv(h)est(h) and(h) reign(h)est(h)  with(h) God(h) the(h) Fa(h)ther(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Ember Wednesday of Advent}
+	
+	\gabcsnippet{(c4) Grant,(g) we(h) be(h)seech(h) thee,(h) al(h)might(h)y(h) God,(h) that(h) the(h) com(h)ing(h) so(h)lem(h)ni(h)ty(h) of(h) our(h) re(h)demp(h)tion(h) may(h) be(h)stow(h) up(h)on(h) the(h) us(h) all(h) things(h) need(h)ful(h) to(h) this(h) pre(h)sent(h) life,(h) and,(h) in(h) the(h) world(h) to(h) come,(h) the(h) prize(h) of(h) e(h)ter(g)nal(g) glo(h)ry.(h.) (:) Through(h) the(h) same(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Ember Friday of Advent}
+	
+	\gabcsnippet{(c4) Stir(g) up(h) thy(h) strength,(h) we(h) be(h)seech(h) thee,(h) O(h) Lord,(h) and(h) come:(g.) (;) that(g) they(h) who(h) do(h) put(h) their(h) whole(h) trust(h) in(h) and(h) con(h)fi(h)dence(h) in(h) thy(h) mer(h)cy(h) may(h) speed(h)i(h)ly(h) be(h) de(h)liv(h)ered(h) from(h) all(h) ad(g)ver(g)si(h)ty.(h.) (:) Who(h) liv(h)est(h) and(h) reign(h)est(h) with(h) God(h) the(h) Fa(h)ther(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Ember Saturday of Advent}
+	
+	\gabcsnippet{(c4) O(g) God,(h) who(h) se(h)est(h) that(h) through(h) our(h) e(h)vil(h) deeds(h) we(h) just(h)ly(h) suf(h)fer(h) af(h)flic(h)tion:(g.) (;) mer(g)ci(h)ful(h)ly(h) grant,(h) that(h) through(h) thy(h) vis(h)it(h)a(h)tion(h) we(h) may(h) be(g) com(g)fort(h)ed.(h.) (:) Who(h) liv(h)est(h) and(h) reign(h)est(h) with(h) God(h) the(h) Fa(h)ther(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Fourth Week in Advent}
+	
+	\gabcsnippet{(c4) Stir(g) up(h) thy(h) strength,(h) we(h) be(h)seech(h) thee,(h) O(h) Lord,(h) and(h) come,(h) and(h) with(h) great(h) might(h) suc(h)cor(h) us:(g.) (;) that,(g) where(h)as(h) through(h) our(h) sins(h) and(h) wick(h)ed(h)ness(h) we(h) are(h) sore(h) let(h) and(h) hin(h)dered,(h) thy(h) boun(h)ti(h)ful(h) grace(h) and(h) mer(h)cy(h) may(h) speed(h)i(h)ly(h) help(h) and(h) de(h)liv(g)er(g) us.(h.) (:) Who(h) liv(h)est(h) and(h) reign(h)est(h) with(h) God(h) the(h) Fa(h)ther(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Nativity of the Lord}
+	
+	\hyheading{On the Eve}
+	
+	\gabcsnippet{(c4) O(g) God,(h) who(h) mak(h)est(h) us(h) glad(h) with(h) the(h) year(h)ly(h) ex(h)pec(h)ta(h)tion(h) of(h) our(h) re(h)demp(h)tion:(g.) (;) grant(g) that(h) as(h) we(h) joy(h)ful(h)ly(h) re(h)ceive(h) thine(h) on(h)ly-(h)be(h)got(h)ten(h) Son(h) as(h) our(h) re(h)deem(h)er,(h) so(h) we(h) may(h) with(h) sure(h) con(h)fi(h)dence(h) be(h)hold(h) him(h) when(h) he(h) shall(h) come(h) to(h) be(h) our(h) judge,(h) e(h)ven(h) Je(h)sus(h) Christ(h) thy(h) Son(g) our(g) Lord.(h.) (:) Who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\clearpage
+	
+	\hyheading{On the Day}
+	
+	\gabcsnippet{(c4) Grant,(g) we(h) be(h)seech(h) thee,(h) al(h)might(h)y(h) God,(h) that(h) the(h) new(h) birth(h) of(h) thine(h) on(h)ly-(h)be(h)got(h)ten(h) Son(h) in(h) the(h) flesh(h) may(h) de(h)liv(h)er(h) us:(g.) (;) who(g) are(h) held(h) by(h) the(h) an(h)cient(h) bond(h)age(h) un(h)der(h) the(h) yoke(g) of(g) sin.(h.) (:) Through(h) the(h) same(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Saint Stephen, Protomartyr}
+	
+	\gabcsnippet{(c4) Grant(g) us,(h) O(h) Lord,(h) we(h) be(h)seech(h) thee,(h) so(h) to(h) im(h)i(h)tate(h) that(h) which(h) we(h) hold(h) in(h) hon(h)or,(h) that(h) we(h) may(h) learn(h) to(h) love(h) our(h) en(h)e(h)mies,(h) as(h) we(h) cel(h)e(h)brate(h) the(h) birth(h)day(h) of(h) him(h) who(h) prayed(h) e(h)ven(h) for(h) his(h) mur(h)ders(h) to(h) thy(h) Son,(h) Je(h)sus(h) Christ(g) our(g) Lord.(h.) (:) Who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Saint John, Apostle and Evangelist}
+	
+	\gabcsnippet{(c4) Of(g) thy(h) lov(h)ing-(h)kind(h)ness,(h) O(h) Lord,(h) we(h) be(h)seech(h) thee(h) to(h) en(h)light(h)en(h) thy(h) Church:(g.) (;) that,(g) be(h)ing(h) il(h)lu(h)mined(h) by(h) the(h) teach(h)ings(h) of(h) bless(h)ed(h) John(h) thine(h) a(h)pos(h)tle(h) and(h) e(h)van(h)ge(h)list,(h) she(h) may(h) at(h)tain(h) to(h) ev(h)er(h)last(g)ing(g) gifts.(h.) (:) Through(h) our(h) Lord(h) Je(h)sus(h) Christ(h) thy(h) Son(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Holy Innocents}
+	
+	\gabcsnippet{(c4) O(g) God,(h) whose(h) praise(h) this(h) day(h) the(h) mar(h)tyred(h) In(h)no(h)cents(h) did(h) con(h)fess,(h) not(h) by(h) speak(h)ing(h) but(h) by(h) dy(h)ing:(g.) (;) mor(g)ti(h)fy(h) all(h) e(h)vil(h) vic(h)es(h) with(h)in(h) us,(h) that(h) our(h) lives(h) may(h) al(h)so(h) de(h)clare(h) the(h) faith(h) which(h) our(g) tongues(g) pro(h)fess.(h.) (:) Who(h) liv(h)est(h) and(h) reign(h)est(h) with(h) God(h) the(h) Fa(h)ther(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Saint Thomas Becket, Martyr}
+	
+	\gabcsnippet{(c4) O(g) God,(h) for(h) the(h) sake(h) of(h) whose(h) Church(h) thy(h) glo(h)ri(h)ous(h) bish(h)op(h) Thom(h)as(h) fell(h) by(h) the(h) swords(h) of(h) un(h)god(h)ly(h) men:(g.) (;) grant,(g) we(h) be(h)seech(h) thee,(h) that(h) all(h) who(h) im(h)plore(h) his(h) aid(h) may(h) ob(h)tain(h) the(h) sav(h)ing(h) fullfilment(h) of(h) their(g) pe(g)ti(h)tion.(h.) (:) Through(h) our(h) Lord(h) Je(h)sus(h) Christ(h) thy(h) Son(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Days within the Octave of the Nativity}
+	
+	\gabcsnippet{(c4) Al(g)might(h)y(h) and(h) ev(h)er(h)last(h)ing(h) God,(h) di(h)rect(h) our(h) ac(h)tions(h) ac(h)cord(h)ing(h) to(h) thy(h) good(h) pleas(h)ure:(g.) (;) that(g) through(h) the(h) Name(h) of(h) thy(h) well-(h)be(h)lov(h)ed(h) Son(h) we(h) may(h) mer(h)it(h) to(h) a(h)bound(h) in(g) good(g) works.(h.) (:) Who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Saint Sylvester, Pope and Confessor}
+	
+	\gabcsnippet{(c4) Grant(g) us,(h) we(h) be(h)seech(h) thee,(h) al(h)might(h)y(h) God:(g.) (;) that(g) the(h) re(h)vered(h) so(h)lem(h)ni(h)ty(h) of(h) bless(h)ed(h) Syl(h)ves(h)ter(h) thy(h) con(h)fes(h)sor(h) and(h) bish(h)op(h) may(h) both(h) in(h)crease(h) our(h) de(h)vo(h)tion(h) and(h) ad(h)vance(h) our(g) sal(g)va(h)tion.(h.) (:) Through(h) our(h) Lord(h) Je(h)sus(h) Christ(h) thy(h) Son(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Circumcision of the Lord}
+	
+	\instruct{This prayer is made on both the eve and the day of the solemnity.}
+	
+	\gabcsnippet{(c4) O(g) God,(h) who(h) dost(h) per(h)mit(h) us(h) to(h) cel(h)e(h)brate(h) the(h) oc(h)tave(h) of(h) our(h) Savior's(h) birth:(g.) (;) grant,(g) we(h) be(h)seech(h) thee,(h) that(h) as(h) we(h) have(h) been(h) re(h)newed(h) by(h) the(h) com(h)mun(h)ion(h) of(h) his(h) flesh,(h) so(h) we(h) may(h) be(h) de(h)fend(h)ed(h) by(h) his(h) per(h)pet(h)u(h)al(h) di(g)vin(g)i(h)ty.(h.) (:) Who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\instruct{On the following days until the eve of the Epiphany are again the services of Saint Stephen, Saint John, and the Holy Innocents.}
+	
+	\vepart{Sanctorale}
+	
+	\vechapter{Saint Andrew, Apostle}
+	
+	\hyheading{On the Eve}
+	
+	\instruct{If falling within Advent, no eve is said.}
+	
+	\gabcsnippet{(c4) We(g) be(h)seech(h) thee,(h) al(h)might(h)y(h) God,(h) that(h) the(h) bless(h)ed(h) A(h)pos(h)tle(h) An(h)drew(h) may(h) im(h)plore(h) thy(h) help(h) for(h) us:(g.) (;) that,(g) be(h)ing(h) ab(h)solved(h) from(h) our(h) sins,(h) we(h) may(h) like(h)wise(h) be(h) de(h)liv(h)ered(h) from(g) all(g) dan(h)gers.(h.) (:) Through(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\clearpage\hyheading{On the Day}
+	
+	\gabcsnippet{(c4) We(g) hum(h)bly(h) en(h)treat(h) thy(h) maj(h)es(h)ty,(h) O(h) Lord,(h) that(h) like(h) as(h) the(h) bless(h)ed(h) A(h)pos(h)tle(h) An(h)drew(h) stood(h) forth(h) as(h) a(h) preach(h)er(h) and(h) rul(h)er(h) of(h) thy(h) Church,(h) so(h) he(h) may(h) be(h) a(h) per(h)pet(h)u(h)al(h) in(h)ter(h)ces(h)sor(h) for(h) us(h) be(g)fore(g) thee.(h.) (:) Through(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Saint Nicholas, Bishop and Confessor}
+	
+	\gabcsnippet{(c4) O(g) God,(h) who(h) didst(h) a(h)dorn(h) thy(h) bless(h)ed(h) Bish(h)op(h) Ni(h)cho(h)las(h) with(h) in(h)nu(h)mer(h)a(h)ble(h) mir(h)a(h)cles,(h) grant,(h) we(h) be(h)seech(h) thee,(h) that(h) by(h) his(h) mer(h)its(h) and(h) prayers(h) we(h) may(h) be(h) de(h)liv(h)ered(h) from(h) the(h) fires(g) of(g) hell.(h.) (:) Through(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Immaculate Conception of Blessed Virgin Mary}
+	
+	\gabcsnippet{(c4) Hear(g) the(h) sup(h)pli(h)ca(h)tions(h) of(h) thy(h) ser(h)vants,(h) O(h) mer(h)ci(h)ful(h) God:(g.) (;) that(g) we(h) who(h) are(h) as(h)sem(h)bled(h) to(h)geth(h)er(h) on(h) the(h) Con(h)cep(h)tion(h) of(h) the(h) Vir(h)gin(h) Moth(h)er(h) of(h) God:(g.) (;) may(g) at(h) her(h) in(h)ter(h)ces(h)sion(h) be(h) de(h)liv(h)ered(h) by(h) thee(h) from(h) threat(h)en(g)ing(g) dan(h)gers.(h.) (:) Through(h) the(h) same(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Saint Lucy, Virgin and Martyr}
+	
+	\gabcsnippet{(c4) Hear(g) us,(h) O(h) God(h) of(h) our(h) sal(h)va(h)tion:(g.) (;) that(g) as(h) we(h) re(h)joice(h) in(h) the(h) fes(h)ti(h)val(h) of(h) bless(h)ed(h) Lu(h)cy(h) thy(h) vir(h)gin(h) and(h) mar(h)tyr:(g.) (;) so(g) we(h) may(h) be(h) in(h)struct(h)ed(h) in(h) the(h) af(h)fec(h)tion(h) of(h) pi(h)ous(g) de(g)vo(h)tion.(h.) (:) Through(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vechapter{Saint Thomas, Apostle}
+	
+	\gabcsnippet{(c4) Grant(g) un(h)to(h) us,(h) we(h) be(h)seech(h) thee,(h) O(h) Lord,(h) so(h) to(h) re(h)joice(h) in(h) the(h) so(h)lem(h)ni(h)ties(h) of(h) thy(h) bless(h)ed(h) A(h)pos(h)tle(h) Thom(h)as:(g.) (;) that(g) we(h) may(h) both(h) be(h) ev(h)er(h) as(h)sist(h)ed(h) by(h) his(h) pro(h)tec(h)tion:(g.) (;) and(g) fol(h)low(h) his(h) faith(h) with(h) fit(h)ting(g) de(g)vo(h)tion.(h.) (:) Through(h) Je(h)sus(h) Christ(h) thy(h) Son(h) our(h) Lord,(h) who(h) liveth(h) and(h) reign(h)eth(h) with(h) thee(h) in(h) the(h) u(h)ni(h)ty(h) of(h) the(h) Ho(h)ly(h) Spir(h)it,(h) God,(h) world(g) with(h)out(hg) end.(g.)}
+	
+	\vepart{Anthem of Blessed Virgin Mary}
+	
+	\vechapter{Before the Nativity}
+	
+	\gabcsnippet{(c3) We(h) be(h)seech(h) thee,(h) O(h) Lord,(h) pour(h) thy(h) grace(h) in(h)to(g) our(f) hearts:(h.) (;) that,(h) as(h) we(h) have(h) known(h) the(h) In(h)car(h)na(h)tion(h) of(h) thy(h) Son(h) Je(h)sus(h) Christ(h) by(h) the(h) mes(h)sage(h) of(h) an(h) an(h)gel,(h) so(h) by(h) his(h) Cross(h) and(h) Pas(h)sion(h) we(h) may(h) be(h) brought(h) to(h) the(h) glo(h)ry(h) of(h) his(h) Res(h)ur(h)rec(h)tion.(d.) (:) Through(h) the(h) same(h) Christ(h) our(h) Lord.(f.)}
+	
+	\vechapter{After the Nativity}
+	
+	\gabcsnippet{(c3) O(h) God,(h) who(h) by(h) the(h) fruit(h)ful(h) vir(h)gin(h)i(h)ty(h) of(h) bless(h)ed(h) Mar(h)y,(h) hast(h) be(h)stowed(h) up(h)on(h) man(h)kind(h) the(h) re(h)ward(h) of(h) e(h)ter(h)nal(g) sal(f)va(h)tion:(h.) (;) grant,(h) we(h) be(h)seech(h) thee,(h) that(h) we(h) may(h) ex(h)pe(h)ri(h)ence(h) her(h) in(h)ter(h)ces(h)sion,(h) through(h) whom(h) we(h) have(h) been(h) made(h) wor(h)thy(h) to(h) re(h)ceive(h) the(h) Au(h)thor(g) of(f) life:(h.) (;) our(h) Lord(h) Je(h)sus(h) Christ,(h) thy(h) Son.(f.)}
+\end{document}
