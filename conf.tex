@@ -17,6 +17,7 @@
 \usepackage{paracol}
 \usepackage[latin,english]{babel}
 \usepackage{enumitem}
+\usepackage{tabto}
 \usepackage{titlesec}
 
 \setlength{\columnseprule}{0.025pt}
@@ -52,7 +53,7 @@
 \newcommand{\skiplines}[1]{\vspace*{#1\baselineskip}}
 
 \newcommand{\veformat}[1]{\textcolor{red}{\textbf{#1}}}
-\newcommand{\veant}[1]{\greannotation{#1. \color{red}\textbf{Ant.}}}
+\newcommand{\veant}[2]{\greannotation{#1. \veformat{Ant.}}\greannotation{\veformat{#2.}}}
 \newcommand{\instruct}[1]{\textcolor{red}{\textit{#1}}}
 
 \newcommand{\whiteribbon}[0]{\textcolor{black}{\textbf{white ribbon}} }%
@@ -135,5 +136,14 @@
 	\gresetinitiallines{1}%
 	\greannotation{\veformat{Resp.}}%
 	\greannotation{\veformat{#2.}}%
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\tone}[2]{%
+	\greannotation{\veformat{Ps.}}
+	\greannotation{\veformat{#1.}}
+	
+	\gabcsnippet{#2}
 }%
 \makeatother
