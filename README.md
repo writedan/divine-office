@@ -2,15 +2,16 @@ This project is an arrangement of the tradition liturgy of the hours even pre-da
 
 To that end, there are eight volumes, each containing six liturgical books. These volumes are:
 
-|     | Temporale                 | Sanctorale               |
-|-----|---------------------------|--------------------------|
-| I   | Advent and Christmas      | November 27 - January 4  |
-| II  | Epiphany and Septuagesima | January 5 - March 9      |
-| III | Lent and Passiontide      | February 4 - April 24    |
-| IV  | Triduum and Easter Week   | Saints days do not occur |
-| V   | Paschaltide               | March 22 - June 12       |
-| VI  | Time after Pentecost      | May 10 - August 7        |
-| VII | August until Advent       | July 27 - December 3     |
+|      | Temporale                 | Sanctorale                                 |
+|------|---------------------------|--------------------------------------------|
+| I    | Advent and Christmas      | November 27 - January 4                    |
+| II   | Epiphany and Septuagesima | January 5 - March 9                        |
+| III  | Lent and Passiontide      | February 4 - April 24                      |
+| IV   | Triduum and Easter Week   | Saints days do not occur                   |
+| V    | Paschaltide               | March 22 - June 12                         |
+| VI   | Time after Pentecost      | May 10 - August 7                          |
+| VII  | August until Advent       | July 27 - December 3                       |
+| VIII | Votive Offices            | Office of the Dead<br>Office of the B.V.M. |
 
 The dates of the sanctorale overlap since the liturgical seasons move around the calendar year. Thus, certain saints days may fall within two different seasons.
 
@@ -22,3 +23,5 @@ The liturgical books within each volume are these:
 4. The **nocturnale**, containing the antiphons, psalter, responsories, and so forth of Vigils.
 5. The **diurnale**, containing Lauds, Prime, Terce, Sext, and None.
 6. The **vesperale**, containing Vespers and Compline.
+
+Finally, there will be included an introductory volume containing the full rubrics and norms to be observed.
