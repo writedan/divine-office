@@ -36,7 +36,21 @@ In total, the calendar is particularly Roman of the traditional rite.
 
 # Brief Rubrics
 
-The congregation, whether ecclessial or familial, should gather at some sacred place with at least a crucifix. In ecclesial celebrations, if a priest is ministering, he should be vested with cassock, surplice, and cope. Deacons should be vested with cassock, surplice, and stole. When laity officiate, let them be vested with cassock, surplice, and mozzetta.
+Liturgical ministers, if they are male should vest with these in this order:
+
+1. The cassock, always black
+2. The fascia, always white and given to the left.
+3. The full scapular, in the liturgical color of the day.
+4. The surplice.
+5. The mantle, always black.
+
+If they be women:
+
+1. The tunic, always black.
+2. The scapular, in the color of the day.
+3. The cincture, always white.
+4. The coif, always white.
+5. The veil, always black.
 
 Commemorations or memorials are never made at any hour: all said in the office pertains only to one liturgical day.
 
@@ -58,3 +72,29 @@ The second, third and fouth Sundays in Advent, as well as all Sundays from Septu
 The first Sundays after the octave of the Epiphany and after Trinity, as well as the Sundays beginning each book from August until Advent (Wisdom, Job, Tobit, Judith, Maccabees, and Ezekiel) take precedence over all days of 9 lessons, except Saint Peter's chair and the Beheading of St. John Baptist. Again, if yielding, they are said on the preceding Saturday.
 
 All other Sundays take precedence only over days of three lessons. But in all cases, if the Sunday cannot be anticipated on Saturday because another feast occurs there, the Sunday precedes any other celebration.
+
+# Vesting Prayers
+
+Before vesting, wash hands while saying:
+
+> Give virtue to my hands, O Lord, that being cleansed from all stain I might serve thee with purity of mind and body.
+
+When vesting the cassock or tunic:
+
+> O Lord, the portion of mine inheritance and my chalice, thou art he who will restore my inheritance.
+
+When fasting the fascia or cincture:
+
+> Gird me, O Lord, with the cincture of purity, and quench in my heart the fire of conscupiscene, that the virtues of continence and chastity may abide in me.
+
+When vesting the scapular:
+
+> Pour thy grace upon me, O Lord, as the oil upon the beard of Aaron.
+
+When vesting the surplice or veil:
+
+> Invest me, O Lord, as a new man, who was created by God in justice and the holiness of truth.
+
+When vesting the mantle or coif:
+
+> Adorn me, O Lord, with a crown as a bride adorns herself with jewels, and cover me with the robe of salvation.
