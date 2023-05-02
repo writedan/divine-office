@@ -1,0 +1,208 @@
+<html>
+<head>
+	<title>Horarium</title>
+	<style>
+		* {
+			font-family: monospace;
+		}
+
+		body {
+			margin: 5%;
+		}
+	</style>
+</head>
+<body>
+	<p>This tool attempts to calculate the time of the canonical hours of the divine office according to the current location of your device. Hours are always set to their precise solar time without adjuste\ment; use proper discretion to set appropriate times for a given congregation. Remember that the hinge hours are Lauds and Vespers.</p>
+
+	<p>Clicking on a particular celebration at a particular hour will give the ribbon placement and general ordo of that day.</p>
+
+	<p>The following table gives the horarium for today and tomorrow.</p>
+
+	<hr/>
+</body>
+</html>
+
+<script>
+	
+
+function suntimes(lat, lng, d) {
+   // var d = new Date();
+	var tz;
+    var radians = Math.PI / 180.0;
+    var degrees = 180.0 / Math.PI;
+
+    var a = Math.floor((14 - (d.getMonth() + 1.0)) / 12)
+    var y = d.getFullYear() + 4800 - a;
+    var m = (d.getMonth() + 1) + 12 * a - 3;
+    var j_day = d.getDate() + Math.floor((153 * m + 2)/5) + 365 * y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
+    var n_star = j_day - 2451545.0009 - lng / 360.0;
+    var n = Math.floor(n_star + 0.5);
+    var solar_noon = 2451545.0009 - lng / 360.0 + n;
+    var M = 356.0470 + 0.9856002585 * n;
+    var C = 1.9148 * Math.sin( M * radians ) + 0.02 * Math.sin( 2 * M * radians ) + 0.0003 * Math.sin( 3 * M * radians );
+    var L = ( M + 102.9372 + C + 180 ) % 360;
+    var j_transit = solar_noon + 0.0053 * Math.sin( M * radians) - 0.0069 * Math.sin( 2 * L * radians );
+    var D = Math.asin( Math.sin( L * radians ) * Math.sin( 23.45 * radians ) ) * degrees;
+    var cos_omega = ( Math.sin(-0.83 * radians) - Math.sin( lat * radians ) * Math.sin( D * radians ) ) / ( Math.cos( lat * radians ) * Math.cos( D * radians ) );
+
+    // sun never rises
+    if( cos_omega > 1)
+      return [null, -1];
+
+    // sun never sets
+    if( cos_omega < -1 )
+      return [-1, null];
+
+    // get Julian dates of sunrise/sunset
+    var omega = Math.acos( cos_omega ) * degrees;
+    var j_set = j_transit + omega / 360.0;
+    var j_rise = j_transit - omega / 360.0;
+
+    /*
+    * get sunrise and sunset times in UTC
+    * Check section "Finding Julian date given Julian day number and time of
+    *  day" on wikipedia for where the extra "+ 12" comes from
+    */
+
+    var utc_time_set = 24 * (j_set - j_day) + 12;
+    var utc_time_rise = 24 * (j_rise - j_day) + 12;
+    var tz_offset = tz === undefined ? -1 * d.getTimezoneOffset() / 60 : tz;
+    var local_rise = (utc_time_rise + tz_offset) % 24;
+    var local_set = (utc_time_set + tz_offset) % 24;
+    return [local_rise, local_set];
+}
+
+const roundNearest = (value, nearest) => Math.round(value/nearest)*nearest;
+
+function roundTime(time) {
+	//time = (Math.round(time * (60/15)) / (60/15))
+	if (time > 24) time -= 24;
+	return time;
+}
+
+function suntimeToClocktime(suntime) {
+	return [Math.floor(suntime), Math.floor((suntime - Math.floor(suntime)) * 60)];
+}
+
+function getHorariumTable(hours) {
+	let table = document.createElement('table');
+	table.border = '0';
+	table.style.borderCollapse = 'collapse';
+	table.style.weidth = '100%';
+	let tr = document.createElement('tr');
+	tr.style.width = '100%';
+	let timeth = document.createElement('th');
+	timeth.style.width = '25%';
+	timeth.innerHTML = 'Time';
+	timeth.align = 'left';
+	tr.append(timeth);
+	let hourth = document.createElement('th');
+	hourth.style.width = '25%';
+	hourth.innerHTML = 'Hour';
+	hourth.align = 'left';
+	tr.append(hourth);
+	let celebrationth = document.createElement('th');
+	celebrationth.style.width = '50%';
+	celebrationth.innerHTML = 'Liturgy';
+	//tr.append(celebrationth);
+	table.append(tr);
+
+	for (hour in hours) {
+		let time = suntimeToClocktime(hours[hour].time);
+		let tr = document.createElement('tr');
+		let timetd = document.createElement('td');
+		let am = time[0] < 12;
+		if (time[0] == 0) time[0] = 12;
+		time[0] = am?time[0]:(time[0]-12)
+		timetd.innerHTML = ((time[0]<10)?'0':'') + time[0] + ":" + (time[1]<10?"0"+time[1]:time[1]) + " " + (am?"AM":"PM");
+		tr.append(timetd);
+		let hourtd = document.createElement('td');
+		hourtd.innerHTML = hour;
+		tr.append(hourtd);
+		table.append(tr);
+	}
+
+	return table;
+}
+
+function printDay(lat, long, date) {
+	let suntime = suntimes(lat, long, date);
+
+	let sunrise = roundTime(suntime[0]);
+	let sunset = roundTime(suntime[1]);
+	
+	let daylight = (sunset - sunrise);
+	let night = (sunrise - sunset) + 24;
+
+	let dayhours = roundTime(daylight / 12);
+	let nighthours = roundTime(night / 12);
+
+	// TODO get liturgicla day, handle first vespers
+
+	let content = document.createElement('div');
+	let heading = document.createElement('p');
+	heading.style.fontWeight = 'bold';
+	heading.innerHTML = date;
+	content.append(heading);
+
+	let hours = {
+		'Vigils': {
+			'time': roundTime(sunset + (nighthours * 6)),
+			'liturgy': undefined
+		},
+		'Lauds': {
+			'time': roundTime(sunrise),
+			'liturgy': undefined
+		},
+		'Prime': {
+			'time': roundTime(sunrise + dayhours),
+			'liturgy': undefined
+		},
+		'Terce': {
+			'time': roundTime(sunrise + (dayhours * 3)),
+			'liturgy': undefined
+		},
+		'Sext': {
+			'time': roundTime(sunrise + (dayhours * 6)),
+			'liturgy': undefined
+		},
+		'None': {
+			'time': roundTime(sunrise + (dayhours * 9)),
+			'liturgy': undefined
+		},
+		'Vespers': {
+			'time': roundTime(sunset),
+			'liturgy': undefined
+		},
+		'Compline': {
+			'time': roundTime(sunset + nighthours),
+			'liturgy': undefined
+		}
+	};
+
+	console.log(hours);
+
+	content.append(getHorariumTable(hours));
+
+	document.body.append(content);
+}
+
+function promulHours(position) {
+	let currentDate = new Date();
+	printDay(position.coords.latitude, position.coords.longitude, currentDate);
+
+	currentDate.setDate(currentDate.getDate() + 1);
+	printDay(position.coords.latitude, position.coords.longitude, currentDate);
+}
+
+
+if (navigator.geolocation) {
+    	navigator.geolocation.getCurrentPosition(promulHours, function(){
+    		alert('Geolocation failed and i dont know why, use a diffrent device')
+    	});
+	} else {
+    	alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
+	}
+
+
+</script>
