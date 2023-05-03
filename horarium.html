@@ -4,6 +4,7 @@
 	<style>
 		* {
 			font-family: monospace;
+			font-size: 18px;
 		}
 
 		body {
@@ -12,7 +13,7 @@
 	</style>
 </head>
 <body>
-	<p>This tool attempts to calculate the time of the canonical hours of the divine office according to the current location of your device. Hours are always set to their precise solar time without adjuste\ment; use proper discretion to set appropriate times for a given congregation. Remember that the hinge hours are Lauds and Vespers.</p>
+	<p>This tool attempts to calculate the time of the canonical hours of the divine office according to the current location of your device. Hours are set below to approximate solar time; use proper discretion to set appropriate times for a given congregation. Remember that the hinge hours are Lauds and Vespers.</p>
 
 	<p>Clicking on a particular celebration at a particular hour will give the ribbon placement and general ordo of that day.</p>
 
@@ -75,7 +76,7 @@ function suntimes(lat, lng, d) {
 const roundNearest = (value, nearest) => Math.round(value/nearest)*nearest;
 
 function roundTime(time) {
-	//time = (Math.round(time * (60/15)) / (60/15))
+	time = (Math.round(time * (60/15)) / (60/15))
 	if (time > 24) time -= 24;
 	return time;
 }
@@ -86,7 +87,7 @@ function suntimeToClocktime(suntime) {
 
 function getHorariumTable(hours) {
 	let table = document.createElement('table');
-	table.border = '0';
+	table.border = '1';
 	table.style.borderCollapse = 'collapse';
 	table.style.weidth = '100%';
 	let tr = document.createElement('tr');
@@ -128,14 +129,14 @@ function getHorariumTable(hours) {
 function printDay(lat, long, date) {
 	let suntime = suntimes(lat, long, date);
 
-	let sunrise = roundTime(suntime[0]);
-	let sunset = roundTime(suntime[1]);
+	let sunrise = (suntime[0]);
+	let sunset = (suntime[1]);
 	
 	let daylight = (sunset - sunrise);
 	let night = (sunrise - sunset) + 24;
 
-	let dayhours = roundTime(daylight / 12);
-	let nighthours = roundTime(night / 12);
+	let dayhours = (daylight / 12);
+	let nighthours = (night / 12);
 
 	// TODO get liturgicla day, handle first vespers
 
@@ -155,7 +156,7 @@ function printDay(lat, long, date) {
 			'liturgy': undefined
 		},
 		'Prime': {
-			'time': roundTime(sunrise + dayhours),
+			'time': roundTime(sunrise + (dayhours * 1.5)),
 			'liturgy': undefined
 		},
 		'Terce': {
@@ -175,7 +176,7 @@ function printDay(lat, long, date) {
 			'liturgy': undefined
 		},
 		'Compline': {
-			'time': roundTime(sunset + nighthours),
+			'time': roundTime(sunset + (nighthours * 3)),
 			'liturgy': undefined
 		}
 	};
