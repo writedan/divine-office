@@ -27,7 +27,6 @@
 	
 
 function suntimes(lat, lng, d) {
-   // var d = new Date();
 	var tz;
     var radians = Math.PI / 180.0;
     var degrees = 180.0 / Math.PI;
@@ -73,10 +72,10 @@ function suntimes(lat, lng, d) {
     return [local_rise, local_set];
 }
 
-const roundNearest = (value, nearest) => Math.round(value/nearest)*nearest;
+const roundNearest = (value, nearest) => Math.round(value*(1/nearest))/(1/nearest);
 
 function roundTime(time) {
-	time = (Math.round(time * (60/15)) / (60/15))
+	time = roundNearest(time, 15/60)
 	if (time > 24) time -= 24;
 	return time;
 }
@@ -152,11 +151,11 @@ function printDay(lat, long, date) {
 			'liturgy': undefined
 		},
 		'Lauds': {
-			'time': roundTime(sunrise),
+			'time': roundTime(sunrise - 30/60),
 			'liturgy': undefined
 		},
 		'Prime': {
-			'time': roundTime(sunrise + (dayhours * 1.5)),
+			'time': roundTime(sunrise + (dayhours * 1)),
 			'liturgy': undefined
 		},
 		'Terce': {
@@ -172,7 +171,7 @@ function printDay(lat, long, date) {
 			'liturgy': undefined
 		},
 		'Vespers': {
-			'time': roundTime(sunset),
+			'time': roundTime(sunset - 30/60),
 			'liturgy': undefined
 		},
 		'Compline': {
@@ -181,7 +180,7 @@ function printDay(lat, long, date) {
 		}
 	};
 
-	console.log(hours);
+	
 
 	content.append(getHorariumTable(hours));
 
