@@ -1,6 +1,6 @@
 This project is an arrangement of the tradition liturgy of the hours even pre-dating the Tridentine reforms into English and made wieldly for the use of the general public. All offices have been put to music in English translation.
 
-To that end, there are eight volumes, each containing six liturgical books. These volumes are:
+To that end, there are eight volumes, each containing seven liturgical books. These volumes are:
 
 |      | Temporale                 | Sanctorale                                 |
 |------|---------------------------|--------------------------------------------|
@@ -23,7 +23,7 @@ The liturgical books within each volume are these:
 4. The **nocturnal**, containing the antiphons, psalter, responsories, and so forth of Vigils.
 5. The **diurnal**, containing Lauds, Prime, Terce, Sext, and None.
 6. The **vesperal**, containing Vespers and Compline.
-7. THe **processional**, containing the antiphons, responsories, versicles, and collects used during processions.
+7. The **processional**, containing the antiphons, responsories, versicles, and collects used during processions.
 
 These are the essential books which will have the main focus of activity until they are complete. Once so, I will include also books of lesser importance:
 
