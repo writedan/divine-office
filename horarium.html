@@ -86,9 +86,9 @@ function suntimeToClocktime(suntime) {
 
 function getHorariumTable(hours) {
 	let table = document.createElement('table');
-	table.border = '1';
+	//table.border = '1';
 	table.style.borderCollapse = 'collapse';
-	table.style.weidth = '100%';
+	table.style.width = '100%';
 	let tr = document.createElement('tr');
 	tr.style.width = '100%';
 	let timeth = document.createElement('th');
@@ -104,6 +104,7 @@ function getHorariumTable(hours) {
 	let celebrationth = document.createElement('th');
 	celebrationth.style.width = '50%';
 	celebrationth.innerHTML = 'Liturgy';
+	celebrationth.align = 'left';
 	//tr.append(celebrationth);
 	table.append(tr);
 
@@ -114,11 +115,18 @@ function getHorariumTable(hours) {
 		let am = time[0] < 12;
 		if (time[0] == 0) time[0] = 12;
 		time[0] = am?time[0]:(time[0]-12)
-		timetd.innerHTML = ((time[0]<10)?'0':'') + time[0] + ":" + (time[1]<10?"0"+time[1]:time[1]) + " " + (am?"AM":"PM");
+		timetd.innerHTML = ((time[0]<10)?'&nbsp;':'') + time[0] + ":" + (time[1]<10?"0"+time[1]:time[1]) + " " + (am?"AM":"PM");
 		tr.append(timetd);
 		let hourtd = document.createElement('td');
 		hourtd.innerHTML = hour;
+		let liturgytd = document.createElement('td');
 		tr.append(hourtd);
+		//tr.append(liturgytd);
+		tr.style.width = '100%';
+		timetd.style.width = '25%';
+		hourtd.style.width = '25%';
+		/*liturgytd.style.width = '50%';
+		liturgytd.innerHTML = "";*/
 		table.append(tr);
 	}
 
@@ -151,11 +159,11 @@ function printDay(lat, long, date) {
 			'liturgy': undefined
 		},
 		'Lauds': {
-			'time': roundTime(sunrise - 30/60),
+			'time': roundTime(sunrise),
 			'liturgy': undefined
 		},
 		'Prime': {
-			'time': roundTime(sunrise + (dayhours * 1)),
+			'time': roundTime(sunrise + (dayhours * 2)),
 			'liturgy': undefined
 		},
 		'Terce': {
@@ -171,11 +179,11 @@ function printDay(lat, long, date) {
 			'liturgy': undefined
 		},
 		'Vespers': {
-			'time': roundTime(sunset - 30/60),
+			'time': roundTime(sunset),
 			'liturgy': undefined
 		},
 		'Compline': {
-			'time': roundTime(sunset + (nighthours * 3)),
+			'time': roundTime(sunset + (nighthours * 2)),
 			'liturgy': undefined
 		}
 	};
