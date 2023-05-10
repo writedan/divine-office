@@ -56,11 +56,12 @@
 \newcommand{\veant}[2]{\greannotation{#1. \veformat{Ant.}}\greannotation{\veformat{#2.}}}
 \newcommand{\instruct}[1]{\textcolor{red}{\textit{#1}}}
 
+\makeatletter
 \newcommand{\whiteribbon}[0]{\textcolor{black}{\textbf{white ribbon}} }%
 \newcommand{\greenribbon}[0]{\textcolor{ForestGreen}{\textbf{green ribbon}} }%
 \newcommand{\redribbon}[0]{\textcolor{red}{\textbf{red ribbon}} }%
 \newcommand{\blueribbon}[0]{\textcolor{blue}{\textbf{blue ribbon}} }%
-
+\makeatother
 
 %%% HEADERS %%%
 \newcommand{\vepart}[1]{%
@@ -145,5 +146,13 @@
 	\greannotation{\veformat{#1.}}
 	
 	\gabcsnippet{#2}
+}%
+\makeatother
+
+\makeatletter
+\newcommand{\repant}[1]{%
+	%\greannotation{\veformat{Ant.}}
+	%\greannotation{\veformat{\Rbar. \Rbar.}}
+	\gresetinitiallines{0}\gregorioscore{#1}\gresetinitiallines{1}
 }%
 \makeatother
