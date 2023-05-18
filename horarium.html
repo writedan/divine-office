@@ -92,27 +92,32 @@ function suntimeToClocktime(suntime) {
 
 function getHorariumTable(hours) {
 	let table = document.createElement('table');
-	//table.border = '1';
+	table.border = '1';
 	table.style.borderCollapse = 'collapse';
-	table.style.width = '40%';
+	table.style.width = '100%';
 	let tr = document.createElement('tr');
 	tr.style.width = '100%';
 	let timeth = document.createElement('th');
-	timeth.style.width = '10%';
+	timeth.style.width = '15%';
 	timeth.innerHTML = 'Time';
 	timeth.align = 'left';
 	tr.append(timeth);
 	let hourth = document.createElement('th');
-	hourth.style.width = '10%';
+	hourth.style.width = '15%';
 	hourth.innerHTML = 'Hour';
 	hourth.align = 'left';
 	tr.append(hourth);
 	let celebrationth = document.createElement('th');
-	celebrationth.style.width = '80%';
-	celebrationth.innerHTML = 'Liturgy';
+	celebrationth.style.width = '70%';
+	celebrationth.innerHTML = 'Celebration';
 	celebrationth.align = 'left';
-	//tr.append(celebrationth);
+	tr.append(celebrationth);
 	table.append(tr);
+
+	var rowspan = 8;
+	if (hours.Vespers.liturgy != hours.Vigils.liturgy) {
+		rowspan = 6;
+	}
 
 	for (hour in hours) {
 		let time = suntimeToClocktime(hours[hour].time);
@@ -124,16 +129,23 @@ function getHorariumTable(hours) {
 		timetd.innerHTML = ((time[0]<10)?'':'') + time[0] + ":" + (time[1]<10?"0"+time[1]:time[1]) + " " + (am?"AM":"PM");
 		tr.append(timetd);
 		let hourtd = document.createElement('td');
-		hourtd.innerHTML = hour;
+		hourtd.innerHTML = "<a>"+hour+"</a>";
 		let liturgytd = document.createElement('td');
 		tr.append(hourtd);
-		//tr.append(liturgytd);
 		tr.style.width = '100%';
 		timetd.style.width = '10%';
 		hourtd.style.width = '10%';
 		liturgytd.style.width = '80%';
-		liturgytd.innerHTML = "";
-		//tr.append(liturgytd);
+		liturgytd.innerHTML = hours[hour].liturgy;
+		if (hour == 'Vespers') {
+			if (rowspan != 8) {
+				liturgytd.rowSpan = 2;
+				tr.append(liturgytd);
+			}
+		} else if (hour == 'Vigils') {
+			liturgytd.rowSpan = rowspan;
+			tr.append(liturgytd);
+		}
 		table.append(tr);
 	}
 
@@ -237,13 +249,11 @@ if (!getParam("hour")) {
 		    		lonBox.value = pos.coords.longitude;
 
 		    		latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-
 		    		lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-
 		    		datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
 
 
-		    		boxChanged(latBox, lonBox, datBox); // update stuff on default values
+		    		boxChanged(latBox, lonBox, datBox); // populate horarium on default values
 		    	}, function(){
 		    		alert('Geolocation failed. Manual entry is required.')
 		    	});
