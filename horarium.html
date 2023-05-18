@@ -10,16 +10,22 @@
 		body {
 			margin: 5%;
 		}
+
+		form  { display: table;      }
+		label { display: table-cell; }
+		input { display: table-cell; }
 	</style>
 </head>
 <body>
-	<p>This tool attempts to calculate the time of the canonical hours of the divine office according to the current location of your device. Hours are set below to approximate solar time; use proper discretion to set appropriate times for a given congregation. Remember that the hinge hours are Lauds and Vespers.</p>
-
-	<p>Clicking on a particular celebration at a particular hour will give the ribbon placement and general ordo of that day.</p>
-
-	<p>The following table gives the horarium for today and tomorrow.</p>
-
-	<hr/>
+	<form>
+		<label for="lat">Latitude</label>
+		<input type="number" id="lat"/><br/>
+		<label for="lon">Longitude</label>
+		<input type="number" id="lon"/><br/>
+		<label for="dat">Date</label>
+		<input type="date" id="dat"/><br/>
+	</form>
+	<div id='content'></div>
 </body>
 </html>
 
@@ -88,7 +94,7 @@ function getHorariumTable(hours) {
 	let table = document.createElement('table');
 	//table.border = '1';
 	table.style.borderCollapse = 'collapse';
-	table.style.width = '100%';
+	table.style.width = '40%';
 	let tr = document.createElement('tr');
 	tr.style.width = '100%';
 	let timeth = document.createElement('th');
@@ -105,7 +111,7 @@ function getHorariumTable(hours) {
 	celebrationth.style.width = '80%';
 	celebrationth.innerHTML = 'Liturgy';
 	celebrationth.align = 'left';
-	tr.append(celebrationth);
+	//tr.append(celebrationth);
 	table.append(tr);
 
 	for (hour in hours) {
@@ -127,7 +133,7 @@ function getHorariumTable(hours) {
 		hourtd.style.width = '10%';
 		liturgytd.style.width = '80%';
 		liturgytd.innerHTML = "";
-		tr.append(liturgytd);
+		//tr.append(liturgytd);
 		table.append(tr);
 	}
 
@@ -148,7 +154,7 @@ function printDay(lat, long, date) {
 
 	// TODO get liturgicla day, handle first vespers
 
-	let content = document.createElement('div');
+	let content = document.getElementById('content');
 	let heading = document.createElement('p');
 	heading.style.fontWeight = 'bold';
 	heading.innerHTML = date;
@@ -196,22 +202,56 @@ function printDay(lat, long, date) {
 	document.body.append(content);
 }
 
-function promulHours(position) {
-	let currentDate = new Date();
-	printDay(position.coords.latitude, position.coords.longitude, currentDate);
-
-	currentDate.setDate(currentDate.getDate() + 1);
-	printDay(position.coords.latitude, position.coords.longitude, currentDate);
+function promulHours(lat, lon, dat) {
+	printDay(lat, lon, dat);
 }
 
 
-if (navigator.geolocation) {
-    	navigator.geolocation.getCurrentPosition(promulHours, function(){
-    		alert('Geolocation failed and i dont know why, use a diffrent device')
-    	});
-	} else {
-    	alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
-	}
+function getParam(param) {
+	 var url_string = window.location.href;
+    var url = new URL(url_string);
+    return url.searchParams.get(param);
+}
 
+function boxChanged(latBox, lonBox, datBox) {
+	var content = document.getElementById('content');
+	var lat = latBox.value;
+	var lon = lonBox.value;
+	var dat = new Date(datBox.value + "T00:00");
+
+	content.innerHTML = '<hr/>';
+	promulHours(lat, lon, dat);
+}
+
+
+if (!getParam("hour")) {
+		if (navigator.geolocation) {
+		    	navigator.geolocation.getCurrentPosition(function(pos){
+		    		var latBox = document.getElementById("lat");
+		    		var lonBox = document.getElementById("lon");
+		    		var datBox = document.getElementById("dat");
+
+		    		datBox.valueAsDate = new Date();
+		    		
+		    		latBox.value = pos.coords.latitude;
+		    		lonBox.value = pos.coords.longitude;
+
+		    		latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+
+		    		lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+
+		    		datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+
+
+		    		boxChanged(latBox, lonBox, datBox); // update stuff on default values
+		    	}, function(){
+		    		alert('Geolocation failed. Manual entry is required.')
+		    	});
+			} else {
+		    	alert('Geolocation is not supported on this device. Manual entry is required.');
+			}
+	} else {
+		// nuke page, display ribbon placement
+	}
 
 </script>
