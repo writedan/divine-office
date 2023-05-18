@@ -23,7 +23,6 @@ The liturgical books within each volume are these:
 4. The **nocturnal**, containing the antiphons, psalter, responsories, and so forth of Vigils.
 5. The **diurnal**, containing Lauds, Prime, Terce, Sext, and None.
 6. The **vesperal**, containing Vespers and Compline.
-7. The **processional**, containing the antiphons, responsories, versicles, and collects used during processions.
 
 These are the essential books which will have the main focus of activity until they are complete. Once so, I will include also books of lesser importance:
 
@@ -32,5 +31,7 @@ These are the essential books which will have the main focus of activity until t
 3. The **evangeliary**, containing the Gospels with their tracts or alleluias duplicated from the antiphonary.
 4. The **martyrology**, containing the amplified calendar of the saints.
 5. The **sacramentary**, containing everything necessary by the priest for the celebration of all the sacraments.
+6. The **processional**, containing the antiphons, responsories, versicles, and collects used during processions.
+
 
 The divine office in its full solemnity should be a fixture of Christian life in families and churches alike. It should precede any devotion in the spiritual life of the faithful. It is what Saint Benedict terms "the school of the service of God." This project is not to forment dissent, nor in any way oppose the Second Vatican Council, but to embrace what prior generations held as sacred, to promote the liturgical life of the Church, and to indeed complete the restoration of the apostolic Church as demanded by the Council.
