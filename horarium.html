@@ -29,6 +29,7 @@
             <label for="dat">Date</label>
             <input type="date" id="dat" /><br />
         </form>
+        <p>Times for the hours are always given in the local timezone set on this device. Thus impossible measuremens may occur which must be adjusted according to the Greenwich Mean Time including negative times.</p>
         <div id="content"></div>
     </body>
 </html>
@@ -110,6 +111,7 @@
         celebrationth.style.width = "70%";
         celebrationth.innerHTML = "Celebration";
         celebrationth.align = "left";
+        celebrationth.style.paddingLeft = '0.5%';
         tr.append(celebrationth);
         table.append(tr);
 
@@ -123,9 +125,9 @@
             let tr = document.createElement("tr");
             let timetd = document.createElement("td");
             let am = time[0] < 12;
-            time[0] = am ? time[0] : time[0] - 12;
+           time[0] = am ? time[0] : time[0] - 12;
             if (time[0] == 0) time[0] = 12;
-            timetd.innerHTML = (time[0] < 10 ? "" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + " " + (am ? "AM" : "PM");
+           timetd.innerHTML = (time[0] < 10 ? "" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + " " + (am ? "AM" : "PM");
             tr.append(timetd);
             let hourtd = document.createElement("td");
             hourtd.innerHTML = "<a href='?lat=" + lat.value + "&lon=" + lon.value + "&date=" + dat.valueAsDate + "&hour=" + hour + "'>" + hour + "</a>";
@@ -135,6 +137,7 @@
             timetd.style.width = "10%";
             hourtd.style.width = "10%";
             liturgytd.style.width = "80%";
+            liturgytd.style.padding = '0.5%';
             liturgytd.innerHTML = hours[hour].liturgy;
             if (hour == "Vespers") {
                 if (rowspan != 8) {
@@ -173,7 +176,7 @@
 
         let hours = {
             Vigils: {
-                time: roundTime(sunset + nighthours * 6),
+                time: roundTime(sunrise - nighthours * 6),
                 liturgy: undefined,
             },
             Lauds: {
