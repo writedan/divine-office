@@ -9,27 +9,21 @@
             body {
                 margin: 5%;
             }
-            form {
-                display: table;
-            }
-            label {
-                display: table-cell;
-            }
-            input {
-                display: table-cell;
+            td, th {
+            	padding: 0.5%;
             }
         </style>
     </head>
     <body>
         <form>
             <label for="lat">Latitude</label>
-            <input type="number" id="lat" /><br />
+            <input type="number" id="lat" />
             <label for="lon">Longitude</label>
-            <input type="number" id="lon" /><br />
+            <input type="number" id="lon" />
             <label for="dat">Date</label>
-            <input type="date" id="dat" /><br />
+            <input type="date" id="dat" />
         </form>
-        <p>Times for the hours are always given in the local timezone set on this device. Thus impossible measuremens may occur which must be adjusted according to the Greenwich Mean Time including negative times.</p>
+        <p>The prescribed times of the hours are always given in the local timezone (as set by this device), which will cause impossible results (including negative time) if the latitude and longitude inputted are not within the bounds of the local timezone.</p>
         <div id="content"></div>
     </body>
 </html>
@@ -83,6 +77,7 @@
     function roundTime(time) {
         time = roundNearest(time, 15 / 60);
         if (time > 24) time -= 24;
+        if (time < 0) time += 24;
         return time;
     }
 
@@ -111,7 +106,7 @@
         celebrationth.style.width = "70%";
         celebrationth.innerHTML = "Celebration";
         celebrationth.align = "left";
-        celebrationth.style.paddingLeft = '0.5%';
+        //celebrationth.style.paddingLeft = '0.5%';
         tr.append(celebrationth);
         table.append(tr);
 
@@ -127,7 +122,7 @@
             let am = time[0] < 12;
            time[0] = am ? time[0] : time[0] - 12;
             if (time[0] == 0) time[0] = 12;
-           timetd.innerHTML = (time[0] < 10 ? "" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + " " + (am ? "AM" : "PM");
+           timetd.innerHTML = (time[0] < 10 ? "" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + (time[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
             tr.append(timetd);
             let hourtd = document.createElement("td");
             hourtd.innerHTML = "<a href='?lat=" + lat.value + "&lon=" + lon.value + "&date=" + dat.valueAsDate + "&hour=" + hour + "'>" + hour + "</a>";
@@ -137,7 +132,7 @@
             timetd.style.width = "10%";
             hourtd.style.width = "10%";
             liturgytd.style.width = "80%";
-            liturgytd.style.padding = '0.5%';
+            //liturgytd.style.padding = '0.5%';
             liturgytd.innerHTML = hours[hour].liturgy;
             if (hour == "Vespers") {
                 if (rowspan != 8) {
@@ -176,7 +171,7 @@
 
         let hours = {
             Vigils: {
-                time: roundTime(sunrise - nighthours * 6),
+                time: /*roundTime(sunrise - nighthours * 8.75)*/ roundTime(sunrise - nighthours * 6),
                 liturgy: undefined,
             },
             Lauds: {
@@ -204,7 +199,7 @@
                 liturgy: undefined,
             },
             Compline: {
-                time: roundTime(sunset + nighthours * 2),
+                time: /*roundTime(sunset + nighthours * 1.5)*/ roundTime(sunset + nighthours * 2),
                 liturgy: undefined,
             },
         };
