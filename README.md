@@ -1,3 +1,11 @@
+# Divine Office
+
+# Useage
+
+Refer to the [documentation](https://writedan.github.io/divine-office/docs).
+
+# About
+
 This project is an arrangement of the tradition liturgy of the hours even pre-dating the Tridentine reforms into English and made wieldly for the use of the general public. All offices have been put to music in English translation.
 
 To that end, there are eight volumes, each containing seven liturgical books. These volumes are:
