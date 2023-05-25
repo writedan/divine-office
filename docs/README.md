@@ -1,6 +1,6 @@
 This page describes in detail the liturgical rite as a supplement where the books may be obscure or incomplete. 
 
-Refer to the [horarium](https://writedan.github.io/horarium.html) for ribbon placement. That webpage is designed to be downloaded and ran locally such that it is not reliant upon any particular host, and so that it can be modified for each particular community.
+Refer to the [horarium](https://writedan.github.io/divine-office/horarium.html) for ribbon placement. That webpage is designed to be downloaded and ran locally such that it is not reliant upon any particular host, and so that it can be modified for each particular community.
 
 # Order of the Chapel
 
