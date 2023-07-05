@@ -4,3 +4,4 @@
 !*.md
 !horarium.html
 !.gitignore
+*_model.tex
