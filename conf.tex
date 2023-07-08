@@ -151,8 +151,8 @@
 
 \makeatletter
 \newcommand{\repant}[1]{%
-	%\greannotation{\veformat{Ant.}}
-	%\greannotation{\veformat{\Rbar. \Rbar.}}
-	\gresetinitiallines{0}\gregorioscore{#1}\gresetinitiallines{1}
+	\gresetspecial{*}{}
+	\skiplines{1}\gresetinitiallines{0}\gregorioscore{#1}\gresetinitiallines{1}
+	\gresetspecial{*}{\textcolor{red}{\GreStarHeight{17}}}
 }%
 \makeatother
