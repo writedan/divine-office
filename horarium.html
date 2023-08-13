@@ -141,7 +141,7 @@
             let am = time[0] < 12;
            time[0] = am ? time[0] : time[0] - 12;
             if (time[0] == 0) time[0] = 12;
-           timetd.innerHTML = (time[0] < 10 ? "" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + (time[0] < 10 ? "&nbsp;&nbsp;":"&nbsp;") + (am ? "AM" : "PM");
+           timetd.innerHTML = (time[0] < 10 ? "0" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + (time[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
             tr.append(timetd);
             let hourtd = document.createElement("td");
             hourtd.innerHTML = "<a href='?date=" + dat.valueAsDate + "&hour=" + hour + "'>" + hour + "</a>";
