@@ -65,4 +65,3 @@ Ministers should enter the quire at hours besides the Vigils with the precantor 
 If the rulers are present, they lead this procession, and after genuflecting to the altar, go around and come up from the east to their places.
 
 At the Vigils, rather, all the ministers begin at the baptistery (or the west end of the church) in the same order and process in solemnly while the rulers sing the inviatatory verses, but the whole procession should pause while the antiphon is repeated. But if there are no rulers present or appointed for that day, then only the officiant should process in from there while the cantors sing the inviatatory verses from their place.
-
