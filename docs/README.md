@@ -1,0 +1,20 @@
+The liturgical year is divided into seven volumes (an eighth contains the votive offices of the Blessed Virgin and of the Dead). Each of these volumes includes these four books:
+
+1. The **collectary**, containing primarily the order of collects, versicles, absolutions, and benedictions used at the hours.
+2. The **capitulary**, containing the chapters read at all hours excluding Vigils, along with their responsories when they are appointed.
+3. The **lectionary**, containing the lessons of Vigils and their responsories.
+4. The **antiphonary**, containing the antiphons, psalms, hymns, odes, and other such material, which is divided into three books:
+	1. The *dirunal* for the hours of Lauds, Prime, Sext, and None.
+	2. The *vesperal*, for the hours of Vespers and Compline.
+	3. The *nocturnal*, for the Vigil hour.
+
+| Vol. | Temporal                                      | Sanctoral                               | Capitulary                                                          | Collectary                                                          | Nocturnal | Dirunal | Vesperal                                                           |
+|------|-----------------------------------------------|-----------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------|-----------|---------|--------------------------------------------------------------------|
+| I    | First Sunday of Advent Sunday after Epiphany  | November 27 January 12                  |                                                                     |                                                                     |           |         |                                                                    |
+| II   | Sunday after Epiphany First Sunday in Lent    | January 7 March 13                      |                                                                     |                                                                     |           |         |                                                                    |
+| III  | First Sunday in Lent Wednesday of Holy Week   | February 8 April 20                     |                                                                     |                                                                     |           |         |                                                                    |
+| IV   | Holy Thursday Sunday after Pascha             | N/A                                     |                                                                     |                                                                     |           |         |                                                                    |
+| V    | Sunday after Pascha Trinity Sunday            | May 28 June 19                          |                                                                     |                                                                     |           |         |                                                                    |
+| VI   | Trinity Sunday First Sunday in August         | May 16 August 7                         |                                                                     |                                                                     |           |         |                                                                    |
+| VII  | First Sunday in August First Sunday of Advent | July 27 December 2                      | https://writedan.github.io/divine-office/docs/autumn_capitulary.pdf | https://writedan.github.io/divine-office/docs/autumn_collectary.pdf |           |         | https://writedan.github.io/divine-office/docs/autumn_vesperale.pdf |
+| VIII | Votive Offices                                | Office of the Dead Office of the B.V.M. |                                                                     |                                                                     |           |         |                                                                    |
