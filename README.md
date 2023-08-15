@@ -2,7 +2,7 @@
 
 ## Liturgical Books
 
-The liturgical year is divided into seven volumes (an eighth contains the votice offices of the Blessed Virgin and of the Dead). Each of these volumes includes these four books:
+The liturgical year is divided into seven volumes (an eighth contains the votive offices of the Blessed Virgin and of the Dead). Each of these volumes includes these four books:
 
 1. The **collectary**, containing primarily the order of collects, versicles, absolutions, and benedictions used at the hours.
 2. The **capitulary**, containing the chapters read at all hours excluding Vigils, along with their responsories when they are appointed.
@@ -17,7 +17,7 @@ The liturgical year is divided into seven volumes (an eighth contains the votice
 | I    | First Sunday of Advent<br>Sunday after Epiphany  | November 27<br>January 12                  |
 | II   | Sunday after Epiphany<br>First Sunday in Lent    | January 7<br>March 13                      |
 | III  | First Sunday in Lent<br>Wednesday of Holy Week   | February 8<br>April 20                     |
-| IV   | Sacred Triduum<br>Sunday after Pascha            | N/A                                        |
+| IV   | Holy Thursday<br>Sunday after Pascha             | N/A                                        |
 | V    | Sunday after Pascha<br>Trinity Sunday            | May 28<br>June 19                          |
 | VI   | Trinity Sunday<br>First Sunday in August         | May 16<br>August 7                         |
 | VII  | First Sunday in August<br>First Sunday of Advent | July 27<br>December 2                      |
