@@ -50,6 +50,8 @@
 		\vechapter{Order of Compline}
 		
 			\input{compline/order}
+			
+	\gresetinitiallines{1}
 	
 	\vepart{Psalter}
 	
@@ -665,6 +667,10 @@
 			\input{psalter/magnificat/1}
 			
 			\repant{ant/qui_celorum_contines.gabc}
+
+
+%%% REMOVE TO ADD SANCTORAL
+\stop
 		
 	\vepart{Sanctoral}
 	
@@ -672,11 +678,65 @@
 		
 		\vechapter{Saint Sixtus}
 		
+			\skiplines{-1}\input{hymn/martyr_dei}
+			
+			\gresetinitiallines{0}
+			\skiplines{1}\gabcsnippet{
+				(c3) <sp>v</sp> Thou(h) hast(h) crowned(h) him,(h) O(h) Lord,(h) with(h) glor(h)y(h) and(h) wor(f)ship.(g)
+				<sp>r</sp>(::) And(h) mad(h)est(h) him(h) to(h) have(h) do(h)min(h)ion(h) of(h) the(h) works(h) of(h) thy(f) hands.(f)
+			}
+			\gresetinitiallines{1}
+			
+			\skiplines{1}\veant{M}{vii. i}
+			\gregorioscore{ant/hic_est_vere_martyr.gabc}
+			
+			\greannotation{\veformat{Cant.}}
+			\greannotation{\veformat{vii. i.}}
+			\skiplines{1}\gabcsnippet{
+				(c3) My(hg) soul(hi) (:?) doth(ir) <b>mag</b>(ik)ni(jr)fy(j) <b>the</b>(i) Lord(jr j) <sp>*</sp>(:) and(ir) my() spirit() hath() rejoiced() in() <b>God</b>(j) my(i) Sav(h)ior.(gf)
+			}
+			
+			\input{psalter/magnificat/7}
+			
+			\repant{ant/hic_est_vere_martyr.gabc}
+			
+			\instruct{Turn to the \whiteribbon at the conclusion, pp. \pageref{vespers:conclusion}.}
+			
+			\greannotation{\veformat{Kyrie}}
+			\greannotation{\veformat{XIII}}
+			\skiplines{1}\gregorioscore{kyrie/xiii.gabc}
+		
 		\vechapter{Saint Laurence}
 		
 		\vechapter{Assumption}
 		
+			\skiplines{-1}\vesectionp{At First Vespers}
+			
+			\vesection{At Second Vespers}
+			
+			\vesection{At Compline}
+		
 		\vechapter{Saint Bartholomew}
+		
+			\skiplines{-1}\vesectionp{At First Vespers}
+			
+				\skiplines{-1}\veheading{Psalter}
+		
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{i .iv.}}
+				\gregorioscore{ant/estote_fortes_in_bello.gabc}
+				
+				\input{psalter/109/text}
+				
+				\input{psalter/112/text}
+				
+				\input{psalter/115/text}
+				
+				\input{psalter/125/text}
+				
+				\input{psalter/138/text}
+				
+				\repant{ant/estote_fortes_in_bello.gabc}
 		
 		\vechapter{Saint Augustine}
 		

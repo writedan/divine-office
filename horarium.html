@@ -115,6 +115,25 @@
             rowspan = 6;
         }
 
+
+        {
+            for (i = 0; i< Object.keys(hours).length; i++) {
+                name = Object.keys(hours)[i]
+                hour = hours[name]
+
+                nextHour = i + 1
+                if (nextHour == Object.keys(hours).length) {
+                    nextHour = 0
+                }
+
+                elapse = hours[Object.keys(hours)[nextHour]].time - hour.time;
+                elapse -= hour.duration;
+                if (elapse < 0) elapse += 24
+
+                console.log("Time elapse from " + name + " to " + Object.keys(hours)[nextHour] + ": " + elapse);
+            }
+        }
+
         for (hour in hours) {
             let time = suntimeToClocktime(hours[hour].time);
             let tr = document.createElement("tr");
@@ -122,10 +141,10 @@
             let am = time[0] < 12;
            time[0] = am ? time[0] : time[0] - 12;
             if (time[0] == 0) time[0] = 12;
-           timetd.innerHTML = (time[0] < 10 ? "" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + (time[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
+           timetd.innerHTML = (time[0] < 10 ? "0" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + (time[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
             tr.append(timetd);
             let hourtd = document.createElement("td");
-            hourtd.innerHTML = "<a href='?lat=" + lat.value + "&lon=" + lon.value + "&date=" + dat.valueAsDate + "&hour=" + hour + "'>" + hour + "</a>";
+            hourtd.innerHTML = "<a href='?date=" + dat.valueAsDate + "&hour=" + hour + "'>" + hour + "</a>";
             let liturgytd = document.createElement("td");
             tr.append(hourtd);
             tr.style.width = "100%";
@@ -150,6 +169,9 @@
     }
 
     function printDay(lat, long, date) {
+
+        console.log(" --- CALCULATING HORARIUM ---")
+
         let suntime = suntimes(lat, long, date);
 
         let sunrise = suntime[0];
@@ -171,36 +193,44 @@
 
         let hours = {
             Vigils: {
-                time: /*roundTime(sunrise - nighthours * 8.75)*/ roundTime(sunrise - nighthours * 6),
+                time: roundTime(sunrise - nighthours * 8.75) /*roundTime(sunrise - nighthours * 6)*/,
                 liturgy: undefined,
+                duration: 1.25,
             },
             Lauds: {
                 time: roundTime(sunrise),
                 liturgy: undefined,
+                duration: 0.75,
             },
             Prime: {
                 time: roundTime(sunrise + dayhours * 1.5),
                 liturgy: undefined,
+                duration: 0.5,
             },
             Terce: {
                 time: roundTime(sunrise + dayhours * 3),
                 liturgy: undefined,
+                duration: 0.25,
             },
             Sext: {
                 time: roundTime(sunrise + dayhours * 6),
                 liturgy: undefined,
+                duration: 0.25,
             },
             None: {
                 time: roundTime(sunrise + dayhours * 9),
                 liturgy: undefined,
+                duration: 0.25,
             },
             Vespers: {
                 time: roundTime(sunset),
                 liturgy: undefined,
+                duration: 0.5,
             },
             Compline: {
-                time: /*roundTime(sunset + nighthours * 1.5)*/ roundTime(sunset + nighthours * 2),
+                time: roundTime(sunset + nighthours * 1.5) /*roundTime(sunset + nighthours * 2)*/,
                 liturgy: undefined,
+                duration: 0.5,
             },
         };
 
@@ -223,7 +253,7 @@
         var content = document.getElementById("content");
         var lat = latBox.value;
         var lon = lonBox.value;
-        var dat = new Date(datBox.value + "T03:00");
+        var dat = new Date(datBox.value + "T12:00"); // noon to account for daylight savings
 
         content.innerHTML = "<hr/>";
         promulHours(lat, lon, dat);
