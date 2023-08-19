@@ -1,4 +1,4 @@
-\documentclass[17pt,twoside]{extarticle}
+\documentclass[14pt,twoside]{extarticle}
 \usepackage{moresize}
 \usepackage{fontspec}
 \usepackage{aeguill}
@@ -162,7 +162,7 @@
 \makeatletter
 \newcommand{\repant}[1]{%
 	\gresetspecial{*}{}
-	\skiplines{1}\gresetinitiallines{0}\gregorioscore{#1}\gresetinitiallines{1}
+	\nopagebreak[4]\skiplines{1}\nopagebreak[4]\gresetinitiallines{0}\gregorioscore{#1}\gresetinitiallines{1}
 	\gresetspecial{*}{\textcolor{red}{\GreStarHeight{17}}}
 }%
 \makeatother
