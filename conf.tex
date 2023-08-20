@@ -20,6 +20,7 @@
 \usepackage{tabto}
 \usepackage{titlesec}
 \usepackage[savepos]{zref}
+\usepackage{setspace}
 %\usepackage{libertine}
 
 \setlength{\columnseprule}{0.025pt}
@@ -87,6 +88,7 @@
 \newcommand{\vechapter}[1]{%
 	\cleardoublepage%
 	\begin{center}
+		\setstretch{1.5}
 		{\LARGE \selectfont \color{red} \uppercase{ \textbf{#1}}}\par%
 	\end{center}
 	\skiplines{1}
