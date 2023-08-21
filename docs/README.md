@@ -1,10 +1,10 @@
 The liturgical year is divided into seven volumes (an eighth contains the votive offices of the Blessed Virgin and of the Dead). Each of these volumes includes these four books:
 
-1. The **collectary**, containing primarily the order of collects, versicles, absolutions, and benedictions used at the hours.
+1. The **collectary**, containing the order of collects throughout the liturgical season.
 2. The **capitulary**, containing the chapters read at all hours excluding Vigils, along with their responsories when they are appointed.
 3. The **lectionary**, containing the lessons of Vigils and their responsories.
 4. The **antiphonary**, containing the antiphons, psalms, hymns, odes, and other such material, which is divided into three books:
-	1. The *dirunal* for the hours of Lauds, Prime, Sext, and None.
+	1. The *dirunal* for the hours of Lauds, Prime, Terce, Sext, and None.
 	2. The *vesperal*, for the hours of Vespers and Compline.
 	3. The *nocturnal*, for the Vigil hour.
 
