@@ -1,3 +1,138 @@
+<script>
+    function computus( y ) {
+
+        var date, a, b, c, m, d;
+
+        date = new Date;
+
+        // Set the timestamp to midnight.
+        date.setHours( 0, 0, 0, 0 );
+
+        date.setFullYear( y );
+
+        a = y % 19;
+
+        // choose which version of the algorithm to use based on the given year.
+        b = ( 2200 <= y && y <= 2299 ) ?
+            ( ( 11 * a ) + 4 ) % 30 :
+            ( ( 11 * a ) + 5 ) % 30;
+
+        // determine whether or not to compensate for the previous step
+        c = ( ( b === 0 ) || ( b === 1 && a > 10 ) ) ?
+            ( b + 1 ) :
+            b;
+
+        // use c first to find the month: April or March.
+        m = ( 1 <= c && c <= 19 ) ? 3 : 2;
+
+        // then use c to find the full moon after the northward equinox
+        d = ( 50 - c ) % 31;
+
+        // mark the date of that full moon—the ecclesiastical full moon
+        date.setMonth( m, d );
+
+        // count forward the number of days until the following Sunday (Easter).
+        date.setMonth( m, d + ( 7 - date.getDay() ) );
+
+        return date;
+
+    }
+
+    function addrdate(date,days=1) {
+        n = new Date(date.getTime())
+        n.setDate(date.getDate() + days)
+        return n;
+    }
+
+    function nextWeek(date) {
+        return addrdate(date,7)
+    }
+
+    function nextSunday(date) {
+        date = addrdate(date)
+        while (date.getDay() != 0) {
+            date = addrdate(date)
+        }
+        return date;
+    }
+
+    function prevSunday(date) { 
+        date = addrdate(date,-1)
+        while (date.getDay() != 0) {
+            date = addrdate(date,-1)
+        }
+        return date;
+    }
+
+    var EASTER = computus(new Date().getFullYear());
+    console.log(EASTER);
+
+    // now to populate the calendar
+
+    var ly = {}; // this means liturgical year but is actually the calendar but im in too deep
+
+    function setly(date, id) {
+        var m = ly[date.getMonth()];
+        if(m === undefined) {ly[date.getMonth()] = {}};
+        ly[date.getMonth()][date.getDate()] = id;
+    }
+
+    function getly(date) {
+        return ly[date.getMonth()][date.getDate()];
+    }
+
+    setly(EASTER, 'pascha/sunday');
+
+    for (i = 0; i < 5; i++) {
+        EASTER = nextWeek(EASTER);
+        setly(EASTER,'pascha/' + (i+1)+"/sunday")
+    }
+
+    EASTER=addrdate(EASTER, 3)
+    setly(EASTER,'ascension/vigil')
+    EASTER=addrdate(EASTER)
+    setly(EASTER,'ascension')
+    EASTER = nextSunday(EASTER);
+    setly(EASTER,'ascension/sunday')
+    EASTER = nextSunday(EASTER);
+    setly(EASTER,'pentecost/sunday')
+    EASTER = nextSunday(EASTER)
+    setly(EASTER,'trinity/sunday')
+
+    for (i = 0; i < 25; i++) {
+        EASTER = nextSunday(EASTER)
+        setly(EASTER,'trinity/'+(i+1)+'/sunday')
+    }
+
+    lastDay = new Date(EASTER.getTime())
+    EASTER = computus(new Date().getFullYear()); // reset easter and compute week days
+
+    var days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday']
+    while (EASTER != lastDay) {
+        EASTER = addrdate(EASTER)
+        if (getly(EASTER) === undefined) {
+            sun = prevSunday(EASTER);
+            id = getly(sun).substring(0, getly(sun).lastIndexOf('/')) + '/'+days[EASTER.getDay()]
+            setly(EASTER,id)
+        }
+    }
+</script>
+
+
+<script>
+    // big bad array of liturgical days
+    bbaold = {
+        'pascha': {
+            'sunday': {
+                name: 'Resurrection of the Lord'
+            }
+        },
+        'ascension':{},
+        'pentecost': {},
+        'trinity': {}
+    }
+</script>
+
 <html>
     <head>
         <title>Horarium</title>
@@ -191,35 +326,43 @@
         heading.innerHTML = date;
         content.append(heading);
 
+        console.log(date)
+
+        try {
+            celeb = ly[date.getMonth()][date.getDate()]
+        } catch (e) {
+            celeb = undefined
+        }
+
         let hours = {
             Vigils: {
                 time: roundTime(sunrise - nighthours * 8.75) /*roundTime(sunrise - nighthours * 6)*/,
-                liturgy: undefined,
+                liturgy: celeb,
                 duration: 1.25,
             },
             Lauds: {
                 time: roundTime(sunrise),
-                liturgy: undefined,
+                liturgy: celeb,
                 duration: 0.75,
             },
             Prime: {
                 time: roundTime(sunrise + dayhours * 1.5),
-                liturgy: undefined,
-                duration: 0.5,
+                liturgy: celeb,
+                duration: 0.25,
             },
             Terce: {
                 time: roundTime(sunrise + dayhours * 3),
-                liturgy: undefined,
+                liturgy: celeb,
                 duration: 0.25,
             },
             Sext: {
                 time: roundTime(sunrise + dayhours * 6),
-                liturgy: undefined,
+                liturgy: celeb,
                 duration: 0.25,
             },
             None: {
                 time: roundTime(sunrise + dayhours * 9),
-                liturgy: undefined,
+                liturgy: celeb,
                 duration: 0.25,
             },
             Vespers: {
@@ -230,7 +373,7 @@
             Compline: {
                 time: roundTime(sunset + nighthours * 1.5) /*roundTime(sunset + nighthours * 2)*/,
                 liturgy: undefined,
-                duration: 0.5,
+                duration: 0.25,
             },
         };
 
@@ -284,6 +427,20 @@
             );
         } else {
             alert("Geolocation is not supported on this device. Manual entry is required.");
+                    var latBox = document.getElementById("lat");
+                    var lonBox = document.getElementById("lon");
+                    var datBox = document.getElementById("dat");
+
+                    datBox.valueAsDate = new Date();
+
+                    latBox.value = 0;
+                    lonBox.value = 0;
+
+                    latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+                    lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+                    datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+
+                    boxChanged(latBox, lonBox, datBox); // populate horarium on default values
         }
     } else {
         // nuke page, display ribbon placement
