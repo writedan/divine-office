@@ -1,0 +1,85 @@
+\input{conf}
+
+\begin{document}
+	\newgeometry{margin=0pt}
+	\begin{titlepage}
+		\vspace*{\fill}
+		
+		\begin{center}
+			
+			\textbf{\Huge\color{red} ANTIPHONARY}
+			
+			ACCORDING TO THE RITE OF THE
+			
+			\textbf{\LARGE HOLY ROMAN CHURCH}
+			
+			\vspace*{\fill}
+			
+			\textbf{\Large\color{red} VOLUME VIII}
+			
+			Office of Blessed Virgin Mary\\
+			Office of the Dead
+			
+		\end{center}
+		
+		\vspace*{\fill}
+	\end{titlepage}
+	
+	\newgeometry{top=0.75in,bottom=0.75in,inner=0.75in,outer=0.75in,includefoot}
+	
+	\pagenumbering{arabic}
+	\gresetinitiallines{0}
+	
+	\raggedbottom
+	
+	%\tableofcontents
+	
+	\vepart{Office of the Blessed Virgin Mary}
+	
+	\vepart{Office of the Dead}
+	
+		\vechapter{At Vespers}
+		
+			\instruct{All kneel and make quietly these prayers.}
+			
+			Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+			
+			Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+			
+			\instruct{All stand as a cantor intones the first antiphon of the psalmody.}
+			
+			\gresetinitiallines{1}
+			\veant{1}{iii. iv}
+			\skiplines{1}\gregorioscore{ant/placebo_domino.gabc}
+			
+			\greannotation{\veformat{Ps. 114}}
+			\greannotation{\veformat{iii. iv.}}
+			\skiplines{1}\gabcsnippet{
+				(c4) I(jr) am(j) <b>well</b>(i) pleased(jr) <sp>*</sp>(:) that(jr) the() Lord() hath() heard(j) <b>the</b>(ji) voice(hi) of(h) my(gr) prayer.(gh)
+			}
+		
+			\input{psalter/114/3}
+		
+			\repant{ant/placebo_domino.gabc}
+			
+			
+			\skiplines{1}\veant{2}{ii. i}
+			\gregorioscore{ant/heu_me_quia_incolatus.gabc}
+			
+			\skiplines{1}\greannotation{\veformat{Ps. 119}}
+			\greannotation{\veformat{ii. i.}}
+			\gabcsnippet{
+				(f3) When(e) I(f) (:?) was(hr) in() trouble,() I called() up(h)<b>on</b>(i) the(hr) Lord() <sp>*</sp>(:) and(hr) <b>he</b>(g) heard(er) me.(f)
+			}
+		
+			\input{psalter/119/2}
+			
+			\skiplines{-1}\repant{ant/heu_me_quia_incolatus.gabc}
+		
+		\vechapter{At Vigils}
+		
+		\vechapter{At Lauds}
+		
+		\vechapter{Commendation of Souls}
+	
+\end{document}
