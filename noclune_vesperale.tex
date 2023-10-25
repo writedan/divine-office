@@ -26,6 +26,18 @@
 	
 	\newgeometry{top=0.75in,bottom=0.75in,inner=0.75in,outer=0.75in,includefoot}
 	
+	\newcommand{\sundaykyrie}{
+		\greannotation{\veformat{Kyrie}}
+		\greannotation{\veformat{XVII}}
+		\skiplines{1}\gregorioscore{kyrie/xvii.gabc}
+	}
+
+	\newcommand{\feriakyrie}{
+		\greannotation{\veformat{Kyrie}}
+		\greannotation{\veformat{XVIII}}
+		\skiplines{1}\gregorioscore{kyrie/xviii.gabc}
+	}
+	
 	\pagenumbering{arabic}
 	\gresetinitiallines{0}
 	
@@ -84,106 +96,176 @@
 		\vechapter{Saturday at Vespers}
 		
 			\input{vespers/saturday}
-	
-	\vepart{Temporale}
-	
-		\vechapter{First Sunday in Advent}
 			
-			\skiplines{-1}\vesectionp{At First Vespers}
+		\vechapter{Compline}
+		
+			\input{compline/ordinary}
+	
+	\vepart{Common Tones}
+	
+		\vechapter{Vespers before \textit{O Wisdom}} % before O Wisdom
+		
+			\input{vespers/advent1}
+		
+		\vechapter{Vespers after \textit{O Wisdom}} % after O Wisdom
+		
+			\input{vespers/advent2}
+		
+		\vechapter{Compline on Sunday}
+			
+			\input{compline/sunday(advent)}
+		
+		\vechapter{Compline on Feria}
+		
+			\input{compline/feria(advent)}
+
+
+	\vepart{Temporal I\\Advent}
+	
+		\vechapter{First Week in Advent}
+		
+			\skiplines{-1}\vesectionp{Sunday at First Vespers}
 				
-				\skiplines{-1}\resp{Ecce dies veniunt}{viii}
-				\gregorioscore{resp/ecce_dies_veniunt.gabc}
+				\instruct{Turn to the \blueribbon and sing the hymn and versicle appointed there.}
+				
+					\skiplines{-1}\resp{Ecce dies veniunt}{viii}
 					
-				\instruct{Turn to the \blueribbon and sing the hymn and versicle.}
+					\gregorioscore{resp/ecce_dies_veniunt.gabc}
+									
+					\greannotation{\veformat{Ant.}}
+					\greannotation{\veformat{i.}}
+					\skiplines{1}\gregorioscore{ant/ecce_nomen_domini.gabc}
+					
+					\clearpage\vecomment{Canticle of Mary \enquote{Magnificat}}
+					\vecomment{Luke i, 46-55}
+					
+					\greannotation{\veformat{Cant.}}
+					\greannotation{\veformat{i.}}
+					\gabcsnippet{
+							(cb4) My(hr) soul(h) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my(h) spir(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
+						}
+					
+					\input{psalter/magnificat/1}
+					
+					\repant{ant/ecce_nomen_domini.gabc}
 				
-				\skiplines{1}
-				\veant{M}{i}
-				\gregorioscore{ant/ecce_nomen_domini.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{i.}}
-				\skiplines{1}\gabcsnippet{
-					(cb4) My(f) soul(gh :? hr) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my() <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
-				}
-				
-				\input{psalter/magnificat/1}
-				
-				\repant{ant/ecce_nomen_domini.gabc}
-			
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{At Second Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/ne_timeas_maria.gabc}
+				\sundaykyrie
+				
+			\cleardoublepage\vesection{Sunday at Second Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{viii.}}
+				\skiplines{1}\gregorioscore{ant/ne_timeas_maria.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{viii.}}
-				\skiplines{1}\gabcsnippet{
-					(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
+				\gabcsnippet{
+					(c3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(h) Sav(f)ior.(e)
 				}
-			
+				
 				\input{psalter/magnificat/8}
-			
+				
 				\repant{ant/ne_timeas_maria.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+				
+				\sundaykyrie
 			
-			\vesection{Monday at Vespers}
+			\cleardoublepage\vesection{Monday at Vespers}
 			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{vii}
-				\gregorioscore{ant/hierusalem_respice.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{vii.}}
-				\skiplines{1}\gabcsnippet{
-					(c2) My(fe) soul(fg) (:?) doth(gr) <b>mag</b>(gi)ni(hr)fy(h) <b>the</b>(g) Lord(h) <sp>*</sp>(:) and(gr) my() spirit() hath() rejoiced() in(g) <b>God</b>(h) my(g) Sav(f)ior.(ed)
-				}
-				
-				\input{psalter/magnificat/7}
-				
-				\repant{ant/hierusalem_respice.gabc}
+					\greannotation{\veformat{Ant.}}
+					\greannotation{\veformat{vii.}}
+					\gregorioscore{ant/hierusalem_respice.gabc}
+					
+					\vecomment{Canticle of Mary \enquote{Magnificat}}
+					\vecomment{Luke i, 46-55}
+					
+					\greannotation{\veformat{Cant.}}
+					\greannotation{\veformat{vii.}}
+					\gabcsnippet{
+						(c2) My(fe) soul(fg) doth(gr) <b>mag</b>(gi)ni(hr)fy(h) <b>the</b>(g) Lord(h) <sp>*</sp>(:) and(gr) my() spirit() hath() rejoiced() in(g) <b>God</b>(h) my(g) Sav(f)ior.(ed)
+					}
+					
+					\input{psalter/magnificat/7}
+					
+					\skiplines{-1}\repant{ant/hierusalem_respice.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Tuesday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{iv}
-				\gregorioscore{ant/querite_dominum.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Tuesday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+					\greannotation{\veformat{Ant.}}
+					\greannotation{\veformat{iv.}}
+					\gregorioscore{ant/querite_dominum.gabc}
+					
+					\vecomment{Canticle of Mary \enquote{Magnificat}}
+					\vecomment{Luke i, 46-55}
+					
+					\greannotation{\veformat{Cant.}}
+					\greannotation{\veformat{iv.}}
+					\gabcsnippet{
+						(c3) My(ir) soul(i) <b>doth</b>(ih) mag(hj)ni(j)<b>fy</b>(ij) the(ir) Lord() <sp>*</sp>(:) and(ir) my(i) <b>spir</b>(ij)it(ir) hath() rejoiced(i) <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f)
+					}
+				
+					\input{psalter/magnificat/4}
+				
+				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+				
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Wednesday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+					\greannotation{\veformat{Ant.}}
+					\greannotation{\veformat{viii.}}
+					\skiplines{1}\gregorioscore{ant/veniet_fortior_me.gabc}
+					
+					\vecomment{Canticle of Mary \enquote{Magnificat}}
+					\vecomment{Luke i, 46-55}
+					
+					\greannotation{\veformat{Cant.}}
+					\greannotation{\veformat{viii.}}
+					\gabcsnippet{
+						(c3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(h) Sav(f)ior.(e)
+					}
+				
+					\input{psalter/magnificat/8}
+					
+					\repant{ant/veniet_fortior_me.gabc}
+				
+				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+				
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Thursday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{iv.}}
+				\skiplines{1}\gregorioscore{ant/expectabo_dominum.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{iv.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
-				}
-				
-				\input{psalter/magnificat/4}
-				
-				\repant{ant/querite_dominum.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Wednesday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
-				
-				\skiplines{1}
-				\veant{M}{iv}
-				\gregorioscore{ant/expectabo_dominum.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{iv.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
+				\gabcsnippet{
+					(c3) My(ir) soul(i) <b>doth</b>(ih) mag(hj)ni(j)<b>fy</b>(ij) the(ir) Lord() <sp>*</sp>(:) and(ir) my(i) <b>spir</b>(ij)it(ir) hath() rejoiced(i) <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f)
 				}
 				
 				\input{psalter/magnificat/4}
@@ -191,19 +273,24 @@
 				\repant{ant/expectabo_dominum.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Thursday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{iv}
-				\gregorioscore{ant/ex_egypto_vocavi.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Friday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{iv.}}
+				\skiplines{1}\gregorioscore{ant/ex_egypto_vocavi.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{iv.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
+				\gabcsnippet{
+					(c3) My(ir) soul(i) <b>doth</b>(ih) mag(hj)ni(j)<b>fy</b>(ij) the(ir) Lord() <sp>*</sp>(:) and(ir) my(i) <b>spir</b>(ij)it(ir) hath() rejoiced(i) <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f)
 				}
 				
 				\input{psalter/magnificat/4}
@@ -211,25 +298,30 @@
 				\repant{ant/ex_egypto_vocavi.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+				
+				\feriakyrie
+				
+		\vechapter{Second Week in Advent}
+		
+			\skiplines{-1}\vesectionp{Sunday at First Vespers}
 			
-			\vesection{Friday at Vespers}
-			
-		\vechapter{Second Sunday in Advent}
-			\skiplines{-1}\vesectionp{At First Vespers}
-			
-				\skiplines{-1}\resp{Docebit nos Dominus}{ii}
+				\instruct{Turn to the \blueribbon and sing the hymn and versicle appointed there.}
+				
+				\resp{Docebit nos Dominus}{ii}
+				
 				\gregorioscore{resp/docebit_nos_dominus.gabc}
 				
-				\instruct{Turn to the \blueribbon and sing the hymn and versicle.}
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{viii.}}
+				\skiplines{1}\gregorioscore{ant/orietur_sicut_sol.gabc}
 				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/orietur_sicut_sol.gabc}
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{viii.}}
-				\skiplines{1}\gabcsnippet{
-					(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
+				\gabcsnippet{
+					(c4) My(jr) soul(j) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord() <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(j) <b>God</b>(i) my(j) Sav(h)ior.(g)
 				}
 				
 				\input{psalter/magnificat/8}
@@ -237,19 +329,24 @@
 				\repant{ant/orietur_sicut_sol.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{At Second Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/beata_es_maria.gabc}
+				\sundaykyrie
+				
+			\cleardoublepage\vesection{Sunday at Second Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{viii.}}
+				\skiplines{1}\gregorioscore{ant/beata_es_maria.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{viii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
+				\gabcsnippet{
+					(c4) My(jr) soul(j) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord() <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(j) <b>God</b>(i) my(j) Sav(h)ior.(g)
 				}
 				
 				\input{psalter/magnificat/8}
@@ -257,19 +354,24 @@
 				\repant{ant/beata_es_maria.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Monday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{iv}
-				\gregorioscore{ant/ecce_rex_venit.gabc}
+				\sundaykyrie
+			
+			\cleardoublepage\vesection{Monday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{iv.}}
+				\skiplines{1}\gregorioscore{ant/ecce_rex_venit.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{iv.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
+				\gabcsnippet{
+					(c3) My(ir) soul(i) <b>doth</b>(ih) mag(hj)ni(j)<b>fy</b>(ij) the(ir) Lord() <sp>*</sp>(:) and(ir) my(i) <b>spir</b>(ij)it(ir) hath() rejoiced(i) <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f)
 				}
 				
 				\input{psalter/magnificat/4}
@@ -277,19 +379,24 @@
 				\repant{ant/ecce_rex_venit.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Tuesday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{v. i}
-				\gregorioscore{ant/vox_clamantis.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Tuesday at Vespers}
+				
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{v.}}
+				\skiplines{1}\gregorioscore{ant/vox_clamantis.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{v. i.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(d) soul(f) (:?) doth(hr) magnify(h) <b>the</b>(i) Lord(hr) <sp>*</sp>(:) and(hr) my() spirit() hath() rejoiced() in(h) <b>God</b>(iv) my(gr) <b>Sav</b>(h)ior.(fr f)
+				\greannotation{\veformat{v.}}
+				\gabcsnippet{
+					(c3) My(d) soul(f) doth(hr) magni(h)<b>fy</b>(i) the(hr) Lord() <sp>*</sp>() and(hr) my() spirit() hath() rejoiced() in(h) <b>God</b>(i) mygr() <b>Sav</b>(h)ior.(fr)
 				}
 				
 				\input{psalter/magnificat/5}
@@ -297,19 +404,24 @@
 				\repant{ant/vox_clamantis.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Wednesday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{iv}
-				\gregorioscore{ant/syon_renovaberis.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Wednesday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{iv.}}
+				\skiplines{1}\gregorioscore{ant/syon_renovaberis.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{iv.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
+				\gabcsnippet{
+					(c3) My(ir) soul(i) <b>doth</b>(ih) mag(hj)ni(j)<b>fy</b>(ij) the(ir) Lord() <sp>*</sp>(:) and(ir) my(i) <b>spir</b>(ij)it(ir) hath() rejoiced(i) <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f)
 				}
 				
 				\input{psalter/magnificat/4}
@@ -317,19 +429,24 @@
 				\repant{ant/syon_renovaberis.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Thursday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{iv}
-				\gregorioscore{ant/qui_post_me_venit.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Thursday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{iv.}}
+				\skiplines{1}\gregorioscore{ant/qui_post_me_venit.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{iv.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
+				\gabcsnippet{
+					(c3) My(ir) soul(i) <b>doth</b>(ih) mag(hj)ni(j)<b>fy</b>(ij) the(ir) Lord() <sp>*</sp>(:) and(ir) my(i) <b>spir</b>(ij)it(ir) hath() rejoiced(i) <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f)
 				}
 				
 				\input{psalter/magnificat/4}
@@ -337,19 +454,24 @@
 				\repant{ant/qui_post_me_venit.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Friday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{vii}
-				\gregorioscore{ant/cantate_domino.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Friday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{vii.}}
+				\skiplines{1}\gregorioscore{ant/cantate_domino.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{vii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(hg) soul(hi) (:?) doth(ir) <b>mag</b>(ik)ni(jr)fy(j) <b>the</b>(i) Lord(h) <sp>*</sp>(:) and(ir) my() spirit() hath() rejoiced() in(i) <b>God</b>(j) my(i) Sav(h)ior.(gf)
+				\greannotation{\veformat{bii.}}
+				\gabcsnippet{
+					(c3) My(hg) soul(hi) (:?) doth(ir) <b>mag</b>(ik)ni(jr)fy(j) <b>the</b>(i) Lord(j) <sp>*</sp>(:) and(ir) my() spirit() hath() rejoiced() in(i) <b>God</b>(j) my(i) Sav(h)ior.(gf)
 				}
 				
 				\input{psalter/magnificat/7}
@@ -357,24 +479,30 @@
 				\repant{ant/cantate_domino.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+				
+				\feriakyrie
+				
+		\vechapter{Third Week in Advent}
+		
+			\skiplines{-1}\vesectionp{Sunday at First Vespers}
 			
-		\vechapter{Third Sunday in Advent}
-			\skiplines{-1}\vesectionp{At First Vespers}
-			
-				\skiplines{-1}\resp{Qui venturus est}{vi}
+				\instruct{Turn to the \blueribbon and sing the hymn and versicle appointed there.}
+				
+				\resp{Qui venturus est}{vi}
 				
 				\gregorioscore{resp/qui_venturus_est.gabc}
 				
-				\instruct{Turn to the \blueribbon and sing the hymn and versicle.}
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{iv.}}
+				\skiplines{1}\gregorioscore{ant/ante_me_non_est.gabc}
 				
-				\skiplines{1}
-				\veant{M}{iv}
-				\gregorioscore{ant/ante_me_non_est.gabc}
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{iv.}}
-				\skiplines{1}\gabcsnippet{
-					(cb4) My(hg) soul(gh :? hr) <b>doth</b>(hg) mag(gi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my() <b>spir</b>(hi)it(hr) hath() rejoiced() <b>in</b>(g) God(h) my(ih) Sav(gvFE)ior.(e) 
+				\gabcsnippet{
+					(c4) My(hr) soul(h) <b>doth</b>(hg) mag(gi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiced(h) <b>in</b>(g) God(h) my(ih) Sav(gvFE)ior.(e)
 				}
 				
 				\input{psalter/magnificat/4}
@@ -382,39 +510,49 @@
 				\repant{ant/ante_me_non_est.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{At Second Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{i}
-				\gregorioscore{ant/ite_dicite_johanni.gabc}
+				\feriakyrie
+				
+			\cleardoublepage\vesection{Sunday at Second Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{i.}}
+				\skiplines{1}\gregorioscore{ant/ite_dicite_johanni.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{i.}}
-				\skiplines{1}\gabcsnippet{
-					(cb4) My(f) soul(gh :? hr) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my() <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
+				\gabcsnippet{
+					(cb4) My(hr) soul(h) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my(h) spir(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
 				}
 				
 				\input{psalter/magnificat/1}
 				
-				\repant{ant/ite_dicite_johanni.gabc}
+				\repant{ant/ite_dicite_johanni.gabc} %%%% this is the earliest point the O antiphons begin
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Monday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/elevare_elevare.gabc}
+				\sundaykyrie
+			
+			\cleardoublepage\vesection{Monday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{viii.}}
+				\skiplines{1}\gregorioscore{ant/elevare_elevare.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{viii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
+				\gabcsnippet{
+					(c3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(h) Sav(f)ior.(e)
 				}
 				
 				\input{psalter/magnificat/8}
@@ -422,19 +560,24 @@
 				\repant{ant/elevare_elevare.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Tuesday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{vii}
-				\gregorioscore{ant/erumpant_montes.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Tuesday at Vespers}
+				
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{vii.}}
+				\skiplines{1}\gregorioscore{ant/erumpant_montes.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{vii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(hg) soul(hi) (:?) doth(ir) <b>mag</b>(ik)ni(jr)fy(j) <b>the</b>(i) Lord(j) <sp>*</sp>(:) and(ir) my() spirit() hath() rejoiced() in(i) <b>God</b>(hj) my(i) Sav(h)ior.(gf)
+				\greannotation{\veformat{bii.}}
+				\gabcsnippet{
+					(c3) My(hg) soul(hi) (:?) doth(ir) <b>mag</b>(ik)ni(jr)fy(j) <b>the</b>(i) Lord(j) <sp>*</sp>(:) and(ir) my() spirit() hath() rejoiced() in(i) <b>God</b>(j) my(i) Sav(h)ior.(gf)
 				}
 				
 				\input{psalter/magnificat/7}
@@ -442,19 +585,24 @@
 				\repant{ant/erumpant_montes.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Wednesday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{vii}
-				\gregorioscore{ant/quomodo_fiet_istud.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Ember Wednesday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{vii.}}
+				\skiplines{1}\gregorioscore{ant/quomodo_fiet_istud.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{vii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(hg) soul(hi) (:?) doth(ir) <b>mag</b>(ik)ni(jr)fy(j) <b>the</b>(i) Lord(j) <sp>*</sp>(:) and(ir) my() spirit() hath() rejoiced() in(i) <b>God</b>(hj) my(i) Sav(h)ior.(gf)
+				\greannotation{\veformat{bii.}}
+				\gabcsnippet{
+					(c3) My(hg) soul(hi) (:?) doth(ir) <b>mag</b>(ik)ni(jr)fy(j) <b>the</b>(i) Lord(j) <sp>*</sp>(:) and(ir) my() spirit() hath() rejoiced() in(i) <b>God</b>(j) my(i) Sav(h)ior.(gf)
 				}
 				
 				\input{psalter/magnificat/7}
@@ -462,19 +610,24 @@
 				\repant{ant/quomodo_fiet_istud.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Thursday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{v. i}
-				\gregorioscore{ant/letamini_cum_hierusalem.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Thursday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{v.}}
+				\skiplines{1}\gregorioscore{ant/letamini_cum_hierusalem.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{v. i.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(d) soul(f) (:?) doth(hr) magnify(h) <b>the</b>(i) Lord(hr) <sp>*</sp>(:) and(hr) my() spirit() hath() rejoiced() in(h) <b>God</b>(iv) my(gr) <b>Sav</b>(h)ior.(fr f)
+				\greannotation{\veformat{v.}}
+				\gabcsnippet{
+					(c3) My(d) soul(f) doth(hr) magni(h)<b>fy</b>(i) the(hr) Lord() <sp>*</sp>() and(hr) my() spirit() hath() rejoiced() in(h) <b>God</b>(i) mygr() <b>Sav</b>(h)ior.(fr)
 				}
 				
 				\input{psalter/magnificat/5}
@@ -482,53 +635,51 @@
 				\repant{ant/letamini_cum_hierusalem.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{Friday at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_virgo_virginum.gabc}
+				\feriakyrie
+			
+			\cleardoublepage\vesection{Ember Friday at Vespers}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{i.}}
+				\skiplines{1}\gregorioscore{ant/hoc_est_testimonium.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\greannotation{\veformat{i.}}
+				\gabcsnippet{
+					(c4) My(hr) soul(h) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my(h) spir(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
 				}
 				
-				\input{psalter/magnificat/2}
+				\input{psalter/magnificat/1}
 				
-				\repant{ant/o_virgo_virginum.gabc}
+				\repant{ant/hoc_est_testimonium.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
 				
-		\vechapter{Fourth Sunday in Advent}
-			
-			\skiplines{-1}\vesectionp{At First Vespers}
+				\feriakyrie
 				
-				\skiplines{-1}\resp{Non auferetur sceptrum}{ii}
-				
-				\gregorioscore{resp/non_auferetur_sceptrum.gabc}
-				
-				\instruct{Turn to the \blueribbon and sing the hymn and versicle.}
-				
-				\instruct{The Magnificat antiphon is given on one of the following pages for the current day of December.}
-			
 		\vechapter{O Antiphons}
 		
-			\skiplines{-1}\vesectionp{December 17}
+			\skiplines{-1}\vesectionp{December 17\\O Sapientia}
 			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_sapientia.gabc}
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{ii.}}
+				\skiplines{1}\gregorioscore{ant/o_sapientia.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\gabcsnippet{
+					(f3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiceD() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
 				}
 				
 				\input{psalter/magnificat/2}
@@ -536,19 +687,24 @@
 				\repant{ant/o_sapientia.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{December 18}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_adonay.gabc}
+				\instruct{Turn to the \blueribbon for the Kyrie.}
+			
+			\vesection{December 18\\O Adonay}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{ii.}}
+				\skiplines{1}\gregorioscore{ant/o_adonay.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\gabcsnippet{
+					(f3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiceD() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
 				}
 				
 				\input{psalter/magnificat/2}
@@ -556,19 +712,24 @@
 				\repant{ant/o_adonay.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{December 19}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_radix_jesse.gabc}
+				\instruct{Turn to the \blueribbon for the Kyrie.}
+				
+			\vesection{December 19\\O Radix Jesse}
+				
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{ii.}}
+				\skiplines{1}\gregorioscore{ant/o_radix_jesse.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\gabcsnippet{
+					(f3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiceD() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
 				}
 				
 				\input{psalter/magnificat/2}
@@ -576,19 +737,24 @@
 				\repant{ant/o_radix_jesse.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{December 20}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_clavis_david.gabc}
+				\instruct{Turn to the \blueribbon for the Kyrie.}
+				
+			\vesection{December 20\\O Clavis David}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{ii.}}
+				\skiplines{1}\gregorioscore{ant/o_clavis_david.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\gabcsnippet{
+					(f3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiceD() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
 				}
 				
 				\input{psalter/magnificat/2}
@@ -596,19 +762,24 @@
 				\repant{ant/o_clavis_david.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{December 21}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_oriens.gabc}
+				\instruct{Turn to the \blueribbon for the Kyrie.}
+				
+			\vesection{December 21\\O Oriens}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{ii.}}
+				\skiplines{1}\gregorioscore{ant/o_oriens.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\gabcsnippet{
+					(f3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiceD() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
 				}
 				
 				\input{psalter/magnificat/2}
@@ -616,19 +787,24 @@
 				\repant{ant/o_oriens.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{December 22}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_rex_gentium.gabc}
+				\instruct{Turn to the \blueribbon for the Kyrie.}
+				
+			\vesection{December 22\\O Rex Gentium}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{ii.}}
+				\skiplines{1}\gregorioscore{ant/o_rex_gentium.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\gabcsnippet{
+					(f3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiceD() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
 				}
 				
 				\input{psalter/magnificat/2}
@@ -636,19 +812,24 @@
 				\repant{ant/o_rex_gentium.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{December 23}
-			
-				\instruct{Turn to the \blueribbon and sing the responsory, hymn, and versicle.}
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/o_emmanuel.gabc}
+				\instruct{Turn to the \blueribbon for the Kyrie.}
+				
+			\vesection{December 23\\O Emmanuel}
+			
+				\instruct{Turn to the \blueribbon and sing the appointed responsory, hymn, and versicle.}
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{ii.}}
+				\skiplines{1}\gregorioscore{ant/o_emmanuel.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
 				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
+				\gabcsnippet{
+					(f3) My(hr) soul(h) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord() <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiceD() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
 				}
 				
 				\input{psalter/magnificat/2}
@@ -656,495 +837,307 @@
 				\repant{ant/o_emmanuel.gabc}
 				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
+				
+				\instruct{Turn to the \blueribbon for the Kyrie.}
+
+	\vepart{Temporal II\\Christmas}
+	
 		\vechapter{Nativity of the Lord}
 		
 			\skiplines{-1}\vesectionp{At First Vespers}
-				
-				\skiplines{-1}\resp{Judea et Hierusalem}{iv}
-				
-				\gregorioscore{resp/judea_et_hierusalem.gabc}
-				
-				\input{hymn/veni_redemptor_gentium}
-				
-				\gresetinitiallines{0}\gabcsnippet{(c3) <sp>v</sp> As(h) a(h) bride(f)groom.(g) <sp>r</sp>(::) The(h) Lord(h) com(h)eth(h) out(h) of(h) his(h) cham(h)ber.(f)}\gresetinitiallines{1}
-				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/dum_ortus_fuerit.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{viii.}}
-				\skiplines{1}\gabcsnippet{
-					(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
-				}
-				
-				\input{psalter/magnificat/8}
-				
-				\repant{ant/dum_ortus_fuerit.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
 			
+				%%% PSALTER %%%
+				
+					\veant{1}{viii. i}
+					\gregorioscore{ant/rex_pacificus.gabc}
+					
+					\greannotation{\veformat{Ps. 112}}
+					\greannotation{\veformat{viii. i.}}
+					\skiplines{1}\gabcsnippet{
+						(c4) Praise(g) ye(h) (:?) the(jr) Lord,() ye(j) <b>ser</b>(k)vants(jr) <sp>*</sp>(:) O(jr) praise(j) <b>the</b>(i) Name(j) of(h) the(gr) Lord.()
+					}
+				
+					\input{psalter/112/8}
+					
+					\skiplines{-2}\repant{ant/rex_pacificus.gabc}
+					
+					
+					\skiplines{1}\veant{2}{vii. i}
+					\gregorioscore{ant/magnificatus_est.gabc}
+					
+					\greannotation{\veformat{Ps. 116}}
+					\greannotation{\veformat{vii. i.}}
+					\skiplines{1}\gabcsnippet{
+						(c3) O(g) praise(h:?) the(ir) Lord,(i) <b>all</b>(k) ye(jr) <b>hea</b>(i)then(jr) <sp>*</sp>(:) praise(ir) him,(i) <b>all</b>(j) ye(ir) <b>na</b>(hr)tions.(gf)
+					}
+				
+					\input{psalter/116/7}
+					
+					\nopagebreak[4]\skiplines{-1}\repant{ant/magnificatus_est.gabc}\pagebreak[4]
+					
+					
+					
+					\veant{3}{viii. i}
+					\gregorioscore{ant/scitote_quia_prope.gabc}
+					
+					\greannotation{\veformat{Ps. 145}}
+					\greannotation{\veformat{viii. i.}}
+					\skiplines{1}\gabcsnippet{
+						(c4) Praise(g) the(h:?) Lord,(jr) O() my() soul;() while() I() live() will() I(j) <b>praise</b>(k) the(jr) Lord() <sp>*</sp>(:) yea,(jr) as() long() as() I() have() any() being,() I() will() sing() prai(j)<b>ses</b>(i) un(j)to(h) my(gr) God.()
+					}
+				
+					\input{psalter/145/8}
+				
+					\repant{ant/scitote_quia_prope.gabc}
+					
+					
+					
+					\skiplines{1}\veant{4}{i. iv}
+					\gregorioscore{ant/levate_capita_vestra.gabc}
+					
+					\greannotation{\veformat{Ps. 146}}
+					\greannotation{\veformat{i. iv.}}
+					\clearpage\gabcsnippet{
+						(f3) O(h) praise(i:?) the(jr) Lord,() for() it() is() a() good() thing() to() sing() praises() unto(j) <b>our</b>(i) God(j) <sp>*</sp>(:) yea,(jr) a() joyful() and() pleasant() thing() it() is(j) <b>to</b>(i) be(h) thank(ir)ful.(j)
+					}
+				
+					\input{psalter/146/1}
+					
+					\nopagebreak[4]\skiplines{-1}\repant{ant/levate_capita_vestra.gabc}\pagebreak[4]
+					
+					
+					
+					\veant{5}{viii. i}
+					\gregorioscore{ant/completi_sunt_dies.gabc}
+					
+					\greannotation{\veformat{Ps. 148}}
+					\greannotation{\veformat{viii. i.}}
+					\skiplines{1}\gabcsnippet{
+						(c4) O(g) praise(h:?) the(jr) Lord() of(j) <b>hea</b>(k)ven(jr) <sp>*</sp>(:) (jr) <b>praise</b>(i) him(j) in(h) the(gr) height.()
+					}
+					
+					\input{psalter/148/8}
+					
+					\skiplines{-1.5}\repant{ant/completi_sunt_dies.gabc}
+					
+					\instruct{Turn to the \whiteribbon for the chapter.}
+					
+				\clearpage %%%% PROPERS %%%%%
+				
+					\skiplines{-1}\resp{Judea et Hierusalem}{iv}
+					
+					\skiplines{-0.5}\nopagebreak[4]\gregorioscore{resp/judea_et_hierusalem.gabc}\pagebreak[4]
+					
+					\input{hymn/veni_redemptor_gentium}
+					
+					\gresetinitiallines{0}
+					\skiplines{1}\gabcsnippet{
+						(c3) <sp>v</sp> As(h) a(h) bride(h)groom.(ghGFEfhGF)
+						<sp>r</sp>(::) The(h) Lord(h) com(h)eth(h) forth(h) out(h) of(h) his(h) cham(h)ber.(ghGFEfhGF)
+					}
+					\gresetinitiallines{1}
+					
+					\greannotation{\veformat{Ant.}}
+					\greannotation{\veformat{viii.}}
+					\skiplines{1}\gregorioscore{ant/dum_ortus_fuerit.gabc}
+									
+					\clearpage\vecomment{Canticle of Mary \enquote{Magnificat}}
+					\vecomment{Luke i, 46-55}
+									
+					\greannotation{\veformat{Cant.}}
+					\greannotation{\veformat{viii.}}
+					\gabcsnippet{
+						(c4) My(jr) soul(j) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord() <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(j) <b>God</b>(i) my(j) Sav(h)ior.(g)
+					}
+									
+					\input{psalter/magnificat/8}
+									
+					\repant{ant/dum_ortus_fuerit.gabc}
+									
+					\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+									
+					\greannotation{\veformat{Kyrie}}
+					\greannotation{\veformat{II}}
+					\skiplines{1}\gregorioscore{kyrie/ii.gabc}
+					
+			\vesection{At Compline on the Eve}
+			
+				%%% PSALTER %%%
+				
+					\input{compline/christmas_eve}
+					
+				%%% PROPERS %%%
+				
+					\cleardoublepage\skiplines{-2}\resp{In manus tuas}{vi}
+					
+					\gregorioscore{resp/in_manus_tuas.gabc}
+					
+					\input{hymn/salvator_mundi_domine}
+					
+					\gresetinitiallines{0}
+					\skiplines{1}\gabcsnippet{
+						(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(h) eye.(ghGFEfhGF)
+						<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(h) wings.(ghGFEfhGF)
+					}
+					\gresetinitiallines{1}
+					
+					\greannotation{\veformat{Ant.}}
+					\greannotation{\veformat{iv. i.}}
+					\skiplines{1}\gregorioscore{ant/vigilate_omnes.gabc}
+					
+					\skiplines{1}\greannotation{\veformat{Cant.}}
+					\greannotation{\veformat{iv. i.}}
+					\gabcsnippet{
+						(f3) Lord,(j) now(i:?) lettest(jr) thou() thy() serv(jr)<b>ant</b>(i) de(j)part(k) in(jr) peace() <sp>*</sp>(:) (jr) <b>ac</b>(i)cord(j)ing(kj) to(ivHG) thy(gr) word.()
+					}
+					
+					\input{psalter/nunc_dimittis/4}
+					
+					\repant{ant/vigilate_omnes.gabc}
+					
+					\instruct{Turn to the \whiteribbon at the conclusion, pp. \pageref{compline:conclusion}.}
+					
 			\vesection{At Second Vespers}
 			
-				\skiplines{-1}\resp{Verbum caro factum}{viii}
+				%%% PSALTER %%%
 				
-				\gregorioscore{resp/verbum_caro_factum.gabc}
+					\veant{1}{i. i}
+					\gregorioscore{ant/tecum_principium.gabc}
+					
+					\greannotation{\veformat{Ps. 109}}
+					\greannotation{\veformat{i. i.}}
+					\skiplines{1}\gabcsnippet{
+						(cb4) The(f) Lord(g:?) said(hr) un--()to(h) <b>my</b>(g) Lord(h) * Sit(hr) thou() on() my() right() hand,() until() I() make() thine() en--()e(h)<b>mies</b>(g) thy(f) foot(gh)stool.(gr)
+					}
+					
+					\input{psalter/109/1}
+					
+					\repant{ant/tecum_principium.gabc}
+					
+					
+					\skiplines{1}\veant{2}{vii. i}
+					\gregorioscore{ant/redemptionem_misit_dominus.gabc}
+					
+					\greannotation{\veformat{Ps. 110}}
+					\greannotation{\veformat{vii. i.}}
+					\clearpage\gabcsnippet{
+						(c3) I(g) will(h:?) give(ir) thanks() unto() the() Lord(i) <b>with</b>(k) my(jr) <b>whole</b>(i) heart(jr) <sp>*</sp>(:) secretly(ir) among() the() faithful() and() in() the(i) <b>con</b>(j)gre(ir)<b>ga</b>(hr)tion.(gf)
+					}
 				
-				\input{hymn/a_solus_ortus_cardine}
+					\input{psalter/110/7}
+					
+					\repant{ant/redemptionem_misit_dominus.gabc}
+					
+					
+					\veant{3}{vii. iii}
+					\gregorioscore{ant/exortum_est.gabc}
+					
+					\greannotation{\veformat{Ps. 111}}
+					\greannotation{\veformat{vii. iii.}}
+					\skiplines{1}\gabcsnippet{
+						(c3) Bles(g)sed(h:?) is(ir) the() man() that(i) <b>fear</b>(k)eth(jr) <b>the</b>(i) Lord(jr) <sp>*</sp>(:) he(ir) hath() great() delight() in(i) <b>his</b>(j) com(ir)<b>mand</b>(hr)ments.(g)
+					}
+					
+					\input{psalter/111/7}
+					
+					\skiplines{-1}\repant{ant/exortum_est.gabc}
+					
+					
+					
+					\skiplines{1}\veant{4}{iv. viii}
+					\gregorioscore{ant/apud_dominum.gabc}
+					
+					\greannotation{\veformat{Ps. 129}}
+					\greannotation{\veformat{iv. v.}}
+					\skiplines{1}\gabcsnippet{
+						(c3) Out(i) of(h:?) the(ir) deep() have() I() called(i) <b>un</b>(h)to(i) thee(j), O(ir) Lord() <sp>*</sp>(:) (ir) <b>X</b>(h) Lord,(i) hear(j) my(h) (fr) voice.(fh)
+					}
+					
+					\input{psalter/129/4}
+					
+					\repant{ant/apud_dominum.gabc}
+					
+					
+					\skiplines{1}\veant{5}{viii. i}
+					\gregorioscore{ant/de_fructu_ventris.gabc}
+					
+					\greannotation{\veformat{Ps. 131}}
+					\greannotation{\veformat{viii. i.}}
+					\skiplines{1}\gabcsnippet{
+						(c3) Lord,(e) re(f:?)mem(hr)ber(h) <b>Da</b>(i)vid(hr) <sp>*</sp>(:) and(hr) <b>all</b>(g) his(h) trou(f)ble.(er)
+					}
 				
-				\gresetinitiallines{0}\gabcsnippet{(c3)
-					<sp>v</sp> Bles(h)sed(h) is(h) he(h) that(h) com(h)eth(h) in(h) the(h) Name(h) of(h) the(f) Lord.(g) <sp>r</sp>(::) God(h) is(h) the(h) Lord,(h) who(h) hath(h) shewed(h) us(h) light.(f)
-				 }\gresetinitiallines{1}
-			 
-			 	\skiplines{1}
-			 	\veant{M}{viii}
-			 	\gregorioscore{ant/gloria_in_excelsis.gabc}
-			 	
-			 	\greannotation{\veformat{Cant.}}
-			 	\greannotation{\veformat{viii.}}
-			 	\skiplines{1}\gabcsnippet{
-			 		(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
-			 	}
-			 	
-			 	\input{psalter/magnificat/8}
-			 	
-			 	\repant{ant/gloria_in_excelsis.gabc}
-			 	
-			 	\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-		\vechapter{Saint Stephen, Protomartyr}
-		
-			\instruct{This responsory is not sung on the octave.}
-			
-			\resp{Impetum fecerunt}{i}
-			
-			\gregorioscore{resp/impetum_fecerunt.gabc}
-			
-			\input{hymn/sancte_dei_preciose}
-			
-			\skiplines{1}\gresetinitiallines{0}\gabcsnippet{(c3)
-				<sp>v</sp> The(h) right(h)eous(h) shall(h) flour(h)ish(h) like(h) a(h) palm(f) tree.(g) <sp>r</sp>(::) He(h) shall(h) spread(h) a(h)broad(h) like(h) a(h) ce(h)dar(h) in(h) Leb(f)an(f)on.(f)
-			}\gresetinitiallines{1}
-			
-			\skiplines{1}
-			\veant{M}{viii}
-			\gregorioscore{ant/impii_super_justum.gabc}
-			
-			\greannotation{\veformat{Cant.}}
-			\greannotation{\veformat{viii.}}
-			\gabcsnippet{
-				(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
-			}
-			
-			\input{psalter/magnificat/8}
-			
-			\repant{ant/impii_super_justum.gabc}
-			
-			\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-		
-		\vechapter{Saint John, Evangelist and Apostle}
-		
-			\instruct{This responsory is not sung on the octave.}
-			
-			\resp{Iste est Johannes}{i}
-			
-			\gregorioscore{resp/iste_est_johannes.gabc}
-			
-			\input{hymn/exultet_celum_laudibus_christmas}
-			
-			\skiplines{1}\gresetinitiallines{0}\gabcsnippet{(c3)
-				<sp>v</sp> They(h) de(h)clared(h) the(h) works(h) of(f) God.(g) <sp>r</sp>(::) And(h) wise(h)ly(h) con(h)sid(h)ered(h) of(h) his(h) do(h)ings.(f)
-			}\gresetinitiallines{1}
-			
-			\skiplines{1}
-			\veant{M}{viii}
-			\gregorioscore{ant/in_medio_ecclesie.gabc}
-			
-			\greannotation{\veformat{Cant.}}
-			\greannotation{\veformat{viii.}}
-			\gabcsnippet{
-				(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
-			}
-			
-			\input{psalter/magnificat/8}
-			
-			\repant{ant/in_medio_ecclesie.gabc}
-			
-			\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-		
-		\vechapter{Holy Innocents}
-		
-			\instruct{This responsory is not sung on the octave.}
-			
-			\resp{Centum quadragintaquattuor}{i}
-			
-			\gregorioscore{resp/centum_quadragintaquattuor.gabc}
-			
-			\input{hymn/exultet_celum_laudibus_christmas}
-			
-			\skiplines{1}\gresetinitiallines{0}\gabcsnippet{(c3)
-				<sp>v</sp> Won(h)der(h)ful(h) is(h) God(h) in(h) his(f) saints.(g) <sp>r</sp>(::) And(h) glor(h)i(h)ous(h) in(h) his(h) ma(h)jes(f)ty.(f)
-			}\gresetinitiallines{1}
-			
-			\skiplines{1}
-			\veant{M}{i. v.}
-			\gregorioscore{ant/ecce_vide_agnum.gabc}
-			
-			\greannotation{\veformat{Cant.}}
-			\greannotation{\veformat{i.}}
-			\skiplines{1}\gabcsnippet{
-				(cb4) My(f) soul(gh :? hr) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my() <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
-			}
-			
-			\input{psalter/magnificat/1}
-			
-			\repant{ant/ecce_vide_agnum.gabc}
-			
-			\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-		\vechapter{Saint Thomas Becket, Martyr}
-		
-			\skiplines{-1}\resp{Jesu bone per Thome}{ii}
-			
-			\gregorioscore{resp/jesu_bone_per_thome.gabc}
-			
-			\input{hymn/deus_tuorum_militum_christmas}
-			
-			\skiplines{1}\gresetinitiallines{0}\gabcsnippet{(c3)
-				<sp>v</sp> The(h) right(h)eous(h) shall(h) blos(h)som(h) as(h) the(h) lil(f)y.(g) <sp>r</sp>(::) And(h) shall(h) flour(h)ish(h) for(h)ev(h)er(h) be(h)fore(h) the(h) Lord.(f)
-			}\gresetinitiallines{1}
-			
-			\skiplines{1}
-			\veant{M}{i. v.}
-			\gregorioscore{ant/salve_thoma_virga_justicie.gabc}
-			
-			\greannotation{\veformat{Cant.}}
-			\greannotation{\veformat{i.}}
-			\skiplines{1}\gabcsnippet{
-				(cb4) My(f) soul(gh :? hr) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my() <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
-			}
-			
-			\input{psalter/magnificat/1}
-			
-			\repant{ant/salve_thoma_virga_justicie.gabc}
-			
-			\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-		
-		\vechapter{Within the Octave}
-			\skiplines{-1}\vesectionp{Sixth Day at Vespers}
-			
-				\instruct{Turn to the \blueribbon and sing the responsry, hymn, and versicle there, but not the Magnificat.}
+					\input{psalter/131/8}
+					
+					\repant{ant/de_fructu_ventris.gabc}
+					
+					\instruct{Turn back to the \whiteribbon for the chapter.}
+					
+				%%% PROPERS &&&
 				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/virgo_verbo_concepit.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
-				}
-				
-				\input{psalter/magnificat/2}
-				
-				\repant{ant/virgo_verbo_concepit.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+					\clearpage
+					\skiplines{-2}\resp{Verbum caro factum}{viii}
+					
+					\gregorioscore{resp/verbum_caro_factum.gabc}
+					
+					\input{hymn/a_solus_ortus_cardine}
+					
+					\gresetinitiallines{0}
+					\skiplines{1}\gabcsnippet{
+						(c3) <sp>v</sp> Bles(h)sed(h) be(h) he(h) that(h) com(h)eth(h) in(h) the(h) Name(h) of(h) the(h) Lord.(ghGFEfhGF)
+						<sp>r</sp>(::) God(h) is(h) the(h) Lord,(h) who(h) hath(h) shewed(h) us(h) light.(ghGFEfhGF)
+					}\pagebreak[4]
+					\gresetinitiallines{1}
+					
+					
+					\greannotation{\veformat{Ant.}}
+					\greannotation{\veformat{i. iv.}}
+					\gregorioscore{ant/hodie_christus_natus_est.gabc}
+					
+					\greannotation{\veformat{Cant.}}
+					\greannotation{\veformat{i.}}
+					\skiplines{1}\gabcsnippet{
+						(c4) My(fr) soul(f) <b>doth</b>(fe) mag(eg)ni(fr)fy(f) <b>the</b>(fe) Lord(ef) <sp>*</sp>(:) and(fr) my(f) spir(fg)it(fr) hath() rejoiced() in(f) <b>God</b>(e) my(d) Sav(ef)ior.(e)
+					}
+										
+					\input{psalter/magnificat/1}
+					
+					\repant{ant/hodie_christus_natus_est.gabc}
+					
+					\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
+					
+					\greannotation{\veformat{Kyrie}}
+					\greannotation{\veformat{III}}
+					\skiplines{1}\gregorioscore{kyrie/iii.gabc}
 			
-			\vesection{Seventh Day at Vespers}
+			\vesection{At Compline on the Day}
 			
-				\instruct{Turn to the \blueribbon and sing the responsry, hymn, and versicle there, but not the Magnificat.}
+				\input{compline/christmas}
 				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/pastores_dicite.gabc}
+				\cleardoublepage\skiplines{-2}\resp{In manus tuas}{vi}
 				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{viii.}}
-				\skiplines{1}\gabcsnippet{
-					(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
-				}
+				\gregorioscore{resp/in_manus_tuas.gabc}
 				
-				\input{psalter/magnificat/8}
+				\input{hymn/salvator_mundi_domine}
 				
-				\repant{ant/pastores_dicite.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-		\vechapter{Circumcision of the Lord}
-		
-			\instruct{Turn to the \blueribbon and sing the responsry, hymn, and versicle there, but this Magnificat.}
-			
-			\skiplines{1}
-			\veant{M}{iii}
-			\gregorioscore{ant/qui_de_terra_est.gabc}
-			
-			\greannotation{\veformat{Cant.}}
-			\greannotation{\veformat{iii.}}
-			\skiplines{1}\gabcsnippet{
-				(c4) My(g) soul(hj) (:?) doth(jr) <b>mag</b>(k)ni(jr)fy(j) <b>the</b>(ih) Lord(hj) <sp>*</sp>(:) and(jr) my() spirit() hath() rejoiced() in(j) <b>God</b>(ji) my(hi) Sav(hg)ior.(gh)
-			}
-		
-			\input{psalter/magnificat/3}
-		
-			\repant{ant/qui_de_terra_est.gabc}
-		
-			\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-		
-		\vechapter{Epiphany of the Lord}
-			\skiplines{-1}\vesectionp{At First Vespers}
-			
-				\skiplines{-1}\resp{Reges Tharsis}{ii}
-				
-				\gregorioscore{resp/reges_tharsis.gabc}
-				
-				\input{hymn/hostis_herodes_impie}
-				
-				\skiplines{1}
 				\gresetinitiallines{0}
-				\gabcsnippet{
-					(c3) <sp>v</sp> All(h) they(h) from(h) Sa(h)ba(h) shall(f) come.(g)
-					<sp>r</sp>(::) They(h) shall(h) bring(h) hold(h) and(h) in(f)cense:(g) (;) and(h) shall(h) shew(h) forth(h) the(h) prai(h)ses(h) of(h) the(h) Lord.(f)
+				\skiplines{1}\gabcsnippet{
+					(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(h) eye.(ghGFEfhGF)
+					<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(h) wings.(ghGFEfhGF)
 				}
 				\gresetinitiallines{1}
 				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/magi_viderunt_stellam.gabc}
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{v. i.}}
+				\skiplines{1}\gregorioscore{ant/alleluia_verbum_caro.gabc}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{viii.}}
+				\greannotation{\veformat{v. i.}}
 				\skiplines{1}\gabcsnippet{
-					(c4) My(gh) soul(gj :? jr) <b>doth</b>(ji) mag(jk)ni(kr)<b>fy</b>(jk) the(jr) Lord(j) <sp>*</sp>(:) and(jr) my(j) <b>spir</b>(jk)it(jr) hath() rejoiced() in(jr) <b>God</b>(i) my(j) Sav(h)ior.(g)
+					(c3) Lord,(d) now(f:?) lettest(hr) thou() thy() servant() de(h)<b>part</b>(i) in(hr) peace() <sp>*</sp>(:) ac(hr)<b>cord</b>(i)ing(gr) <b>to</b>(h) thy(fr) word.()
 				}
 				
-				\input{psalter/magnificat/8}
+				\input{psalter/nunc_dimittis/5}
 				
-				\repant{ant/magi_viderunt_stellam.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-			\vesection{At Second Vespers}
-			
-				\skiplines{-1}\resp{Tria sunt munera}{i}
-				
-				\gregorioscore{resp/tria_sunt_munera.gabc}
-				
-				\instruct{Turn to the \blueribbon and sing the hymn and versicle there, but this Magnificat.}
-				
-				\skiplines{1}
-				\veant{M}{viii}
-				\gregorioscore{ant/ab_oriente_venerunt.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{viii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ih) soul(hi :? ir) <b>doth</b>(ih) mag(hj)ni(jr)<b>fy</b>(ji) the(ir) Lord(i) <sp>*</sp>(:) and(ir) my() <b>spir</b>(ij)it(ir) hath() rejoiced() <b>in</b>(h) God(i) my(ji) Sav(hvGF)ior.(f) 
-				}
-				
-				\input{psalter/magnificat/8}
-				
-				\repant{ant/ab_oriente_venerunt.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-	
-	\vepart{Sanctorale}
-	
-		\vechapter{Saint Andrew Apostle}
-		
-			\skiplines{-1}\vesectionp{At First Vespers}
-			
-				\skiplines{-1}\resp{Homo Dei ducebatur}{ii}
-				
-				\gregorioscore{resp/homo_dei_ducebatur.gabc}
-				
-				\input{hymn/andrea_pie}
-				
-				\skiplines{1}
-				\gresetinitiallines{0}
-				\gabcsnippet{(c4)
-					<sp>v</sp> The(h) Lord(h) loved(h) An(f)drew.(g)
-					<sp>r</sp>(::) For(h) a(h) sweet(h)smell(h)ing(h) sa(h)vor.(f)
-				}
-				
-				\skiplines{1}
-				\veant{M}{i}
-				\gregorioscore{ant/ambulans_jesus.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{i.}}
-				\skiplines{1}\gabcsnippet{
-					(f3) My(h) soul(ij :? jr) <b>doth</b>(ji) mag(ik)ni(jr)fy(j) <b>the</b>(ji) Lord(ij) <sp>*</sp>(:) and(jr) my() <b>spir</b>(jk)it(jr) hath() rejoiced() in(j) <b>God</b>(i) my(h) Sav(ij)ior.(i)
-				}
-				
-				\input{psalter/magnificat/1}
-				
-				\repant{ant/ambulans_jesus.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-				
-			\vesection{At Second Vespers}
-			
-				\skiplines{-1}\resp{Vir perfecte pietatis}{i}
-				
-				\gregorioscore{resp/vir_perfecte_pietatis.gabc}
-				
-				\input{hymn/exultet_celum_laudibus}
-				
-				\gresetinitiallines{0}
-				\skiplines{1}
-				\gabcsnippet{(c3)
-					<sp>v</sp> They(h) de(h)clared(h) the(h) works(h) of(f) God.(g)
-					<sp>r</sp>(::) And(h) un(h)der(h)stood(h) his(h) do(h)ings.(f)
-				}
-				\gresetinitiallines{1}
-				
-				\skiplines{1}
-				\veant{M}{ii}
-				\gregorioscore{ant/domine_jesu_christe.gabc}
-			
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gabcsnippet{
-					(c3) My(ef) soul(eh :? hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the(hr) Lord(h) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)rit(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(e)ior.(f)
-				}
-			
-				\input{psalter/magnificat/2}
-			
-				\repant{ant/domine_jesu_christe.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-				
-		\vechapter{Saint Nicholas}
-			
-			\skiplines{-1}\resp{Beatus Nicholas}{vi}
-			
-			\gregorioscore{resp/beatus_nicholas.gabc}
-			
-			\input{hymn/iste_confessor}
-			
-			\skiplines{1}
-			\gresetinitiallines{0}
-			\gabcsnippet{(c3)
-				<sp>v</sp> The(h) Lord(h) loved(h) him(h) and(h) a(h)dorned(f) him.(g)
-				<sp>r</sp>(::) He(h) clothed(h) him(h) with(h) a(h) robe(h) of(h) glor(h)y.(f)
-			}
-		
-			\skiplines{1}
-			\veant{M}{i}
-			\gregorioscore{ant/o_pastor_eterne.gabc}
-			
-			\greannotation{\veformat{Cant.}}
-			\greannotation{\veformat{i.}}
-			\skiplines{1}\gabcsnippet{
-				(cb4) My(f) soul(gh :? hr) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my() <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
-			}
-			
-			\input{psalter/magnificat/1}
-			
-			\repant{ant/o_pastor_eterne.gabc}
-			
-			\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-			
-		\vechapter{Saint Ambrose, Doctor}
-		
-		\vechapter{Conception of the B.V.M.}
-		
-			\skiplines{-1}\vesectionp{At First Vespers}
-		
-				\skiplines{-1}\resp{Stirps Jesse}{ii}
-				
-				\gregorioscore{resp/stirps_jesse.gabc}
-				
-				\input{hymn/ave_maris_stella}
-				
-				\skiplines{1}
-				\gresetinitiallines{0}
-				\gabcsnippet{(c3)
-					<sp>v</sp> Ho(h)ly(h) mo(h)ther(h) of(h) God,(h) ev(h)er(h) Vir(h)gin(h) Ma(h)ry(h).
-					<sp>r</sp>(::) In(h)ter(h)cede(h) for(h) us(h) un(h)to(h) the(h) Lord(h) our(h) God.(h)
-				}
-			
-				\skiplines{1}
-				\veant{M}{i}
-				\gregorioscore{ant/conceptio_tua.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{i.}}
-				\skiplines{1}\gabcsnippet{
-					(cb4) My(f) soul(gh :? hr) <b>doth</b>(hg) mag(gi)ni(hr)fy(h) <b>the</b>(hg) Lord(gh) <sp>*</sp>(:) and(hr) my() <b>spir</b>(hi)it(hr) hath() rejoiced() in(h) <b>God</b>(g) my(f) Sav(gh)ior.(g)
-				}
-				
-				\input{psalter/magnificat/1}
-				
-				\repant{ant/conceptio_tua.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-				
-			\vesection{At Second Vespers}
-			
-				\skiplines{-1}\resp{Solem justicie}{i}
-				
-				\gregorioscore{resp/solem_justicia.gabc}
-				
-				\input{hymn/ave_maris_stella}
-			
-				\skiplines{1}
-				\gresetinitiallines{0}
-				\gabcsnippet{(c3)
-					<sp>v</sp> Ho(h)ly(h) mo(h)ther(h) of(h) God,(h) ev(h)er(h) Vir(h)gin(h) Ma(h)ry(h).
-					<sp>r</sp>(::) In(h)ter(h)cede(h) for(h) us(h) un(h)to(h) the(h) Lord(h) our(h) God.(h)
-				}
-				\gresetinitiallines{1}
-				
-				\skiplines{1}
-				\veant{M}{i}
-				\gregorioscore{ant/gloriose_virginis_marie.gabc}
-				
-				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{i.}}
-				\skiplines{1}\gabcsnippet{
-					(f3) My(h) soul(ij :? jr) <b>doth</b>(ji) mag(ik)ni(jr)fy(j) <b>the</b>(ji) Lord(ij) <sp>*</sp>(:) and(jr) my() <b>spir</b>(jk)it(jr) hath() rejoiced() in(j) <b>God</b>(i) my(h) Sav(ij)ior.(i)
-				}
-				
-				\input{psalter/magnificat/1}
-				
-				\input{psalter/magnificat/1}
-				
-				\repant{ant/gloriose_virginis_marie.gabc}
-				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-				
-		\vechapter{Saint Lucy, Virgin-Martyr}
-		
-			
-	
-	\vepart{Commons}
-	
-		\vechapter{Advent 1 at Vespers}
-		
-			\skiplines{-1}\resp{Tu exurgens Domine}{iv}
-			\gregorioscore{resp/tu_exurgens_domine.gabc}
-			
-			\input{hymn/conditor_alme_siderum}
-			
-			\gresetinitiallines{0}\gabcsnippet{
-				<sp>v</sp> Drop(hv) down,(hv) ye(hv) hea(hv)vens,(hv) from(hv) a(hv)bove.(ghGFEfhGF) <sp>r</sp>(::) And(hv) let(hv) the(hv) skies(hv) pour(hv) down(hv) right(hv)eous(f)ness:(gv) (;) let(hv) the(hv) earth(hv) o(hv)pen,(hv) and(hv) let(hv) it(hv) bring(hv) forth(hv) sal(hv)va(f)tion.(f)
-			}\gresetinitiallines{1}
-				
-			\instruct{The Magnificat is always proper on all days in Advent; turn to the \redribbon and sing as appointed there.}
-			
-		\vechapter{Advent 2 at Vespers}
-		
-			\skiplines{-1}\resp{Festina ne taraveris}{ii}
-			\gregorioscore{resp/festina_ne_taraveris.gabc}
-		
-			\clearpage\input{hymn/conditor_alme_siderum}
-			
-			\gresetinitiallines{0}\gabcsnippet{
-				<sp>v</sp> Drop(hv) down,(hv) ye(hv) hea(hv)vens,(hv) from(hv) a(hv)bove.(ghGFEfhGF) <sp>r</sp>(::) And(hv) let(hv) the(hv) skies(hv) pour(hv) down(hv) right(hv)eous(f)ness:(gv) (;) let(hv) the(hv) earth(hv) o(hv)pen,(hv) and(hv) let(hv) it(hv) bring(hv) forth(hv) sal(hv)va(f)tion.(f)
-			}\gresetinitiallines{1}
-			
-			\instruct{The Magnificat is always proper on all days in Advent; turn to the \redribbon and sing as appointed there.}
+				\repant{ant/alleluia_verbum_caro.gabc}
 \end{document}
