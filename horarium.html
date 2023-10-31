@@ -278,6 +278,11 @@
             if (time[0] == 0) time[0] = 12;
            timetd.innerHTML = (time[0] < 10 ? "0" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + (time[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
             tr.append(timetd);
+            let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
+            am = dur[0] < 12;
+           dur[0] = am ? dur[0] : dur[0] - 12;
+            if (dur[0] == 0) dur[0] = 12;
+           timetd.innerHTML += "<br/>" + (dur[0] < 10 ? "0" : "") + dur[0] + ":" + (dur[1] < 10 ? "0" + dur[1] : dur[1]) + (dur[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
             let hourtd = document.createElement("td");
             hourtd.innerHTML = "<a href='?date=" + dat.valueAsDate + "&hour=" + hour + "'>" + hour + "</a>";
             let liturgytd = document.createElement("td");
@@ -338,7 +343,7 @@
             Vigils: {
                 time: roundTime(sunrise - nighthours * 8.75) /*roundTime(sunrise - nighthours * 6)*/,
                 liturgy: celeb,
-                duration: 1.25,
+                duration: 1.5,
             },
             Lauds: {
                 time: roundTime(sunrise),
@@ -348,7 +353,7 @@
             Prime: {
                 time: roundTime(sunrise + dayhours * 1.5),
                 liturgy: celeb,
-                duration: 0.25,
+                duration: 0.5,
             },
             Terce: {
                 time: roundTime(sunrise + dayhours * 3),
@@ -373,7 +378,7 @@
             Compline: {
                 time: roundTime(sunset + nighthours * 1.5) /*roundTime(sunset + nighthours * 2)*/,
                 liturgy: undefined,
-                duration: 0.25,
+                duration: 0.5,
             },
         };
 
