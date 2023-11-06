@@ -21,10 +21,6 @@
 \usepackage{titlesec}
 \usepackage[savepos]{zref}
 \usepackage{setspace}
-\usepackage{xstring}
-\def\ReplaceStr#1{%
-	\IfSubStr{#1}{\newline}{%
-		\StrSubstitute{#1}{\newline}{ }}{#1}}
 %\usepackage{libertine}
 
 \setlength{\columnseprule}{0.025pt}
@@ -95,7 +91,7 @@
 
 \newcommand{\vechapter}[1]{%
 	\cleardoublepage%
-	\fancyhead[RO,RE]{text}
+	\fancyhead[RO,RE]{\space}
 	\StrSubstitute{#1}{\\}{\space}[\vetempmacrolol]%
 	\fancyhead[LO,LE]{\vetempmacrolol}%
 	\begin{center}
