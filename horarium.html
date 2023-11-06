@@ -1,140 +1,96 @@
 <script>
-    function computus( y ) {
-
-        var date, a, b, c, m, d;
-
-        date = new Date;
-
-        // Set the timestamp to midnight.
-        date.setHours( 0, 0, 0, 0 );
-
-        date.setFullYear( y );
-
-        a = y % 19;
-
-        // choose which version of the algorithm to use based on the given year.
-        b = ( 2200 <= y && y <= 2299 ) ?
-            ( ( 11 * a ) + 4 ) % 30 :
-            ( ( 11 * a ) + 5 ) % 30;
-
-        // determine whether or not to compensate for the previous step
-        c = ( ( b === 0 ) || ( b === 1 && a > 10 ) ) ?
-            ( b + 1 ) :
-            b;
-
-        // use c first to find the month: April or March.
-        m = ( 1 <= c && c <= 19 ) ? 3 : 2;
-
-        // then use c to find the full moon after the northward equinox
-        d = ( 50 - c ) % 31;
-
-        // mark the date of that full moon—the ecclesiastical full moon
-        date.setMonth( m, d );
-
-        // count forward the number of days until the following Sunday (Easter).
-        date.setMonth( m, d + ( 7 - date.getDay() ) );
-
-        return date;
-
-    }
-
-    function addrdate(date,days=1) {
-        n = new Date(date.getTime())
-        n.setDate(date.getDate() + days)
-        return n;
-    }
-
-    function nextWeek(date) {
-        return addrdate(date,7)
-    }
-
-    function nextSunday(date) {
-        date = addrdate(date)
-        while (date.getDay() != 0) {
-            date = addrdate(date)
-        }
-        return date;
-    }
-
-    function prevSunday(date) { 
-        date = addrdate(date,-1)
-        while (date.getDay() != 0) {
-            date = addrdate(date,-1)
-        }
-        return date;
-    }
-
-    var EASTER = computus(new Date().getFullYear());
-    console.log(EASTER);
-
-    // now to populate the calendar
-
-    var ly = {}; // this means liturgical year but is actually the calendar but im in too deep
-
-    function setly(date, id) {
-        var m = ly[date.getMonth()];
-        if(m === undefined) {ly[date.getMonth()] = {}};
-        ly[date.getMonth()][date.getDate()] = id;
-    }
-
-    function getly(date) {
-        return ly[date.getMonth()][date.getDate()];
-    }
-
-    setly(EASTER, 'pascha/sunday');
-
-    for (i = 0; i < 5; i++) {
-        EASTER = nextWeek(EASTER);
-        setly(EASTER,'pascha/' + (i+1)+"/sunday")
-    }
-
-    EASTER=addrdate(EASTER, 3)
-    setly(EASTER,'ascension/vigil')
-    EASTER=addrdate(EASTER)
-    setly(EASTER,'ascension')
-    EASTER = nextSunday(EASTER);
-    setly(EASTER,'ascension/sunday')
-    EASTER = nextSunday(EASTER);
-    setly(EASTER,'pentecost/sunday')
-    EASTER = nextSunday(EASTER)
-    setly(EASTER,'trinity/sunday')
-
-    for (i = 0; i < 25; i++) {
-        EASTER = nextSunday(EASTER)
-        setly(EASTER,'trinity/'+(i+1)+'/sunday')
-    }
-
-    lastDay = new Date(EASTER.getTime())
-    EASTER = computus(new Date().getFullYear()); // reset easter and compute week days
-
-    var days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday']
-    while (EASTER != lastDay) {
-        EASTER = addrdate(EASTER)
-        if (getly(EASTER) === undefined) {
-            sun = prevSunday(EASTER);
-            id = getly(sun).substring(0, getly(sun).lastIndexOf('/')) + '/'+days[EASTER.getDay()]
-            setly(EASTER,id)
-        }
-    }
+	/*
+ (c) 2011-2015, Vladimir Agafonkin
+ SunCalc is a JavaScript library for calculating sun/moon position and light phases.
+ https://github.com/mourner/suncalc
+*/
+	(function(){'use strict';var PI=Math.PI,sin=Math.sin,cos=Math.cos,tan=Math.tan,asin=Math.asin,atan=Math.atan2,acos=Math.acos,rad=PI/180;var dayMs=1000*60*60*24,J1970=2440588,J2000=2451545;function toJulian(date){return date.valueOf()/dayMs-0.5+J1970}function fromJulian(j){return new Date((j+0.5-J1970)*dayMs)}function toDays(date){return toJulian(date)-J2000}var e=rad*23.4397;function rightAscension(l,b){return atan(sin(l)*cos(e)-tan(b)*sin(e),cos(l))}function declination(l,b){return asin(sin(b)*cos(e)+cos(b)*sin(e)*sin(l))}function azimuth(H,phi,dec){return atan(sin(H),cos(H)*sin(phi)-tan(dec)*cos(phi))}function altitude(H,phi,dec){return asin(sin(phi)*sin(dec)+cos(phi)*cos(dec)*cos(H))}function siderealTime(d,lw){return rad*(280.16+360.9856235*d)-lw}function astroRefraction(h){if(h<0){h=0;}return 0.0002967/Math.tan(h+0.00312536/(h+0.08901179))}function solarMeanAnomaly(d){return rad*(357.5291+0.98560028*d)}function eclipticLongitude(M){var C=rad*(1.9148*sin(M)+0.02*sin(2*M)+0.0003*sin(3*M)),P=rad*102.9372;return M+C+P+PI}function sunCoords(d){var M=solarMeanAnomaly(d),L=eclipticLongitude(M);return{dec:declination(L,0),ra:rightAscension(L,0)}}var SunCalc={};SunCalc.getPosition=function(date,lat,lng){var lw=rad* -lng,phi=rad*lat,d=toDays(date),c=sunCoords(d),H=siderealTime(d,lw)-c.ra;return{azimuth:azimuth(H,phi,c.dec),altitude:altitude(H,phi,c.dec)}};var times=SunCalc.times=[[-0.833,'sunrise','sunset'],[-0.3,'sunriseEnd','sunsetStart'],[-6,'dawn','dusk'],[-12,'nauticalDawn','nauticalDusk'],[-18,'nightEnd','night'],[6,'goldenHourEnd','goldenHour']];SunCalc.addTime=function(angle,riseName,setName){times.push([angle,riseName,setName])};var J0=0.0009;function julianCycle(d,lw){return Math.round(d-J0-lw/(2*PI))}function approxTransit(Ht,lw,n){return J0+(Ht+lw)/(2*PI)+n}function solarTransitJ(ds,M,L){return J2000+ds+0.0053*sin(M)-0.0069*sin(2*L)}function hourAngle(h,phi,d){return acos((sin(h)-sin(phi)*sin(d))/(cos(phi)*cos(d)))}function observerAngle(height){return -2.076*Math.sqrt(height)/60}function getSetJ(h,lw,phi,dec,n,M,L){var w=hourAngle(h,phi,dec),a=approxTransit(w,lw,n);return solarTransitJ(a,M,L)}SunCalc.getTimes=function(date,lat,lng,height){height=height||0;var lw=rad* -lng,phi=rad*lat,dh=observerAngle(height),d=toDays(date),n=julianCycle(d,lw),ds=approxTransit(0,lw,n),M=solarMeanAnomaly(ds),L=eclipticLongitude(M),dec=declination(L,0),Jnoon=solarTransitJ(ds,M,L),i,len,time,h0,Jset,Jrise;var result={solarNoon:fromJulian(Jnoon),nadir:fromJulian(Jnoon-0.5)};for(i=0,len=times.length;i<len;i+=1){time=times[i];h0=(time[0]+dh)*rad;Jset=getSetJ(h0,lw,phi,dec,n,M,L);Jrise=Jnoon-(Jset-Jnoon);result[time[1]]=fromJulian(Jrise);result[time[2]]=fromJulian(Jset)}return result};function moonCoords(d){var L=rad*(218.316+13.176396*d),M=rad*(134.963+13.064993*d),F=rad*(93.272+13.229350*d),l=L+rad*6.289*sin(M),b=rad*5.128*sin(F),dt=385001-20905*cos(M);return{ra:rightAscension(l,b),dec:declination(l,b),dist:dt}}SunCalc.getMoonPosition=function(date,lat,lng){var lw=rad* -lng,phi=rad*lat,d=toDays(date),c=moonCoords(d),H=siderealTime(d,lw)-c.ra,h=altitude(H,phi,c.dec),pa=atan(sin(H),tan(phi)*cos(c.dec)-sin(c.dec)*cos(H));h=h+astroRefraction(h);return{azimuth:azimuth(H,phi,c.dec),altitude:h,distance:c.dist,parallacticAngle:pa}};SunCalc.getMoonIllumination=function(date){var d=toDays(date||new Date()),s=sunCoords(d),m=moonCoords(d),sdist=149598000,phi=acos(sin(s.dec)*sin(m.dec)+cos(s.dec)*cos(m.dec)*cos(s.ra-m.ra)),inc=atan(sdist*sin(phi),m.dist-sdist*cos(phi)),angle=atan(cos(s.dec)*sin(s.ra-m.ra),sin(s.dec)*cos(m.dec)-cos(s.dec)*sin(m.dec)*cos(s.ra-m.ra));return{fraction:(1+cos(inc))/2,phase:0.5+0.5*inc*(angle<0?-1:1)/Math.PI,angle:angle}};function hoursLater(date,h){return new Date(date.valueOf()+h*dayMs/24)}SunCalc.getMoonTimes=function(date,lat,lng,inUTC){var t=new Date(date);if(inUTC){t.setUTCHours(0,0,0,0)}else{t.setHours(0,0,0,0)}var hc=0.133*rad,h0=SunCalc.getMoonPosition(t,lat,lng).altitude-hc,h1,h2,rise,set,a,b,xe,ye,d,roots,x1,x2,dx;for(var i=1;i<=24;i+=2){h1=SunCalc.getMoonPosition(hoursLater(t,i),lat,lng).altitude-hc;h2=SunCalc.getMoonPosition(hoursLater(t,i+1),lat,lng).altitude-hc;a=(h0+h2)/2-h1;b=(h2-h0)/2;xe= -b/(2*a);ye=(a*xe+b)*xe+h1;d=b*b-4*a*h1;roots=0;if(d>=0){dx=Math.sqrt(d)/(Math.abs(a)*2);x1=xe-dx;x2=xe+dx;if(Math.abs(x1)<=1){roots+=1}if(Math.abs(x2)<=1){roots+=1}if(x1<-1){x1=x2}}if(roots===1){if(h0<0){rise=i+x1}else{set=i+x1}}else if(roots===2){rise=i+(ye<0?x2:x1);set=i+(ye<0?x1:x2)}if(rise&&set){break}h0=h2}var result={};if(rise){result.rise=hoursLater(t,rise)}if(set){result.set=hoursLater(t,set)}if(!rise&&!set){result[ye>0?'alwaysUp':'alwaysDown']=true}return result};if(typeof exports==='object'&&typeof module!=='undefined'){module.exports=SunCalc}else if(typeof define==='function'&&define.amd){define(SunCalc)}else{window.SunCalc=SunCalc}}());
 </script>
 
 
 <script>
-    // big bad array of liturgical days
-    bbaold = {
-        'pascha': {
-            'sunday': {
-                name: 'Resurrection of the Lord'
-            }
-        },
-        'ascension':{},
-        'pentecost': {},
-        'trinity': {}
+	// this is the definitons script
+	function computus(y){var date,a,b,c,m,d;date=new Date;date.setHours(0,0,0,0);date.setFullYear(y);a=y%19;b=(2200<=y&&y<=2299)?((11*a)+4)%30:((11*a)+5)%30;c=((b===0)||(b===1&&a>10))?(b+1):b;m=(1<=c&&c<=19)?3:2;d=(50-c)%31;date.setMonth(m,d);date.setMonth(m,d+(7-date.getDay()));return date}function computus2(y){var nov27=new Date();nov27.setFullYear(y);nov27.setMonth(11-1);nov27.setDate(27);while(nov27.getDay()!=0){nov27.setDate(nov27.getDate()+1)}return nov27}function dateToSuntime(dat){var hour=dat.getHours();var mint=dat.getMinutes();return hour+(mint/60)}function w_sunrise(lat,lon,dat){return dateToSuntime(SunCalc.getTimes(dat,lat,lon).sunrise)}function w_sunset(lat,lon,dat){return dateToSuntime(SunCalc.getTimes(dat,lat,lon).sunset)}const roundNearest=(value,nearest)=>Math.round(value*(1/nearest))/(1/nearest);function roundTime(time){time=roundNearest(time,15/60);if(time>24){time-=24}if(time<0){time+=24}return time}function suntimeToClocktime(suntime){return[Math.floor(suntime),Math.floor((suntime-Math.floor(suntime))*60)]}function printClocktime(clocktime){let am=clocktime[0]<12;clocktime[0]=am?clocktime[0]:clocktime[0]-12;if(clocktime[0]==0){clocktime[0]=12}return(clocktime[0]<10?"0":"")+clocktime[0]+":"+(clocktime[1]<10?"0"+clocktime[1]:clocktime[1])+(clocktime[0]<10?" ":" ")+(am?"AM":"PM")}function initBoxes(lat,lon){var latBox=document.getElementById("lat");var lonBox=document.getElementById("lon");var datBox=document.getElementById("dat");datBox.valueAsDate=new Date();latBox.value=lat;lonBox.value=lon;latBox.onchange=(event)=>boxChanged(latBox,lonBox,datBox);lonBox.onchange=(event)=>boxChanged(latBox,lonBox,datBox);datBox.onchange=(event)=>boxChanged(latBox,lonBox,datBox);boxChanged(latBox,lonBox,datBox);}function getHorariumTable(hours){let table=document.createElement("table");table.border="1";table.style.borderCollapse="collapse";table.style.width="100%";let tr=document.createElement("tr");tr.style.width="100%";let timeth=document.createElement("th");timeth.style.width="15%";timeth.innerHTML="Time";timeth.align="left";tr.append(timeth);let hourth=document.createElement("th");hourth.style.width="15%";hourth.innerHTML="Hour";hourth.align="left";tr.append(hourth);table.append(tr);{for(i=0;i<Object.keys(hours).length;i+=1){name=Object.keys(hours)[i];hour=hours[name];nextHour=i+1;if(nextHour==Object.keys(hours).length){nextHour=0}elapse=hours[Object.keys(hours)[nextHour]].time-hour.time;elapse-=hour.duration;if(elapse<0){elapse+=24}console.log("Time elapse from "+name+" to "+Object.keys(hours)[nextHour]+": "+elapse)}}for(hour in hours){let time=suntimeToClocktime(hours[hour].time);let tr=document.createElement("tr");let timetd=document.createElement("td");timetd.innerHTML=printClocktime(time);tr.append(timetd);let dur=suntimeToClocktime(hours[hour].time+hours[hour].duration);timetd.innerHTML+="<br/>"+printClocktime(dur);let hourtd=document.createElement("td");hourtd.innerHTML="<a href='?date="+dat.valueAsDate+"&hour="+hour+"'>"+hour+"</a>";tr.append(hourtd);tr.style.width="100%";timetd.style.width="10%";hourtd.style.width="10%";table.append(tr)}return table}
+
+	function boxChanged(latBox, lonBox, datBox) { // this is the main logic loop
+      	var lat = latBox.value;
+      	var lon = lonBox.value;
+      	var dat = new Date(datBox.value + "T12:00"); // we take noontime so as to account for daylight savings and so forth
+
+      	var easterSunday = computus(dat.getFullYear());
+      	var advent = computus2(dat.getFullYear());
+
+      	console.log("================= NEW DATE =================");
+      	console.log("Today is " + dat.toDateString());
+      	console.log("Easter is " + easterSunday.toDateString());
+      	console.log("Advent is " + advent.toDateString())
+
+      	console.log("---------------- HORARIUM ----------------")
+
+      	suntimes = SunCalc.getTimes(dat, lat, lon);
+      	for (let x in suntimes) {
+      		suntimes[x] = dateToSuntime(suntimes[x])
+      	}
+
+      	var sunrise = suntimes.sunrise;
+      	var sunset = suntimes.sunset;
+
+      	var dayhours = (sunset - sunrise) / 12;
+      	var nighthours = (sunrise - sunset + 24) / 12;
+
+      	console.log("Sunrise is at " + printClocktime(suntimeToClocktime(sunrise)) + "; day hours are " + dayhours + " hours long");
+
+      	let hours = {
+            Vigils: {
+                time: roundTime(suntimes.nadir),
+                duration: 1.5,
+            },
+            Lauds: {
+            	time: roundTime(suntimes.sunrise) - 0.75,
+            	duration: 0.75
+            },
+            Prime: {
+                time: roundTime(sunrise + dayhours * 1),
+                duration: 0.25,
+            },
+            Terce: {
+                time: roundTime(sunrise + dayhours * 3),
+                duration: 0.25,
+            },
+            Sext: {
+                time: roundTime(sunrise + dayhours * 6),
+                duration: 0.25,
+            },
+            None: {
+                time: roundTime(sunrise + dayhours * 9),
+                duration: 0.25,
+            },
+            Vespers: {
+                time: roundTime(sunset),
+                duration: 0.5,
+            },
+            Compline: {
+                time: roundTime(suntimes.night),
+                duration: 0.5,
+            },
+        };
+        
+        var table = getHorariumTable(hours);
+        let content = document.getElementById("content");
+        let heading = document.createElement("p");
+        heading.style.fontWeight = "bold";
+        heading.innerHTML = dat;
+        content.innerHTML = '';
+        content.append(heading);
+        content.append(table);
+        document.body.append(content);
+
+      	console.log("============================================")
     }
 </script>
 
 <html>
-    <head>
+	<head>
         <title>Horarium</title>
         <style>
             * {
@@ -158,297 +114,24 @@
             <label for="dat">Date</label>
             <input type="date" id="dat" />
         </form>
-        <p>The prescribed times of the hours are always given in the local timezone (as set by this device), which will cause impossible results (including negative time) if the latitude and longitude inputted are not within the bounds of the local timezone.</p>
         <div id="content"></div>
     </body>
-</html>
-<script>
-    function suntimes(lat, lng, d) {
-        var tz;
-        var radians = Math.PI / 180.0;
-        var degrees = 180.0 / Math.PI;
 
-        var a = Math.floor((14 - (d.getMonth() + 1.0)) / 12);
-        var y = d.getFullYear() + 4800 - a;
-        var m = d.getMonth() + 1 + 12 * a - 3;
-        var j_day = d.getDate() + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
-        var n_star = j_day - 2451545.0009 - lng / 360.0;
-        var n = Math.floor(n_star + 0.5);
-        var solar_noon = 2451545.0009 - lng / 360.0 + n;
-        var M = 356.047 + 0.9856002585 * n;
-        var C = 1.9148 * Math.sin(M * radians) + 0.02 * Math.sin(2 * M * radians) + 0.0003 * Math.sin(3 * M * radians);
-        var L = (M + 102.9372 + C + 180) % 360;
-        var j_transit = solar_noon + 0.0053 * Math.sin(M * radians) - 0.0069 * Math.sin(2 * L * radians);
-        var D = Math.asin(Math.sin(L * radians) * Math.sin(23.45 * radians)) * degrees;
-        var cos_omega = (Math.sin(-0.83 * radians) - Math.sin(lat * radians) * Math.sin(D * radians)) / (Math.cos(lat * radians) * Math.cos(D * radians));
+	<script>
 
-        // sun never rises
-        if (cos_omega > 1) return [null, -1];
-
-        // sun never sets
-        if (cos_omega < -1) return [-1, null];
-
-        // get Julian dates of sunrise/sunset
-        var omega = Math.acos(cos_omega) * degrees;
-        var j_set = j_transit + omega / 360.0;
-        var j_rise = j_transit - omega / 360.0;
-
-        /*
-         * get sunrise and sunset times in UTC
-         * Check section "Finding Julian date given Julian day number and time of
-         *  day" on wikipedia for where the extra "+ 12" comes from
-         */
-
-        var utc_time_set = 24 * (j_set - j_day) + 12;
-        var utc_time_rise = 24 * (j_rise - j_day) + 12;
-        var tz_offset = tz === undefined ? (-1 * d.getTimezoneOffset()) / 60 : tz;
-        var local_rise = (utc_time_rise + tz_offset) % 24;
-        var local_set = (utc_time_set + tz_offset) % 24;
-        return [local_rise, local_set];
-    }
-
-    const roundNearest = (value, nearest) => Math.round(value * (1 / nearest)) / (1 / nearest);
-
-    function roundTime(time) {
-        time = roundNearest(time, 15 / 60);
-        if (time > 24) time -= 24;
-        if (time < 0) time += 24;
-        return time;
-    }
-
-    function suntimeToClocktime(suntime) {
-        return [Math.floor(suntime), Math.floor((suntime - Math.floor(suntime)) * 60)];
-    }
-
-    function getHorariumTable(hours) {
-        let table = document.createElement("table");
-        table.border = "1";
-        table.style.borderCollapse = "collapse";
-        table.style.width = "100%";
-        let tr = document.createElement("tr");
-        tr.style.width = "100%";
-        let timeth = document.createElement("th");
-        timeth.style.width = "15%";
-        timeth.innerHTML = "Time";
-        timeth.align = "left";
-        tr.append(timeth);
-        let hourth = document.createElement("th");
-        hourth.style.width = "15%";
-        hourth.innerHTML = "Hour";
-        hourth.align = "left";
-        tr.append(hourth);
-        let celebrationth = document.createElement("th");
-        celebrationth.style.width = "70%";
-        celebrationth.innerHTML = "Celebration";
-        celebrationth.align = "left";
-        //celebrationth.style.paddingLeft = '0.5%';
-        tr.append(celebrationth);
-        table.append(tr);
-
-        var rowspan = 8;
-        if (hours.Vespers.liturgy != hours.Vigils.liturgy) {
-            rowspan = 6;
-        }
-
-
-        {
-            for (i = 0; i< Object.keys(hours).length; i++) {
-                name = Object.keys(hours)[i]
-                hour = hours[name]
-
-                nextHour = i + 1
-                if (nextHour == Object.keys(hours).length) {
-                    nextHour = 0
-                }
-
-                elapse = hours[Object.keys(hours)[nextHour]].time - hour.time;
-                elapse -= hour.duration;
-                if (elapse < 0) elapse += 24
-
-                console.log("Time elapse from " + name + " to " + Object.keys(hours)[nextHour] + ": " + elapse);
-            }
-        }
-
-        for (hour in hours) {
-            let time = suntimeToClocktime(hours[hour].time);
-            let tr = document.createElement("tr");
-            let timetd = document.createElement("td");
-            let am = time[0] < 12;
-           time[0] = am ? time[0] : time[0] - 12;
-            if (time[0] == 0) time[0] = 12;
-           timetd.innerHTML = (time[0] < 10 ? "0" : "") + time[0] + ":" + (time[1] < 10 ? "0" + time[1] : time[1]) + (time[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
-            tr.append(timetd);
-            let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
-            am = dur[0] < 12;
-           dur[0] = am ? dur[0] : dur[0] - 12;
-            if (dur[0] == 0) dur[0] = 12;
-           timetd.innerHTML += "<br/>" + (dur[0] < 10 ? "0" : "") + dur[0] + ":" + (dur[1] < 10 ? "0" + dur[1] : dur[1]) + (dur[0] < 10 ? " ":" ") + (am ? "AM" : "PM");
-            let hourtd = document.createElement("td");
-            hourtd.innerHTML = "<a href='?date=" + dat.valueAsDate + "&hour=" + hour + "'>" + hour + "</a>";
-            let liturgytd = document.createElement("td");
-            tr.append(hourtd);
-            tr.style.width = "100%";
-            timetd.style.width = "10%";
-            hourtd.style.width = "10%";
-            liturgytd.style.width = "80%";
-            //liturgytd.style.padding = '0.5%';
-            liturgytd.innerHTML = hours[hour].liturgy;
-            if (hour == "Vespers") {
-                if (rowspan != 8) {
-                    liturgytd.rowSpan = 2;
-                    tr.append(liturgytd);
-                }
-            } else if (hour == "Vigils") {
-                liturgytd.rowSpan = rowspan;
-                tr.append(liturgytd);
-            }
-            table.append(tr);
-        }
-
-        return table;
-    }
-
-    function printDay(lat, long, date) {
-
-        console.log(" --- CALCULATING HORARIUM ---")
-
-        let suntime = suntimes(lat, long, date);
-
-        let sunrise = suntime[0];
-        let sunset = suntime[1];
-
-        let daylight = sunset - sunrise;
-        let night = sunrise - sunset + 24;
-
-        let dayhours = daylight / 12;
-        let nighthours = night / 12;
-
-        // TODO get liturgicla day, handle first vespers
-
-        let content = document.getElementById("content");
-        let heading = document.createElement("p");
-        heading.style.fontWeight = "bold";
-        heading.innerHTML = date;
-        content.append(heading);
-
-        console.log(date)
-
-        try {
-            celeb = ly[date.getMonth()][date.getDate()]
-        } catch (e) {
-            celeb = undefined
-        }
-
-        let hours = {
-            Vigils: {
-                time: roundTime(sunrise - nighthours * 6),
-                liturgy: celeb,
-                duration: 1.5,
-            },
-            Lauds: {
-                time: roundTime(sunrise),
-                liturgy: celeb,
-                duration: 0.75,
-            },
-            Prime: {
-                time: roundTime(sunrise + dayhours * 2),
-                liturgy: celeb,
-                duration: 0.5,
-            },
-            Terce: {
-                time: roundTime(sunrise + dayhours * 3),
-                liturgy: celeb,
-                duration: 0.25,
-            },
-            Sext: {
-                time: roundTime(sunrise + dayhours * 6),
-                liturgy: celeb,
-                duration: 0.25,
-            },
-            None: {
-                time: roundTime(sunrise + dayhours * 9),
-                liturgy: celeb,
-                duration: 0.25,
-            },
-            Vespers: {
-                time: roundTime(sunset),
-                liturgy: undefined,
-                duration: 0.5,
-            },
-            Compline: {
-                time: roundTime(sunset + nighthours * 2),
-                liturgy: undefined,
-                duration: 0.5,
-            },
-        };
-
-        content.append(getHorariumTable(hours));
-
-        document.body.append(content);
-    }
-
-    function promulHours(lat, lon, dat) {
-        printDay(lat, lon, dat);
-    }
-
-    function getParam(param) {
-        var url_string = window.location.href;
-        var url = new URL(url_string);
-        return url.searchParams.get(param);
-    }
-
-    function boxChanged(latBox, lonBox, datBox) {
-        var content = document.getElementById("content");
-        var lat = latBox.value;
-        var lon = lonBox.value;
-        var dat = new Date(datBox.value + "T12:00"); // noon to account for daylight savings
-
-        content.innerHTML = "<hr/>";
-        promulHours(lat, lon, dat);
-    }
-
-    if (!getParam("hour")) {
-        if (navigator.geolocation) {
+	    if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (pos) {
-                    var latBox = document.getElementById("lat");
-                    var lonBox = document.getElementById("lon");
-                    var datBox = document.getElementById("dat");
-
-                    datBox.valueAsDate = new Date();
-
-                    latBox.value = pos.coords.latitude;
-                    lonBox.value = pos.coords.longitude;
-
-                    latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-                    lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-                    datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-
-                    boxChanged(latBox, lonBox, datBox); // populate horarium on default values
+                    initBoxes(pos.coords.latitude, pos.coords.longitude);
                 },
                 function () {
                     alert("Geolocation failed. Manual entry is required.");
+                    initBoxes(0, 0);
                 }
             );
         } else {
             alert("Geolocation is not supported on this device. Manual entry is required.");
-                    var latBox = document.getElementById("lat");
-                    var lonBox = document.getElementById("lon");
-                    var datBox = document.getElementById("dat");
-
-                    datBox.valueAsDate = new Date();
-
-                    latBox.value = 0;
-                    lonBox.value = 0;
-
-                    latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-                    lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-                    datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-
-                    boxChanged(latBox, lonBox, datBox); // populate horarium on default values
-        }
-    } else {
-        // nuke page, display ribbon placement
-        document.body.innerHTML = getParam("hour");
-    }
-</script>
+            initBoxes(0, 0);
+      }
+	</script>
+</html>
