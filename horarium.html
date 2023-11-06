@@ -341,7 +341,7 @@
 
         let hours = {
             Vigils: {
-                time: roundTime(sunrise - nighthours * 8.75) /*roundTime(sunrise - nighthours * 6)*/,
+                time: roundTime(sunrise - nighthours * 6),
                 liturgy: celeb,
                 duration: 1.5,
             },
@@ -351,7 +351,7 @@
                 duration: 0.75,
             },
             Prime: {
-                time: roundTime(sunrise + dayhours * 1.5),
+                time: roundTime(sunrise + dayhours * 2),
                 liturgy: celeb,
                 duration: 0.5,
             },
@@ -376,7 +376,7 @@
                 duration: 0.5,
             },
             Compline: {
-                time: roundTime(sunset + nighthours * 1.5) /*roundTime(sunset + nighthours * 2)*/,
+                time: roundTime(sunset + nighthours * 2),
                 liturgy: undefined,
                 duration: 0.5,
             },
