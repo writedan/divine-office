@@ -59,15 +59,16 @@
 \grechangestaffsize{30}
 %\grechangedim{abovelinestextheight}{0.25cm}{fixed}
 %\grechangedim{spacebeneathtext}{0.5cm}{fixed}
-\grechangedim{annotationseparation}{0.25cm}{fixed}
+%\grechangedim{annotationseparation}{0.25cm}{fixed}
 
-\newcommand{\skiplines}[1]{\vspace*{#1\baselineskip}}
 
+\newcommand{\skiplines}[1]{\pagebreak[1]\vspace*{#1\baselineskip}}
+
+\makeatletter
 \newcommand{\veformat}[1]{\textcolor{red}{\textbf{#1}}}
 \newcommand{\veant}[2]{\greannotation{#1. \veformat{Ant.}}\greannotation{\veformat{#2.}}}
 \newcommand{\instruct}[1]{\textcolor{red}{\textit{#1}}}
 
-\makeatletter
 \newcommand{\whiteribbon}[0]{\textcolor{black}{\textbf{white ribbon}} }%
 \newcommand{\greenribbon}[0]{\textcolor{ForestGreen}{\textbf{green ribbon}} }%
 \newcommand{\redribbon}[0]{\textcolor{red}{\textbf{red ribbon}} }%
@@ -77,6 +78,7 @@
 %%% HEADERS %%%
 \makeatletter
 \newcommand{\vepart}[1]{%
+	\fancyhead{}
 	\cleardoublepage%
 	\vspace*{\fill}%
 	\begin{center}%
@@ -89,6 +91,7 @@
 
 \newcommand{\vechapter}[1]{%
 	\cleardoublepage%
+	\fancyhead[LO,LE]{#1}%
 	\begin{center}
 		\setstretch{1.5}
 		{\LARGE \selectfont \color{red} \uppercase{ \textbf{#1}}}\par%
@@ -99,6 +102,7 @@
 
 \newcommand{\vesectionp}[1]{%
 	\skiplines{1}
+	\fancyhead[RO,RE]{#1}%
 	\begin{center}
 		\setstretch{1.5}
 		{\Large \selectfont \uppercase{ \textbf{#1}}}\par%
