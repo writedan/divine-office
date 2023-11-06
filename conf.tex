@@ -76,6 +76,8 @@
 \makeatother
 
 %%% HEADERS %%%
+%\renewcommand{\headrulewidth}{0pt}
+
 \makeatletter
 \newcommand{\vepart}[1]{%
 	\cleardoublepage%
@@ -98,16 +100,15 @@
 		{\LARGE \selectfont \color{red} \uppercase{ \textbf{#1}}}\par%
 	\end{center}
 	\skiplines{1}
-	\fancyhead[RO,RE]{\space}
 	\StrSubstitute{#1}{\\}{\space}[\vetempmacrolol]%
-	\fancyhead[LO,LE]{\vetempmacrolol}%
+	\fancyhead[CO,CE]{\textbf{\vetempmacrolol}}%
 }%
 \makeatother
 
 \newcommand{\vesectionp}[1]{%
 	\skiplines{1}
 	\StrSubstitute{#1}{\\}{\space}[\veforthesection]%
-	\fancyhead[RO,RE]{\veforthesection}%
+	\fancyhead[CE]{\textbf{\veforthesection}}%
 	\begin{center}
 		\setstretch{1.5}
 		{\Large \selectfont \uppercase{ \textbf{#1}}}\par%
