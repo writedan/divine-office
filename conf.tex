@@ -104,7 +104,8 @@
 
 \newcommand{\vesectionp}[1]{%
 	\skiplines{1}
-	\fancyhead[RO,RE]{#1}%
+	\StrSubstitute{#1}{\\}{\space}[\veforthesection]%
+	\fancyhead[RO,RE]{\veforthesection}%
 	\begin{center}
 		\setstretch{1.5}
 		{\Large \selectfont \uppercase{ \textbf{#1}}}\par%
