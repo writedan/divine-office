@@ -10,7 +10,158 @@
 
 <script>
 	// this is the definitons script
-	function computus(y){var date,a,b,c,m,d;date=new Date;date.setHours(0,0,0,0);date.setFullYear(y);a=y%19;b=(2200<=y&&y<=2299)?((11*a)+4)%30:((11*a)+5)%30;c=((b===0)||(b===1&&a>10))?(b+1):b;m=(1<=c&&c<=19)?3:2;d=(50-c)%31;date.setMonth(m,d);date.setMonth(m,d+(7-date.getDay()));return date}function computus2(y){var nov27=new Date();nov27.setFullYear(y);nov27.setMonth(11-1);nov27.setDate(27);while(nov27.getDay()!=0){nov27.setDate(nov27.getDate()+1)}return nov27}function dateToSuntime(dat){var hour=dat.getHours();var mint=dat.getMinutes();return hour+(mint/60)}function w_sunrise(lat,lon,dat){return dateToSuntime(SunCalc.getTimes(dat,lat,lon).sunrise)}function w_sunset(lat,lon,dat){return dateToSuntime(SunCalc.getTimes(dat,lat,lon).sunset)}const roundNearest=(value,nearest)=>Math.round(value*(1/nearest))/(1/nearest);function roundTime(time){time=roundNearest(time,15/60);if(time>24){time-=24}if(time<0){time+=24}return time}function suntimeToClocktime(suntime){return[Math.floor(suntime),Math.floor((suntime-Math.floor(suntime))*60)]}function printClocktime(clocktime){let am=clocktime[0]<12;clocktime[0]=am?clocktime[0]:clocktime[0]-12;if(clocktime[0]==0){clocktime[0]=12}return(clocktime[0]<10?"0":"")+clocktime[0]+":"+(clocktime[1]<10?"0"+clocktime[1]:clocktime[1])+(clocktime[0]<10?" ":" ")+(am?"AM":"PM")}function initBoxes(lat,lon){var latBox=document.getElementById("lat");var lonBox=document.getElementById("lon");var datBox=document.getElementById("dat");datBox.valueAsDate=new Date();latBox.value=lat;lonBox.value=lon;latBox.onchange=(event)=>boxChanged(latBox,lonBox,datBox);lonBox.onchange=(event)=>boxChanged(latBox,lonBox,datBox);datBox.onchange=(event)=>boxChanged(latBox,lonBox,datBox);boxChanged(latBox,lonBox,datBox);}function getHorariumTable(hours){let table=document.createElement("table");table.border="1";table.style.borderCollapse="collapse";table.style.width="100%";let tr=document.createElement("tr");tr.style.width="100%";let timeth=document.createElement("th");timeth.style.width="15%";timeth.innerHTML="Time";timeth.align="left";tr.append(timeth);let hourth=document.createElement("th");hourth.style.width="15%";hourth.innerHTML="Hour";hourth.align="left";tr.append(hourth);table.append(tr);{for(i=0;i<Object.keys(hours).length;i+=1){name=Object.keys(hours)[i];hour=hours[name];nextHour=i+1;if(nextHour==Object.keys(hours).length){nextHour=0}elapse=hours[Object.keys(hours)[nextHour]].time-hour.time;elapse-=hour.duration;if(elapse<0){elapse+=24}console.log("Time elapse from "+name+" to "+Object.keys(hours)[nextHour]+": "+elapse)}}for(hour in hours){let time=suntimeToClocktime(hours[hour].time);let tr=document.createElement("tr");let timetd=document.createElement("td");timetd.innerHTML=printClocktime(time);tr.append(timetd);let dur=suntimeToClocktime(hours[hour].time+hours[hour].duration);timetd.innerHTML+="<br/>"+printClocktime(dur);let hourtd=document.createElement("td");hourtd.innerHTML="<a href='?date="+dat.valueAsDate+"&hour="+hour+"'>"+hour+"</a>";tr.append(hourtd);tr.style.width="100%";timetd.style.width="10%";hourtd.style.width="10%";table.append(tr)}return table}
+	function computus(y) {
+    var date,
+        a,
+        b,
+        c,
+        m,
+        d;
+    date = new Date;
+    date.setHours(0, 0, 0, 0);
+    date.setFullYear(y);
+    a = y % 19;
+    b = (2200 <= y && y <= 2299)
+        ? ((11 * a) + 4) % 30
+        : ((11 * a) + 5) % 30;
+    c = ((b === 0) || (b === 1 && a > 10))
+        ? (b + 1)
+        : b;
+    m = (1 <= c && c <= 19)
+        ? 3
+        : 2;
+    d = (50 - c) % 31;
+    date.setMonth(m, d);
+    date.setMonth(m, d + (7 - date.getDay()));
+    return date
+}
+function computus2(y) {
+    var nov27 = new Date();
+    nov27.setFullYear(y);
+    nov27.setMonth(11 - 1);
+    nov27.setDate(27);
+    while (nov27.getDay() != 0) {
+        nov27.setDate(nov27.getDate() + 1)
+    }
+    return nov27
+}
+function dateToSuntime(dat) {
+    var hour = dat.getHours();
+    var mint = dat.getMinutes();
+    return hour + (mint / 60)
+}
+function w_sunrise(lat, lon, dat) {
+    return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunrise)
+}
+function w_sunset(lat, lon, dat) {
+    return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunset)
+}
+const roundNearest = (value, nearest) => Math.round(value * (1 / nearest)) / (1 / nearest);
+function roundTime(time) {
+    time = roundNearest(time, 15 / 60);
+    if (time > 24) {
+        time -= 24
+    }
+    if (time < 0) {
+        time += 24
+    }
+    return time
+}
+function suntimeToClocktime(suntime) {
+    return [
+        Math.floor(suntime),
+        Math.floor((suntime - Math.floor(suntime)) * 60)
+    ]
+}
+function printClocktime(clocktime) {
+    let am = clocktime[0] < 12;
+    clocktime[0] = am
+        ? clocktime[0]
+        : clocktime[0] - 12;
+    if (clocktime[0] == 0) {
+        clocktime[0] = 12
+    }
+    return (clocktime[0] < 10
+        ? "0"
+        : "") + clocktime[0] + ":" + (clocktime[1] < 10
+        ? "0" + clocktime[1]
+        : clocktime[1]) + (clocktime[0] < 10
+        ? " "
+        : " ") + (am
+        ? "AM"
+        : "PM")
+}
+
+function printDuration(suntime) {
+    var n = suntimeToClocktime(suntime);
+    return (n[0] > 0 ? n[0] + "hr" : "") + (n[1] > 0 ? n[1] + "min" : "");
+}
+
+
+function initBoxes(lat, lon) {
+    var latBox = document.getElementById("lat");
+    var lonBox = document.getElementById("lon");
+    var datBox = document.getElementById("dat");
+    datBox.valueAsDate = new Date();
+    latBox.value = lat;
+    lonBox.value = lon;
+    latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+    lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+    datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+    boxChanged(latBox, lonBox, datBox);
+}
+function getHorariumTable(hours) {
+    let table = document.createElement("table");
+    table.border = "1";
+    table.style.borderCollapse = "collapse";
+    table.style.width = "100%";
+    let tr = document.createElement("tr");
+    tr.style.width = "100%";
+    let timeth = document.createElement("th");
+    timeth.style.width = "15%";
+    timeth.innerHTML = "Time";
+    timeth.align = "left";
+    tr.append(timeth);
+    let hourth = document.createElement("th");
+    hourth.style.width = "85%";
+    hourth.innerHTML = "Hour";
+    hourth.align = "left";
+    tr.append(hourth);
+    table.append(tr);
+    {
+        for (i = 0; i < Object.keys(hours).length; i += 1) {
+            name = Object.keys(hours)[i];
+            hour = hours[name];
+            nextHour = i + 1;
+            if (nextHour == Object.keys(hours).length) {
+                nextHour = 0
+            }
+            elapse = hours[Object.keys(hours)[nextHour]].time - hour.time;
+            elapse -= hour.duration;
+            if (elapse < 0) {
+                elapse += 24
+            }
+            console.log("Time elapse from " + name + " to " + Object.keys(hours)[nextHour] + ": " + printDuration(elapse))
+        }
+    }
+    for (hour in hours) {
+        let time = suntimeToClocktime(hours[hour].time);
+        let tr = document.createElement("tr");
+        let timetd = document.createElement("td");
+        timetd.innerHTML = printClocktime(time);
+        tr.append(timetd);
+        let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
+        timetd.innerHTML += "<br/>" + printClocktime(dur);
+        let hourtd = document.createElement("td");
+        hourtd.innerHTML = "<B>"+hour+"</B>";
+        tr.append(hourtd);
+        tr.style.width = "100%";
+        timetd.style.width = "10%";
+        hourtd.style.width = "10%";
+        table.append(tr)
+    }
+    return table
+}
 
 	function boxChanged(latBox, lonBox, datBox) { // this is the main logic loop
       	var lat = latBox.value;
@@ -22,8 +173,6 @@
 
       	console.log("================= NEW DATE =================");
       	console.log("Today is " + dat.toDateString());
-      	console.log("Easter is " + easterSunday.toDateString());
-      	console.log("Advent is " + advent.toDateString())
 
       	console.log("---------------- HORARIUM ----------------")
 
@@ -38,7 +187,9 @@
       	var dayhours = (sunset - sunrise) / 12;
       	var nighthours = (sunrise - sunset + 24) / 12;
 
-      	console.log("Sunrise is at " + printClocktime(suntimeToClocktime(sunrise)) + "; day hours are " + dayhours + " hours long");
+      	console.log("Sunrise is at " + printClocktime(suntimeToClocktime(sunrise)));
+        console.log("Day hours are " + printDuration(dayhours) + " long");
+        console.log("Night hours are " + printDuration(nighthours) + " long");
 
       	let hours = {
             Vigils: {
