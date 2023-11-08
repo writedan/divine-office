@@ -163,6 +163,461 @@ function getHorariumTable(hours) {
     return table
 }
 
+function advdat(dat, n=1) {
+    // advance date by one
+    dat.setDate(dat.getDate() + n)
+    return dat;
+}
+
+function treatAsUTC(date) {
+    var result = new Date(date);
+    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+    return result;
+}
+
+function daysBetween(startDate, endDate) {
+    var millisecondsPerDay = 24 * 60 * 60 * 1000;
+    return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+}
+
+function keyDate(date) {
+    var now = date;
+    var start = new Date(now.getFullYear(), 0, 0);
+    return Math.floor(daysBetween(start, now));
+}
+
+function ordinal_suffix_of(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+
+function getLiturgicalCalendar(year) {
+    function gendat(m, d, y=year) {
+        var n = new Date();
+        n.setMonth(m - 1);
+        n.setDate(d);
+        n.setFullYear(y);
+        return n;
+    }
+
+    var easterSunday = computus(year);
+    var adventSunday = computus2(year);
+
+    var calendar = {};
+
+    //console.log("Easter is " + easterSunday.toDateString());
+    //console.log("Advent is " + adventSunday.toDateString());
+
+    /* the sundays of paschaltide */
+
+    var nxtSunday = new Date(easterSunday);
+
+    for (var i = 0; i < 6; i++) {
+        calendar[keyDate(nxtSunday)] = {
+            //name: (i == 0) ? "Pascha" : ordinal_suffix_of(i) + " Sunday after Pascha",
+            id: 'pascha/' + (i + 1) + '/sunday',
+            date: nxtSunday.toDateString()
+        };
+
+        nxtSunday.setDate(nxtSunday.getDate() + 7);
+    }
+
+    /* days of the ascension octave */
+    var ascension = new Date(nxtSunday);
+    advdat(ascension, -3)
+    for (i = 0; i < 8; i++) {
+        if (i == 0) {
+            calendar[keyDate(ascension)] = {
+                //name: 'Ascension of the Lord',
+                id: 'ascension/octave/1',
+                date: ascension.toDateString()
+            }
+        } else if (i == 7) {
+            calendar[keyDate(ascension)] = {
+                //name: 'Octave of the Ascension',
+                id: 'ascension/octave/8',
+                date: ascension.toDateString()
+            }
+        } else {
+            //if (calendar[keyDate(ascension)] === undefined) {
+                calendar[keyDate(ascension)] = {
+                    //name: ordinal_suffix_of(i) + ' Day after Ascension',
+                    id: 'ascension/octave/' + (i + 1),
+                    date: ascension.toDateString()
+                }
+            //}
+        }
+
+        advdat(ascension)
+    }
+
+    /* pentecost sunday */
+
+    calendar[keyDate(advdat(nxtSunday, 7))] = {
+        //name: 'Pentecost',
+        id: 'pentecost/sunday',
+        date: nxtSunday.toDateString()
+    }
+
+    /* the sundays after pentecost */
+
+    var seventhSunday;
+
+    for (var i = 0; i < 24; i++) {
+        advdat(nxtSunday, 7);
+        if (i == 6) {
+            seventhSunday = new Date(nxtSunday)
+        }
+        calendar[keyDate(nxtSunday)] = {
+            //name: ordinal_suffix_of(i + 1) + ' Sunday after Pentecost',
+            id: 'pentecost/' + (i + 1) + '/sunday',
+            date: nxtSunday.toDateString()
+        }
+    }
+
+    function subidSundays(date, n, id) {
+        if (date.getDay() == 0) {
+            advdat(date)
+        }
+
+        while (date.getDay() != 0) {
+              advdat(date)
+        } 
+
+        for (var i = 0; i < n; i++) {
+            if (calendar[keyDate(date)].id.split("/")[0] != "pentecost" && calendar[keyDate(date)].id.split("/")[0] != 'epiphany') {
+                //console.log(date.toDateString() + " would be " + id + '/' + (i + 1) + '/sunday')
+                //console.log("\tcannot be included in advent")
+            } else {
+                calendar[keyDate(date)].subid = id + '/' + (i + 1) + '/sunday'
+            }
+            advdat(date, 7)
+        }
+    }
+
+    function queryid(id) {
+        for (var x in calendar) {
+            if (calendar[x].id == id) return x
+        }
+        return -1
+    }
+
+    function querysubid(id) {
+        for (var x in calendar) {
+            if (calendar[x].subid == id) return x
+        }
+        return -1
+    }
+
+    /* the sundays of wisdom */
+    /* first sunday aftr the fifth kalends of august */
+    /* which i understand to be the 28th of july */
+    subidSundays(gendat(7, 28), 5, 'august')
+        /**
+         * August I = Proverbs
+         * August II = Ecclesiastes
+         * August III = Wisdom
+         * August IV = Sirach
+         * August V = Sirach
+         /* 
+
+    /* the sundays of job */
+    /* first sunday after the fifth kalends of septmber */
+    subidSundays(gendat(8, 28), 5, 'september')
+        /** 
+         * September I = Job
+         * September II = Job
+         * Septemver III = Tobit
+         * Septemver IV = Tobit (but if there only be 4 weeks, = Setpevmer V)
+         * Septemver V = Judith
+         * */
+
+
+    subidSundays(gendat(9, 27), 5, 'october')
+        /**
+         * October I = 1 Macchabbes
+         * October II = 1 Maccabees
+         * October III = 1 Maccabees
+         * Octover IV = 2 Maccabees
+         * October V = 2 Maccabess
+         * */
+
+    if (querysubid('september/5/sunday') == -1) { // apply above rubric
+        var x = querysubid('september/4/sunday')
+        calendar[x].subid = 'september/5/sunday'
+        calendar[x].transfers = {
+            subid: true
+        }
+    }
+
+    // before we can add in the november dates, we must ensure we have continuous sundays from pentecost until advent
+    // if there are sundays missing, we can add in the octaves of the Assumption and All Saints, in this ordrer
+    // the octave-days will overwrite the sunday
+    // the sunday will be deffered to the next sunday
+    // now let's say we had this scheudle
+        /**
+         * Nth Sunday after Pentecost
+         * Monday
+         * Tuesday
+         * Assumption (Wednesday)
+         * 2nd (Thursday)
+         * 3rd (Friday)
+         * 4th (Saturday)
+         * 5th (Sunday)
+         * 6th (Monday)
+         * 7th (Tuesday)
+         * Octave (Wednesday)
+         * */
+    // The octave of the assumption repealed Wednesday->Saturday
+    // so the days after the octave would be the Thursday, Friday, and Saturday offices removed; Wednesday is lost to the feast itself
+    // thus, the Sunday is deferred to next week, and begins there, without losing any offices
+
+    // now, so as to maintain a common calendar, the Assumption and All Saints will always have octaves, and these octaves will always defer the sunday within them to the next
+
+
+    /* the four sundays of advent */
+
+    nxtSunday = new Date(adventSunday);
+    for (var i = 0; i < 4; i++) {
+        calendar[keyDate(nxtSunday)] = {
+            //name: ordinal_suffix_of(i + 1) + " Sunday of Advent",
+            id: 'advent/' + (i + 1) + "/sunday",
+            date: nxtSunday.toDateString()
+        }
+        advdat(nxtSunday, 7)
+    }
+
+    /* Sunday next before Advent */
+
+    nxtSunday = advdat(new Date(adventSunday), -7)
+    calendar[keyDate(nxtSunday)] = {
+        //name: 'Sunday before Advent',
+        id: 'pentecost/28/sunday',
+        date: nxtSunday.toDateString()
+    }
+
+    // we must now fill in the missing sundays, up to 2
+    {var i = 25;
+        var epi = 4;
+        while (calendar[keyDate(advdat(nxtSunday, -7))] === undefined) {
+            // bring us to an undefined suday
+        }
+    
+        while (calendar[keyDate(advdat(nxtSunday, 7))] === undefined) {
+            calendar[keyDate(nxtSunday)] = {
+                id: 'pentecost/' + i + '/sunday',
+                date: nxtSunday.toDateString(),
+                refid: 'epiphany/' + epi + '/sunday'
+            }
+            i+=1; epi+=1
+        }}
+
+    // we can now fill in the november sundays
+    subidSundays(gendat(10, 28), 5, 'november')
+        /**
+         * November I = Ezekiel
+         * November II = Ezekiel (but if 4 weeks = November III)
+         * November III = Daniel (but if 4 weeks = November IV)
+         * November IV = Hosea, Joel, Amos, Obadiah, Jonah (but if 4 weeks = Novermber V)
+         * November V = Micah, Nahum, Habbakkuk, Zephaniah, Haggai, Zechariah, Malachi
+         * */
+
+    /* the two sundays of passiontide */
+
+    nxtSunday = easterSunday;
+    for (var i = 0; i < 2; i++) {
+        calendar[keyDate(advdat(nxtSunday, -7))] = {
+            //name: (i == 0) ? 'Palm Sunday' : 'Passion Sunday',
+            id: 'passion/' + (2 - i) + '/sunday',
+            date: nxtSunday.toDateString()
+        }
+    }
+
+    /* the four sundays of lent */
+    for (var i = 0; i < 4; i++) {
+        calendar[keyDate(advdat(nxtSunday, -7))] = {
+            //name: ordinal_suffix_of(4 - i) + ' Sunday in Lent',
+            id: 'lent/' + (4 - i) + '/sunday',
+            date: nxtSunday.toDateString()
+        }
+    }
+
+    /* the three sundays before lent */
+    for (var i = 0; i < 3; i++) {
+        calendar[keyDate(advdat(nxtSunday, -7))] = {
+            //name: ordinal_suffix_of(i + 1) + ' Sunday before Lent',
+            id: 'prelent/' + (3 - i) + '/sunday',
+            date: nxtSunday.toDateString()
+        }
+    }
+
+    /* epiphany of the lord */
+    var epiphany = gendat(1, 6); // jan 6
+    for (var i = 0; i < 8; i++) {
+        calendar[keyDate(epiphany)] = {
+            //name: (i == 0) ? 'Epiphany of the Lord' : ordinal_suffix_of(i) + ' Day of the Epiphany',
+            id: 'epiphany/octave/' + (i + 1),
+            date: epiphany.toDateString()
+        }
+
+        if (epiphany.getDay() == 0) {
+            calendar[keyDate(epiphany)].id = 'epiphany/1/sunday'
+            nxtSunday = new Date(epiphany);
+        }
+        advdat(epiphany)
+    }
+
+    /* days until first sunday after octave of epiphany */
+
+    {
+        var i = 1;
+        while (epiphany.getDay() != 0) {
+            calendar[keyDate(epiphany)] = {
+               // name: ordinal_suffix_of(i) + ' Feria after Epiphanytide',
+                id: 'epiphany/post.octave/' + i,
+                date: epiphany.toDateString()
+            }
+            i += 1
+            advdat(epiphany)
+        }
+    }
+
+    /* the sundays after epiphny */
+    {
+        advdat(nxtSunday, 7);
+        var i = 2;
+        while (calendar[keyDate(nxtSunday)] === undefined) {
+            calendar[keyDate(nxtSunday)] = {
+                //name: ordinal_suffix_of(i + 1) + ' Sunday after Epihpany',
+                id: 'epiphany/' + i + '/sunday',
+                date: nxtSunday.toDateString()
+            }
+            advdat(nxtSunday, 7)
+            i += 1
+        }
+    }
+
+    /* circumcision &c until epiphany */
+    calendar[keyDate(gendat(1, 1))] = {
+        //name: 'Circumcision of the Lord',
+        id: 'christmas/octave/8',
+        date: gendat(1, 1).toDateString()
+    }
+
+    calendar[keyDate(gendat(1, 2))] = {
+        //name: 'Octave of Saint Stephen',
+        id: 'st.stephen.protomartyr/octave/8',
+        date: gendat(1, 2).toDateString()
+    }
+
+    calendar[keyDate(gendat(1, 3))] = {
+        //name: 'Octave of Saint John',
+        id: 'st.john.apostle/octave/8',
+        date: gendat(1, 3).toDateString()
+    }
+
+    calendar[keyDate(gendat(1, 4))] = {
+        //name: 'Octave of the Holy Innocents',
+        id: 'holy.innocents/octave/8',
+        date: gendat(1, 4).toDateString()
+    }
+
+    calendar[keyDate(gendat(1, 5))] = {
+        //name: 'Eve of the Epiphany',
+        id: 'epiphany/eve',
+        date: gendat(1, 5).toDateString()
+    }
+
+    /* christmas &c */
+    calendar[keyDate(gendat(12, 24))] = {
+       // name: 'Eve of the Nativity',
+        id: 'christmas/eve',
+        date: gendat(12, 24).toDateString()
+    }
+
+    calendar[keyDate(gendat(12, 25))] = {
+      //  name: 'Nativity of the Lord',
+        id: 'christmas/octave/1',
+        date: gendat(12, 25).toDateString()
+    }
+
+    calendar[keyDate(gendat(12, 26))] = {
+        //name: 'Saint Stephen, Protomartyr',
+        id: 'christmas/octave/2',
+        date: gendat(12, 26).toDateString()
+    }
+
+    calendar[keyDate(gendat(12, 27))] = {
+        //name: 'Saint John, Apostle and Evangelist',
+        id: 'christmas/octave/3',
+        date: gendat(12, 27).toDateString()
+    }
+
+    calendar[keyDate(gendat(12, 28))] = {
+        //name: 'Holy Innocents, Martyrs',
+        id: 'christmas/octave/4',
+        date: gendat(12, 28).toDateString()
+    }
+
+    calendar[keyDate(gendat(12, 29))] = {
+        //name: 'Saint Thomas Becket, Bishop and Martyr',
+        id: 'christmas/octave/5',
+        date: gendat(12, 29).toDateString()
+    }
+
+    calendar[keyDate(gendat(12, 30))] = {
+        //name: 'Sixth Day of the Nativity',
+        id: 'christmas/octave/6',
+        date: gendat(12, 30).toDateString()
+    }
+
+    calendar[keyDate(gendat(12, 31))] = {
+       // name: 'Seventh Day of the Nativity',
+        id: 'christmas/octave/7',
+        date: gendat(12, 31).toDateString()
+    }
+
+    if (querysubid('november/5/sunday') == -1) {
+        var x = querysubid('november/2/sunday')
+        calendar[x].subid = 'november/3/sunday'
+        calendar[x].transfers = {
+            subid: true
+        }
+        calendar[Number(x) + 7].subid = 'november/4/sunday'
+        calendar[Number(x) + 7].transfers = {
+            subid: true
+        }
+        calendar[Number(x) + 7 + 7].subid = 'november/5/sunday'
+        calendar[Number(x) + 7 + 7].transfers = {
+            subid: true
+        }
+    }
+
+     {
+        var x = queryid('pentecost/28/sunday')
+        if (calendar[Number(x) - 7].id != 'pentecost/27/sunday') {
+            if (calendar[x].transfers === undefined) calendar[x].transfers = {}
+            calendar[x].transfers.id = true
+        }
+     }
+
+    // we can now fill in the sanctoral cycle and defer sundays as necessary
+
+    // we can now fill in the feria
+
+    return calendar;
+}
+
 	function boxChanged(latBox, lonBox, datBox) { // this is the main logic loop
       	var lat = latBox.value;
       	var lon = lonBox.value;
