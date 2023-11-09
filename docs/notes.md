@@ -10,7 +10,9 @@ I think the best solution is to eliminate the octave, i.e. we will celebrate the
 
 Another solution is to fill the dates from January 14-January 20, i.e. the week after the octave wherein a Sunday may fall, with saints days such that we do not need a ferial order for such days. I am not inclined to this solution because our sanctoral is otherwise moderate and well-curated.
 
-The third solution is to use the propers of the Circumcision at the hours and read lessons about the Nativity until the Sunday occurs between January 14 and January 20. I do like this one because it maintains the octave of the Epiphany (one of four with Christmas, Easter, Pentecost). There would have to be six days, for which we could use the lessons given in the reformed rite for the days between Circumcision and a Sunday-fixed Epiphany. Hours celebrated as on the Circumcision, i.e. responsories and antiphons. Benedictus and Magnificat would use those left over from the octave of the Nativity.
+The third solution is to use the propers of the Circumcision at the hours and read lessons about the Nativity until the Sunday occurs between January 14 and January 20. I do like this one because it maintains the octave of the Epiphany (one of four with Christmas, Easter, Pentecost). There would have to be six days, for which we could use the lessons given in the reformed rite for the days between Circumcision and a Sunday-fixed Epiphany. Hours celebrated as on the Circumcision, i.e. responsories and antiphons. Benedictus and Magnificat would use those left over from the octave of the Nativity. The only question is that of the collect, since these are divorced from any Sunday. I believe the "missing" collect from the Sundays after Epiphany from the Roman use (versus Sarum) works well here, especially if we use it for the Sunday after Epihpany which otherwise uses that of the Epiphany itself.
+
+All the foregoing options are unsatisfactory in their own ways, but all are superior to the Roman custom of sustaining ferial readings throuh discordant sanctoral days, and moreover of beginning Romans within Christmas. 
 
 == Post Pentecost ==
 
@@ -26,4 +28,11 @@ Now the first solution is to desnigate some feasts to have octaves upon certai y
 
 Now since it is the custom of the Roman use to supplement the Sundays after Pentecost with those after Epiphany, and since the Sarum also recycles all but the lections in like maner as the 23rd, 24th, and 25th Sundays after Pentecost for the fourth, fifth, and sixth Sundays after Epiphany, I contend these lessons be read at Mass with the propers of those after Pentecost, as also their collects, and antiphons. This is one of two preferred solutions, and indeed the one taken.
 
-Thus, there are 28 Sundays after Epiphany: the 28th is called the 25th after Trinity in the Sarum books, while the 1st-24th are called the 1st-24th after Trinity. The 25th, 26th, and 27th are respectively the 4th, 5th, and 6th Sundays after Epiphany (which Sarum notes as after the octave of Epiphany, thus decreasing each by 1).
+Thus, there are 28 Sundays after Pentecost: the 28th is called the 25th after Trinity in the Sarum books, while the 1st-24th are called the 1st-24th after Trinity. The 25th, 26th, and 27th are respectively the 4th, 5th, and 6th Sundays after Epiphany (which Sarum notes as after the octave of Epiphany, thus decreasing each by 1).
+
+28th = 25th after Trinity
+27th = 6th after Epiphany (5th after octave)
+26th = 5th after Epiphany (4th after octave)
+25th = 4th after Epiphany (3rd after octave)
+24th = 24th after Trinity
+....
