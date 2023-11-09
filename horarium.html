@@ -1,4 +1,6 @@
 <script>
+function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item))}function mergeDeep(target,...sources){if(!sources.length){return target}const source=sources.shift();if(isObject(target)&&isObject(source)){for(const key in source){if(isObject(source[key])){if(!target[key]){Object.assign(target,{[key]:{}})}mergeDeep(target[key],source[key])}else{Object.assign(target,{[key]:source[key]})}}}return mergeDeep(target,...sources)}
+
     /*
  (c) 2011-2015, Vladimir Agafonkin
  SunCalc is a JavaScript library for calculating sun/moon position and light phases.
@@ -311,6 +313,20 @@
         return (n[0] > 0 ? n[0] + "hr" : "") + (n[1] > 0 ? n[1] + "min" : "");
     }
 
+    function romanize (num) {
+    if (isNaN(num))
+        return NaN;
+    var digits = String(+num).split(""),
+        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+               "","I","II","III","IV","V","VI","VII","VIII","IX"],
+        roman = "",
+        i = 3;
+    while (i--)
+        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+    return Array(+digits.join("") + 1).join("M") + roman;
+}
+
     function initBoxes(lat, lon) {
         var latBox = document.getElementById("lat");
         var lonBox = document.getElementById("lon");
@@ -336,12 +352,12 @@
         timeth.align = "left";
         tr.append(timeth);
         let hourth = document.createElement("th");
-        hourth.style.width = "10%";
+        hourth.style.width = "25%";
         hourth.innerHTML = "Hour";
         hourth.align = "left";
         tr.append(hourth);
         let liturgyth = document.createElement('th');
-        liturgyth.style.width = '80%';
+        liturgyth.style.width = '65%';
         liturgyth.innerHTML = 'Liturgy';
         liturgyth.align = 'left';
         tr.append(liturgyth);
@@ -369,14 +385,15 @@
             timetd.innerHTML = printClocktime(time);
             tr.append(timetd);
             let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
-            timetd.innerHTML += "<br/>" + printClocktime(dur);
+            timetd.innerHTML/* += "<br/>" + printClocktime(dur);*/
             let hourtd = document.createElement("td");
-            hourtd.innerHTML = "<B>" + hour + "</B>";
+            hourtd.innerHTML = "<b>" + hour + "</b>";
             tr.append(hourtd);
             tr.style.width = "100%";
             timetd.style.width = "10%";
             hourtd.style.width = "10%";
             let liturgytd = document.createElement('td');
+            liturgytd.style.verticalAlign ='top'
             var metadata = queryTMeta(hours[hour].liturgy);
             let span = document.createElement('span');
             span.style.color = metadata.color;
@@ -390,11 +407,22 @@
             }
                         liturgytd.append(span);
 
+                        let volumep = document.createElement('p');
+            //liturgytd.append(volumep);
+            volumep.innerHTML = 'Use the books of <b>Volume ' + romanize(metadata.volume) + '</b>.'
+
             if (metadata.note != undefined) {
                 let notesp = document.createElement('p')
                 notesp.innerHTML = '<b>Notes. </b> ' + metadata.note;
                 if (hour !='Vespers') liturgytd.append(notesp)
             }
+
+            if (metadata.vnote != undefined && hour == 'Vespers') {
+                let notesp = document.createElement('p')
+                notesp.innerHTML = '<b>Notes. </b> ' + metadata.vnote;
+                liturgytd.append(notesp)
+            }
+
 
             let penancep = document.createElement('p');
             liturgytd.append(penancep)
@@ -402,7 +430,7 @@
             case 'fast': {
                 penancep.innerHTML = '<b>Fasting. </b>';
                 if (hour != 'Vespers') {
-                    penancep.innerHTML += 'Mass follows  Sext.<br/>Dinner with abstinence is taken after None.<br/>';
+                    penancep.innerHTML += 'Mass follows  Sext.<br/>Dinner is taken after None.<br/>';
                 } 
                 
                 if (!separate || hour == 'Vespers') {penancep.innerHTML += "Supper is not taken after Vespers."}
@@ -411,14 +439,14 @@
             case 'abstinence': {
                 penancep.innerHTML = '<b>Abstinence. </b>'
                 if (hour != 'Vespers') {
-                    penancep.innerHTML += 'Mass follows Terce.<br/>Dinner with abstinence is taken after Sext.<br/>'
+                    penancep.innerHTML += 'Mass follows Terce.<br/>Dinner is taken after Sext.<br/>'
                 }
 
                 if (!separate || hour=='Vespers') {
                     //penancep.innerHTML += 'Supper with abstinence is taken after Vespers.';
                     let m2 = queryTMeta(hours['Vigils'].liturgy);
                     if (m2.penance == 'vigil') {
-                        penancep.innerHTML += 'Dinner with abstinence is taken after Vespers.'
+                        penancep.innerHTML += 'Dinner is taken after Vespers.'
                     } else {
                         penancep.innerHTML += 'Supper is taken after Vespers.' // supper by default is a meal of absistence
                     }
@@ -534,7 +562,11 @@
             'passion': {},
             'pascha': {},
             'ascension': {},
-            'pentecost': {}
+            'pentecost': {},
+            'august': {},
+            'september': {},
+            'october': {},
+            'november': {}
         };
 
         for (var w = 1; w < 5; w++) {
@@ -549,7 +581,7 @@
                 metadata.advent[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of Advent',
                     color: 'violet',
-                    penance: (d == 3 || d == 5 || d == 6) ? 'fast' : 'none',
+                    penance: (d == 3 || d == 5) ? 'fast' : 'none',
                     rank: 8
                 }
             }
@@ -557,9 +589,18 @@
 
         metadata.christmas['vigil'] = {
             name: 'Eve of the Nativity of the Lord',
-            rank: 7, // technically, it is a feria
+            rank: 8, // technically, it is a feria
             color: 'violet',
             penance: 'vigil'
+        }
+
+        metadata.christmas['vigil-sunday'] = {
+            name: 'Eve of the Nativity on Sunday',
+            rank: 2,
+            color: 'violet',
+            note: 'The Mass of the Fourth Sunday of Advent is sung after Terce. That of the vigil is sung after None. The whole office is of the vigil. Penance is abrogated by the Sunday.',
+            //vnote: 'Vespers and Compline as on the Fourth Sunday of Advent.'
+            ribbons: metadata.advent[4].sunday
         }
 
         metadata.christmas['octave'] = {}
@@ -567,7 +608,7 @@
             name: 'Nativity of the Lord',
             rank: 1,
             color: 'white',
-            note: 'Three Masses are said of the Nativity: one after Vigils, one after Lauds, and one after Terce.<br/>A Mass <i>in capitulo</i> is said for St. Anastasia after Prime.'
+            note: 'Three Masses are said of the Nativity: one after Vigils, one after Lauds, and one after Terce.'
         }
 
         metadata.christmas.octave[2] = {
@@ -658,6 +699,15 @@
             color: 'white'
         }
 
+        metadata.christmas.feria = {}
+        for (var d = 1; d <= 6; d++) {
+            metadata.christmas.feria[d] = {
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in Christmastide',
+                 rank: 8,
+                 color: 'white'
+             }
+        }
+
         for (var w = 1; w <= 6; w++) {
             metadata.epiphany[w] = {}
             metadata.epiphany[w].sunday = {
@@ -670,7 +720,7 @@
                 metadata.epiphany[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week after Epiphany',
                     color: 'green',
-                    penance: (d == 3 || d == 5 || d == 6) ? 'abstinence' : 'none',
+                    penance: (d == 3 || d == 5) ? 'abstinence' : 'none',
                     rank: 8
                 }
             }
@@ -688,7 +738,7 @@
                 metadata.prelent[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week before Lent',
                     color: 'violet',
-                    penance: (d == 3 || d == 5 || d == 6) ? 'fast' : 'none',
+                    penance: (d == 3 || d == 5) ? 'fast' : 'none',
                     rank: 8
                 }
             }
@@ -698,7 +748,7 @@
             name: 'Ash Wednesday',
             color: 'violet',
             penance: 'fast',
-            rank: 8
+            rank: 7
         }
 
         metadata.prelent[1].thursday = {
@@ -829,14 +879,14 @@
         for (var w = 2; w <= 6; w++) {
             metadata.pascha[w] = {}
             metadata.pascha[w].sunday = {
-                name: ordinal_suffix_of(w) + ' Sunday after Pascha',
+                name: ordinal_suffix_of(w - 1) + ' Sunday after Pascha',
                 color: 'white',
                 rank: 2
             }
 
             for (var d = 1; d < 7; d++) {
                 metadata.pascha[w][feriaToDay(d)] = {
-                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week after Pascha',
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w - 1) + ' Week after Pascha',
                     color: 'white',
                     rank: 8
                 }
@@ -887,40 +937,40 @@
 
         metadata.pentecost[0] = {
             sunday: {
-                name: 'White Sunday of Pentecost',
+                name: 'Sunday of Pentecost',
                 rank: 2,
                 color: 'red'
             },
             monday: {
-                name: 'Monday in White Week',
+                name: 'Monday of Pentecost',
                 rank: 8,
                 color: 'red'
             },
             tuesday: {
-                name: 'Tuesday in White Week',
+                name: 'Tuesday of Pentecost',
                 rank: 8,
                 color: 'red'
             },
             wednesday: {
                 name: 'Ember Wednesday of Pentecost',
-                rank: 8,
+                rank: 7,
                 color: 'red',
                 penance: 'fast'
             },
             thursday: {
-                name: 'Thursday in White Week',
+                name: 'Thursday of Pentecost',
                 rank: 8,
                 color: 'red'
             },
             friday: {
                 name: 'Ember Friday of Pentecost',
-                rank: 8,
+                rank: 7,
                 color: 'red',
                 penance: 'fast'
             },
             saturday: {
                 name: 'Ember Saturday of Pentecost',
-                rank: 8,
+                rank: 7,
                 color: 'red',
                 penance: 'vigil'
             }
@@ -945,16 +995,71 @@
             }
         }
 
+        var months = ['august', 'september', 'october', 'november'];
+        for (var mnum in months) {
+            var m = months[mnum]
+            var name = m.charAt(0).toUpperCase() + m.slice(1)
+            for (var w = 1; w <= 28; w++) {
+                metadata[m][w] = {
+                    sunday: {
+                        name: ordinal_suffix_of(w) + ' Sunday of ' + name,
+                        color: 'green',
+                        rank: 4
+                    }
+                }
+
+                for (var d = 1; d < 7; d++) {
+                    metadata[m][w][feriaToDay(d)] = {
+                        name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of ' + name,
+                        color: 'green',
+                        rank: 8
+                    }
+                }
+            }
+        }
+
+        /*metadata.pentecost[28].sunday.name = 'Sunday before Advent'
+        for (var d = 1; d < 7; d++) {
+            metadata.pentecost[28][feriaToDay(d)].name = feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the Week before Advent'
+        }*/
+
 
         metadata.advent[3].wednesday.name = 'Ember Wednesday of Advent'
+        metadata.advent[3].wednesday.rank = 7
         metadata.advent[3].friday.name = 'Ember Friday of Advent'
+        metadata.advent[3].friday.rank = 7
         metadata.advent[3].saturday.name = 'Ember Saturday of Advent'
+        metadata.advent[3].saturday.rank = 7
         metadata.advent[3].saturday.penance = 'vigil'
 
         metadata.lent[1].wednesday.name = 'Ember Wednesday of Lent'
+        metadata.lent[1].wednesday.rank = 7
         metadata.lent[1].friday.name = 'Ember Friday of Lent'
+        metadata.lent[1].friday.rank = 7
         metadata.lent[1].saturday.name = 'Ember Saturday of Lent'
         metadata.lent[1].saturday.penance = 'vigil'
+        metadata.lent[1].saturday.rank = 7
+
+        // pentecost embertide is handled at its octave
+
+        metadata.september[3].wednesday.name = 'Ember Wednesday of September'
+            metadata.september[3].wednesday.penance = 'fast'
+            metadata.september[3].wednesday.color = 'violet'
+            metadata.september[3].wednesday.rank = 7
+        metadata.september[3].friday.name = 'Ember Friday of September'
+            metadata.september[3].friday.penance = 'fast'
+            metadata.september[3].friday.color = 'violet'
+            metadata.september[3].friday.rank = 7
+        metadata.september[3].saturday.name = 'Ember Saturday of September'
+            metadata.september[3].saturday.penance = 'vigil'
+            metadata.september[3].saturday.color = 'violet'
+            metadata.september[3].saturday.rank = 7
+
+        for (var w in metadata.advent) {
+            for (var d in metadata.advent[w]) {
+                metadata.advent[w][d].volume = 1
+            }
+        }
 
         return metadata;
     }
@@ -962,8 +1067,7 @@
     tMeta = getTemporalMetaData();
     function queryTMeta(calendar) {
         // convert calendar data  to its metadata
-            var metadata = {};
-            Object.assign(metadata, tMeta)
+            var metadata = JSON.parse(JSON.stringify(tMeta));
             var id = calendar.id.split('/');
             for (var i = 0; i < id.length; i++) {
                 var part = id[i]
@@ -972,8 +1076,37 @@
                 }
             }
 
+            if (calendar.subid != undefined) {
+                var om = JSON.parse(JSON.stringify(tMeta));
+                var id = calendar.subid.split('/');
+                    for (var i = 0; i < id.length; i++) {
+                    var part = id[i]
+                        if (om[part] != undefined) {
+                            om = om[part]
+                        }
+                    }
+            }
+
+            if (om != undefined) {
+                if (om.rank < metadata.rank) {
+                    // everything from subid
+                    metadata = JSON.parse(JSON.stringify(om))
+                } else if (om.rank == metadata.rank) {
+                    // merge: om has priority
+                    metadata.backup = JSON.parse(JSON.stringify(metadata))
+                    metadata.backup.id = calendar.id
+                    om.id = calendar.subid
+                    mergeDeep(metadata, om)
+                    var id = metadata.backup.id.split('/')
+                    metadata.name = om.name + ' and ' + ordinal_suffix_of(id[1]) + ' after ' + id[0].charAt(0).toUpperCase() + id[0].slice(1)
+                }
+
+                // else, everything is taken from metadata
+            }
+            
+
             switch (metadata.color) {
-            case 'violet': metadata.color = '#7f00ff'; break;
+            case 'violet': metadata.color = '#4c0099'; break;
             case 'rose': metadata.color = '#fa48ad'; break;
             }
 
@@ -1124,7 +1257,7 @@
         /**
          * September I = Job
          * September II = Job
-         * Septemver III = Tobit
+         * Septemver III = Tobit (where i beleive falls the september embertide)
          * Septemver IV = Tobit (but if there only be 4 weeks, = Setpevmer V)
          * Septemver V = Judith
          * */
@@ -1273,7 +1406,7 @@
             while (epiphany.getDay() != 0) {
                 calendar[keyDate(epiphany)] = {
                     // name: ordinal_suffix_of(i) + ' Feria after Epiphanytide',
-                    id: "christmas/feria/" + i,
+                    id: "christmas/feria/" + epiphany.getDay(),
                     date: epiphany.toDateString(),
                 };
                 i += 1;
@@ -1333,6 +1466,10 @@
             id: "christmas/vigil",
             date: gendat(12, 24).toDateString(),
         };
+
+        if (gendat(12,24).getDay() == 0) {
+            calendar[keyDate(gendat(12, 24))].id = 'christmas/vigil-sunday'
+        }
 
         calendar[keyDate(gendat(12, 25))] = {
             //  name: 'Nativity of the Lord',
@@ -1455,7 +1592,10 @@
                     }
                     calendar[x] = {
                         id: previd[0] + '/' + previd[1] + '/' + feriaToDay(n),
-                        date: thisdate.toDateString()
+                        date: thisdate.toDateString(),
+                    }
+                    if (calendar[prev].transfers != undefined) {
+                        calendar[x].transfers = calendar[prev].transfers
                     }
                }
             }
@@ -1477,11 +1617,11 @@
         }
 
         /* o antiphons */
-        var dec17 = gendat(12, 17)
+        /*var dec17 = gendat(12, 17)
         for (var i = 0; i < 7; i++) {
             calendar[keyDate(dec17)].subid = 'december/' + (i + 17)
             advdat(dec17)
-        }
+        }*/
 
         // verify
         for (var i = 1; i <= queryid('christmas/octave/7'); i++) {
