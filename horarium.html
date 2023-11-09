@@ -1,328 +1,541 @@
 <script>
-	/*
+    /*
  (c) 2011-2015, Vladimir Agafonkin
  SunCalc is a JavaScript library for calculating sun/moon position and light phases.
  https://github.com/mourner/suncalc
 */
-	(function(){'use strict';var PI=Math.PI,sin=Math.sin,cos=Math.cos,tan=Math.tan,asin=Math.asin,atan=Math.atan2,acos=Math.acos,rad=PI/180;var dayMs=1000*60*60*24,J1970=2440588,J2000=2451545;function toJulian(date){return date.valueOf()/dayMs-0.5+J1970}function fromJulian(j){return new Date((j+0.5-J1970)*dayMs)}function toDays(date){return toJulian(date)-J2000}var e=rad*23.4397;function rightAscension(l,b){return atan(sin(l)*cos(e)-tan(b)*sin(e),cos(l))}function declination(l,b){return asin(sin(b)*cos(e)+cos(b)*sin(e)*sin(l))}function azimuth(H,phi,dec){return atan(sin(H),cos(H)*sin(phi)-tan(dec)*cos(phi))}function altitude(H,phi,dec){return asin(sin(phi)*sin(dec)+cos(phi)*cos(dec)*cos(H))}function siderealTime(d,lw){return rad*(280.16+360.9856235*d)-lw}function astroRefraction(h){if(h<0){h=0;}return 0.0002967/Math.tan(h+0.00312536/(h+0.08901179))}function solarMeanAnomaly(d){return rad*(357.5291+0.98560028*d)}function eclipticLongitude(M){var C=rad*(1.9148*sin(M)+0.02*sin(2*M)+0.0003*sin(3*M)),P=rad*102.9372;return M+C+P+PI}function sunCoords(d){var M=solarMeanAnomaly(d),L=eclipticLongitude(M);return{dec:declination(L,0),ra:rightAscension(L,0)}}var SunCalc={};SunCalc.getPosition=function(date,lat,lng){var lw=rad* -lng,phi=rad*lat,d=toDays(date),c=sunCoords(d),H=siderealTime(d,lw)-c.ra;return{azimuth:azimuth(H,phi,c.dec),altitude:altitude(H,phi,c.dec)}};var times=SunCalc.times=[[-0.833,'sunrise','sunset'],[-0.3,'sunriseEnd','sunsetStart'],[-6,'dawn','dusk'],[-12,'nauticalDawn','nauticalDusk'],[-18,'nightEnd','night'],[6,'goldenHourEnd','goldenHour']];SunCalc.addTime=function(angle,riseName,setName){times.push([angle,riseName,setName])};var J0=0.0009;function julianCycle(d,lw){return Math.round(d-J0-lw/(2*PI))}function approxTransit(Ht,lw,n){return J0+(Ht+lw)/(2*PI)+n}function solarTransitJ(ds,M,L){return J2000+ds+0.0053*sin(M)-0.0069*sin(2*L)}function hourAngle(h,phi,d){return acos((sin(h)-sin(phi)*sin(d))/(cos(phi)*cos(d)))}function observerAngle(height){return -2.076*Math.sqrt(height)/60}function getSetJ(h,lw,phi,dec,n,M,L){var w=hourAngle(h,phi,dec),a=approxTransit(w,lw,n);return solarTransitJ(a,M,L)}SunCalc.getTimes=function(date,lat,lng,height){height=height||0;var lw=rad* -lng,phi=rad*lat,dh=observerAngle(height),d=toDays(date),n=julianCycle(d,lw),ds=approxTransit(0,lw,n),M=solarMeanAnomaly(ds),L=eclipticLongitude(M),dec=declination(L,0),Jnoon=solarTransitJ(ds,M,L),i,len,time,h0,Jset,Jrise;var result={solarNoon:fromJulian(Jnoon),nadir:fromJulian(Jnoon-0.5)};for(i=0,len=times.length;i<len;i+=1){time=times[i];h0=(time[0]+dh)*rad;Jset=getSetJ(h0,lw,phi,dec,n,M,L);Jrise=Jnoon-(Jset-Jnoon);result[time[1]]=fromJulian(Jrise);result[time[2]]=fromJulian(Jset)}return result};function moonCoords(d){var L=rad*(218.316+13.176396*d),M=rad*(134.963+13.064993*d),F=rad*(93.272+13.229350*d),l=L+rad*6.289*sin(M),b=rad*5.128*sin(F),dt=385001-20905*cos(M);return{ra:rightAscension(l,b),dec:declination(l,b),dist:dt}}SunCalc.getMoonPosition=function(date,lat,lng){var lw=rad* -lng,phi=rad*lat,d=toDays(date),c=moonCoords(d),H=siderealTime(d,lw)-c.ra,h=altitude(H,phi,c.dec),pa=atan(sin(H),tan(phi)*cos(c.dec)-sin(c.dec)*cos(H));h=h+astroRefraction(h);return{azimuth:azimuth(H,phi,c.dec),altitude:h,distance:c.dist,parallacticAngle:pa}};SunCalc.getMoonIllumination=function(date){var d=toDays(date||new Date()),s=sunCoords(d),m=moonCoords(d),sdist=149598000,phi=acos(sin(s.dec)*sin(m.dec)+cos(s.dec)*cos(m.dec)*cos(s.ra-m.ra)),inc=atan(sdist*sin(phi),m.dist-sdist*cos(phi)),angle=atan(cos(s.dec)*sin(s.ra-m.ra),sin(s.dec)*cos(m.dec)-cos(s.dec)*sin(m.dec)*cos(s.ra-m.ra));return{fraction:(1+cos(inc))/2,phase:0.5+0.5*inc*(angle<0?-1:1)/Math.PI,angle:angle}};function hoursLater(date,h){return new Date(date.valueOf()+h*dayMs/24)}SunCalc.getMoonTimes=function(date,lat,lng,inUTC){var t=new Date(date);if(inUTC){t.setUTCHours(0,0,0,0)}else{t.setHours(0,0,0,0)}var hc=0.133*rad,h0=SunCalc.getMoonPosition(t,lat,lng).altitude-hc,h1,h2,rise,set,a,b,xe,ye,d,roots,x1,x2,dx;for(var i=1;i<=24;i+=2){h1=SunCalc.getMoonPosition(hoursLater(t,i),lat,lng).altitude-hc;h2=SunCalc.getMoonPosition(hoursLater(t,i+1),lat,lng).altitude-hc;a=(h0+h2)/2-h1;b=(h2-h0)/2;xe= -b/(2*a);ye=(a*xe+b)*xe+h1;d=b*b-4*a*h1;roots=0;if(d>=0){dx=Math.sqrt(d)/(Math.abs(a)*2);x1=xe-dx;x2=xe+dx;if(Math.abs(x1)<=1){roots+=1}if(Math.abs(x2)<=1){roots+=1}if(x1<-1){x1=x2}}if(roots===1){if(h0<0){rise=i+x1}else{set=i+x1}}else if(roots===2){rise=i+(ye<0?x2:x1);set=i+(ye<0?x1:x2)}if(rise&&set){break}h0=h2}var result={};if(rise){result.rise=hoursLater(t,rise)}if(set){result.set=hoursLater(t,set)}if(!rise&&!set){result[ye>0?'alwaysUp':'alwaysDown']=true}return result};if(typeof exports==='object'&&typeof module!=='undefined'){module.exports=SunCalc}else if(typeof define==='function'&&define.amd){define(SunCalc)}else{window.SunCalc=SunCalc}}());
+    (function () {
+        "use strict";
+        var PI = Math.PI,
+            sin = Math.sin,
+            cos = Math.cos,
+            tan = Math.tan,
+            asin = Math.asin,
+            atan = Math.atan2,
+            acos = Math.acos,
+            rad = PI / 180;
+        var dayMs = 1000 * 60 * 60 * 24,
+            J1970 = 2440588,
+            J2000 = 2451545;
+        function toJulian(date) {
+            return date.valueOf() / dayMs - 0.5 + J1970;
+        }
+        function fromJulian(j) {
+            return new Date((j + 0.5 - J1970) * dayMs);
+        }
+        function toDays(date) {
+            return toJulian(date) - J2000;
+        }
+        var e = rad * 23.4397;
+        function rightAscension(l, b) {
+            return atan(sin(l) * cos(e) - tan(b) * sin(e), cos(l));
+        }
+        function declination(l, b) {
+            return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l));
+        }
+        function azimuth(H, phi, dec) {
+            return atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi));
+        }
+        function altitude(H, phi, dec) {
+            return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H));
+        }
+        function siderealTime(d, lw) {
+            return rad * (280.16 + 360.9856235 * d) - lw;
+        }
+        function astroRefraction(h) {
+            if (h < 0) {
+                h = 0;
+            }
+            return 0.0002967 / Math.tan(h + 0.00312536 / (h + 0.08901179));
+        }
+        function solarMeanAnomaly(d) {
+            return rad * (357.5291 + 0.98560028 * d);
+        }
+        function eclipticLongitude(M) {
+            var C = rad * (1.9148 * sin(M) + 0.02 * sin(2 * M) + 0.0003 * sin(3 * M)),
+                P = rad * 102.9372;
+            return M + C + P + PI;
+        }
+        function sunCoords(d) {
+            var M = solarMeanAnomaly(d),
+                L = eclipticLongitude(M);
+            return { dec: declination(L, 0), ra: rightAscension(L, 0) };
+        }
+        var SunCalc = {};
+        SunCalc.getPosition = function (date, lat, lng) {
+            var lw = rad * -lng,
+                phi = rad * lat,
+                d = toDays(date),
+                c = sunCoords(d),
+                H = siderealTime(d, lw) - c.ra;
+            return { azimuth: azimuth(H, phi, c.dec), altitude: altitude(H, phi, c.dec) };
+        };
+        var times = (SunCalc.times = [
+            [-0.833, "sunrise", "sunset"],
+            [-0.3, "sunriseEnd", "sunsetStart"],
+            [-6, "dawn", "dusk"],
+            [-12, "nauticalDawn", "nauticalDusk"],
+            [-18, "nightEnd", "night"],
+            [6, "goldenHourEnd", "goldenHour"],
+        ]);
+        SunCalc.addTime = function (angle, riseName, setName) {
+            times.push([angle, riseName, setName]);
+        };
+        var J0 = 0.0009;
+        function julianCycle(d, lw) {
+            return Math.round(d - J0 - lw / (2 * PI));
+        }
+        function approxTransit(Ht, lw, n) {
+            return J0 + (Ht + lw) / (2 * PI) + n;
+        }
+        function solarTransitJ(ds, M, L) {
+            return J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L);
+        }
+        function hourAngle(h, phi, d) {
+            return acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d)));
+        }
+        function observerAngle(height) {
+            return (-2.076 * Math.sqrt(height)) / 60;
+        }
+        function getSetJ(h, lw, phi, dec, n, M, L) {
+            var w = hourAngle(h, phi, dec),
+                a = approxTransit(w, lw, n);
+            return solarTransitJ(a, M, L);
+        }
+        SunCalc.getTimes = function (date, lat, lng, height) {
+            height = height || 0;
+            var lw = rad * -lng,
+                phi = rad * lat,
+                dh = observerAngle(height),
+                d = toDays(date),
+                n = julianCycle(d, lw),
+                ds = approxTransit(0, lw, n),
+                M = solarMeanAnomaly(ds),
+                L = eclipticLongitude(M),
+                dec = declination(L, 0),
+                Jnoon = solarTransitJ(ds, M, L),
+                i,
+                len,
+                time,
+                h0,
+                Jset,
+                Jrise;
+            var result = { solarNoon: fromJulian(Jnoon), nadir: fromJulian(Jnoon - 0.5) };
+            for (i = 0, len = times.length; i < len; i += 1) {
+                time = times[i];
+                h0 = (time[0] + dh) * rad;
+                Jset = getSetJ(h0, lw, phi, dec, n, M, L);
+                Jrise = Jnoon - (Jset - Jnoon);
+                result[time[1]] = fromJulian(Jrise);
+                result[time[2]] = fromJulian(Jset);
+            }
+            return result;
+        };
+        function moonCoords(d) {
+            var L = rad * (218.316 + 13.176396 * d),
+                M = rad * (134.963 + 13.064993 * d),
+                F = rad * (93.272 + 13.22935 * d),
+                l = L + rad * 6.289 * sin(M),
+                b = rad * 5.128 * sin(F),
+                dt = 385001 - 20905 * cos(M);
+            return { ra: rightAscension(l, b), dec: declination(l, b), dist: dt };
+        }
+        SunCalc.getMoonPosition = function (date, lat, lng) {
+            var lw = rad * -lng,
+                phi = rad * lat,
+                d = toDays(date),
+                c = moonCoords(d),
+                H = siderealTime(d, lw) - c.ra,
+                h = altitude(H, phi, c.dec),
+                pa = atan(sin(H), tan(phi) * cos(c.dec) - sin(c.dec) * cos(H));
+            h = h + astroRefraction(h);
+            return { azimuth: azimuth(H, phi, c.dec), altitude: h, distance: c.dist, parallacticAngle: pa };
+        };
+        SunCalc.getMoonIllumination = function (date) {
+            var d = toDays(date || new Date()),
+                s = sunCoords(d),
+                m = moonCoords(d),
+                sdist = 149598000,
+                phi = acos(sin(s.dec) * sin(m.dec) + cos(s.dec) * cos(m.dec) * cos(s.ra - m.ra)),
+                inc = atan(sdist * sin(phi), m.dist - sdist * cos(phi)),
+                angle = atan(cos(s.dec) * sin(s.ra - m.ra), sin(s.dec) * cos(m.dec) - cos(s.dec) * sin(m.dec) * cos(s.ra - m.ra));
+            return { fraction: (1 + cos(inc)) / 2, phase: 0.5 + (0.5 * inc * (angle < 0 ? -1 : 1)) / Math.PI, angle: angle };
+        };
+        function hoursLater(date, h) {
+            return new Date(date.valueOf() + (h * dayMs) / 24);
+        }
+        SunCalc.getMoonTimes = function (date, lat, lng, inUTC) {
+            var t = new Date(date);
+            if (inUTC) {
+                t.setUTCHours(0, 0, 0, 0);
+            } else {
+                t.setHours(0, 0, 0, 0);
+            }
+            var hc = 0.133 * rad,
+                h0 = SunCalc.getMoonPosition(t, lat, lng).altitude - hc,
+                h1,
+                h2,
+                rise,
+                set,
+                a,
+                b,
+                xe,
+                ye,
+                d,
+                roots,
+                x1,
+                x2,
+                dx;
+            for (var i = 1; i <= 24; i += 2) {
+                h1 = SunCalc.getMoonPosition(hoursLater(t, i), lat, lng).altitude - hc;
+                h2 = SunCalc.getMoonPosition(hoursLater(t, i + 1), lat, lng).altitude - hc;
+                a = (h0 + h2) / 2 - h1;
+                b = (h2 - h0) / 2;
+                xe = -b / (2 * a);
+                ye = (a * xe + b) * xe + h1;
+                d = b * b - 4 * a * h1;
+                roots = 0;
+                if (d >= 0) {
+                    dx = Math.sqrt(d) / (Math.abs(a) * 2);
+                    x1 = xe - dx;
+                    x2 = xe + dx;
+                    if (Math.abs(x1) <= 1) {
+                        roots += 1;
+                    }
+                    if (Math.abs(x2) <= 1) {
+                        roots += 1;
+                    }
+                    if (x1 < -1) {
+                        x1 = x2;
+                    }
+                }
+                if (roots === 1) {
+                    if (h0 < 0) {
+                        rise = i + x1;
+                    } else {
+                        set = i + x1;
+                    }
+                } else if (roots === 2) {
+                    rise = i + (ye < 0 ? x2 : x1);
+                    set = i + (ye < 0 ? x1 : x2);
+                }
+                if (rise && set) {
+                    break;
+                }
+                h0 = h2;
+            }
+            var result = {};
+            if (rise) {
+                result.rise = hoursLater(t, rise);
+            }
+            if (set) {
+                result.set = hoursLater(t, set);
+            }
+            if (!rise && !set) {
+                result[ye > 0 ? "alwaysUp" : "alwaysDown"] = true;
+            }
+            return result;
+        };
+        if (typeof exports === "object" && typeof module !== "undefined") {
+            module.exports = SunCalc;
+        } else if (typeof define === "function" && define.amd) {
+            define(SunCalc);
+        } else {
+            window.SunCalc = SunCalc;
+        }
+    })();
 </script>
 
-
 <script>
-	// this is the definitons script
-	function computus(y) {
-    var date,
-        a,
-        b,
-        c,
-        m,
-        d;
-    date = new Date;
-    date.setHours(0, 0, 0, 0);
-    date.setFullYear(y);
-    a = y % 19;
-    b = (2200 <= y && y <= 2299)
-        ? ((11 * a) + 4) % 30
-        : ((11 * a) + 5) % 30;
-    c = ((b === 0) || (b === 1 && a > 10))
-        ? (b + 1)
-        : b;
-    m = (1 <= c && c <= 19)
-        ? 3
-        : 2;
-    d = (50 - c) % 31;
-    date.setMonth(m, d);
-    date.setMonth(m, d + (7 - date.getDay()));
-    return date
-}
-function computus2(y) {
-    var nov27 = new Date();
-    nov27.setFullYear(y);
-    nov27.setMonth(11 - 1);
-    nov27.setDate(27);
-    while (nov27.getDay() != 0) {
-        nov27.setDate(nov27.getDate() + 1)
+    // this is the definitons script
+    function computus(y) {
+        var date, a, b, c, m, d;
+        date = new Date();
+        date.setHours(0, 0, 0, 0);
+        date.setFullYear(y);
+        a = y % 19;
+        b = 2200 <= y && y <= 2299 ? (11 * a + 4) % 30 : (11 * a + 5) % 30;
+        c = b === 0 || (b === 1 && a > 10) ? b + 1 : b;
+        m = 1 <= c && c <= 19 ? 3 : 2;
+        d = (50 - c) % 31;
+        date.setMonth(m, d);
+        date.setMonth(m, d + (7 - date.getDay()));
+        return date;
     }
-    return nov27
-}
-function dateToSuntime(dat) {
-    var hour = dat.getHours();
-    var mint = dat.getMinutes();
-    return hour + (mint / 60)
-}
-function w_sunrise(lat, lon, dat) {
-    return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunrise)
-}
-function w_sunset(lat, lon, dat) {
-    return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunset)
-}
-const roundNearest = (value, nearest) => Math.round(value * (1 / nearest)) / (1 / nearest);
-function roundTime(time) {
-    time = roundNearest(time, 15 / 60);
-    if (time > 24) {
-        time -= 24
-    }
-    if (time < 0) {
-        time += 24
-    }
-    return time
-}
-function suntimeToClocktime(suntime) {
-    return [
-        Math.floor(suntime),
-        Math.floor((suntime - Math.floor(suntime)) * 60)
-    ]
-}
-function printClocktime(clocktime) {
-    let am = clocktime[0] < 12;
-    clocktime[0] = am
-        ? clocktime[0]
-        : clocktime[0] - 12;
-    if (clocktime[0] == 0) {
-        clocktime[0] = 12
-    }
-    return (clocktime[0] < 10
-        ? "0"
-        : "") + clocktime[0] + ":" + (clocktime[1] < 10
-        ? "0" + clocktime[1]
-        : clocktime[1]) + (clocktime[0] < 10
-        ? " "
-        : " ") + (am
-        ? "AM"
-        : "PM")
-}
-
-function printDuration(suntime) {
-    var n = suntimeToClocktime(suntime);
-    return (n[0] > 0 ? n[0] + "hr" : "") + (n[1] > 0 ? n[1] + "min" : "");
-}
-
-
-function initBoxes(lat, lon) {
-    var latBox = document.getElementById("lat");
-    var lonBox = document.getElementById("lon");
-    var datBox = document.getElementById("dat");
-    datBox.valueAsDate = new Date();
-    latBox.value = lat;
-    lonBox.value = lon;
-    latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-    lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-    datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-    boxChanged(latBox, lonBox, datBox);
-}
-function getHorariumTable(hours) {
-    let table = document.createElement("table");
-    table.border = "1";
-    table.style.borderCollapse = "collapse";
-    table.style.width = "100%";
-    let tr = document.createElement("tr");
-    tr.style.width = "100%";
-    let timeth = document.createElement("th");
-    timeth.style.width = "15%";
-    timeth.innerHTML = "Time";
-    timeth.align = "left";
-    tr.append(timeth);
-    let hourth = document.createElement("th");
-    hourth.style.width = "85%";
-    hourth.innerHTML = "Hour";
-    hourth.align = "left";
-    tr.append(hourth);
-    table.append(tr);
-    {
-        for (i = 0; i < Object.keys(hours).length; i += 1) {
-            name = Object.keys(hours)[i];
-            hour = hours[name];
-            nextHour = i + 1;
-            if (nextHour == Object.keys(hours).length) {
-                nextHour = 0
-            }
-            elapse = hours[Object.keys(hours)[nextHour]].time - hour.time;
-            elapse -= hour.duration;
-            if (elapse < 0) {
-                elapse += 24
-            }
-            console.log("Time elapse from " + name + " to " + Object.keys(hours)[nextHour] + ": " + printDuration(elapse))
+    function computus2(y) {
+        var nov27 = new Date();
+        nov27.setFullYear(y);
+        nov27.setMonth(11 - 1);
+        nov27.setDate(27);
+        while (nov27.getDay() != 0) {
+            nov27.setDate(nov27.getDate() + 1);
         }
+        return nov27;
     }
-    for (hour in hours) {
-        let time = suntimeToClocktime(hours[hour].time);
+    function dateToSuntime(dat) {
+        var hour = dat.getHours();
+        var mint = dat.getMinutes();
+        return hour + mint / 60;
+    }
+    function w_sunrise(lat, lon, dat) {
+        return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunrise);
+    }
+    function w_sunset(lat, lon, dat) {
+        return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunset);
+    }
+    const roundNearest = (value, nearest) => Math.round(value * (1 / nearest)) / (1 / nearest);
+    function roundTime(time) {
+        time = roundNearest(time, 15 / 60);
+        if (time > 24) {
+            time -= 24;
+        }
+        if (time < 0) {
+            time += 24;
+        }
+        return time;
+    }
+    function suntimeToClocktime(suntime) {
+        return [Math.floor(suntime), Math.floor((suntime - Math.floor(suntime)) * 60)];
+    }
+    function printClocktime(clocktime) {
+        let am = clocktime[0] < 12;
+        clocktime[0] = am ? clocktime[0] : clocktime[0] - 12;
+        if (clocktime[0] == 0) {
+            clocktime[0] = 12;
+        }
+        return (clocktime[0] < 10 ? "0" : "") + clocktime[0] + ":" + (clocktime[1] < 10 ? "0" + clocktime[1] : clocktime[1]) + (clocktime[0] < 10 ? " " : " ") + (am ? "AM" : "PM");
+    }
+
+    function printDuration(suntime) {
+        var n = suntimeToClocktime(suntime);
+        return (n[0] > 0 ? n[0] + "hr" : "") + (n[1] > 0 ? n[1] + "min" : "");
+    }
+
+    function initBoxes(lat, lon) {
+        var latBox = document.getElementById("lat");
+        var lonBox = document.getElementById("lon");
+        var datBox = document.getElementById("dat");
+        datBox.valueAsDate = new Date();
+        latBox.value = lat;
+        lonBox.value = lon;
+        latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+        lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+        datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+        boxChanged(latBox, lonBox, datBox);
+    }
+    function getHorariumTable(hours) {
+        let table = document.createElement("table");
+        table.border = "1";
+        table.style.borderCollapse = "collapse";
+        table.style.width = "100%";
         let tr = document.createElement("tr");
-        let timetd = document.createElement("td");
-        timetd.innerHTML = printClocktime(time);
-        tr.append(timetd);
-        let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
-        timetd.innerHTML += "<br/>" + printClocktime(dur);
-        let hourtd = document.createElement("td");
-        hourtd.innerHTML = "<B>"+hour+"</B>";
-        tr.append(hourtd);
         tr.style.width = "100%";
-        timetd.style.width = "10%";
-        hourtd.style.width = "10%";
-        table.append(tr)
-    }
-    return table
-}
-
-function advdat(dat, n=1) {
-    // advance date by one
-    dat.setDate(dat.getDate() + n)
-    return dat;
-}
-
-function treatAsUTC(date) {
-    var result = new Date(date);
-    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
-    return result;
-}
-
-function daysBetween(startDate, endDate) {
-    var millisecondsPerDay = 24 * 60 * 60 * 1000;
-    return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
-}
-
-function keyDate(date) {
-    var now = date;
-    var start = new Date(now.getFullYear(), 0, 0);
-    return Math.floor(daysBetween(start, now));
-}
-
-function ordinal_suffix_of(i) {
-    var j = i % 10,
-        k = i % 100;
-    if (j == 1 && k != 11) {
-        return i + "st";
-    }
-    if (j == 2 && k != 12) {
-        return i + "nd";
-    }
-    if (j == 3 && k != 13) {
-        return i + "rd";
-    }
-    return i + "th";
-}
-
-function getLiturgicalCalendar(year) {
-    function gendat(m, d, y=year) {
-        var n = new Date();
-        n.setMonth(m - 1);
-        n.setDate(d);
-        n.setFullYear(y);
-        return n;
-    }
-
-    var easterSunday = computus(year);
-    var adventSunday = computus2(year);
-
-    var calendar = {};
-
-    //console.log("Easter is " + easterSunday.toDateString());
-    //console.log("Advent is " + adventSunday.toDateString());
-
-    /* the sundays of paschaltide */
-
-    var nxtSunday = new Date(easterSunday);
-
-    for (var i = 0; i < 6; i++) {
-        calendar[keyDate(nxtSunday)] = {
-            //name: (i == 0) ? "Pascha" : ordinal_suffix_of(i) + " Sunday after Pascha",
-            id: 'pascha/' + (i + 1) + '/sunday',
-            date: nxtSunday.toDateString()
-        };
-
-        nxtSunday.setDate(nxtSunday.getDate() + 7);
-    }
-
-    /* days of the ascension octave */
-    var ascension = new Date(nxtSunday);
-    advdat(ascension, -3)
-    for (i = 0; i < 8; i++) {
-        if (i == 0) {
-            calendar[keyDate(ascension)] = {
-                //name: 'Ascension of the Lord',
-                id: 'ascension/octave/1',
-                date: ascension.toDateString()
+        let timeth = document.createElement("th");
+        timeth.style.width = "15%";
+        timeth.innerHTML = "Time";
+        timeth.align = "left";
+        tr.append(timeth);
+        let hourth = document.createElement("th");
+        hourth.style.width = "85%";
+        hourth.innerHTML = "Hour";
+        hourth.align = "left";
+        tr.append(hourth);
+        table.append(tr);
+        {
+            for (i = 0; i < Object.keys(hours).length; i += 1) {
+                name = Object.keys(hours)[i];
+                hour = hours[name];
+                nextHour = i + 1;
+                if (nextHour == Object.keys(hours).length) {
+                    nextHour = 0;
+                }
+                elapse = hours[Object.keys(hours)[nextHour]].time - hour.time;
+                elapse -= hour.duration;
+                if (elapse < 0) {
+                    elapse += 24;
+                }
+                console.log("Time elapse from " + name + " to " + Object.keys(hours)[nextHour] + ": " + printDuration(elapse));
             }
-        } else if (i == 7) {
-            calendar[keyDate(ascension)] = {
-                //name: 'Octave of the Ascension',
-                id: 'ascension/octave/8',
-                date: ascension.toDateString()
-            }
-        } else {
-            //if (calendar[keyDate(ascension)] === undefined) {
+        }
+        for (hour in hours) {
+            let time = suntimeToClocktime(hours[hour].time);
+            let tr = document.createElement("tr");
+            let timetd = document.createElement("td");
+            timetd.innerHTML = printClocktime(time);
+            tr.append(timetd);
+            let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
+            timetd.innerHTML += "<br/>" + printClocktime(dur);
+            let hourtd = document.createElement("td");
+            hourtd.innerHTML = "<B>" + hour + "</B>";
+            tr.append(hourtd);
+            tr.style.width = "100%";
+            timetd.style.width = "10%";
+            hourtd.style.width = "10%";
+            table.append(tr);
+        }
+        return table;
+    }
+
+    function advdat(dat, n = 1) {
+        // advance date by one
+        dat.setDate(dat.getDate() + n);
+        return dat;
+    }
+
+    function treatAsUTC(date) {
+        var result = new Date(date);
+        result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+        return result;
+    }
+
+    function daysBetween(startDate, endDate) {
+        var millisecondsPerDay = 24 * 60 * 60 * 1000;
+        return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+    }
+
+    function keyDate(date) {
+        var now = date;
+        var start = new Date(now.getFullYear(), 0, 0);
+        return Math.floor(daysBetween(start, now));
+    }
+
+    function ordinal_suffix_of(i) {
+        var j = i % 10,
+            k = i % 100;
+        if (j == 1 && k != 11) {
+            return i + "st";
+        }
+        if (j == 2 && k != 12) {
+            return i + "nd";
+        }
+        if (j == 3 && k != 13) {
+            return i + "rd";
+        }
+        return i + "th";
+    }
+
+    function getLiturgicalCalendar(year) {
+        function gendat(m, d, y = year) {
+            var n = new Date();
+            n.setMonth(m - 1);
+            n.setDate(d);
+            n.setFullYear(y);
+            return n;
+        }
+
+        var easterSunday = computus(year);
+        var adventSunday = computus2(year);
+
+        var calendar = {};
+
+        //console.log("Easter is " + easterSunday.toDateString());
+        //console.log("Advent is " + adventSunday.toDateString());
+
+        /* the sundays of paschaltide */
+
+        var nxtSunday = new Date(easterSunday);
+
+        for (var i = 0; i < 6; i++) {
+            calendar[keyDate(nxtSunday)] = {
+                //name: (i == 0) ? "Pascha" : ordinal_suffix_of(i) + " Sunday after Pascha",
+                id: "pascha/" + (i + 1) + "/sunday",
+                date: nxtSunday.toDateString(),
+            };
+
+            nxtSunday.setDate(nxtSunday.getDate() + 7);
+        }
+
+        /* days of the ascension octave */
+        var ascension = new Date(nxtSunday);
+        advdat(ascension, -3);
+        for (i = 0; i < 8; i++) {
+            if (i == 0) {
+                calendar[keyDate(ascension)] = {
+                    //name: 'Ascension of the Lord',
+                    id: "ascension/octave/1",
+                    date: ascension.toDateString(),
+                };
+            } else if (i == 7) {
+                calendar[keyDate(ascension)] = {
+                    //name: 'Octave of the Ascension',
+                    id: "ascension/octave/8",
+                    date: ascension.toDateString(),
+                };
+            } else {
+                //if (calendar[keyDate(ascension)] === undefined) {
                 calendar[keyDate(ascension)] = {
                     //name: ordinal_suffix_of(i) + ' Day after Ascension',
-                    id: 'ascension/octave/' + (i + 1),
-                    date: ascension.toDateString()
-                }
-            //}
-        }
-
-        advdat(ascension)
-    }
-
-    /* pentecost sunday */
-
-    calendar[keyDate(advdat(nxtSunday, 7))] = {
-        //name: 'Pentecost',
-        id: 'pentecost/sunday',
-        date: nxtSunday.toDateString()
-    }
-
-    /* the sundays after pentecost */
-
-    var seventhSunday;
-
-    for (var i = 0; i < 24; i++) {
-        advdat(nxtSunday, 7);
-        if (i == 6) {
-            seventhSunday = new Date(nxtSunday)
-        }
-        calendar[keyDate(nxtSunday)] = {
-            //name: ordinal_suffix_of(i + 1) + ' Sunday after Pentecost',
-            id: 'pentecost/' + (i + 1) + '/sunday',
-            date: nxtSunday.toDateString()
-        }
-    }
-
-    function subidSundays(date, n, id) {
-        if (date.getDay() == 0) {
-            advdat(date)
-        }
-
-        while (date.getDay() != 0) {
-              advdat(date)
-        } 
-
-        for (var i = 0; i < n; i++) {
-            if (calendar[keyDate(date)].id.split("/")[0] != "pentecost" && calendar[keyDate(date)].id.split("/")[0] != 'epiphany') {
-                //console.log(date.toDateString() + " would be " + id + '/' + (i + 1) + '/sunday')
-                //console.log("\tcannot be included in advent")
-            } else {
-                calendar[keyDate(date)].subid = id + '/' + (i + 1) + '/sunday'
+                    id: "ascension/octave/" + (i + 1),
+                    date: ascension.toDateString(),
+                };
+                //}
             }
-            advdat(date, 7)
-        }
-    }
 
-    function queryid(id) {
-        for (var x in calendar) {
-            if (calendar[x].id == id) return x
+            advdat(ascension);
         }
-        return -1
-    }
 
-    function querysubid(id) {
-        for (var x in calendar) {
-            if (calendar[x].subid == id) return x
+        /* pentecost sunday */
+
+        calendar[keyDate(advdat(nxtSunday, 7))] = {
+            //name: 'Pentecost',
+            id: "pentecost/sunday",
+            date: nxtSunday.toDateString(),
+        };
+
+        /* the sundays after pentecost */
+
+        var seventhSunday;
+
+        for (var i = 0; i < 24; i++) {
+            advdat(nxtSunday, 7);
+            if (i == 6) {
+                seventhSunday = new Date(nxtSunday);
+            }
+            calendar[keyDate(nxtSunday)] = {
+                //name: ordinal_suffix_of(i + 1) + ' Sunday after Pentecost',
+                id: "pentecost/" + (i + 1) + "/sunday",
+                date: nxtSunday.toDateString(),
+            };
         }
-        return -1
-    }
 
-    /* the sundays of wisdom */
-    /* first sunday aftr the fifth kalends of august */
-    /* which i understand to be the 28th of july */
-    subidSundays(gendat(7, 28), 5, 'august')
+        function subidSundays(date, n, id) {
+            if (date.getDay() == 0) {
+                advdat(date);
+            }
+
+            while (date.getDay() != 0) {
+                advdat(date);
+            }
+
+            for (var i = 0; i < n; i++) {
+                if (calendar[keyDate(date)].id.split("/")[0] != "pentecost" && calendar[keyDate(date)].id.split("/")[0] != "epiphany") {
+                    //console.log(date.toDateString() + " would be " + id + '/' + (i + 1) + '/sunday')
+                    //console.log("\tcannot be included in advent")
+                } else {
+                    calendar[keyDate(date)].subid = id + "/" + (i + 1) + "/sunday";
+                }
+                advdat(date, 7);
+            }
+        }
+
+        function queryid(id) {
+            for (var x in calendar) {
+                if (calendar[x].id == id) return x;
+            }
+            return -1;
+        }
+
+        function querysubid(id) {
+            for (var x in calendar) {
+                if (calendar[x].subid == id) return x;
+            }
+            return -1;
+        }
+
+        /* the sundays of wisdom */
+        /* first sunday aftr the fifth kalends of august */
+        /* which i understand to be the 28th of july */
+        subidSundays(gendat(7, 28), 5, "august");
         /**
          * August I = Proverbs
          * August II = Ecclesiastes
@@ -332,9 +545,9 @@ function getLiturgicalCalendar(year) {
          /* 
 
     /* the sundays of job */
-    /* first sunday after the fifth kalends of septmber */
-    subidSundays(gendat(8, 28), 5, 'september')
-        /** 
+        /* first sunday after the fifth kalends of septmber */
+        subidSundays(gendat(8, 28), 5, "september");
+        /**
          * September I = Job
          * September II = Job
          * Septemver III = Tobit
@@ -342,8 +555,7 @@ function getLiturgicalCalendar(year) {
          * Septemver V = Judith
          * */
 
-
-    subidSundays(gendat(9, 27), 5, 'october')
+        subidSundays(gendat(9, 27), 5, "october");
         /**
          * October I = 1 Macchabbes
          * October II = 1 Maccabees
@@ -352,19 +564,20 @@ function getLiturgicalCalendar(year) {
          * October V = 2 Maccabess
          * */
 
-    if (querysubid('september/5/sunday') == -1) { // apply above rubric
-        var x = querysubid('september/4/sunday')
-        calendar[x].subid = 'september/5/sunday'
-        calendar[x].transfers = {
-            subid: true
+        if (querysubid("september/5/sunday") == -1) {
+            // apply above rubric
+            var x = querysubid("september/4/sunday");
+            calendar[x].subid = "september/5/sunday";
+            calendar[x].transfers = {
+                subid: true,
+            };
         }
-    }
 
-    // before we can add in the november dates, we must ensure we have continuous sundays from pentecost until advent
-    // if there are sundays missing, we can add in the octaves of the Assumption and All Saints, in this ordrer
-    // the octave-days will overwrite the sunday
-    // the sunday will be deffered to the next sunday
-    // now let's say we had this scheudle
+        // before we can add in the november dates, we must ensure we have continuous sundays from pentecost until advent
+        // if there are sundays missing, we can add in the octaves of the Assumption and All Saints, in this ordrer
+        // the octave-days will overwrite the sunday
+        // the sunday will be deffered to the next sunday
+        // now let's say we had this scheudle
         /**
          * Nth Sunday after Pentecost
          * Monday
@@ -378,52 +591,54 @@ function getLiturgicalCalendar(year) {
          * 7th (Tuesday)
          * Octave (Wednesday)
          * */
-    // The octave of the assumption repealed Wednesday->Saturday
-    // so the days after the octave would be the Thursday, Friday, and Saturday offices removed; Wednesday is lost to the feast itself
-    // thus, the Sunday is deferred to next week, and begins there, without losing any offices
+        // The octave of the assumption repealed Wednesday->Saturday
+        // so the days after the octave would be the Thursday, Friday, and Saturday offices removed; Wednesday is lost to the feast itself
+        // thus, the Sunday is deferred to next week, and begins there, without losing any offices
 
-    // now, so as to maintain a common calendar, the Assumption and All Saints will always have octaves, and these octaves will always defer the sunday within them to the next
+        // now, so as to maintain a common calendar, the Assumption and All Saints will always have octaves, and these octaves will always defer the sunday within them to the next
 
+        /* the four sundays of advent */
 
-    /* the four sundays of advent */
-
-    nxtSunday = new Date(adventSunday);
-    for (var i = 0; i < 4; i++) {
-        calendar[keyDate(nxtSunday)] = {
-            //name: ordinal_suffix_of(i + 1) + " Sunday of Advent",
-            id: 'advent/' + (i + 1) + "/sunday",
-            date: nxtSunday.toDateString()
-        }
-        advdat(nxtSunday, 7)
-    }
-
-    /* Sunday next before Advent */
-
-    nxtSunday = advdat(new Date(adventSunday), -7)
-    calendar[keyDate(nxtSunday)] = {
-        //name: 'Sunday before Advent',
-        id: 'pentecost/28/sunday',
-        date: nxtSunday.toDateString()
-    }
-
-    // we must now fill in the missing sundays, up to 2
-    {var i = 25;
-        var epi = 4;
-        while (calendar[keyDate(advdat(nxtSunday, -7))] === undefined) {
-            // bring us to an undefined suday
-        }
-    
-        while (calendar[keyDate(advdat(nxtSunday, 7))] === undefined) {
+        nxtSunday = new Date(adventSunday);
+        for (var i = 0; i < 4; i++) {
             calendar[keyDate(nxtSunday)] = {
-                id: 'pentecost/' + i + '/sunday',
+                //name: ordinal_suffix_of(i + 1) + " Sunday of Advent",
+                id: "advent/" + (i + 1) + "/sunday",
                 date: nxtSunday.toDateString(),
-                refid: 'epiphany/' + epi + '/sunday'
-            }
-            i+=1; epi+=1
-        }}
+            };
+            advdat(nxtSunday, 7);
+        }
 
-    // we can now fill in the november sundays
-    subidSundays(gendat(10, 28), 5, 'november')
+        /* Sunday next before Advent */
+
+        nxtSunday = advdat(new Date(adventSunday), -7);
+        calendar[keyDate(nxtSunday)] = {
+            //name: 'Sunday before Advent',
+            id: "pentecost/28/sunday",
+            date: nxtSunday.toDateString(),
+        };
+
+        // we must now fill in the missing sundays, up to 2
+        {
+            var i = 25;
+            var epi = 4;
+            while (calendar[keyDate(advdat(nxtSunday, -7))] === undefined) {
+                // bring us to an undefined suday
+            }
+
+            while (calendar[keyDate(advdat(nxtSunday, 7))] === undefined) {
+                calendar[keyDate(nxtSunday)] = {
+                    id: "pentecost/" + i + "/sunday",
+                    date: nxtSunday.toDateString(),
+                    refid: "epiphany/" + epi + "/sunday",
+                };
+                i += 1;
+                epi += 1;
+            }
+        }
+
+        // we can now fill in the november sundays
+        subidSundays(gendat(10, 28), 5, "november");
         /**
          * November I = Ezekiel
          * November II = Ezekiel (but if 4 weeks = November III)
@@ -432,228 +647,243 @@ function getLiturgicalCalendar(year) {
          * November V = Micah, Nahum, Habbakkuk, Zephaniah, Haggai, Zechariah, Malachi
          * */
 
-    /* the two sundays of passiontide */
+        /* the two sundays of passiontide */
 
-    nxtSunday = easterSunday;
-    for (var i = 0; i < 2; i++) {
-        calendar[keyDate(advdat(nxtSunday, -7))] = {
-            //name: (i == 0) ? 'Palm Sunday' : 'Passion Sunday',
-            id: 'passion/' + (2 - i) + '/sunday',
-            date: nxtSunday.toDateString()
-        }
-    }
-
-    /* the four sundays of lent */
-    for (var i = 0; i < 4; i++) {
-        calendar[keyDate(advdat(nxtSunday, -7))] = {
-            //name: ordinal_suffix_of(4 - i) + ' Sunday in Lent',
-            id: 'lent/' + (4 - i) + '/sunday',
-            date: nxtSunday.toDateString()
-        }
-    }
-
-    /* the three sundays before lent */
-    for (var i = 0; i < 3; i++) {
-        calendar[keyDate(advdat(nxtSunday, -7))] = {
-            //name: ordinal_suffix_of(i + 1) + ' Sunday before Lent',
-            id: 'prelent/' + (3 - i) + '/sunday',
-            date: nxtSunday.toDateString()
-        }
-    }
-
-    /* epiphany of the lord */
-    var epiphany = gendat(1, 6); // jan 6
-    for (var i = 0; i < 8; i++) {
-        calendar[keyDate(epiphany)] = {
-            //name: (i == 0) ? 'Epiphany of the Lord' : ordinal_suffix_of(i) + ' Day of the Epiphany',
-            id: 'epiphany/octave/' + (i + 1),
-            date: epiphany.toDateString()
+        nxtSunday = easterSunday;
+        for (var i = 0; i < 2; i++) {
+            calendar[keyDate(advdat(nxtSunday, -7))] = {
+                //name: (i == 0) ? 'Palm Sunday' : 'Passion Sunday',
+                id: "passion/" + (2 - i) + "/sunday",
+                date: nxtSunday.toDateString(),
+            };
         }
 
-        if (epiphany.getDay() == 0) {
-            calendar[keyDate(epiphany)].id = 'epiphany/1/sunday'
-            nxtSunday = new Date(epiphany);
+        /* the four sundays of lent */
+        for (var i = 0; i < 4; i++) {
+            calendar[keyDate(advdat(nxtSunday, -7))] = {
+                //name: ordinal_suffix_of(4 - i) + ' Sunday in Lent',
+                id: "lent/" + (4 - i) + "/sunday",
+                date: nxtSunday.toDateString(),
+            };
         }
-        advdat(epiphany)
-    }
 
-    /* days until first sunday after octave of epiphany */
+        /* the three sundays before lent */
+        for (var i = 0; i < 3; i++) {
+            calendar[keyDate(advdat(nxtSunday, -7))] = {
+                //name: ordinal_suffix_of(i + 1) + ' Sunday before Lent',
+                id: "prelent/" + (3 - i) + "/sunday",
+                date: nxtSunday.toDateString(),
+            };
+        }
 
-    {
-        var i = 1;
-        while (epiphany.getDay() != 0) {
+        /* epiphany of the lord */
+        var epiphany = gendat(1, 6); // jan 6
+        for (var i = 0; i < 8; i++) {
             calendar[keyDate(epiphany)] = {
-               // name: ordinal_suffix_of(i) + ' Feria after Epiphanytide',
-                id: 'epiphany/post.octave/' + i,
-                date: epiphany.toDateString()
+                //name: (i == 0) ? 'Epiphany of the Lord' : ordinal_suffix_of(i) + ' Day of the Epiphany',
+                id: "epiphany/octave/" + (i + 1),
+                date: epiphany.toDateString(),
+            };
+
+            if (epiphany.getDay() == 0) {
+                calendar[keyDate(epiphany)].id = "epiphany/1/sunday";
+                nxtSunday = new Date(epiphany);
             }
-            i += 1
-            advdat(epiphany)
+            advdat(epiphany);
         }
-    }
 
-    /* the sundays after epiphny */
-    {
-        advdat(nxtSunday, 7);
-        var i = 2;
-        while (calendar[keyDate(nxtSunday)] === undefined) {
-            calendar[keyDate(nxtSunday)] = {
-                //name: ordinal_suffix_of(i + 1) + ' Sunday after Epihpany',
-                id: 'epiphany/' + i + '/sunday',
-                date: nxtSunday.toDateString()
+        /* days until first sunday after octave of epiphany */
+
+        {
+            var i = 1;
+            while (epiphany.getDay() != 0) {
+                calendar[keyDate(epiphany)] = {
+                    // name: ordinal_suffix_of(i) + ' Feria after Epiphanytide',
+                    id: "epiphany/post.octave/" + i,
+                    date: epiphany.toDateString(),
+                };
+                i += 1;
+                advdat(epiphany);
             }
-            advdat(nxtSunday, 7)
-            i += 1
         }
-    }
 
-    /* circumcision &c until epiphany */
-    calendar[keyDate(gendat(1, 1))] = {
-        //name: 'Circumcision of the Lord',
-        id: 'christmas/octave/8',
-        date: gendat(1, 1).toDateString()
-    }
-
-    calendar[keyDate(gendat(1, 2))] = {
-        //name: 'Octave of Saint Stephen',
-        id: 'st.stephen.protomartyr/octave/8',
-        date: gendat(1, 2).toDateString()
-    }
-
-    calendar[keyDate(gendat(1, 3))] = {
-        //name: 'Octave of Saint John',
-        id: 'st.john.apostle/octave/8',
-        date: gendat(1, 3).toDateString()
-    }
-
-    calendar[keyDate(gendat(1, 4))] = {
-        //name: 'Octave of the Holy Innocents',
-        id: 'holy.innocents/octave/8',
-        date: gendat(1, 4).toDateString()
-    }
-
-    calendar[keyDate(gendat(1, 5))] = {
-        //name: 'Eve of the Epiphany',
-        id: 'epiphany/eve',
-        date: gendat(1, 5).toDateString()
-    }
-
-    /* christmas &c */
-    calendar[keyDate(gendat(12, 24))] = {
-       // name: 'Eve of the Nativity',
-        id: 'christmas/eve',
-        date: gendat(12, 24).toDateString()
-    }
-
-    calendar[keyDate(gendat(12, 25))] = {
-      //  name: 'Nativity of the Lord',
-        id: 'christmas/octave/1',
-        date: gendat(12, 25).toDateString()
-    }
-
-    calendar[keyDate(gendat(12, 26))] = {
-        //name: 'Saint Stephen, Protomartyr',
-        id: 'christmas/octave/2',
-        date: gendat(12, 26).toDateString()
-    }
-
-    calendar[keyDate(gendat(12, 27))] = {
-        //name: 'Saint John, Apostle and Evangelist',
-        id: 'christmas/octave/3',
-        date: gendat(12, 27).toDateString()
-    }
-
-    calendar[keyDate(gendat(12, 28))] = {
-        //name: 'Holy Innocents, Martyrs',
-        id: 'christmas/octave/4',
-        date: gendat(12, 28).toDateString()
-    }
-
-    calendar[keyDate(gendat(12, 29))] = {
-        //name: 'Saint Thomas Becket, Bishop and Martyr',
-        id: 'christmas/octave/5',
-        date: gendat(12, 29).toDateString()
-    }
-
-    calendar[keyDate(gendat(12, 30))] = {
-        //name: 'Sixth Day of the Nativity',
-        id: 'christmas/octave/6',
-        date: gendat(12, 30).toDateString()
-    }
-
-    calendar[keyDate(gendat(12, 31))] = {
-       // name: 'Seventh Day of the Nativity',
-        id: 'christmas/octave/7',
-        date: gendat(12, 31).toDateString()
-    }
-
-    if (querysubid('november/5/sunday') == -1) {
-        var x = querysubid('november/2/sunday')
-        calendar[x].subid = 'november/3/sunday'
-        calendar[x].transfers = {
-            subid: true
+        /* the sundays after epiphny */
+        {
+            advdat(nxtSunday, 7);
+            var i = 2;
+            while (calendar[keyDate(nxtSunday)] === undefined) {
+                calendar[keyDate(nxtSunday)] = {
+                    //name: ordinal_suffix_of(i + 1) + ' Sunday after Epihpany',
+                    id: "epiphany/" + i + "/sunday",
+                    date: nxtSunday.toDateString(),
+                };
+                advdat(nxtSunday, 7);
+                i += 1;
+            }
         }
-        calendar[Number(x) + 7].subid = 'november/4/sunday'
-        calendar[Number(x) + 7].transfers = {
-            subid: true
+
+        /* circumcision &c until epiphany */
+        calendar[keyDate(gendat(1, 1))] = {
+            //name: 'Circumcision of the Lord',
+            id: "christmas/octave/8",
+            date: gendat(1, 1).toDateString(),
+        };
+
+        calendar[keyDate(gendat(1, 2))] = {
+            //name: 'Octave of Saint Stephen',
+            id: "st.stephen.protomartyr/octave/8",
+            date: gendat(1, 2).toDateString(),
+        };
+
+        calendar[keyDate(gendat(1, 3))] = {
+            //name: 'Octave of Saint John',
+            id: "st.john.apostle/octave/8",
+            date: gendat(1, 3).toDateString(),
+        };
+
+        calendar[keyDate(gendat(1, 4))] = {
+            //name: 'Octave of the Holy Innocents',
+            id: "holy.innocents/octave/8",
+            date: gendat(1, 4).toDateString(),
+        };
+
+        calendar[keyDate(gendat(1, 5))] = {
+            //name: 'Eve of the Epiphany',
+            id: "epiphany/vigil",
+            date: gendat(1, 5).toDateString(),
+        };
+
+        /* christmas &c */
+        calendar[keyDate(gendat(12, 24))] = {
+            // name: 'Eve of the Nativity',
+            id: "christmas/vigil",
+            date: gendat(12, 24).toDateString(),
+        };
+
+        calendar[keyDate(gendat(12, 25))] = {
+            //  name: 'Nativity of the Lord',
+            id: "christmas/octave/1",
+            date: gendat(12, 25).toDateString(),
+        };
+
+        calendar[keyDate(gendat(12, 26))] = {
+            //name: 'Saint Stephen, Protomartyr',
+            id: "christmas/octave/2",
+            date: gendat(12, 26).toDateString(),
+        };
+
+        calendar[keyDate(gendat(12, 27))] = {
+            //name: 'Saint John, Apostle and Evangelist',
+            id: "christmas/octave/3",
+            date: gendat(12, 27).toDateString(),
+        };
+
+        calendar[keyDate(gendat(12, 28))] = {
+            //name: 'Holy Innocents, Martyrs',
+            id: "christmas/octave/4",
+            date: gendat(12, 28).toDateString(),
+        };
+
+        calendar[keyDate(gendat(12, 29))] = {
+            //name: 'Saint Thomas Becket, Bishop and Martyr',
+            id: "christmas/octave/5",
+            date: gendat(12, 29).toDateString(),
+        };
+
+        calendar[keyDate(gendat(12, 30))] = {
+            //name: 'Sixth Day of the Nativity',
+            id: "christmas/octave/6",
+            date: gendat(12, 30).toDateString(),
+        };
+
+        calendar[keyDate(gendat(12, 31))] = {
+            // name: 'Seventh Day of the Nativity',
+            id: "christmas/octave/7",
+            date: gendat(12, 31).toDateString(),
+        };
+
+        if (querysubid("november/5/sunday") == -1) {
+            var x = querysubid("november/2/sunday");
+            calendar[x].subid = "november/3/sunday";
+            calendar[x].transfers = {
+                subid: true,
+            };
+            calendar[Number(x) + 7].subid = "november/4/sunday";
+            calendar[Number(x) + 7].transfers = {
+                subid: true,
+            };
+            calendar[Number(x) + 7 + 7].subid = "november/5/sunday";
+            calendar[Number(x) + 7 + 7].transfers = {
+                subid: true,
+            };
         }
-        calendar[Number(x) + 7 + 7].subid = 'november/5/sunday'
-        calendar[Number(x) + 7 + 7].transfers = {
-            subid: true
+
+        {
+            var x = queryid("pentecost/28/sunday");
+            if (calendar[Number(x) - 7].id != "pentecost/27/sunday") {
+                if (calendar[x].transfers === undefined) calendar[x].transfers = {};
+                calendar[x].transfers.id = true;
+            }
         }
+
+        /* ascension eve */
+        var x = queryid("ascension/octave/1");
+        calendar[Number(x) - 1] = {
+            id: "ascension/vigil",
+            date: advdat(new Date(calendar[x].date), -1).toDateString(),
+        };
+
+        /* pentecost eve*/
+        var x = queryid("pentecost/sunday");
+        calendar[Number(x) - 1] = {
+            id: "pentecost/vigil",
+            date: advdat(new Date(calendar[x].date), -1).toDateString(),
+        };
+
+        // now we fill in with saints days
+
+        // we can now fill in the feria
+
+        return calendar;
     }
 
-     {
-        var x = queryid('pentecost/28/sunday')
-        if (calendar[Number(x) - 7].id != 'pentecost/27/sunday') {
-            if (calendar[x].transfers === undefined) calendar[x].transfers = {}
-            calendar[x].transfers.id = true
+    function boxChanged(latBox, lonBox, datBox) {
+        // this is the main logic loop
+        var lat = latBox.value;
+        var lon = lonBox.value;
+        var dat = new Date(datBox.value + "T12:00"); // we take noontime so as to account for daylight savings and so forth
+
+        var easterSunday = computus(dat.getFullYear());
+        var advent = computus2(dat.getFullYear());
+
+        console.log("================= NEW DATE =================");
+        console.log("Today is " + dat.toDateString());
+
+        console.log("---------------- HORARIUM ----------------");
+
+        suntimes = SunCalc.getTimes(dat, lat, lon);
+        for (let x in suntimes) {
+            suntimes[x] = dateToSuntime(suntimes[x]);
         }
-     }
 
-    // we can now fill in the sanctoral cycle and defer sundays as necessary
+        var sunrise = suntimes.sunrise;
+        var sunset = suntimes.sunset;
 
-    // we can now fill in the feria
+        var dayhours = (sunset - sunrise) / 12;
+        var nighthours = (sunrise - sunset + 24) / 12;
 
-    return calendar;
-}
-
-	function boxChanged(latBox, lonBox, datBox) { // this is the main logic loop
-      	var lat = latBox.value;
-      	var lon = lonBox.value;
-      	var dat = new Date(datBox.value + "T12:00"); // we take noontime so as to account for daylight savings and so forth
-
-      	var easterSunday = computus(dat.getFullYear());
-      	var advent = computus2(dat.getFullYear());
-
-      	console.log("================= NEW DATE =================");
-      	console.log("Today is " + dat.toDateString());
-
-      	console.log("---------------- HORARIUM ----------------")
-
-      	suntimes = SunCalc.getTimes(dat, lat, lon);
-      	for (let x in suntimes) {
-      		suntimes[x] = dateToSuntime(suntimes[x])
-      	}
-
-      	var sunrise = suntimes.sunrise;
-      	var sunset = suntimes.sunset;
-
-      	var dayhours = (sunset - sunrise) / 12;
-      	var nighthours = (sunrise - sunset + 24) / 12;
-
-      	console.log("Sunrise is at " + printClocktime(suntimeToClocktime(sunrise)));
+        console.log("Sunrise is at " + printClocktime(suntimeToClocktime(sunrise)));
         console.log("Day hours are " + printDuration(dayhours) + " long");
         console.log("Night hours are " + printDuration(nighthours) + " long");
 
-      	let hours = {
+        let hours = {
             Vigils: {
                 time: roundTime(suntimes.nadir),
                 duration: 1.5,
             },
             Lauds: {
-            	time: roundTime(suntimes.nauticalDawn),
-            	duration: 0.75
+                time: roundTime(suntimes.nauticalDawn),
+                duration: 0.75,
             },
             Prime: {
                 time: roundTime(sunrise + dayhours * 1),
@@ -680,23 +910,23 @@ function getLiturgicalCalendar(year) {
                 duration: 0.5,
             },
         };
-        
+
         var table = getHorariumTable(hours);
         let content = document.getElementById("content");
         let heading = document.createElement("p");
         heading.style.fontWeight = "bold";
         heading.innerHTML = dat;
-        content.innerHTML = '';
+        content.innerHTML = "";
         content.append(heading);
         content.append(table);
         document.body.append(content);
 
-      	console.log("============================================")
+        console.log("============================================");
     }
 </script>
 
 <html>
-	<head>
+    <head>
         <title>Horarium</title>
         <style>
             * {
@@ -706,8 +936,9 @@ function getLiturgicalCalendar(year) {
             body {
                 margin: 5%;
             }
-            td, th {
-            	padding: 0.5%;
+            td,
+            th {
+                padding: 0.5%;
             }
         </style>
     </head>
@@ -723,9 +954,8 @@ function getLiturgicalCalendar(year) {
         <div id="content"></div>
     </body>
 
-	<script>
-
-	    if (navigator.geolocation) {
+    <script>
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (pos) {
                     initBoxes(pos.coords.latitude, pos.coords.longitude);
@@ -738,6 +968,6 @@ function getLiturgicalCalendar(year) {
         } else {
             alert("Geolocation is not supported on this device. Manual entry is required.");
             initBoxes(0, 0);
-      }
-	</script>
+        }
+    </script>
 </html>
