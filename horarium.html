@@ -323,7 +323,7 @@
         datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
         boxChanged(latBox, lonBox, datBox);
     }
-    function getHorariumTable(hours) {
+    function getHorariumTable(hours, separate) {
         let table = document.createElement("table");
         table.border = "1";
         table.style.borderCollapse = "collapse";
@@ -331,15 +331,20 @@
         let tr = document.createElement("tr");
         tr.style.width = "100%";
         let timeth = document.createElement("th");
-        timeth.style.width = "15%";
+        timeth.style.width = "10%";
         timeth.innerHTML = "Time";
         timeth.align = "left";
         tr.append(timeth);
         let hourth = document.createElement("th");
-        hourth.style.width = "85%";
+        hourth.style.width = "10%";
         hourth.innerHTML = "Hour";
         hourth.align = "left";
         tr.append(hourth);
+        let liturgyth = document.createElement('th');
+        liturgyth.style.width = '80%';
+        liturgyth.innerHTML = 'Liturgy';
+        liturgyth.align = 'left';
+        tr.append(liturgyth);
         table.append(tr);
         {
             for (i = 0; i < Object.keys(hours).length; i += 1) {
@@ -371,6 +376,99 @@
             tr.style.width = "100%";
             timetd.style.width = "10%";
             hourtd.style.width = "10%";
+            let liturgytd = document.createElement('td');
+            var metadata = queryTMeta(hours[hour].liturgy);
+            let span = document.createElement('span');
+            span.style.color = metadata.color;
+            if (metadata.color == 'white') {
+                span.style.textShadow = '1px 1px 0 #000,-1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000'
+            }
+
+            if (metadata.color == 'black') {
+                span.style.fontWeight = 999
+                span.style.textShadow = '0.1px 0.1px 0 #000,-0.1px 0.1px 0 #000, -0.1px -0.1px 0 #000, 0.1px -0.1px 0 #000'
+            }
+                        liturgytd.append(span);
+
+            if (metadata.note != undefined) {
+                let notesp = document.createElement('p')
+                notesp.innerHTML = '<b>Notes. </b> ' + metadata.note;
+                if (hour !='Vespers') liturgytd.append(notesp)
+            }
+
+            let penancep = document.createElement('p');
+            liturgytd.append(penancep)
+            switch (metadata.penance) {
+            case 'fast': {
+                penancep.innerHTML = '<b>Fasting. </b>';
+                if (hour != 'Vespers') {
+                    penancep.innerHTML += 'Mass follows  Sext.<br/>Dinner with abstinence is taken after None.<br/>';
+                } 
+                
+                if (!separate || hour == 'Vespers') {penancep.innerHTML += "Supper is not taken after Vespers."}
+                break;
+            }
+            case 'abstinence': {
+                penancep.innerHTML = '<b>Abstinence. </b>'
+                if (hour != 'Vespers') {
+                    penancep.innerHTML += 'Mass follows Terce.<br/>Dinner with abstinence is taken after Sext.<br/>'
+                }
+
+                if (!separate || hour=='Vespers') {
+                    //penancep.innerHTML += 'Supper with abstinence is taken after Vespers.';
+                    let m2 = queryTMeta(hours['Vigils'].liturgy);
+                    if (m2.penance == 'vigil') {
+                        penancep.innerHTML += 'Dinner with abstinence is taken after Vespers.'
+                    } else {
+                        penancep.innerHTML += 'Supper is taken after Vespers.' // supper by default is a meal of absistence
+                    }
+                }
+                break;
+            }
+            case 'vigil': {
+                // vigils can never be separated
+                penancep.innerHTML = '<b>Vigil.</b> Mass follows None.'; 
+                if (!separate) {
+                    penancep.innerHTML += '<br/>Dinner is taken after Vespers.'
+                }
+                break;
+            }
+            default: {
+                    // we know the day after a vigil has no penance
+                    //penancep.innerHTML = '<b>No penance.</b> Mass follows the hour of Terce.<br/>Dinner is taken after Sext.' + ((separate && hour!='Vespers') ? '' : '<br/>Supper is taken after Vespers.')
+                    penancep.innerHTML = '<b>No penance.</b> ';
+                    if (hour != 'Vespers') {
+                        penancep.innerHTML += 'Mass follows Terce.<br/>Dinner is taken after Sext.<br/>'
+                    }
+
+                    if (!separate || hour == 'Vespers') {
+                        //penancep.innerHTML += 'Supper is taken after Vespers.'
+                        let m2 = queryTMeta(hours['Vigils'].liturgy);
+                        if (m2.penance == 'vigil') {
+                            // day preceding was a vigil
+                            penancep.innerHTML += 'Dinner is taken after Vespers.'
+                        } else {
+                            penancep.innerHTML += 'Supper is taken after Vespers.'
+                        }
+                    }
+                }
+            }
+
+            span.innerHTML = metadata.name
+            if (separate) {
+                if (hour == 'Vigils') {
+                    liturgytd.rowSpan = 6;
+                    tr.append(liturgytd)
+                } else if (hour == 'Vespers') {
+                    liturgytd.rowSpan = 2;
+                    tr.append(liturgytd)
+                }
+            } else {
+                if (hour == 'Vigils') {
+                    liturgytd.rowSpan = 8;
+                    tr.append(liturgytd)
+                }
+            }
             table.append(tr);
         }
         return table;
@@ -414,6 +512,475 @@
         return i + "th";
     }
 
+    function feriaToDay(n) {
+            switch (n) {
+            case 0: return 'sunday'
+            case 1: return 'monday'
+            case 2: return 'tuesday'
+            case 3: return 'wednesday'
+            case 4: return 'thursday'
+            case 5: return 'friday'
+            case 6: return 'saturday'
+            }
+        }
+
+    function getTemporalMetaData() {
+        var metadata = {
+            'advent': {},
+            'christmas': {},
+            'epiphany': {},
+            'prelent': {},
+            'lent': {},
+            'passion': {},
+            'pascha': {},
+            'ascension': {},
+            'pentecost': {}
+        };
+
+        for (var w = 1; w < 5; w++) {
+            metadata.advent[w] = {};
+            metadata.advent[w].sunday = {
+                name: ordinal_suffix_of(w) + ' Sunday of Advent',
+                color: (w == 3) ? 'rose' : 'violet',
+                rank: 2
+            }
+
+            for (var d = 1; d < 7; d++) {
+                metadata.advent[w][feriaToDay(d)] = {
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of Advent',
+                    color: 'violet',
+                    penance: (d == 3 || d == 5 || d == 6) ? 'fast' : 'none',
+                    rank: 8
+                }
+            }
+        }
+
+        metadata.christmas['vigil'] = {
+            name: 'Eve of the Nativity of the Lord',
+            rank: 7, // technically, it is a feria
+            color: 'violet',
+            penance: 'vigil'
+        }
+
+        metadata.christmas['octave'] = {}
+        metadata.christmas['octave'][1] = {
+            name: 'Nativity of the Lord',
+            rank: 1,
+            color: 'white',
+            note: 'Three Masses are said of the Nativity: one after Vigils, one after Lauds, and one after Terce.<br/>A Mass <i>in capitulo</i> is said for St. Anastasia after Prime.'
+        }
+
+        metadata.christmas.octave[2] = {
+            name: 'Saint Stephen, Protomartyr',
+            rank: 3,
+            color: 'red'
+        }
+
+        metadata.christmas.octave[3] = {
+            name: 'Saint John, Apostle and Evangelist',
+            rank: 3,
+            color: 'white'
+        }
+
+        metadata.christmas.octave[4] = {
+            name: 'Holy Innocents, Martyrs',
+            rank: 3,
+            color: 'violet'
+        }
+
+        metadata.christmas.octave[5] = {
+            name: 'Saint Thomas Becket, Bishop and Martyr',
+            rank: 3,
+            color: 'red'
+        }
+
+        metadata.christmas.octave[6] = {
+            name: 'Sixth Day of the Nativity',
+            rank: 8,
+            color: 'white'
+        }
+
+        metadata.christmas.octave[7] = {
+            name: 'Seventh Day of the Nativity',
+            rank: 8,
+            color: 'white'
+        }
+
+        metadata.christmas.octave[8] = {
+            name: 'Circumcision of the Lord',
+            rank: 1,
+            color: 'white'
+        }
+
+        metadata.christmas.octave[9] = {
+            name: 'Octave of Saint Stephen',
+            rank: 8,
+            color: 'red'
+        }
+
+        metadata.christmas.octave[10] = {
+            name: 'Octave of Saint John',
+            rank: 8,
+            color: 'white'
+        }
+
+        metadata.christmas.octave[12] = {
+            name: 'Octave of the Innocents',
+            rank: 8,
+            color: 'red'
+        }
+
+        metadata.epiphany.vigil = {
+            name: 'Eve of the Epiphany',
+            rank: 8,
+            color: 'violet',
+            penance: 'vigil'
+        }
+
+        metadata.epiphany.octave = {}
+        metadata.epiphany.octave[1] = {
+            name: 'Epiphany of the Lord',
+            rank: 1,
+            color: 'white'
+        }
+
+        for (var d = 1; d < 8; d++) {
+            metadata.epiphany.octave[d + 1] = {
+                name: ordinal_suffix_of(d + 1) + ' Day of the Epiphany',
+                rank: 8, 
+                color: 'white'
+            }
+        }
+
+        metadata.epiphany.octave[8] = {
+            name: 'Octave of the Epiphany',
+            rank: 5,
+            color: 'white'
+        }
+
+        for (var w = 1; w <= 6; w++) {
+            metadata.epiphany[w] = {}
+            metadata.epiphany[w].sunday = {
+                name: ordinal_suffix_of(w) + ' Sunday after Epiphany',
+                rank: 4,
+                color: (w == 1) ? 'white' : 'green'
+            }
+
+            for (var d = 1; d < 7; d++) {
+                metadata.epiphany[w][feriaToDay(d)] = {
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week after Epiphany',
+                    color: 'green',
+                    penance: (d == 3 || d == 5 || d == 6) ? 'abstinence' : 'none',
+                    rank: 8
+                }
+            }
+        }
+
+        for (var w = 3; w > 0; w-- ) {
+            metadata.prelent[w] = {}
+            metadata.prelent[w].sunday = {
+                name: ordinal_suffix_of(w) + ' Sunday before Lent',
+                color: 'violet',
+                rank: 2
+            }
+
+            for (var d = 1; d < 7; d++) {
+                metadata.prelent[w][feriaToDay(d)] = {
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week before Lent',
+                    color: 'violet',
+                    penance: (d == 3 || d == 5 || d == 6) ? 'fast' : 'none',
+                    rank: 8
+                }
+            }
+        }
+
+        metadata.prelent[1].wednesday = {
+            name: 'Ash Wednesday',
+            color: 'violet',
+            penance: 'fast',
+            rank: 8
+        }
+
+        metadata.prelent[1].thursday = {
+            name: 'Thursday after Ashes',
+            color: 'violet',
+            penance: 'fast',
+            rank: 8
+        }
+
+        metadata.prelent[1].friday = {
+            name: 'Friday after Ashes',
+            color: 'violet',
+            penance: 'fast',
+            rank: 8
+        }
+
+        metadata.prelent[1].saturday = {
+            name: 'Saturday after Ashes',
+            color: 'violet',
+            penance: 'fast',
+            rank: 8
+        }
+
+        for (var w = 1; w < 5; w++) {
+            metadata.lent[w] = {}
+            metadata.lent[w].sunday = {
+                name: ordinal_suffix_of(w) + ' Sunday in Lent',
+                color: (w == 4) ? 'rose' : 'violet',
+                penance: 'abstinence',
+                rank: 2
+            }
+
+            for (var d = 1; d < 7; d++) {
+                metadata.lent[w][feriaToDay(d)] = {
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of Lent',
+                    color: 'violet',
+                    penance: 'fast',
+                    rank: 8
+                }
+            }
+        }
+
+        metadata.passion = {}
+        metadata.passion[1] = {}
+        metadata.passion[1].sunday = {
+            name: '1st Sunday of the Passion',
+            color: 'violet',
+            penance: 'abstinence',
+            rank: 2
+        }
+
+        for (var d = 1; d < 7; d++) {
+            metadata.passion[1][feriaToDay(d)] = {
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the First Week of Passiontide',
+                color: 'violet',
+                penance: 'fast',
+                rank: 8
+            }
+        }
+
+        metadata.passion[2] = {}
+        metadata.passion[2].sunday = {
+            name: 'Palm Sunday',
+            color: 'violet',
+            penance: 'abstinence',
+            rank: 2
+        }
+
+        metadata.passion[2].monday = {
+            name: 'Monday in Holy Week',
+            color: 'violet',
+            penance: 'fast',
+            rank: 8
+        }
+
+        metadata.passion[2].tuesday = {
+            name: 'Tuesday in Holy Week',
+            color: 'violet',
+            penance: 'fast',
+            rank: 8
+        }
+
+        metadata.passion[2].wednesday = {
+            name: 'Wednesday in Holy Week',
+            color: 'violet',
+            penance: 'fast',
+            rank: 8
+        }
+
+        metadata.passion[2].thursday = {
+            name: "Thursday of the Lord's Supper",
+            color: 'violet',
+            note: 'Liturgical color of the Mass is white.',
+            penance: 'vigil',
+            rank: 8
+        }
+
+        metadata.passion[2].friday = {
+            name: 'Friday of the Preparation',
+            color: 'black',
+            penance: 'vigil',
+            rank: 8
+        }
+
+        metadata.passion[2].saturday = {
+            name: 'Holy Saturday',
+            color: 'violet',
+            note: 'Mass begins at the prescribed time for Vespers.<br/>Liturgical color changes to white.',
+            penance: 'vigil',
+            rank: 8
+        }
+
+        metadata.pascha[1] = {}
+        metadata.pascha[1].sunday = {
+            name: 'Bright Sunday of the Resurrection',
+            color: 'white',
+            rank: 0
+        }
+
+        for (var d = 1; d < 7; d++) {
+            metadata.pascha[1][feriaToDay(d)] = {
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in Bright Week',
+                color: 'white',
+                rank: 8
+            }
+        }
+
+        for (var w = 2; w <= 6; w++) {
+            metadata.pascha[w] = {}
+            metadata.pascha[w].sunday = {
+                name: ordinal_suffix_of(w) + ' Sunday after Pascha',
+                color: 'white',
+                rank: 2
+            }
+
+            for (var d = 1; d < 7; d++) {
+                metadata.pascha[w][feriaToDay(d)] = {
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week after Pascha',
+                    color: 'white',
+                    rank: 8
+                }
+            }
+        }
+
+        metadata.ascension.vigil = {
+            name: 'Eve of the Ascension',
+            color: 'violet',
+            penance: 'vigil',
+            rank: 8
+        }
+
+        metadata.ascension.octave = {}
+        metadata.ascension.octave[1] = {
+            name: 'Ascension of the Lord',
+            color: 'white',
+            rank: 1
+        }
+
+        for (var d = 2; d <= 8; d++) {
+            metadata.ascension.octave[d] = {
+                name: (d == 8) ? 'Octave of the Asecnsion' : ordinal_suffix_of(d) + ' Day of the Ascension',
+                color: 'white',
+                rank: 8
+            }
+        }
+
+        metadata.ascension.octave[4].name = 'Sunday after Ascension'
+        metadata.ascension.octave[4].rank = 2
+
+        metadata.ascension.octave[8].rank = 5
+
+        metadata.ascension.feria = {
+            name: 'Friday in Ascensiontide',
+            color: 'white',
+            penance: 'abstinence',
+            rank: 8
+        }
+
+        metadata.pentecost.vigil = {
+            name: 'Eve of Pentecost',
+            color: 'white',
+            note: 'Liturgical color is white until None, violet until the introit of the Mass, and red thereafter.',
+            penance: 'vigil',
+            rank: 8
+        }
+
+        metadata.pentecost[0] = {
+            sunday: {
+                name: 'White Sunday of Pentecost',
+                rank: 2,
+                color: 'red'
+            },
+            monday: {
+                name: 'Monday in White Week',
+                rank: 8,
+                color: 'red'
+            },
+            tuesday: {
+                name: 'Tuesday in White Week',
+                rank: 8,
+                color: 'red'
+            },
+            wednesday: {
+                name: 'Ember Wednesday of Pentecost',
+                rank: 8,
+                color: 'red',
+                penance: 'fast'
+            },
+            thursday: {
+                name: 'Thursday in White Week',
+                rank: 8,
+                color: 'red'
+            },
+            friday: {
+                name: 'Ember Friday of Pentecost',
+                rank: 8,
+                color: 'red',
+                penance: 'fast'
+            },
+            saturday: {
+                name: 'Ember Saturday of Pentecost',
+                rank: 8,
+                color: 'red',
+                penance: 'vigil'
+            }
+        }
+
+        for (var w = 1; w <= 28; w++) {
+            metadata.pentecost[w] = {
+                sunday: {
+                    name: ordinal_suffix_of(w) + ' Sunday after Pentecost',
+                    rank: 4,
+                    color: 'green'
+                }
+            }
+
+            for (var d = 1; d < 7; d++) {
+                metadata.pentecost[w][feriaToDay(d)] = {
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week after Pentecost',
+                    rank: 8,
+                    color: 'green',
+                    penance: (d == 5) ? 'abstinence' : ''
+                }
+            }
+        }
+
+
+        metadata.advent[3].wednesday.name = 'Ember Wednesday of Advent'
+        metadata.advent[3].friday.name = 'Ember Friday of Advent'
+        metadata.advent[3].saturday.name = 'Ember Saturday of Advent'
+        metadata.advent[3].saturday.penance = 'vigil'
+
+        metadata.lent[1].wednesday.name = 'Ember Wednesday of Lent'
+        metadata.lent[1].friday.name = 'Ember Friday of Lent'
+        metadata.lent[1].saturday.name = 'Ember Saturday of Lent'
+        metadata.lent[1].saturday.penance = 'vigil'
+
+        return metadata;
+    }
+
+    tMeta = getTemporalMetaData();
+    function queryTMeta(calendar) {
+        // convert calendar data  to its metadata
+            var metadata = {};
+            Object.assign(metadata, tMeta)
+            var id = calendar.id.split('/');
+            for (var i = 0; i < id.length; i++) {
+                var part = id[i]
+                if (metadata[part] != undefined) {
+                    metadata = metadata[part]
+                }
+            }
+
+            switch (metadata.color) {
+            case 'violet': metadata.color = '#7f00ff'; break;
+            case 'rose': metadata.color = '#fa48ad'; break;
+            }
+
+            if (metadata.penance === undefined) metadata.penance = 'none'
+            return metadata
+    }
+
     function getLiturgicalCalendar(year) {
         function gendat(m, d, y = year) {
             var n = new Date();
@@ -428,8 +995,10 @@
 
         var calendar = {};
 
-        //console.log("Easter is " + easterSunday.toDateString());
-        //console.log("Advent is " + adventSunday.toDateString());
+        console.log("In the year of Our Lord " + year)
+
+        console.log("Easter is " + easterSunday.toDateString());
+        console.log("Advent is " + adventSunday.toDateString());
 
         /* the sundays of paschaltide */
 
@@ -474,11 +1043,16 @@
             advdat(ascension);
         }
 
+        calendar[keyDate(ascension)] = {
+            id: 'ascension/feria',
+            date: ascension.toDateString()
+        }
+
         /* pentecost sunday */
 
         calendar[keyDate(advdat(nxtSunday, 7))] = {
             //name: 'Pentecost',
-            id: "pentecost/sunday",
+            id: "pentecost/0/sunday",
             date: nxtSunday.toDateString(),
         };
 
@@ -671,7 +1245,7 @@
         for (var i = 0; i < 3; i++) {
             calendar[keyDate(advdat(nxtSunday, -7))] = {
                 //name: ordinal_suffix_of(i + 1) + ' Sunday before Lent',
-                id: "prelent/" + (3 - i) + "/sunday",
+                id: "prelent/" + (i + 1) + "/sunday",
                 date: nxtSunday.toDateString(),
             };
         }
@@ -699,7 +1273,7 @@
             while (epiphany.getDay() != 0) {
                 calendar[keyDate(epiphany)] = {
                     // name: ordinal_suffix_of(i) + ' Feria after Epiphanytide',
-                    id: "epiphany/post.octave/" + i,
+                    id: "christmas/feria/" + i,
                     date: epiphany.toDateString(),
                 };
                 i += 1;
@@ -731,19 +1305,19 @@
 
         calendar[keyDate(gendat(1, 2))] = {
             //name: 'Octave of Saint Stephen',
-            id: "st.stephen.protomartyr/octave/8",
+            id: "christmas/octave/9",
             date: gendat(1, 2).toDateString(),
         };
 
         calendar[keyDate(gendat(1, 3))] = {
             //name: 'Octave of Saint John',
-            id: "st.john.apostle/octave/8",
+            id: "christmas/octave/10",
             date: gendat(1, 3).toDateString(),
         };
 
         calendar[keyDate(gendat(1, 4))] = {
             //name: 'Octave of the Holy Innocents',
-            id: "holy.innocents/octave/8",
+            id: "christmas/octave/12",
             date: gendat(1, 4).toDateString(),
         };
 
@@ -834,7 +1408,7 @@
         };
 
         /* pentecost eve*/
-        var x = queryid("pentecost/sunday");
+        var x = queryid("pentecost/0/sunday");
         calendar[Number(x) - 1] = {
             id: "pentecost/vigil",
             date: advdat(new Date(calendar[x].date), -1).toDateString(),
@@ -843,6 +1417,84 @@
         // now we fill in with saints days
 
         // we can now fill in the feria
+        
+        function prevSunday(n) {
+            // get the previous sunday from a index on the calendar
+            // note that this doesn't look at sundays, but at days of the form '[season]/[week]/sunday'
+            while (calendar[n] === undefined) {
+                if (n <= 0) {
+                    return -1
+                }
+                n -= 1
+            }
+
+            var id = calendar[n].id.split('/');
+            if (id.length < 3) {
+                return prevSunday(n - 1)
+            }
+
+            if (id[2] != 'sunday') {
+                return prevSunday(n- 1)
+            }
+
+            return n
+        }
+
+        for (var i = 1; i <= queryid('christmas/octave/7'); i++) {
+            var prev = prevSunday(i);
+            if (prev == -1) {
+                continue;
+            };
+            if (calendar[i] === undefined) {
+                var thisdate = new Date(calendar[prev].date);
+                var previd = calendar[prev].id.split('/')
+               for (var n = 1; n < 7; n++) {
+                    var x =keyDate(advdat(thisdate))
+                    if (calendar[x] != undefined) {
+                        continue
+                    }
+                    calendar[x] = {
+                        id: previd[0] + '/' + previd[1] + '/' + feriaToDay(n),
+                        date: thisdate.toDateString()
+                    }
+               }
+            }
+        }
+
+        // now do the same for the sundays of august &c
+        for (var i = querysubid('august/1/sunday'); i < queryid('advent/1/sunday'); i++) {
+            var prev = prevSunday(i);
+            if (prev == -1) continue;
+            if (calendar[i].subid === undefined) {
+                var thisdate = new Date(calendar[prev].date);
+                var previd = calendar[prev].subid.split('/')
+                for (var n = 1; n < 7; n++) {
+                    var x = keyDate(advdat(thisdate))
+                    if (calendar[x].subid != undefined) continue;
+                    calendar[x].subid = previd[0] + '/' + previd[1] + '/' + feriaToDay(n)
+                }
+            }
+        }
+
+        /* o antiphons */
+        var dec17 = gendat(12, 17)
+        for (var i = 0; i < 7; i++) {
+            calendar[keyDate(dec17)].subid = 'december/' + (i + 17)
+            advdat(dec17)
+        }
+
+        // verify
+        for (var i = 1; i <= queryid('christmas/octave/7'); i++) {
+            if (calendar[i] === undefined) {
+                alert("ERROR: calendar["+i+"] = undefined")
+            }
+        }
+
+        for (var i = querysubid('august/1/sunday'); i < queryid('advent/1/sunday'); i++) {
+            if (calendar[i].subid == undefined) {
+                alert("ERROR: calendar["+i+"].subid = undefined")
+            }
+        }
 
         return calendar;
     }
@@ -858,6 +1510,8 @@
 
         console.log("================= NEW DATE =================");
         console.log("Today is " + dat.toDateString());
+
+        var calendar = getLiturgicalCalendar(dat.getFullYear());
 
         console.log("---------------- HORARIUM ----------------");
 
@@ -876,42 +1530,61 @@
         console.log("Day hours are " + printDuration(dayhours) + " long");
         console.log("Night hours are " + printDuration(nighthours) + " long");
 
+        var today = calendar[keyDate(dat)]
+        var tomorrow = calendar[keyDate(advdat(new Date(dat)))];
+
+        var m1 = queryTMeta(today);
+        var m2 = queryTMeta(tomorrow);
+
+        console.log("Today is " + today.id);
+        console.log("Tomorrow is " + tomorrow.id)
+
         let hours = {
             Vigils: {
                 time: roundTime(suntimes.nadir),
                 duration: 1.5,
+                liturgy: today
             },
             Lauds: {
                 time: roundTime(suntimes.nauticalDawn),
                 duration: 0.75,
+                liturgy: today
             },
             Prime: {
                 time: roundTime(sunrise + dayhours * 1),
                 duration: 0.25,
+                liturgy: today
             },
             Terce: {
                 time: roundTime(sunrise + dayhours * 3),
                 duration: 0.25,
+                liturgy: today
             },
             Sext: {
                 time: roundTime(sunrise + dayhours * 6),
                 duration: 0.25,
+                liturgy: today
             },
             None: {
                 time: roundTime(sunrise + dayhours * 9),
                 duration: 0.25,
+                liturgy: today
             },
             Vespers: {
                 time: roundTime(sunset),
                 duration: 0.5,
+                liturgy: (m2.rank < 7) ? ((m2.rank < m1.rank) ? tomorrow : today)  : today
             },
             Compline: {
                 time: roundTime(suntimes.night),
                 duration: 0.5,
+                liturgy: (m2.rank < 7) ? ((m2.rank < m1.rank) ? tomorrow : today)  : today
             },
         };
 
-        var table = getHorariumTable(hours);
+        console.log(hours)
+
+        var table = getHorariumTable(hours, (m2.rank < 7) ? ((m2.rank < m1.rank) ? true : false)  : false);
         let content = document.getElementById("content");
         let heading = document.createElement("p");
         heading.style.fontWeight = "bold";
