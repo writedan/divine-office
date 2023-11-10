@@ -305,7 +305,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         if (clocktime[0] == 0) {
             clocktime[0] = 12;
         }
-        return (clocktime[0] < 10 ? "0" : "") + clocktime[0] + ":" + (clocktime[1] < 10 ? "0" + clocktime[1] : clocktime[1]) + (clocktime[0] < 10 ? " " : " ") + (am ? "AM" : "PM");
+        return (clocktime[0] < 10 ? "" : "") + clocktime[0] + ":" + (clocktime[1] < 10 ? "0" + clocktime[1] : clocktime[1]) + (clocktime[0] < 10 ? " " : " ") + (am ? "AM" : "PM");
     }
 
     function printDuration(suntime) {
@@ -352,15 +352,15 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         timeth.align = "left";
         tr.append(timeth);
         let hourth = document.createElement("th");
-        hourth.style.width = "25%";
+        hourth.style.width = "90%";
         hourth.innerHTML = "Hour";
         hourth.align = "left";
         tr.append(hourth);
-        let liturgyth = document.createElement('th');
+        /*let liturgyth = document.createElement('th');
         liturgyth.style.width = '65%';
         liturgyth.innerHTML = 'Liturgy';
         liturgyth.align = 'left';
-        tr.append(liturgyth);
+        tr.append(liturgyth);*/
         table.append(tr);
         {
             for (i = 0; i < Object.keys(hours).length; i += 1) {
@@ -379,6 +379,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
         }
         for (hour in hours) {
+            if (hour == 'Vespers' || hour == 'Compline') {
+                if (separate) continue;
+            }
             let time = suntimeToClocktime(hours[hour].time);
             let tr = document.createElement("tr");
             let timetd = document.createElement("td");
@@ -387,25 +390,52 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
             timetd.innerHTML/* += "<br/>" + printClocktime(dur);*/
             let hourtd = document.createElement("td");
-            hourtd.innerHTML = "<b>" + hour + "</b>";
+            hourtd.innerHTML = "<b>" + hour + ". </b>";
             tr.append(hourtd);
             tr.style.width = "100%";
             timetd.style.width = "10%";
             hourtd.style.width = "10%";
+            hourtd.style.verticalAlign ='top'
+            timetd.style.verticalAlign ='top'
             let liturgytd = document.createElement('td');
             liturgytd.style.verticalAlign ='top'
             var metadata = queryTMeta(hours[hour].liturgy);
+            if (metadata.penance == 'fast') {
+                if (hour == 'Sext') {
+                    hourtd.innerHTML += '<span class="info"><i>Mass follows.</i></span>';
+                }
+                if (hour == 'Vespers') {
+                    hourtd.innerHTML += '<span class="info"><i>Dinner follows.</i></span>'
+                }
+            } else if (metadata.penance == 'vigil') {
+                if (hour == 'None') {
+                    hourtd.innerHTML += '<span class="info"><i>Mass follows.</i></span>'
+                }
+                if (hour == 'Vespers') {
+                    hourtd.innerHTML += '<span class="info"><i>Dinner follows.</i></span>'
+                }
+            } else {
+                if (hour == 'Terce') {
+                    hourtd.innerHTML += '<span class="info"><i>Mass follows.</i></span>'
+                }
+                if (hour == 'Sext') {
+                    hourtd.innerHTML += '<span class="info"><i>Dinner follows.</i></span>'
+                }
+                if (hour == 'Vespers') {
+                    hourtd.innerHTML += '<span class="info"><i>Supper follows.</i></span>'
+                }
+            }
             let span = document.createElement('span');
-            span.style.color = metadata.color;
-            if (metadata.color == 'white') {
+            //span.style.color = metadata.color;
+            /*if (metadata.color == 'white') {
                 span.style.textShadow = '1px 1px 0 #000,-1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000'
             }
 
             if (metadata.color == 'black') {
                 span.style.fontWeight = 999
                 span.style.textShadow = '0.1px 0.1px 0 #000,-0.1px 0.1px 0 #000, -0.1px -0.1px 0 #000, 0.1px -0.1px 0 #000'
-            }
-                        liturgytd.append(span);
+            }*/
+                        //liturgytd.append(span);
 
                         let volumep = document.createElement('p');
             //liturgytd.append(volumep);
@@ -424,7 +454,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
 
 
-            let penancep = document.createElement('p');
+            /*let penancep = document.createElement('p');
             liturgytd.append(penancep)
             switch (metadata.penance) {
             case 'fast': {
@@ -486,17 +516,17 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             if (separate) {
                 if (hour == 'Vigils') {
                     liturgytd.rowSpan = 6;
-                    tr.append(liturgytd)
+                    //tr.append(liturgytd)
                 } else if (hour == 'Vespers') {
                     liturgytd.rowSpan = 2;
-                    tr.append(liturgytd)
+                    //tr.append(liturgytd)
                 }
             } else {
                 if (hour == 'Vigils') {
                     liturgytd.rowSpan = 8;
-                    tr.append(liturgytd)
+                    //tr.append(liturgytd)
                 }
-            }
+            }*/
             table.append(tr);
         }
         return table;
@@ -598,9 +628,16 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             name: 'Eve of the Nativity on Sunday',
             rank: 2,
             color: 'violet',
-            note: 'The Mass of the Fourth Sunday of Advent is sung after Terce. That of the vigil is sung after None. The whole office is of the vigil. Penance is abrogated by the Sunday.',
+            note: 'The Mass of the Fourth Sunday of Advent is sung after Terce. That of the eve is sung after None. The whole office is of the eve. Penance is abrogated by the Sunday.',
             //vnote: 'Vespers and Compline as on the Fourth Sunday of Advent.'
             ribbons: metadata.advent[4].sunday
+        }
+
+        metadata.epiphany['vigil-sunday'] = {
+            name: 'Eve of the Epiphany on Sunday',
+            rank: 8,
+            color: 'violet',
+            note: 'First Vespers superseded by Octave of the Innocents. Mass of Christmastide feria is sung after Terce. That of the eve is sung after None. The whole office is of the eve. Penance is abrogated by the Sunday.'
         }
 
         metadata.christmas['octave'] = {}
@@ -704,14 +741,15 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             metadata.christmas.feria[d] = {
                 name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in Christmastide',
                  rank: 8,
-                 color: 'white'
+                 color: 'white',
+                 penance: (d == 3 || d == 5) ? 'abstinence' : 'none'
              }
         }
 
         for (var w = 1; w <= 6; w++) {
             metadata.epiphany[w] = {}
             metadata.epiphany[w].sunday = {
-                name: ordinal_suffix_of(w) + ' Sunday after Epiphany',
+                name: (w == 1) ? 'Sunday after Epihpany' : ordinal_suffix_of(w) + ' Sunday after Epiphany',
                 rank: 4,
                 color: (w == 1) ? 'white' : 'green'
             }
@@ -856,7 +894,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         metadata.passion[2].saturday = {
             name: 'Holy Saturday',
             color: 'violet',
-            note: 'Mass begins at the prescribed time for Vespers.<br/>Liturgical color changes to white.',
+            note: 'Mass begins at the prescribed time for Vespers.<br/>Liturgical color changes to white at the Litany.',
             penance: 'vigil',
             rank: 8
         }
@@ -888,6 +926,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.pascha[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w - 1) + ' Week after Pascha',
                     color: 'white',
+                    penance: (d == 3 || d == 5) ? 'abstinence' : 'none',
                     rank: 8
                 }
             }
@@ -1392,7 +1431,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 date: epiphany.toDateString(),
             };
 
-            if (epiphany.getDay() == 0) {
+            if (epiphany.getDay() == 0 && i > 0) {
                 calendar[keyDate(epiphany)].id = "epiphany/1/sunday";
                 nxtSunday = new Date(epiphany);
             }
@@ -1469,6 +1508,10 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         if (gendat(12,24).getDay() == 0) {
             calendar[keyDate(gendat(12, 24))].id = 'christmas/vigil-sunday'
+        }
+
+        if (gendat(1,5).getDay() == 0) {
+            calendar[keyDate(gendat(1, 5))].id = 'epiphany/vigil-sunday'
         }
 
         calendar[keyDate(gendat(12, 25))] = {
@@ -1679,6 +1722,8 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         console.log("Today is " + today.id);
         console.log("Tomorrow is " + tomorrow.id)
 
+        var firstVespers = (m2.rank < 7) ? ((m2.rank < m1.rank) ? true : false)  : false; // whether tomorrow has first vespers
+
         let hours = {
             Vigils: {
                 time: roundTime(suntimes.nadir),
@@ -1713,25 +1758,77 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             Vespers: {
                 time: roundTime(sunset),
                 duration: 0.5,
-                liturgy: (m2.rank < 7) ? ((m2.rank < m1.rank) ? tomorrow : today)  : today
+                liturgy: firstVespers ? tomorrow : today
             },
             Compline: {
                 time: roundTime(suntimes.night),
                 duration: 0.5,
-                liturgy: (m2.rank < 7) ? ((m2.rank < m1.rank) ? tomorrow : today)  : today
+                liturgy: firstVespers ? tomorrow : today
             },
         };
 
         console.log(hours)
 
-        var table = getHorariumTable(hours, (m2.rank < 7) ? ((m2.rank < m1.rank) ? true : false)  : false);
+        var table = getHorariumTable(hours, firstVespers);
         let content = document.getElementById("content");
+        let fasting = document.createElement('p');
+        let notes = document.createElement('p');
         let heading = document.createElement("p");
         heading.style.fontWeight = "bold";
-        heading.innerHTML = dat;
+        heading.innerHTML = m1.name;
+        heading.style.color = m1.color;
+        if (m1.color == 'white') {
+            //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
+            heading.style['-webkit-text-stroke'] = '0.75px black';
+        }
+
+        switch (m1.penance) {
+        case 'fast': {
+            fasting.innerHTML = '<b>Fasting.</b> Refrain from meat, fish, dairy, and eggs.'
+            break;
+        }
+        case 'abstinence': {
+            fasting.innerHTML = '<b>Abstinence.</b> Refrain from meat, dairy, and eggs.'
+            break;
+        }
+        case 'vigil': {
+            fasting.innerHTML = '<b>Fasting.</b> Refrain from meat, fish, oil, wine, dairy, and eggs.'
+            break;
+        }
+        default:
+            fasting.innerHTML = '<b>No penance.</b>'
+        }
+
+        notes.innerHTML += '<b>Notes. </b>' + m1.note;
+
+
         content.innerHTML = "";
         content.append(heading);
+        content.append(fasting);
+        if (m1.note != undefined) content.append(notes);
         content.append(table);
+
+        if (firstVespers) {
+            for (x in hours) {
+                if (x == 'Vespers' || x == 'Compline') continue;
+                delete hours[x]
+            }
+
+            let table = getHorariumTable(hours, false);
+            let heading = document.createElement("p");
+            heading.style.fontWeight = "bold";
+            heading.innerHTML = m2.name;
+            heading.style.color = m2.color;
+            if (m2.color == 'white') {
+                //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
+                heading.style['-webkit-text-stroke'] = '0.75px black';
+            }
+
+            content.append(heading);
+            content.append(fasting.cloneNode(true))
+            content.append(table);
+        }
+
         document.body.append(content);
 
         console.log("============================================");
@@ -1742,23 +1839,24 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
     <head>
         <title>Horarium</title>
         <style>
-            * {
-                font-family: monospace;
-                font-size: 18px;
-            }
             body {
                 margin: 5%;
+                font-size: 18px;
             }
             td,
             th {
                 padding: 0.5%;
             }
+            .info {
+               /* font-size: 12px; */
+               float: right;
+            }
         </style>
     </head>
     <body>
         <form>
-            <label for="lat">Latitude</label>
-            <input type="number" id="lat" />
+            <label for="lat" visible='false'>Latitude</label>
+            <input type="number" id="lat" visible='false'/>
             <label for="lon">Longitude</label>
             <input type="number" id="lon" />
             <label for="dat">Date</label>
