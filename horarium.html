@@ -297,9 +297,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         return time;
     }
     function suntimeToClocktime(suntime) {
+        if (suntime > 24) suntime -= 24
         return [Math.floor(suntime), Math.floor((suntime - Math.floor(suntime)) * 60)];
     }
     function printClocktime(clocktime) {
+        //if (clocktime[0] >= 24) clocktime[0] -= 24;
         let am = clocktime[0] < 12;
         clocktime[0] = am ? clocktime[0] : clocktime[0] - 12;
         if (clocktime[0] == 0) {
@@ -331,7 +333,13 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         var latBox = document.getElementById("lat");
         var lonBox = document.getElementById("lon");
         var datBox = document.getElementById("dat");
-        datBox.valueAsDate = new Date();
+
+        var today = new Date();
+        today = new Date(today.toDateString());
+
+        console.log(today)
+
+        datBox.valueAsDate = today;
         latBox.value = lat;
         lonBox.value = lon;
         latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
@@ -339,6 +347,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
         boxChanged(latBox, lonBox, datBox);
     }
+
     function getHorariumTable(hours, separate) {
         let table = document.createElement("table");
         table.border = "1";
@@ -400,29 +409,29 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             let liturgytd = document.createElement('td');
             liturgytd.style.verticalAlign ='top'
             var metadata = queryTMeta(hours[hour].liturgy);
-            if (metadata.penance == 'fast') {
+            if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
                 if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass follows.</i></span>';
+                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>';
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner follows.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Dinner.</i></span>'
                 }
             } else if (metadata.penance == 'vigil') {
                 if (hour == 'None') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass follows.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>'
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner follows.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Supper.</i></span>'
                 }
             } else {
                 if (hour == 'Terce') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass follows.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>'
                 }
                 if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner follows.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Dinner.</i></span>'
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Supper follows.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Supper.</i></span>'
                 }
             }
             let span = document.createElement('span');
@@ -749,9 +758,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         for (var w = 1; w <= 6; w++) {
             metadata.epiphany[w] = {}
             metadata.epiphany[w].sunday = {
-                name: (w == 1) ? 'Sunday after Epihpany' : ordinal_suffix_of(w) + ' Sunday after Epiphany',
+                name: ordinal_suffix_of(w) + ' Sunday after Epiphany',
                 rank: 4,
-                color: (w == 1) ? 'white' : 'green'
+                color: 'green'
             }
 
             for (var d = 1; d < 7; d++) {
@@ -762,6 +771,12 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                     rank: 8
                 }
             }
+        }
+
+        metadata.epiphany.octave.sunday = {
+            name: 'Sunday after Epiphany',
+            rank: 4,
+            color: 'white'
         }
 
         for (var w = 3; w > 0; w-- ) {
@@ -785,7 +800,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         metadata.prelent[1].wednesday = {
             name: 'Ash Wednesday',
             color: 'violet',
-            penance: 'fast',
+            penance: 'strict-fast',
             rank: 7
         }
 
@@ -799,7 +814,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         metadata.prelent[1].friday = {
             name: 'Friday after Ashes',
             color: 'violet',
-            penance: 'fast',
+            penance: 'strict-fast',
             rank: 8
         }
 
@@ -823,7 +838,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.lent[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of Lent',
                     color: 'violet',
-                    penance: 'fast',
+                    penance: (d==5) ? 'strict-fast' : 'fast',
                     rank: 8
                 }
             }
@@ -842,7 +857,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             metadata.passion[1][feriaToDay(d)] = {
                 name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the First Week of Passiontide',
                 color: 'violet',
-                penance: 'fast',
+                penance: 'strict-fast',
                 rank: 8
             }
         }
@@ -858,21 +873,21 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         metadata.passion[2].monday = {
             name: 'Monday in Holy Week',
             color: 'violet',
-            penance: 'fast',
+            penance: 'strict-fast',
             rank: 8
         }
 
         metadata.passion[2].tuesday = {
             name: 'Tuesday in Holy Week',
             color: 'violet',
-            penance: 'fast',
+            penance: 'strict-fast',
             rank: 8
         }
 
         metadata.passion[2].wednesday = {
             name: 'Wednesday in Holy Week',
             color: 'violet',
-            penance: 'fast',
+            penance: 'strict-fast',
             rank: 8
         }
 
@@ -901,14 +916,14 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         metadata.pascha[1] = {}
         metadata.pascha[1].sunday = {
-            name: 'Bright Sunday of the Resurrection',
+            name: 'Sunday of the Holy Pascha',
             color: 'white',
             rank: 0
         }
 
         for (var d = 1; d < 7; d++) {
             metadata.pascha[1][feriaToDay(d)] = {
-                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in Bright Week',
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' after Pascha',
                 color: 'white',
                 rank: 8
             }
@@ -994,7 +1009,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 name: 'Ember Wednesday of Pentecost',
                 rank: 7,
                 color: 'red',
-                penance: 'fast'
+                penance: 'strict-fast',
             },
             thursday: {
                 name: 'Thursday of Pentecost',
@@ -1005,7 +1020,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 name: 'Ember Friday of Pentecost',
                 rank: 7,
                 color: 'red',
-                penance: 'fast'
+                penance: 'strict-fast'
             },
             saturday: {
                 name: 'Ember Saturday of Pentecost',
@@ -1065,15 +1080,19 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         metadata.advent[3].wednesday.name = 'Ember Wednesday of Advent'
         metadata.advent[3].wednesday.rank = 7
+        metadata.advent[3].wednesday.penance = 'strict-fast'
         metadata.advent[3].friday.name = 'Ember Friday of Advent'
         metadata.advent[3].friday.rank = 7
+        metadata.advent[3].friday.penance = 'strict-fast'
         metadata.advent[3].saturday.name = 'Ember Saturday of Advent'
         metadata.advent[3].saturday.rank = 7
         metadata.advent[3].saturday.penance = 'vigil'
 
         metadata.lent[1].wednesday.name = 'Ember Wednesday of Lent'
+        metadata.lent[1].wednesday.penance = 'strict-fast'
         metadata.lent[1].wednesday.rank = 7
         metadata.lent[1].friday.name = 'Ember Friday of Lent'
+        metadata.lent[1].friday.penance = 'strict-fast'
         metadata.lent[1].friday.rank = 7
         metadata.lent[1].saturday.name = 'Ember Saturday of Lent'
         metadata.lent[1].saturday.penance = 'vigil'
@@ -1082,11 +1101,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         // pentecost embertide is handled at its octave
 
         metadata.september[3].wednesday.name = 'Ember Wednesday of September'
-            metadata.september[3].wednesday.penance = 'fast'
+            metadata.september[3].wednesday.penance = 'strict-fast'
             metadata.september[3].wednesday.color = 'violet'
             metadata.september[3].wednesday.rank = 7
         metadata.september[3].friday.name = 'Ember Friday of September'
-            metadata.september[3].friday.penance = 'fast'
+            metadata.september[3].friday.penance = 'strict-fast'
             metadata.september[3].friday.color = 'violet'
             metadata.september[3].friday.rank = 7
         metadata.september[3].saturday.name = 'Ember Saturday of September'
@@ -1432,8 +1451,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             };
 
             if (epiphany.getDay() == 0 && i > 0) {
-                calendar[keyDate(epiphany)].id = "epiphany/1/sunday";
+                calendar[keyDate(epiphany)].id = "epiphany/octave/sunday";
                 nxtSunday = new Date(epiphany);
+                ;
             }
             advdat(epiphany);
         }
@@ -1686,17 +1706,28 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         // this is the main logic loop
         var lat = latBox.value;
         var lon = lonBox.value;
-        var dat = new Date(datBox.value + "T12:00"); // we take noontime so as to account for daylight savings and so forth
+        var dat = new Date(datBox.value.replace(/-/g, '\/'));
+        dat.setUTCHours(12);
+
+        console.log(datBox.value)
+
+        console.log(dat);
 
         var easterSunday = computus(dat.getFullYear());
         var advent = computus2(dat.getFullYear());
 
         console.log("================= NEW DATE =================");
         console.log("Today is " + dat.toDateString());
+        console.log(dat)
 
         var calendar = getLiturgicalCalendar(dat.getFullYear());
 
         console.log("---------------- HORARIUM ----------------");
+
+        suntimes = SunCalc.getTimes(dat, lat, lon);
+        for (let x in suntimes) {
+            suntimes[x] = dateToSuntime(suntimes[x]);
+        }
 
         suntimes = SunCalc.getTimes(dat, lat, lon);
         for (let x in suntimes) {
@@ -1791,6 +1822,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             fasting.innerHTML = '<b>Abstinence.</b> Refrain from meat, dairy, and eggs.'
             break;
         }
+        case 'strict-fast': // same as vigil
         case 'vigil': {
             fasting.innerHTML = '<b>Fasting.</b> Refrain from meat, fish, oil, wine, dairy, and eggs.'
             break;
