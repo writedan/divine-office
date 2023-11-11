@@ -838,7 +838,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.lent[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of Lent',
                     color: 'violet',
-                    penance: (d==5) ? 'strict-fast' : 'fast',
+                    penance: (d==3 || d==5) ? 'strict-fast' : 'fast',
                     rank: 8
                 }
             }
