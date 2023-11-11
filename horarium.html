@@ -350,13 +350,13 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
     function getHorariumTable(hours, separate) {
         let table = document.createElement("table");
-        table.border = "1";
+        table.border = "0";
         table.style.borderCollapse = "collapse";
-        table.style.width = "100%";
+        table.style.width = "300px";
         let tr = document.createElement("tr");
         tr.style.width = "100%";
         let timeth = document.createElement("th");
-        timeth.style.width = "10%";
+        timeth.style.width = "25%";
         timeth.innerHTML = "Time";
         timeth.align = "left";
         tr.append(timeth);
@@ -409,6 +409,10 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             let liturgytd = document.createElement('td');
             liturgytd.style.verticalAlign ='top'
             var metadata = queryTMeta(hours[hour].liturgy);
+
+
+
+            // Mass, Dinner, and Supper ought go last
             if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
                 if (hour == 'Sext') {
                     hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>';
@@ -1615,6 +1619,99 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         };
 
         // now we fill in with saints days
+        // i see no better way than a manual insertation
+        function sanc(date) {
+            var id = date.toLocaleString('default', { month: 'long' }).toLowerCase() + '/' + date.getDate();
+            if (calendar[keyDate(date)] == undefined) {
+                calendar[keyDate(date)] = {
+                    id: '',
+                    stid: id,
+                    date: date.toDateString(),
+                }
+            } else {
+                calendar[keyDate(date)].stid = id;
+            }
+        }
+
+        sanc(gendat(1, 21))
+        sanc(gendat(1, 24))
+        sanc(gendat(1, 25))
+        sanc(gendat(1, 30))
+        sanc(gendat(2, 1))
+        sanc(gendat(2, 2))
+        sanc(gendat(2, 3))
+        sanc(gendat(2, 5))
+        sanc(gendat(2, 10))
+        sanc(gendat(2, 14))
+        sanc(gendat(3, 7))
+        sanc(gendat(3, 12))
+        sanc(gendat(3, 17))
+        sanc(gendat(3, 21))
+        sanc(gendat(3, 25))
+        sanc(gendat(4, 14))
+        sanc(gendat(4, 25))
+        sanc(gendat(4, 26))
+        sanc(gendat(4, 30))
+        sanc(gendat(5, 1))
+        sanc(gendat(5, 2))
+        sanc(gendat(5, 3))
+        sanc(gendat(5, 14))
+        sanc(gendat(5, 31))
+        sanc(gendat(6, 2))
+        sanc(gendat(6, 11))
+        sanc(gendat(6, 14))
+        sanc(gendat(6, 18)) // dedication of holy trinity
+        sanc(gendat(6, 23))
+        sanc(gendat(6, 24))
+        sanc(gendat(6, 26))
+        sanc(gendat(6, 28))
+        sanc(gendat(6, 29))
+        sanc(gendat(6, 30))
+        sanc(gendat(7, 2))
+        sanc(gendat(7, 3))
+        sanc(gendat(7, 22))
+        sanc(gendat(7, 24))
+        sanc(gendat(7, 25))
+        sanc(gendat(8, 6))
+        sanc(gendat(8, 7))
+        sanc(gendat(8, 10))
+        sanc(gendat(8, 14))
+        sanc(gendat(8, 15))
+        sanc(gendat(8, 23))
+        sanc(gendat(8, 24))
+        sanc(gendat(8, 28))
+        sanc(gendat(8, 29))
+        sanc(gendat(9, 8))
+        sanc(gendat(9, 13))
+        sanc(gendat(9, 14))
+        sanc(gendat(9, 16))
+        sanc(gendat(9, 20))
+        sanc(gendat(9, 21))
+        sanc(gendat(9, 23))
+        sanc(gendat(9, 26))
+        sanc(gendat(9, 29))
+        sanc(gendat(9, 30))
+        sanc(gendat(10, 2))
+        sanc(gendat(10, 17))
+        sanc(gendat(10, 18))
+        sanc(gendat(10, 27))
+        sanc(gendat(10, 28))
+        sanc(gendat(10, 31))
+        sanc(gendat(11, 1))
+        sanc(gendat(11, 2))
+        sanc(gendat(11, 22))
+        sanc(gendat(11, 23))
+        sanc(gendat(11, 24))
+        sanc(gendat(11, 25))
+        sanc(gendat(11, 29))
+        sanc(gendat(11, 30))
+        sanc(gendat(12, 6))
+        sanc(gendat(12, 7))
+        sanc(gendat(12, 8))
+        sanc(gendat(12, 13))
+        for (var x = 17; x < 24; x++) {
+            sanc(gendat(12, x)) // O antiphons
+        }
 
         // we can now fill in the feria
         
@@ -1645,13 +1742,18 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             if (prev == -1) {
                 continue;
             };
-            if (calendar[i] === undefined) {
+            if (calendar[i] === undefined || calendar[i].id == '') {
                 var thisdate = new Date(calendar[prev].date);
                 var previd = calendar[prev].id.split('/')
                for (var n = 1; n < 7; n++) {
                     var x =keyDate(advdat(thisdate))
                     if (calendar[x] != undefined) {
-                        continue
+                        if (calendar[x].id != '') {continue}
+                            else {
+                                calendar[x].id = previd[0] + '/' + previd[1] + '/' + feriaToDay(n);
+                                calendar[x].transfers = calendar[prev].transfers;
+                                continue;
+                            }
                     }
                     calendar[x] = {
                         id: previd[0] + '/' + previd[1] + '/' + feriaToDay(n),
@@ -1706,8 +1808,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         // this is the main logic loop
         var lat = latBox.value;
         var lon = lonBox.value;
-        var dat = new Date(datBox.value.replace(/-/g, '\/'));
-        dat.setUTCHours(12);
+        var dat = datBox.value.replace(/-/g, '\/').split('/');
+        
+        dat = new Date(dat[0], dat[1] -1 , dat[2])
+
+        console.log(datBox.value.replace(/-/g, '\/'))
 
         console.log(datBox.value)
 
