@@ -67,92 +67,92 @@
 			
 	\gresetinitiallines{1}
 	
-	\vepart{Psalter}
-	
-		%%% sunday has proper antiphons for all hours in the diurnal
-		%%% this is cause for concern
-		
-		\vechapter{Monday}
-		
-			\skiplines{-1}\vesectionp{At Lauds}
-			
-				\input{lauds/monday}
-			
-			\cleardoublepage\vesection{At Prime}
-			
-				\input{prime/advent}
-			
-			\cleardoublepage\vesection{At Terce}
-			
-				\input{terce/advent}
-			
-			\cleardoublepage\vesection{At Sext}
-			
-				\input{sext/advent}
-			
-			\cleardoublepage\vesection{At None}
-				
-				\input{none/advent}
-			
-		\vechapter{Tuesday at Lauds}
-		
-			\input{lauds/tuesday}
-		
-		\vechapter{Wednesday at Lauds}
-		
-			\input{lauds/wednesday}
-		
-		\vechapter{Thursday at Lauds}
-		
-			\input{lauds/thursday}
-		
-		\vechapter{Friday at Lauds}
-		
-			\input{lauds/friday}
-		
-		\vechapter{Saturday at Lauds}
-		
-			\input{lauds/saturday}
-
-	\vepart{Common Tones}
-		
-			\vechapter{Common of Lauds}
-			
-				\input{common/lauds/advent}
-				
-			\vechapter{Common of Prime}
-				
-				\input{common/prime/advent}
-
-		\vechapter{Common of Terce}
-		
-			\skiplines{-1}\vesectionp{On Sundays}
-			
-				\input{common/terce/sunday(advent)}
-			
-			\vesection{On Feria}
-			
-				\input{common/terce/feria(advent)}
-
-		\vechapter{Common of Sext}
-		
-			\skiplines{-1}\vesectionp{On Sundays}
-			
-				\input{common/sext/sunday(advent)}
-			
-			\vesection{On Feria}
-			
-				\input{common/sext/feria(advent)}
-			
-		\vechapter{Common of None}
-		
-			\skiplines{-1}\vesectionp{On Sundays}
-			
-				\input{common/none/sunday(advent)}
-			
-			\vesection{On Feria}
-				
-				\input{common/none/feria(advent)}
+%	\vepart{Psalter}
+%	
+%		%%% sunday has proper antiphons for all hours in the diurnal
+%		%%% this is cause for concern
+%		
+%		\vechapter{Monday}
+%		
+%			\skiplines{-1}\vesectionp{At Lauds}
+%			
+%				\input{lauds/monday}
+%			
+%			\cleardoublepage\vesection{At Prime}
+%			
+%				\input{prime/advent}
+%			
+%			\cleardoublepage\vesection{At Terce}
+%			
+%				\input{terce/advent}
+%			
+%			\cleardoublepage\vesection{At Sext}
+%			
+%				\input{sext/advent}
+%			
+%			\cleardoublepage\vesection{At None}
+%				
+%				\input{none/advent}
+%			
+%		\vechapter{Tuesday at Lauds}
+%		
+%			\input{lauds/tuesday}
+%		
+%		\vechapter{Wednesday at Lauds}
+%		
+%			\input{lauds/wednesday}
+%		
+%		\vechapter{Thursday at Lauds}
+%		
+%			\input{lauds/thursday}
+%		
+%		\vechapter{Friday at Lauds}
+%		
+%			\input{lauds/friday}
+%		
+%		\vechapter{Saturday at Lauds}
+%		
+%			\input{lauds/saturday}
+%
+%	\vepart{Common Tones}
+%		
+%			\vechapter{Common of Lauds}
+%			
+%				\input{common/lauds/advent}
+%				
+%			\vechapter{Common of Prime}
+%				
+%				\input{common/prime/advent}
+%
+%		\vechapter{Common of Terce}
+%		
+%			\skiplines{-1}\vesectionp{On Sundays}
+%			
+%				\input{common/terce/sunday(advent)}
+%			
+%			\vesection{On Feria}
+%			
+%				\input{common/terce/feria(advent)}
+%
+%		\vechapter{Common of Sext}
+%		
+%			\skiplines{-1}\vesectionp{On Sundays}
+%			
+%				\input{common/sext/sunday(advent)}
+%			
+%			\vesection{On Feria}
+%			
+%				\input{common/sext/feria(advent)}
+%			
+%		\vechapter{Common of None}
+%		
+%			\skiplines{-1}\vesectionp{On Sundays}
+%			
+%				\input{common/none/sunday(advent)}
+%			
+%			\vesection{On Feria}
+%				
+%				\input{common/none/feria(advent)}
 
 	\vepart{Temporal}
 	
@@ -402,7 +402,13 @@
 				
 				\input{psalter/118-4/8}
 				
-				\input{psalter/118-5/text}
+				\greannotation{\veformat{Ps. 118E}}
+				\greannotation{\veformat{viii. i.}}
+				\skiplines{0}\gabcsnippet{
+						(c4) O(g) Lord,(h:?) thou(jr) hast() dealt() graciously() with() thy(j) <b>ser</b>(k)vant(jr) <sp>*</sp>(:) ac(jr)cord(j)<b>ing</b>(i) un(j)to(h) thy(gr) word.()
+				}
+				
+				\input{psalter/118-5/8}
 				
 				\repant{ant/jocundare_filia_syon.gabc}
 				
@@ -410,11 +416,35 @@
 				
 			\cleardoublepage\vesection{Sunday at Sext}
 			
-				\input{psalter/118-6/text}
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{v. i.}}
+				\gregorioscore{ant/ecce_dominus_veniet.gabc}
 				
-				\input{psalter/118-7/text}
+				\greannotation{\veformat{Ps. 118F}}
+				\greannotation{\veformat{v. i.}}
+				\skiplines{1}\gabcsnippet{
+					(c3) My(d) soul(f:?) hath(hr) longed() for() thy() sal(h)<b>va</b>(i)tion(hr) <sp>*</sp>(:) and(hr) I() have() a() good() hope() be(h)<b>cause</b>(i) of(gr) <b>thy</b>(h) word.(fr)
+				}
+			
+				\input{psalter/118-6/5}
 				
-				\input{psalter/118-8/text}
+				\greannotation{\veformat{Ps. 118G}}
+				\greannotation{\veformat{v. i.}}
+				\skiplines{1}\gabcsnippet{
+					(c3) Lord,(d) what(f:?) love(hr) have() I() un(h)<b>to</b>(i) thy(hr) law() <sp>*</sp>(:) all(hr) the() day() long() is() my(h) <b>stu</b>(i)dy(gr) <b>in</b>(h) it.(fr)
+				}
+				
+				\input{psalter/118-7/5}
+				
+				\greannotation{\veformat{Ps. 118H}}
+				\greannotation{\veformat{v. i.}}
+				\skiplines{1}\gabcsnippet{
+					(c3) I(d) hate(f:?) them(hr) that() imag--()ine(h) <b>e</b>(i)vil(hr) things() <sp>*</sp>(:) but(hr) thy(h) <b>way</b>(i) do(gr) <b>I</b>(h) love.(fr)
+				}
+				
+				\input{psalter/118-8/5}
+				
+				\repant{ant/ecce_dominus_veniet.gabc}
 				
 			\cleardoublepage\vesection{Sunday at None}
 			
