@@ -310,6 +310,18 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         return (clocktime[0] < 10 ? "" : "") + clocktime[0] + ":" + (clocktime[1] < 10 ? "0" + clocktime[1] : clocktime[1]) + (clocktime[0] < 10 ? " " : " ") + (am ? "AM" : "PM");
     }
 
+    function getFormattedDate(date) {
+  var year = date.getFullYear();
+
+  var month = (1 + date.getMonth()).toString();
+  month = month.length > 1 ? month : '0' + month;
+
+  var day = date.getDate().toString();
+  day = day.length > 1 ? day : '0' + day;
+  
+  return year + '/' + month + '/' + day;
+}
+
     function printDuration(suntime) {
         var n = suntimeToClocktime(suntime);
         return (n[0] > 0 ? n[0] + "hr" : "") + (n[1] > 0 ? n[1] + "min" : "");
@@ -348,7 +360,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         boxChanged(latBox, lonBox, datBox);
     }
 
-    function getHorariumTable(hours, separate) {
+    function getHorariumTable(hours, separate, secondVespers=false) {
         let table = document.createElement("table");
         table.border = "0";
         table.style.borderCollapse = "collapse";
@@ -356,12 +368,12 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         let tr = document.createElement("tr");
         tr.style.width = "100%";
         let timeth = document.createElement("th");
-        timeth.style.width = "25%";
+        timeth.style.width = "33%";
         timeth.innerHTML = "Time";
         timeth.align = "left";
         tr.append(timeth);
         let hourth = document.createElement("th");
-        hourth.style.width = "90%";
+        hourth.style.width = "66%";
         hourth.innerHTML = "Hour";
         hourth.align = "left";
         tr.append(hourth);
@@ -374,6 +386,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         {
             for (i = 0; i < Object.keys(hours).length; i += 1) {
                 name = Object.keys(hours)[i];
+                if (name == 'Vespers' && i == 0) break;
                 hour = hours[name];
                 nextHour = i + 1;
                 if (nextHour == Object.keys(hours).length) {
@@ -391,6 +404,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             if (hour == 'Vespers' || hour == 'Compline') {
                 if (separate) continue;
             }
+
             let time = suntimeToClocktime(hours[hour].time);
             let tr = document.createElement("tr");
             let timetd = document.createElement("td");
@@ -399,7 +413,12 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
             timetd.innerHTML/* += "<br/>" + printClocktime(dur);*/
             let hourtd = document.createElement("td");
-            hourtd.innerHTML = "<b>" + hour + ". </b>";
+            hourtd.innerHTML = "<a href='?hour=" + hour + "&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>" + hour + ". </a>";
+            if (hours.Vigils === undefined) {
+                if (hour == 'Vespers' && !secondVespers) {
+                    hourtd.innerHTML = "<a href='?hour=FirstVespers&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>First Vespers. </a>";
+                }
+            }
             tr.append(hourtd);
             tr.style.width = "100%";
             timetd.style.width = "10%";
@@ -410,7 +429,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             liturgytd.style.verticalAlign ='top'
             var metadata = queryTMeta(hours[hour].liturgy);
 
-
+            hourtd.innerHTML += '<br/>'
 
             // Mass, Dinner, and Supper ought go last
             if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
@@ -438,6 +457,8 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                     hourtd.innerHTML += '<span class="info"><i>Supper.</i></span>'
                 }
             }
+
+            //hourtd.innerHTML += '<br/>'
             let span = document.createElement('span');
             //span.style.color = metadata.color;
             /*if (metadata.color == 'white') {
@@ -1126,7 +1147,85 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         return metadata;
     }
 
+    function getSanctoralMetaData() {
+        return {
+            'january': {
+                '21': {
+                    name: 'Saint Agnes, Virgin-Martyr',
+                    color: 'rose',
+                    rank: 5
+                },
+                '24': {
+                    name: 'Saint Timothy, Bishop and Martyr',
+                    color: 'red',
+                    rank: 6
+                },
+                '25': {
+                    name: 'Conversion of Saint Paul, Apostle',
+                    color: 'white',
+                    rank: 3
+                },
+                '30': {
+                    name: 'Saint Gregory Nazianzus, Bishop and Doctor',
+                    color: 'white',
+                    rank: 5
+                }
+            },
+            'februaru': {
+                '1': {
+                    name: 'Saint Ignatius of Antioch, Bishop and Martyr',
+                    color: 'red',
+                    rank: 6
+                }
+            },
+            'november': {
+                '1': {
+                    name: 'Communion of All Saints',
+                    color: 'white',
+                    rank: 1
+                },
+                '2': {
+                    name: 'Synaxis of the Holy Souls',
+                    color: 'black',
+                    rank: 8 // this also must be counted with feria
+                },
+                '22': {
+                    name: 'Saint Cecilia, Virgin-Martyr',
+                    color: 'rose',
+                    rank: 5
+                },
+                '23': {
+                    name: 'Saint Clement, Pope and Martyr',
+                    color: 'red',
+                    rank: 5
+                },
+                '24': {
+                    name: 'Saint Chrysogonus, Martyr',
+                    color: 'red',
+                    rank: 6
+                },
+                '25': {
+                    name: 'Saint Catherine, Virgin-Martyr',
+                    color: 'rose',
+                    rank: 6
+                },
+                '29': {
+                    name: 'Eve of Saint Andrew, Apostle',
+                    color: 'violet',
+                    penance: 'vigil',
+                    rank: 8 // we will treat it as a feria
+                },
+                '30': {
+                    name: 'Saint Andrew, Apostle',
+                    color: 'red',
+                    rank: 3
+                }
+            }
+        }
+    }
+
     tMeta = getTemporalMetaData();
+    sMeta = getSanctoralMetaData();
     function queryTMeta(calendar) {
         // convert calendar data  to its metadata
             var metadata = JSON.parse(JSON.stringify(tMeta));
@@ -1149,6 +1248,17 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                     }
             }
 
+            if (calendar.stid != undefined) {
+                var st = JSON.parse(JSON.stringify(sMeta));
+                var id = calendar.stid.split('/');
+                    for (var i = 0; i < id.length; i++) {
+                    var part = id[i]
+                        if (st[part] != undefined) {
+                            st = st[part]
+                        }
+                    }
+            }
+
             if (om != undefined) {
                 if (om.rank < metadata.rank) {
                     // everything from subid
@@ -1164,6 +1274,29 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 }
 
                 // else, everything is taken from metadata
+            }
+
+            if (st != undefined) {
+                /*metadata.backup = JSON.parse(JSON.stringify(metadata))
+                if (st.rank > 5) {
+                    // in this case, merging the two is necessary
+                    mergeDeep(metadata, st); // st is given the priority
+                } else if (st.rank < metadata.rank) {
+                    metadata = st; // this can only be true if >simplex anyways
+                } else if (st.rank == metadata.rank) {
+                    // this ought only be vigil days
+                    mergeDeep(metadata, st);
+                }*/
+
+                // if today is feria, always merge, unless strong feria
+                if (metadata.rank == 8) {
+                    mergeDeep(metadata, st);
+                }
+
+                // if the saint is ranked higher than the feria
+                if (st.rank < metadata.rank) {
+                    metadata = st;
+                }
             }
             
 
@@ -1854,11 +1987,20 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         var m1 = queryTMeta(today);
         var m2 = queryTMeta(tomorrow);
+        
+        var today_minus_saint = JSON.parse(JSON.stringify(today));
+        delete today_minus_saint.stid;
+        console.log(today_minus_saint)
+
+        var m3 = queryTMeta(today_minus_saint)
 
         console.log("Today is " + today.id);
         console.log("Tomorrow is " + tomorrow.id)
 
-        var firstVespers = (m2.rank < 7) ? ((m2.rank < m1.rank) ? true : false)  : false; // whether tomorrow has first vespers
+        var firstVespers = (m2.rank < 7); // whether tomorrow has first vespers
+        var secondVespers = (m1.rank != 6 && m1.rank != 5); // whether today has vespers
+
+        var higherFeast = m2.rank < m1.rank; // whether tomorrow is a greater feast
 
         let hours = {
             Vigils: {
@@ -1894,22 +2036,40 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             Vespers: {
                 time: roundTime(sunset),
                 duration: 0.5,
-                liturgy: firstVespers ? tomorrow : today
+                liturgy: secondVespers ? (higherFeast ? tomorrow : today) : (firstVespers ? tomorrow : today_minus_saint)
             },
             Compline: {
                 time: roundTime(suntimes.night),
                 duration: 0.5,
-                liturgy: firstVespers ? tomorrow : today
+                liturgy: secondVespers ? (higherFeast ? tomorrow : today) : (firstVespers ? tomorrow : today_minus_saint)
             },
         };
 
         console.log(hours)
 
-        var table = getHorariumTable(hours, firstVespers);
+        if (secondVespers && firstVespers) {
+            console.log('Today has Vespers, and tomorrow has first Vespers.')
+            if (higherFeast) {
+                console.log("Vespers and Compline of tomorrow")
+            } else {
+                console.log("Vespers and Compline of today")
+            }
+        } else if (!secondVespers && firstVespers) {
+            console.log('Today has no Vespers, but tomorrow has first Vespers.')
+            console.log('Vespers and Compline of tomorrow')
+        } else if (secondVespers && !firstVespers) {
+            console.log('Today has second Vespers and tomorrow has no first Vespers.')
+            console.log('Vespers and Compline of today.')
+        } else {
+            console.log('Today has no Vespers and tomorrow has no first Vespers.')
+            console.log('We will default to ferial!')
+        }
+
+        var table = getHorariumTable(hours, (firstVespers || !secondVespers));
         let content = document.getElementById("content");
         let fasting = document.createElement('p');
         let notes = document.createElement('p');
-        let heading = document.createElement("p");
+        let heading = document.createElement("h2");
         heading.style.fontWeight = "bold";
         heading.innerHTML = m1.name;
         heading.style.color = m1.color;
@@ -1945,18 +2105,18 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         if (m1.note != undefined) content.append(notes);
         content.append(table);
 
-        if (firstVespers) {
+        if (firstVespers || !secondVespers) {
             for (x in hours) {
                 if (x == 'Vespers' || x == 'Compline') continue;
                 delete hours[x]
             }
 
-            let table = getHorariumTable(hours, false);
-            let heading = document.createElement("p");
+            let table = getHorariumTable(hours, false, !secondVespers && !firstVespers);
+            let heading = document.createElement("h2");
             heading.style.fontWeight = "bold";
-            heading.innerHTML = m2.name;
-            heading.style.color = m2.color;
-            if (m2.color == 'white') {
+            heading.innerHTML = (!secondVespers && !firstVespers) ? m3.name : m2.name;
+            heading.style.color = (!secondVespers && !firstVespers) ? m3.color : m2.color;
+            if (heading.style.color == 'white') {
                 //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
                 heading.style['-webkit-text-stroke'] = '0.75px black';
             }
@@ -1970,6 +2130,40 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         console.log("============================================");
     }
+
+
+    function displayRibbons(date, hour) {
+        document.body.innerHTML = ''
+        console.log(date.toDateString() + ' @ ' + hour)
+
+        var calendar = getLiturgicalCalendar(date.getFullYear())
+        var today = calendar[keyDate(date)]
+        var meta = queryTMeta(today)
+        console.log(meta)
+
+        let heading = document.createElement('h2')
+        heading.innerHTML = meta.name;
+        heading.style.color = meta.color;
+        if (meta.color == 'white') {
+            //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
+            heading.style['-webkit-text-stroke'] = '0.75px black';
+        }
+
+        document.body.append(heading)
+
+        let hourheading = document.createElement('h3')
+        hourheading.innerHTML = 'At ' + hour;
+        heading.style.fontWeight = "bold";
+        if (hour == 'FirstVespers') {
+            hourheading.innerHTML = 'At First Vespers';
+        }
+
+        document.body.append(hourheading)
+
+        let returnp = document.createElement('p');
+        returnp.innerHTML = 'Return to the <a href="?">horarium.</a>'
+        document.body.append(returnp)
+    }
 </script>
 
 <html>
@@ -1982,7 +2176,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
             td,
             th {
-                padding: 0.5%;
+                padding: 1%;
             }
             .info {
                /* font-size: 12px; */
@@ -2003,19 +2197,30 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
     </body>
 
     <script>
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function (pos) {
-                    initBoxes(pos.coords.latitude, pos.coords.longitude);
-                },
-                function () {
-                    alert("Geolocation failed. Manual entry is required.");
-                    initBoxes(0, 0);
-                }
-            );
+        let params = new URLSearchParams(window.location.search);
+        if (params.get('hour') == undefined || params.get('date') == undefined) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (pos) {
+                        initBoxes(pos.coords.latitude, pos.coords.longitude);
+                    },
+                    function () {
+                        alert("Geolocation failed. Manual entry is required.");
+                        initBoxes(0, 0);
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported on this device. Manual entry is required.");
+                initBoxes(0, 0);
+            }
         } else {
-            alert("Geolocation is not supported on this device. Manual entry is required.");
-            initBoxes(0, 0);
+            let date = new Date();
+            let parts = params.get('date').split('/');
+            date.setFullYear(parts[0])
+            date.setMonth(parts[1] - 1)
+            date.setDate(parts[2])
+
+            displayRibbons(date, params.get('hour'));
         }
     </script>
 </html>
