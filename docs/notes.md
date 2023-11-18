@@ -1,3 +1,27 @@
+= Divisons of the Volumes =
+
+Due to the unexpected proxlity of Advent, which was originally to be grouped with Christmas in the first volume, I have deemed it necessary to review the whole. The six Sundays after Epiphany are equitable in their own volume, but these ought not include the Forelent, because the number of saints days possible is large, and the Forelent begins proper antiphons at Lauds and the other diurnal hours. Each day here also has a proper antiphon upon the Gospel canticle for all days of the week. And the Sundays use their own responsories at the minor hours, while the ferial is observed on feria.
+
+Therfore, volume 1 is of Advent, from the first Sunday until the Eve of the Nativity, which begns volume 2, until the second Sunday after Epiphany. Volume 3, accordingly, begins with the third Sunday before Lent. Now here is a crossroads. Obviously, Ash Wednesday until the first Sunday in Lent ought be included with Volume 3 -- but what of Lent itself? It continues the same pattern, but new hymns and responsories have been introduced to the hours, but these are the same throughout the season. In the interest of not duplicating common, then also should the second week of Lent join them. But if this proves too much, then the first Sunday of Lent ought begin volume 4. 
+
+Now, there are 10 saints days which can fall between the second Sunday after Epiphany and the first in Lent. In earlier years, two of these fall within Lent. This is compared to the 5 in the Advent books. I am extremely skeptical these could be made to fit, with the three Sundays before Lent and all their propers, with the Sundays after Epiphany and all the commons of ordinary time, into one book. Thus, it seems fit and just to have
+Volume I 		(Advent)				
+Volume II		(Christmas)
+Volume III		(Time after Epiphany)
+Volume IV		(Forelent until 3rd Lent)
+
+Now, could the first two weeks of Lent be made to fit with Forelent? I am skeptical, but hopeful. This would make 5 weeks in one volume, compared to the 4 with Advent, but there is still (shockingly) less proper material. Now this would cover the days from January 18 to March 27. Fifteen(!) saints days can occur during that time. Of these, eight(!) even have proper psalms. This is significantly more than the Advent book, but it is worth a first attempt.
+
+Certainly, the third and fourth weeks of Lent must be rendered their own volume. We will fit these until the Triduum into a Volume V.
+Volume V 		(3rd Lent until Holy Thursday)
+Volume VI 		(Triduum and 1st Week of Easter)
+Volume VII 		(2nd Sunday of Easter until Pentecost)
+Volume VIII		(Pentecost until 1st Sunday of August)
+Volume IX		(August until Advent)
+Volume X 		(Office of the Dead, Blessed virgin Mary)
+
+With these, I certainly worry that there may be too many saints days in Volumes VIII and IX to accompany in a single volume, but there is no natural divison point for either, so this will have to be dealt with as is.
+ 
 = Liturgical Calendar =
 
 == Post Epiphany ==
@@ -13,6 +37,8 @@ Another solution is to fill the dates from January 14-January 20, i.e. the week 
 The third solution is to use the propers of the Circumcision at the hours and read lessons about the Nativity until the Sunday occurs between January 14 and January 20. I do like this one because it maintains the octave of the Epiphany (one of four with Christmas, Easter, Pentecost). There would have to be six days, for which we could use the lessons given in the reformed rite for the days between Circumcision and a Sunday-fixed Epiphany. Hours celebrated as on the Circumcision, i.e. responsories and antiphons. Benedictus and Magnificat would use those left over from the octave of the Nativity. The only question is that of the collect, since these are divorced from any Sunday. I believe the "missing" collect from the Sundays after Epiphany from the Roman use (versus Sarum) works well here, especially if we use it for the Sunday after Epihpany which otherwise uses that of the Epiphany itself.
 
 All the foregoing options are unsatisfactory in their own ways, but all are superior to the Roman custom of sustaining ferial readings throuh discordant sanctoral days, and moreover of beginning Romans within Christmas. 
+
+It is therefore my determination to maintain the octave of the Epiphany, to be followed by up to six ferial days "in Christmastide", which will generally use the propers of the Circumcision, with proper lessons of Matins. Each day will be 3 lect.
 
 == Post Pentecost ==
 
