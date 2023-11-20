@@ -413,7 +413,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
             timetd.innerHTML/* += "<br/>" + printClocktime(dur);*/
             let hourtd = document.createElement("td");
-            hourtd.innerHTML = "<a href='?hour=" + hour + "&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>" + hour + ". </a>";
+            hourtd.innerHTML = "<a href='?hour=" + hour + "&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>" + hour + "</a>";
             if (hours.Vigils === undefined) {
                 if (hour == 'Vespers' && !secondVespers) {
                     hourtd.innerHTML = "<a href='?hour=FirstVespers&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>First Vespers. </a>";
