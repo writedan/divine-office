@@ -2002,6 +2002,36 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         var higherFeast = m2.rank < m1.rank; // whether tomorrow is a greater feast
 
+        var separateVespers; // whether to separate Vespers and Compline
+        var feriaVespers = !higherFeast; // if separateVespers, whether to use the ferial (m3)
+                            // if false, uses with saints (m2)
+
+        if (secondVespers && firstVespers) {
+            console.log('Today has Vespers, and tomorrow has first Vespers.')
+            if (higherFeast) {
+                console.log("Vespers and Compline of tomorrow")
+                separateVespers = true;
+            } else {
+                console.log("Vespers and Compline of today")
+                separateVespers = true
+            }
+        } else if (!secondVespers && firstVespers) {
+            console.log('Today has no Vespers, but tomorrow has first Vespers.')
+            console.log('Vespers and Compline of tomorrow')
+            separateVespers = true;
+        } else if (secondVespers && !firstVespers) {
+            console.log('Today has second Vespers and tomorrow has no first Vespers.')
+            console.log('Vespers and Compline of today.')
+            separateVespers = false;
+        } else {
+            console.log('Today has no Vespers and tomorrow has no first Vespers.')
+            console.log('We will default to ferial!')
+            separateVespers = true;
+            feriaVespers = true
+        }
+
+        console.log('separateVespers = ' + separateVespers + ', feriaVespers = ' + feriaVespers)
+
         let hours = {
             Vigils: {
                 time: roundTime(suntimes.nadir),
@@ -2047,24 +2077,6 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         console.log(hours)
 
-        if (secondVespers && firstVespers) {
-            console.log('Today has Vespers, and tomorrow has first Vespers.')
-            if (higherFeast) {
-                console.log("Vespers and Compline of tomorrow")
-            } else {
-                console.log("Vespers and Compline of today")
-            }
-        } else if (!secondVespers && firstVespers) {
-            console.log('Today has no Vespers, but tomorrow has first Vespers.')
-            console.log('Vespers and Compline of tomorrow')
-        } else if (secondVespers && !firstVespers) {
-            console.log('Today has second Vespers and tomorrow has no first Vespers.')
-            console.log('Vespers and Compline of today.')
-        } else {
-            console.log('Today has no Vespers and tomorrow has no first Vespers.')
-            console.log('We will default to ferial!')
-        }
-
         var table = getHorariumTable(hours, (firstVespers || !secondVespers));
         let content = document.getElementById("content");
         let fasting = document.createElement('p');
@@ -2105,17 +2117,17 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         if (m1.note != undefined) content.append(notes);
         content.append(table);
 
-        if (firstVespers || !secondVespers) {
+        if (separateVespers) {
             for (x in hours) {
                 if (x == 'Vespers' || x == 'Compline') continue;
                 delete hours[x]
             }
 
-            let table = getHorariumTable(hours, false, !secondVespers && !firstVespers);
+            let table = getHorariumTable(hours, false, !secondVespers);
             let heading = document.createElement("h2");
             heading.style.fontWeight = "bold";
-            heading.innerHTML = (!secondVespers && !firstVespers) ? m3.name : m2.name;
-            heading.style.color = (!secondVespers && !firstVespers) ? m3.color : m2.color;
+            heading.innerHTML = (feriaVespers) ? m3.name : m2.name;
+            heading.style.color = (feriaVespers) ? m3.color : m2.color;
             if (heading.style.color == 'white') {
                 //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
                 heading.style['-webkit-text-stroke'] = '0.75px black';
@@ -2193,7 +2205,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             <label for="dat">Date</label>
             <input type="date" id="dat" />
         </form>
-        <div id="content"></div>
+        <div id="content">
+            <p>Waiting for geolocation.</p>
+        </div>
     </body>
 
     <script>
