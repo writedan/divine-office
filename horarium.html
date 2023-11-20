@@ -766,7 +766,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         metadata.epiphany.octave[8] = {
             name: 'Octave of the Epiphany',
-            rank: 5,
+            rank: 3,
             color: 'white'
         }
 
@@ -2013,12 +2013,13 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 separateVespers = true;
             } else {
                 console.log("Vespers and Compline of today")
-                separateVespers = true
+                separateVespers = false;
             }
         } else if (!secondVespers && firstVespers) {
             console.log('Today has no Vespers, but tomorrow has first Vespers.')
             console.log('Vespers and Compline of tomorrow')
             separateVespers = true;
+            feriaVespers = false;
         } else if (secondVespers && !firstVespers) {
             console.log('Today has second Vespers and tomorrow has no first Vespers.')
             console.log('Vespers and Compline of today.')
@@ -2077,7 +2078,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         console.log(hours)
 
-        var table = getHorariumTable(hours, (firstVespers || !secondVespers));
+        var table = getHorariumTable(hours, (separateVespers));
         let content = document.getElementById("content");
         let fasting = document.createElement('p');
         let notes = document.createElement('p');
@@ -2123,7 +2124,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 delete hours[x]
             }
 
-            let table = getHorariumTable(hours, false, !secondVespers);
+            let table = getHorariumTable(hours, false, feriaVespers ? true : !separateVespers);
+                                                // whether to print vespers & compile spearetely
+                                                        // if true, "Vespers", if false, "First Vespers"
             let heading = document.createElement("h2");
             heading.style.fontWeight = "bold";
             heading.innerHTML = (feriaVespers) ? m3.name : m2.name;
