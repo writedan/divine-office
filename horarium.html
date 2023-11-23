@@ -1701,14 +1701,15 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
 
             if (oidm != undefined) {
+                metadata.note = oidm.name;
                 mergeDeep(oidm, metadata);
-
             }
             
 
             switch (metadata.color) {
             case 'violet': metadata.color = '#4c0099'; break;
             case 'rose': metadata.color = '#fa48ad'; break;
+            case 'blue': metadata.color = '#468FEA'; break;
             }
 
             if (metadata.penance === undefined) metadata.penance = 'none'
