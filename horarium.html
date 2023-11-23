@@ -855,7 +855,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             metadata.lent[w].sunday = {
                 name: ordinal_suffix_of(w) + ' Sunday in Lent',
                 color: (w == 4) ? 'rose' : 'violet',
-                penance: 'abstinence',
+                penance: (w == 4) ? 'none' : 'abstinence',
                 rank: 2
             }
 
