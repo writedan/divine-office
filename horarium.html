@@ -1591,6 +1591,31 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
     tMeta = getTemporalMetaData();
     sMeta = getSanctoralMetaData();
+    oMeta = {
+        december: {
+            '17': {
+                name: 'O Wisdom'
+            },
+            '18': {
+                name: 'O Adonay'
+            },
+            '19': {
+                name: 'O Root of Jesse'
+            },
+            '20': {
+                name: 'O Key of David'
+            },
+            '21': {
+                name: 'O Dayspring'
+            },
+            '22': {
+                name: 'O King of the Gentiles'
+            },
+            '23': {
+                name: 'O Emmanuel'
+            }
+        }
+    };
     function queryTMeta(calendar) {
         // convert calendar data  to its metadata
             var metadata = JSON.parse(JSON.stringify(tMeta));
@@ -1600,6 +1625,17 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 if (metadata[part] != undefined) {
                     metadata = metadata[part]
                 }
+            }
+
+            if (calendar.oid != undefined) {
+                var oidm = JSON.parse(JSON.stringify(oMeta));
+                var id = calendar.oid.split('/');
+                    for (var i = 0; i < id.length; i++) {
+                    var part = id[i]
+                        if (oidm[part] != undefined) {
+                            oidm = oidm[part]
+                        }
+                    }
             }
 
             if (calendar.subid != undefined) {
@@ -1662,6 +1698,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 if (st.rank < metadata.rank) {
                     metadata = st;
                 }
+            }
+
+            if (oidm != undefined) {
+                mergeDeep(oidm, metadata);
+
             }
             
 
@@ -2209,9 +2250,6 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         //sanc(gendat(12, 7))
         sanc(gendat(12, 8))
         sanc(gendat(12, 13))
-        /*for (var x = 17; x < 24; x++) {
-            sanc(gendat(12, x)) // O antiphons
-        }*/
 
         // we can now fill in the feria
         
@@ -2299,6 +2337,10 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             if (calendar[i].subid == undefined) {
                 alert("ERROR: calendar["+i+"].subid = undefined")
             }
+        }
+
+        for (var x = 17; x < 24; x++) {
+            calendar[keyDate(gendat(12, x))].oid = 'december/' + x
         }
 
         return calendar;
