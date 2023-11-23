@@ -2365,7 +2365,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         console.log("Tomorrow is " + tomorrow.id)
 
         var firstVespers = (m2.rank < 7); // whether tomorrow has first vespers
-        var secondVespers = (m1.rank != 6 && m1.rank != 5); // whether today has vespers
+        var secondVespers = (m1.rank != 6/* && m1.rank != 5*/); // whether today has vespers
 
         var higherFeast = m2.rank < m1.rank; // whether tomorrow is a greater feast
 
