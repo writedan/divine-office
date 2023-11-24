@@ -855,7 +855,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             metadata.lent[w].sunday = {
                 name: ordinal_suffix_of(w) + ' Sunday in Lent',
                 color: (w == 4) ? 'rose' : 'violet',
-                penance: 'abstinence',
+                penance: (w == 4) ? 'none' : 'abstinence',
                 rank: 2
             }
 
@@ -1271,6 +1271,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                     color: 'red',
                     rank: 6
                 },
+                '6': {
+                    name: 'Saint John, Apostle, before the Latin Gate',
+                    color: 'red',
+                    rank: 3
+                },
                 '14': {
                     name: 'Saint Matthias, Apostle',
                     color: 'red',
@@ -1586,6 +1591,31 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
     tMeta = getTemporalMetaData();
     sMeta = getSanctoralMetaData();
+    oMeta = {
+        december: {
+            '17': {
+                name: 'O Wisdom'
+            },
+            '18': {
+                name: 'O Adonay'
+            },
+            '19': {
+                name: 'O Root of Jesse'
+            },
+            '20': {
+                name: 'O Key of David'
+            },
+            '21': {
+                name: 'O Dayspring'
+            },
+            '22': {
+                name: 'O King of the Gentiles'
+            },
+            '23': {
+                name: 'O Emmanuel'
+            }
+        }
+    };
     function queryTMeta(calendar) {
         // convert calendar data  to its metadata
             var metadata = JSON.parse(JSON.stringify(tMeta));
@@ -1595,6 +1625,17 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 if (metadata[part] != undefined) {
                     metadata = metadata[part]
                 }
+            }
+
+            if (calendar.oid != undefined) {
+                var oidm = JSON.parse(JSON.stringify(oMeta));
+                var id = calendar.oid.split('/');
+                    for (var i = 0; i < id.length; i++) {
+                    var part = id[i]
+                        if (oidm[part] != undefined) {
+                            oidm = oidm[part]
+                        }
+                    }
             }
 
             if (calendar.subid != undefined) {
@@ -1658,11 +1699,17 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                     metadata = st;
                 }
             }
+
+            if (oidm != undefined) {
+                metadata.note = oidm.name;
+                mergeDeep(oidm, metadata);
+            }
             
 
             switch (metadata.color) {
             case 'violet': metadata.color = '#4c0099'; break;
             case 'rose': metadata.color = '#fa48ad'; break;
+            case 'blue': metadata.color = '#468FEA'; break;
             }
 
             if (metadata.penance === undefined) metadata.penance = 'none'
@@ -2127,32 +2174,33 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         }
 
         sanc(gendat(1, 21))
-        sanc(gendat(1, 24))
+        //sanc(gendat(1, 24))
         sanc(gendat(1, 25))
-        sanc(gendat(1, 30))
-        sanc(gendat(2, 1))
+        //sanc(gendat(1, 30))
+        //sanc(gendat(2, 1))
         sanc(gendat(2, 2))
-        sanc(gendat(2, 3))
+        //sanc(gendat(2, 3))
         sanc(gendat(2, 5))
-        sanc(gendat(2, 10))
+        //sanc(gendat(2, 10))
         sanc(gendat(2, 14))
-        sanc(gendat(3, 7))
-        sanc(gendat(3, 12))
+        //sanc(gendat(3, 7))
+        //sanc(gendat(3, 12))
         sanc(gendat(3, 17))
         sanc(gendat(3, 21))
         sanc(gendat(3, 25))
-        sanc(gendat(4, 14))
+        //sanc(gendat(4, 14))
         sanc(gendat(4, 25))
-        sanc(gendat(4, 26))
+        //sanc(gendat(4, 26))
         sanc(gendat(4, 30))
         sanc(gendat(5, 1))
-        sanc(gendat(5, 2))
+        //sanc(gendat(5, 2))
         sanc(gendat(5, 3))
+        sanc(gendat(5, 6))
         sanc(gendat(5, 14))
         sanc(gendat(5, 31))
         sanc(gendat(6, 2))
         sanc(gendat(6, 11))
-        sanc(gendat(6, 14))
+        //sanc(gendat(6, 14))
         sanc(gendat(6, 18)) // dedication of holy trinity
         sanc(gendat(6, 23))
         sanc(gendat(6, 24))
@@ -2172,10 +2220,10 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         sanc(gendat(8, 15))
         sanc(gendat(8, 23))
         sanc(gendat(8, 24))
-        sanc(gendat(8, 28))
+        //sanc(gendat(8, 28))
         sanc(gendat(8, 29))
         sanc(gendat(9, 8))
-        sanc(gendat(9, 13))
+        //sanc(gendat(9, 13))
         sanc(gendat(9, 14))
         sanc(gendat(9, 16))
         sanc(gendat(9, 20))
@@ -2183,7 +2231,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         sanc(gendat(9, 23))
         sanc(gendat(9, 26))
         sanc(gendat(9, 29))
-        sanc(gendat(9, 30))
+        //sanc(gendat(9, 30))
         sanc(gendat(10, 2))
         sanc(gendat(10, 17))
         sanc(gendat(10, 18))
@@ -2192,20 +2240,17 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         sanc(gendat(10, 31))
         sanc(gendat(11, 1))
         sanc(gendat(11, 2))
-        sanc(gendat(11, 21))
+        //sanc(gendat(11, 21))
         sanc(gendat(11, 22))
         sanc(gendat(11, 23))
         sanc(gendat(11, 24))
-        sanc(gendat(11, 25))
+        //sanc(gendat(11, 25))
         sanc(gendat(11, 29))
         sanc(gendat(11, 30))
         sanc(gendat(12, 6))
-        sanc(gendat(12, 7))
+        //sanc(gendat(12, 7))
         sanc(gendat(12, 8))
         sanc(gendat(12, 13))
-        /*for (var x = 17; x < 24; x++) {
-            sanc(gendat(12, x)) // O antiphons
-        }*/
 
         // we can now fill in the feria
         
@@ -2293,6 +2338,10 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             if (calendar[i].subid == undefined) {
                 alert("ERROR: calendar["+i+"].subid = undefined")
             }
+        }
+
+        for (var x = 17; x < 24; x++) {
+            calendar[keyDate(gendat(12, x))].oid = 'december/' + x
         }
 
         return calendar;
