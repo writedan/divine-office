@@ -1151,6 +1151,16 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
     function getSanctoralMetaData() {
         return {
             'january': {
+                '10': {
+                    name: 'Saint Paul, Hermit',
+                    color: 'white',
+                    rank: 6
+                },
+                '17': {
+                    name: 'Saint Anthony, Abbot',
+                    color: 'white',
+                    rank: 6
+                },
                 '21': {
                     name: 'Saint Agnes, Virgin-Martyr',
                     color: 'rose',
@@ -2191,6 +2201,8 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
         }
 
+        sanc(gendat(1, 10))
+        sanc(gendat(1, 17))
         sanc(gendat(1, 21))
         //sanc(gendat(1, 24))
         sanc(gendat(1, 25))
