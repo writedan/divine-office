@@ -429,8 +429,6 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             let liturgytd = document.createElement('td');
             liturgytd.style.verticalAlign ='top'
             var metadata = hours[hour].metadata;
-            console.log("- " + hour + " -");
-            console.log(metadata);
 
             hourtd.innerHTML += '<br/>'
 
@@ -2457,7 +2455,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata: m1
             },
             Lauds: {
-                time: roundTime(suntimes.nauticalDawn),
+                time: roundTime(suntimes.sunrise - 0.75),
                 duration: 0.75,
                 liturgy: today,
                 metadata: m1
