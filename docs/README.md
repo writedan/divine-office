@@ -1,12 +1,11 @@
-The liturgical year is divided into nine volumes (a tenth contains the votive offices of the Blessed Virgin and of the Dead). Each of these volumes includes these four books:
-
-1. The **collectary**, containing the order of collects throughout the liturgical season.
-2. The **capitulary**, containing the chapters read at all hours excluding Vigils, along with their responsories when they are appointed.
-3. The **lectionary**, containing the lessons of Vigils and their responsories.
-4. The **antiphonary**, containing the antiphons, psalms, hymns, odes, and other such material, which is divided into three books:
-	1. The *dirunal* for the hours of Lauds, Prime, Terce, Sext, and None.
-	2. The *vesperal*, for the hours of Vespers and Compline.
-	3. The *nocturnal*, for the Vigil hour.
+The liturgical year is divided into nine volumes, each volume containing four main books:
+1. The **collectary**, containing the parts of the liturgy said by the priest or other officiant.
+2. The **lectionary**, containing the readings of Vigils.
+3. The **capitulary**, containing the readings for all the other hours, termed *chapters*.
+4. The **antiphonary**, containing the psalms, antiphons, and hymns sung at each hour, which is usually divided into three books:
+	1. The *nocturnal*, containing the hour of Vigils.
+	2. The *diurnal*, containing the hours of Lauds, Prime, Terce, Sext, and None.
+	3. The *vesperal*, containing the hours of Vespers and Compline.
 
 | Vol. | Temporal                                                                    | Sanctoral                  | Collects                                                                               | Readings                                                                               | Antiphons                                                                          |
 |------|-----------------------------------------------------------------------------|----------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
