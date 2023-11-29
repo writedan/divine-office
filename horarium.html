@@ -1857,47 +1857,6 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             return -1;
         }
 
-        /* the sundays of wisdom */
-        /* first sunday aftr the fifth kalends of august */
-        /* which i understand to be the 28th of july */
-        subidSundays(gendat(7, 28), 5, "august");
-        /**
-         * August I = Proverbs
-         * August II = Ecclesiastes
-         * August III = Wisdom
-         * August IV = Sirach
-         * August V = Sirach
-         /* 
-
-    /* the sundays of job */
-        /* first sunday after the fifth kalends of septmber */
-        subidSundays(gendat(8, 28), 5, "september");
-        /**
-         * September I = Job
-         * September II = Job
-         * Septemver III = Tobit (where i beleive falls the september embertide)
-         * Septemver IV = Tobit (but if there only be 4 weeks, = Setpevmer V)
-         * Septemver V = Judith
-         * */
-
-        subidSundays(gendat(9, 27), 5, "october");
-        /**
-         * October I = 1 Macchabbes
-         * October II = 1 Maccabees
-         * October III = 1 Maccabees
-         * Octover IV = 2 Maccabees
-         * October V = 2 Maccabess
-         * */
-
-        if (querysubid("september/5/sunday") == -1) {
-            // apply above rubric
-            var x = querysubid("september/4/sunday");
-            calendar[x].subid = "september/5/sunday";
-            calendar[x].transfers = {
-                subid: true,
-            };
-        }
-
         // before we can add in the november dates, we must ensure we have continuous sundays from pentecost until advent
         // if there are sundays missing, we can add in the octaves of the Assumption and All Saints, in this ordrer
         // the octave-days will overwrite the sunday
@@ -1962,7 +1921,48 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
         }
 
-        // we can now fill in the november sundays
+        // we can now fill in the autumn sundays
+        /* the sundays of wisdom */
+        /* first sunday aftr the fifth kalends of august */
+        /* which i understand to be the 28th of july */
+        subidSundays(gendat(7, 28), 5, "august");
+        /**
+         * August I = Proverbs
+         * August II = Ecclesiastes
+         * August III = Wisdom
+         * August IV = Sirach
+         * August V = Sirach
+         /* 
+
+    /* the sundays of job */
+        /* first sunday after the fifth kalends of septmber */
+        subidSundays(gendat(8, 28), 5, "september");
+        /**
+         * September I = Job
+         * September II = Job
+         * Septemver III = Tobit (where i beleive falls the september embertide)
+         * Septemver IV = Tobit (but if there only be 4 weeks, = Setpevmer V)
+         * Septemver V = Judith
+         * */
+
+        subidSundays(gendat(9, 27), 5, "october");
+        /**
+         * October I = 1 Macchabbes
+         * October II = 1 Maccabees
+         * October III = 1 Maccabees
+         * Octover IV = 2 Maccabees
+         * October V = 2 Maccabess
+         * */
+
+        if (querysubid("september/5/sunday") == -1) {
+            // apply above rubric
+            var x = querysubid("september/4/sunday");
+            calendar[x].subid = "september/5/sunday";
+            calendar[x].transfers = {
+                subid: true,
+            };
+        }
+
         subidSundays(gendat(10, 28), 5, "november");
         /**
          * November I = Ezekiel
