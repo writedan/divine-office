@@ -361,6 +361,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
     }
 
     function getHorariumTable(hours, separate, secondVespers=false) {
+    	console.log("separate = " + separate, "secondVespers = " + secondVespers);
         let table = document.createElement("table");
         table.border = "0";
         table.style.borderCollapse = "collapse";
@@ -427,7 +428,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             timetd.style.verticalAlign ='top'
             let liturgytd = document.createElement('td');
             liturgytd.style.verticalAlign ='top'
-            var metadata = queryTMeta(hours[hour].liturgy);
+            var metadata = hours[hour].metadata;
+            console.log("- " + hour + " -");
+            console.log(metadata);
 
             hourtd.innerHTML += '<br/>'
 
@@ -2407,6 +2410,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         console.log("Today is " + today.id);
         console.log("Tomorrow is " + tomorrow.id)
 
+        m2.penance = m1.penance;
+        m3.penance = m2.penance; // this is necessary to ensure proper supper/dinner after first vespers
+
         var firstVespers = (m2.rank < 7); // whether tomorrow has first vespers
         var secondVespers = (m1.rank != 6 && m1.rank != 5); // whether today has vespers
 
@@ -2447,42 +2453,50 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             Vigils: {
                 time: roundTime(suntimes.nadir),
                 duration: 1.5,
-                liturgy: today
+                liturgy: today,
+                metadata: m1
             },
             Lauds: {
                 time: roundTime(suntimes.nauticalDawn),
                 duration: 0.75,
-                liturgy: today
+                liturgy: today,
+                metadata: m1
             },
             Prime: {
                 time: roundTime(sunrise + dayhours * 1),
                 duration: 0.25,
-                liturgy: today
+                liturgy: today,
+                metadata: m1
             },
             Terce: {
                 time: roundTime(sunrise + dayhours * 3),
                 duration: 0.25,
-                liturgy: today
+                liturgy: today,
+                metadata: m1
             },
             Sext: {
                 time: roundTime(sunrise + dayhours * 6),
                 duration: 0.25,
-                liturgy: today
+                liturgy: today,
+                metadata: m1
             },
             None: {
                 time: roundTime(sunrise + dayhours * 9),
                 duration: 0.25,
-                liturgy: today
+                liturgy: today,
+                metadata: m1
             },
             Vespers: {
                 time: roundTime(sunset),
                 duration: 0.5,
-                liturgy: secondVespers ? (higherFeast ? tomorrow : today) : (firstVespers ? tomorrow : today_minus_saint)
+                liturgy: separateVespers ? (feriaVespers ? today_minus_saint : tomorrow) : today,
+                metadata: separateVespers ? (feriaVespers ? m3 : m2) : m1
             },
             Compline: {
                 time: roundTime(suntimes.night),
                 duration: 0.5,
-                liturgy: secondVespers ? (higherFeast ? tomorrow : today) : (firstVespers ? tomorrow : today_minus_saint)
+                liturgy: separateVespers ? (feriaVespers ? today_minus_saint : tomorrow) : today,
+                metadata: separateVespers ? (feriaVespers ? m3 : m2) : m1
             },
         };
 
