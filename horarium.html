@@ -784,7 +784,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         for (var w = 1; w <= 6; w++) {
             metadata.epiphany[w] = {}
             metadata.epiphany[w].sunday = {
-                name: ordinal_suffix_of(w) + ' Sunday after Epiphany',
+                name: ordinal_suffix_of(w + 1) + ' Sunday after Epiphany',
                 rank: 4,
                 color: 'green'
             }
@@ -2013,7 +2013,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         /* epiphany of the lord */
         var epiphany = gendat(1, 6); // jan 6
-        for (var i = 0; i < 1; i++) {
+        for (var i = 0; i < 8; i++) {
             calendar[keyDate(epiphany)] = {
                 //name: (i == 0) ? 'Epiphany of the Lord' : ordinal_suffix_of(i) + ' Day of the Epiphany',
                 id: "epiphany/octave/" + (i + 1),
