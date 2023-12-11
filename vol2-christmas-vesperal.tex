@@ -24,7 +24,8 @@
 		\vspace*{\fill}
 	\end{titlepage}
 	
-	\newgeometry{top=0.75in,bottom=0.75in,inner=0.75in,outer=0.75in,includefoot}
+	\newgeometry{top=0.25in,bottom=0.25in,inner=0.75in,outer=0.75in,includefoot,includehead}
+	\pagestyle{fancy}
 	
 	\newcommand{\sundaykyrie}{
 		\greannotation{\veformat{Kyrie}}
@@ -49,7 +50,7 @@
 	%%% COPY ABOVE %%%
 	
 	
-	\input{christmas_calendar}
+	\input{vol2-christmas-calendar}
 	
 	
 	\gresetinitiallines{1}
@@ -124,8 +125,8 @@
 					
 					\gresetinitiallines{0}
 					\skiplines{1}\gabcsnippet{
-						(c3) <sp>v</sp> As(h) a(h) bride(h)groom.(ghGFEfhGF)
-						<sp>r</sp>(::) The(h) Lord(h) com(h)eth(h) forth(h) out(h) of(h) his(h) cham(h)ber.(ghGFEfhGF)
+						(c3) <sp>v</sp> As(h) a(h) bride(f)groom.(g)
+						<sp>r</sp>(::) The(h) Lord(h) com(h)eth(h) forth(h) out(h) of(h) his(h) cham(h)ber.(f)
 					}
 					\gresetinitiallines{1}
 					
@@ -160,12 +161,12 @@
 					
 					\gregorioscore{resp/in_manus_tuas.gabc}
 					
-					\skiplines{3}\input{hymn/salvator_mundi_domine}
+					\skiplines{5}\input{hymn/salvator_mundi_domine}
 					
 					\gresetinitiallines{0}
 					\skiplines{1}\gabcsnippet{
-						(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(ghGFEfhGF) eye.(f)
-						<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(ghGFEfhGF) wings.(f)
+						(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(f) eye.(g)
+						<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(f) wings.(f)
 					}
 					\gresetinitiallines{1}\pagebreak[4]
 					
@@ -181,7 +182,13 @@
 					
 					\input{psalter/nunc_dimittis/4}
 					
-					\repant{ant/vigilate_omnes.gabc}
+					\skiplines{-1}\repant{ant/vigilate_omnes.gabc}
+					
+					\instruct{Turn to the \whiteribbon at the conclusion, pp. \pageref{compline:conclusion}.}
+					
+					\greannotation{\veformat{Anth.}}
+					\greannotation{\veformat{v.}}
+					\skiplines{1}\gregorioscore{anthem/alma_redemptoris(solemn).gabc}
 					
 					\gresetinitiallines{0}
 					\skiplines{1}\gabcsnippet{
@@ -207,7 +214,7 @@
 					\greannotation{\veformat{Cant.}}
 					\greannotation{\veformat{i.}}
 					\skiplines{1}\gabcsnippet{
-						(c4) My(fr) soul(f) <b>doth</b>(fe) mag(eg)ni(fr)fy(f) <b>the</b>(fe) Lord(ef) <sp>*</sp>(:) and(fr) my(f) spir(fg)it(fr) hath() rejoiced() in(f) <b>God</b>(e) my(d) Sav(ef)ior.(e)
+						(c4) My(fr) soul(f) <b>doth</b>(fe) mag(eg)ni(fr)fy(f) <b>the</b>(fe) Lord(ef) <sp>*</sp>(:) and(fr) my(f) <b>spir</b>(fg)it(fr) hath() rejoiced() in(f) <b>God</b>(e) my(d) Sav(ef)ior.(e)
 					}
 										
 					\input{psalter/magnificat/1}
@@ -226,8 +233,8 @@
 				
 				\gresetinitiallines{0}
 				\skiplines{1}\gabcsnippet{
-					(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(h) eye.(ghGFEfhGF)
-					<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(h) wings.(ghGFEfhGF)
+					(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(f) eye.(g)
+					<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(f) wings.(f)
 				}
 				\gresetinitiallines{1}\pagebreak[4]
 				
@@ -249,7 +256,7 @@
 				
 				\greannotation{\veformat{Anth.}}
 				\greannotation{\veformat{v.}}
-				\skiplines{-2}\gregorioscore{anthem/alma_redemptoris(solemn).gabc}
+				\skiplines{0}\gregorioscore{anthem/alma_redemptoris(solemn).gabc}
 				
 				\gresetinitiallines{0}
 				\skiplines{1}\gabcsnippet{
@@ -273,8 +280,8 @@
 			
 			\gresetinitiallines{0}
 			\skiplines{1}\gabcsnippet{
-				(c3) <sp>v</sp> The(h) right(h)eous(h) shall(h) flour(h)ish(h) like(h) a(h) palm(h) tree.(ghGFEfhGF)
-				<sp>r</sp>(::) He(h) shall(h) spread(h) a(h)broad(h) like(h) a(h) ce(h)dar(h) in(h) Leb(h)an(h)on.(ghGFEfhGF)
+				(c3) <sp>v</sp> The(h) right(h)eous(h) shall(h) flour(h)ish(h) like(h) a(h) palm(f) tree.(h)
+				<sp>r</sp>(::) He(h) shall(h) spread(h) a(h)broad(h) like(h) a(h) ce(h)dar(h) in(h) Leb(h)an(f)on.(f)
 			}
 			\gresetinitiallines{1}
 			
@@ -314,8 +321,8 @@
 			
 			\gresetinitiallines{0}
 			\skiplines{1}\gabcsnippet{
-				(c3) <sp>v</sp> They(h) de(h)clared(h) the(h) works(h) of(h) God.(ghGFEfhGF)
-				<sp>r</sp>(::) And(h) wise(h)ly(h) con(h)si(h)dered(h) of(h) his(h) do(h)ings.(ghGFEfhGF)
+				(c3) <sp>v</sp> They(h) de(h)clared(h) the(h) works(h) of(f) God.(h)
+				<sp>r</sp>(::) And(h) wise(h)ly(h) con(h)si(h)dered(h) of(h) his(h) do(h)ings.(f)
 			}
 			\gresetinitiallines{1}
 			
@@ -324,7 +331,7 @@
 			\greannotation{\veformat{viii.}}
 			\skiplines{1}\gregorioscore{ant/in_medio_ecclesie.gabc}
 			
-			\vecomment{Canticle of Mary \enquote{Magnificat}}
+			\clearpage\vecomment{Canticle of Mary \enquote{Magnificat}}
 			\vecomment{Luke i, 46-55}
 			
 			\greannotation{\veformat{Cant.}}
@@ -354,9 +361,9 @@
 			\clearpage\input{hymn/rex_gloriose_martyrum}
 			
 			\gresetinitiallines{0}
-			\skiplines{0}\gabcsnippet{
-				(c3) <sp>v</sp> Won(h)der(h)ful(h) is(h) God(h) in(h) his(h) Saints.(ghGFEfhGF)
-				<sp>r</sp>(::) And(h) glor(h)i(h)ous(h) in(h) his(h) maj(h)es(h)ty.(ghGFEfhGF)
+			\skiplines{1}\gabcsnippet{
+				(c3) <sp>v</sp> Won(h)der(h)ful(h) is(h) God(h) in(h) his(f) Saints.(g)
+				<sp>r</sp>(::) And(h) glor(h)i(h)ous(h) in(h) his(h) maj(h)es(f)ty.(f)
 			}
 			\gresetinitiallines{1}
 			
@@ -394,8 +401,8 @@
 			
 			\gresetinitiallines{0}
 			\skiplines{0}\gabcsnippet{
-				(c3) <sp>v</sp> The(h) right(h)eous(h) shall(h) flour(h)ish(h) like(h) a(h) palm(h) tree.(ghGFEfhGF)
-				<sp>r</sp>(::) He(h) shall(h) spread(h) a(h)broad(h) like(h) a(h) ce(h)dar(h) in(h) Leb(h)an(ghGFEfhGF)on.(f)
+				(c3) <sp>v</sp> The(h) right(h)eous(h) shall(h) flour(h)ish(h) like(h) a(h) palm(f) tree.(h)
+				<sp>r</sp>(::) He(h) shall(h) spread(h) a(h)broad(h) like(h) a(h) ce(h)dar(h) in(h) Leb(h)an(f)on.(f)
 			}
 			\gresetinitiallines{1}
 			
@@ -487,8 +494,6 @@
 				
 				\repant{ant/qui_de_terra_est.gabc}
 				
-				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}.}
-				
 				\instruct{Turn to the \whiteribbon at the conclusion rite, pp. \pageref{vespers:conclusion}. Cantors, turn to the \blueribbon for the Kyrie.}
 			
 			\cleardoublepage\vesection{At Compline}
@@ -497,12 +502,12 @@
 				
 				\gregorioscore{resp/in_manus_tuas.gabc}
 				
-				\skiplines{3}\input{hymn/salvator_mundi_domine}
+				\skiplines{5}\input{hymn/salvator_mundi_domine}
 				
 				\gresetinitiallines{0}
 				\skiplines{1}\gabcsnippet{
-					(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(ghGFEfhGF) eye.(f)
-					<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(ghGFEfhGF) wings.(f)
+					(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(f) eye.(fg)
+					<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(f) wings.(f)
 				}
 				\gresetinitiallines{1}\pagebreak[4]
 				
@@ -524,7 +529,7 @@
 				
 				\greannotation{\veformat{Anth.}}
 				\greannotation{\veformat{v.}}
-				\skiplines{1}\gregorioscore{anthem/alma_redemptoris(solemn).gabc}
+				\skiplines{0}\gregorioscore{anthem/alma_redemptoris(solemn).gabc}
 				
 				\gresetinitiallines{0}
 				\skiplines{1}\gabcsnippet{
@@ -542,12 +547,12 @@
 				
 				\gregorioscore{resp/confirmatum_est.gabc}
 				
-				\input{hymn/a_solus_ortus_cardine}
+				\clearpage\skiplines{2}\input{hymn/a_solus_ortus_cardine}
 				
 				\gresetinitiallines{0}
-				\skiplines{0}\gabcsnippet{
-					(c3) <sp>v</sp> Bles(h)sed(h) be(h) he(h) that(h) com(h)eth(h) in(h) the(h) Name(h) of(h) the(h) Lord.(ghGFEfhGF)
-					<sp>r</sp>(::) God(h) is(h) the(h) Lord,(h) who(h) hath(h) shewed(h) us(h) light.(ghGFEfhGF)
+				\skiplines{1}\gabcsnippet{
+					(c3) <sp>v</sp> Bles(h)sed(h) be(h) he(h) that(h) com(h)eth(h) in(h) the(h) Name(h) of(h) the(f) Lord.(g)
+					<sp>r</sp>(::) God(h) is(h) the(h) Lord,(h) who(h) hath(h) shewed(h) us(f) light.(f)
 				}
 				\gresetinitiallines{1}
 				
@@ -584,12 +589,12 @@
 				
 				\gregorioscore{resp/reges_tharsis.gabc}
 				
-				\input{hymn/hostis_herodes_impie}
+				\clearpage\input{hymn/hostis_herodes_impie}
 				
 				\gresetinitiallines{0}
-				\skiplines{1}\gabcsnippet{
-					(c3) <sp>v</sp> All(h) they(h) from(h) Sa(h)ba(h) shall(h) come.(ghGFEfhGF)
-					<sp>r</sp>(::) They(h) shall(h) bring(h) gold(h) and(h) in(h)cense:(h,) they(h) shall(h) shew(h) forth(h) the(h) praises(h) of(h) the(ghGFEfhGF) Lord.(f)
+				\skiplines{0}\gabcsnippet{
+					(c3) <sp>v</sp> All(h) they(h) from(h) Sa(h)ba(h) shall(f) come.(g)
+					<sp>r</sp>(::) They(h) shall(h) bring(h) gold(h) and(h) in(h)cense:(h,) they(h) shall(h) shew(h) forth(h) the(h) praises(h) of(h) the(f) Lord.(f)
 				}
 				\gresetinitiallines{1}
 				
@@ -622,12 +627,12 @@
 				
 				\gregorioscore{resp/in_manus_tuas.gabc}
 				
-				\skiplines{4}\input{hymn/salvator_mundi_domine(epiphany)}
+				\skiplines{5}\input{hymn/salvator_mundi_domine(epiphany)}
 				
 				\gresetinitiallines{0}
 				\skiplines{1}\gabcsnippet{
-					(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(ghGFEfhGF) eye.(f)
-					<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(ghGFEfhGF) wings.(f)
+					(c3) <sp>v</sp> Keep(h) us,(h) O(h) Lord,(h) as(h) the(h) app(h)le(h) of(h) thine(g) eye.(f)
+					<sp>r</sp>(::) Hide(h) us(h) un(h)der(h) the(h) sha(h)dow(h) of(h) thy(f) wings.(f)
 				}
 				\gresetinitiallines{1}
 				
@@ -761,10 +766,10 @@
 				
 				\gregorioscore{resp/in_columbe_specie.gabc}
 				
-				\skiplines{2}\input{hymn/hostis_herodes_impie}
+				\clearpage\input{hymn/hostis_herodes_impie}
 				
 				\gresetinitiallines{0}
-				\skiplines{1}\gabcsnippet{
+				\skiplines{0}\gabcsnippet{
 					(c3) <sp>v</sp> All(h) they(h) from(h) Sa(h)ba(h) shall(h) come.(ghGFEfhGF)
 					<sp>r</sp>(::) They(h) shall(h) bring(h) gold(h) and(h) in(h)cense:(h,) they(h) shall(h) shew(h) forth(h) the(h) praises(h) of(h) the(h) Lord.(ghGFEfhGF)
 				}
@@ -801,8 +806,8 @@
 				
 				\gresetinitiallines{0}
 				\skiplines{1}\gabcsnippet{
-					(c3) <sp>v</sp> The(h) voice(h) of(h) the(h) Lord(h) com(h)man(h)deth(h) the(h) waters.(ghGFEfhGF)
-					<sp>r</sp>(::) The(h) glor(h)i(h)ous(h) God(h) mak(h)eth(h) the(h) thun(h)der,(h) the(h) Lord(h) rul(h)eth(h) the(h) sea.(ghGFEfhGF)
+					(c3) <sp>v</sp> The(h) voice(h) of(h) the(h) Lord(h) com(h)man(h)deth(h) the(h) wa(f)ters.(g)
+					<sp>r</sp>(::) The(h) glor(h)i(h)ous(h) God(h) mak(h)eth(h) the(h) thun(h)der,(h) the(h) Lord(h) rul(h)eth(h) the(h) sea.(f)
 				}
 				\gresetinitiallines{1}
 				
