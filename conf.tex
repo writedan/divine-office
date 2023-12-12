@@ -82,7 +82,8 @@
 \makeatletter
 \newcommand{\vepart}[1]{%
 	\cleardoublepage%
-	\thispagestyle{plain}
+	\thispagestyle{empty}
+	\fancyfoot{}
 	\vspace*{\fill}%
 	\begin{center}%
 		\setstretch{2}
@@ -90,12 +91,14 @@
 	\end{center}%
 	\vspace*{\fill}%
 	\fancyhead{}
+	\fancyfoot{}
 }%
 \makeatother
 
 \newcommand{\vechapter}[1]{%
 	\cleardoublepage%
-	\thispagestyle{plain}
+	\thispagestyle{empty}
+	\fancyfoot{}
 	\begin{center}
 		\setstretch{1.5}
 		{\LARGE \selectfont \color{red} \uppercase{ \textbf{#1}}}\par%
@@ -103,6 +106,8 @@
 	\skiplines{1}
 	\StrSubstitute{#1}{\\}{\space}[\vetempmacrolol]%
 	\fancyhead[CO,CE]{\textbf{\vetempmacrolol}}%
+	\fancyhead[LO,RE]{\thepage}
+	\fancyfoot{}
 }%
 \makeatother
 
@@ -110,11 +115,13 @@
 	\skiplines{1}
 	\StrSubstitute{#1}{\\}{\space}[\veforthesection]%
 	\fancyhead[CE]{\textbf{\veforthesection}}%
+	\fancyfoot{}
 	\begin{center}
 		\setstretch{1.5}
 		{\Large \selectfont \uppercase{ \textbf{#1}}}\par%
 	\end{center}
 	\skiplines{1}
+	\fancyfoot{}
 }%
 \makeatother
 
@@ -231,7 +238,12 @@
 \makeatletter
 \renewcommand*{\cleardoublepage}{\clearpage\if@twoside \ifodd\c@page\else
 \hbox{}%
-\thispagestyle{plain}%
+\thispagestyle{empty}%
 \newpage%
 \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+\makeatletter
+\let\@oddfoot\@empty
+\let\@evenfoot\@empty
 \makeatother
