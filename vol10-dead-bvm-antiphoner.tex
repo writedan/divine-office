@@ -17,15 +17,15 @@
 			
 			\textbf{\Large\color{red} VOLUME X}
 			
-			Office of Blessed Virgin Mary\\
-			Office of the Dead
+			Office of the Dead\\
+			Office of the Blessed Virgin Mary
 			
 		\end{center}
 		
 		\vspace*{\fill}
 	\end{titlepage}
 	
-	\newgeometry{top=0.25in,bottom=0.25in,inner=0.75in,outer=0.75in,includefoot,includehead}
+	\newgeometry{top=0.25in,bottom=0.5in,inner=0.75in,outer=0.75in,includehead,nofoot}
 	\pagestyle{fancy}
 	
 	\pagenumbering{arabic}
@@ -35,13 +35,19 @@
 	
 	%\tableofcontents
 	
-	\vepart{Office of the Blessed Virgin Mary}
-	
 	\vepart{Office of the Dead}
 	
 		\vechapter{Office of the Dead}
 	
 			\skiplines{-1}\vesectionp{At Vespers}
+			
+				\instruct{The congregation and ministers kneel and quietly make these prayers.}
+				
+%				In the name \red{\GreCross{17}} of the all-holy and undivided Trinity. Amen.
+				
+				Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+				
+				Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
 				
 				\instruct{A cantor intones the first antiphon of the psalmody.}
 				
@@ -52,15 +58,15 @@
 				\greannotation{\veformat{Ps. 114}}
 				\greannotation{\veformat{iii. iv.}}
 				\skiplines{1}\gabcsnippet{
-					(c4) (jr) <b>I</b>(k) am(jr) <b>well</b>(i) pleased(jr) <sp>*</sp>(:) that(jr) the() Lord() hath() heard(j) <b>the</b>(ji) voice(hi) of(h) my(gr) prayer.(gh)
+					(c4) I(jr) ---(k) am(jr) <b>well</b>(i) pleased(jr) <sp>*</sp>(:) that(jr) the() Lord() hath() heard(j) <b>the</b>(ji) voice(hi) of(h) my(gr) prayer.(gh)
 				}
 			
-				\input{psalter/114/3}
+				\input{psalter/114/3-dead}
 			
 				\skiplines{-1}\repant{ant/placebo_domino.gabc}
 				
 				
-				\skiplines{0}\veant{2}{ii. i}
+				\skiplines{1}\veant{2}{ii. i}
 				\gregorioscore{ant/heu_me_quia_incolatus.gabc}
 				
 				\skiplines{1}\greannotation{\veformat{Ps. 119}}
@@ -69,7 +75,7 @@
 					(f3) When(e) I(f) (:?) was(hr) in() trouble,() I called() up(h)<b>on</b>(i) the(hr) Lord() <sp>*</sp>(:) and(hr) <b>he</b>(g) heard(er) me.(f)
 				}
 			
-				\input{psalter/119/2}
+				\input{psalter/119/2-dead}
 				
 				\skiplines{-1}\repant{ant/heu_me_quia_incolatus.gabc}
 				
@@ -79,11 +85,11 @@
 				
 				\greannotation{\veformat{Ps. 120}}
 				\greannotation{\veformat{ii. i.}}
-				\skiplines{0}\gabcsnippet{
+				\skiplines{1}\gabcsnippet{
 					(f3) I(e) will(f:?) lift(hr) mine() eyes() un(h)<b>to</b>(i) the hills(hr) <sp>*</sp>(:) from(hr) whence() com(h)<b>eth</b>(g) my(er) help.(f)
 				}
 				
-				\input{psalter/120/2}
+				\input{psalter/120/2-dead}
 				
 				\repant{ant/dominus_custodit_te.gabc}
 				
@@ -93,25 +99,25 @@
 				
 				\greannotation{\veformat{Ps. 129}}
 				\greannotation{\veformat{viii. i.}}
-				\skiplines{0}\gabcsnippet{
+				\skiplines{1}\gabcsnippet{
 					(c4) Out(g) of(h:?) the(jr) deep() have() I() called() un--()to(j) <b>thee</b>(k), O Lord(jr) <sp>*</sp>(:) O(jr) <b>Lord</b>,(i) hear(j) my(h) voice.(gr)
 				}
 				
-				\input{psalter/129/8}
+				\input{psalter/129/8-dead}
 				
 				\repant{ant/si_iniquitates_observaveris.gabc}
 				
 				
 				\veant{5}{ii. i}
-				\skiplines{1}\gregorioscore{ant/opera_manuum_tuarum.gabc}
+				\skiplines{0}\gregorioscore{ant/opera_manuum_tuarum.gabc}
 				
 				\greannotation{\veformat{Ps. 137}}
 				\greannotation{\veformat{ii. i.}}
-				\skiplines{0}\gabcsnippet{
+				\skiplines{1}\gabcsnippet{
 					(f3) I(e) will(f:?) give(hr) thanks() unto() thee,() O() Lord,() with() my(h) <b>whole</b>(i) heart(hr) <sp>*</sp>(:) even(hr) before() the() gods() will() I() sing(h) <b>praise</b>(g) un(er)to(e) thee.(f)
 				}
 			
-				\input{psalter/137/2}
+				\input{psalter/137/2-dead}
 				
 				\repant{ant/opera_manuum_tuarum.gabc}
 				
@@ -123,23 +129,23 @@
 				\gresetinitiallines{1}
 				
 				\greannotation{\veformat{Ant.}}
-				\greannotation{\veformat{ii.}}
-				\skiplines{1}\gregorioscore{ant/audivi_vocem_de_celo.gabc}
+				\greannotation{\veformat{ii. i.}}
+				\skiplines{0}\gregorioscore{ant/audivi_vocem_de_celo.gabc}
 				
 				\vecomment{Canticle of Mary \enquote{Magnificat}}
-				\vecomment{Luke}
+				\vecomment{Luke i, 46-55}
 				
 				\greannotation{\veformat{Cant.}}
-				\greannotation{\veformat{ii.}}
+				\greannotation{\veformat{ii. i.}}
 				\gabcsnippet{
-					(f3) My(ef) soul(eh:?) (hr) <b>doth</b>(hg) mag(hi)ni(ir)<b>fy</b>(hi) the Lord(hr) <sp>*</sp>(:) and(hr) my(h) <b>spir</b>(hi)it(hr) hath() rejoiced() in() God(h) <b>my</b>(g) Sav(er)ior.(f)
+					(f3) My(e) soul(f:?) doth(hr) mag---()ni(h)<b>fy</b>(i) the Lord(hr) <sp>*</sp>(:) and(hr) my() spirit() hath() rejoiced() in() God(h) <b>my</b>(g) Sav(er)ior.(f)
 				}
 			
 				\input{psalter/magnificat/2}
 				
-				\skiplines{-1}\repant{ant/audivi_vocem_de_celo.gabc}
+				\skiplines{0}\repant{ant/audivi_vocem_de_celo.gabc}
 				
-				\clearpage\instruct{All kneel as the cantors sing this Kyrie.}
+				\instruct{All kneel as the cantors sing this Kyrie.}
 				
 				\greannotation{\veformat{Kyrie}}
 				\greannotation{\veformat{XVIII}}
@@ -149,13 +155,19 @@
 				
 				Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 				
-				\instruct{In a low voice, all recite this psalm together.}
-				
-				\skiplines{-1}\vecomment{Ps. 145}
-				
-				\skiplines{-0.75}\begin{multicols}{2}
-					\input{psalter/145/text}
-				\end{multicols}
+%				\skiplines{-0.75}\begin{multicols}{2}
+%					\input{psalter/145/text}
+%				\end{multicols}
+
+				\instruct{Then this psalm is sung without antiphon.}
+
+				\greannotation{\veformat{Ps. 145}}
+				\greannotation{\veformat{T. Dir.}}
+				\skiplines{0.5}\gabcsnippet{
+					(c3) Praise(e) the(f:?) Lord,(hr) O() my() soul;() while() I() live(h) <b>will</b>(g) I(f) praise(hr) the() Lord() <sp>*</sp>(:) yea,(hr) as() long() as() I() have() any() being,() I() will() sing() praises() un--()to(h) <b>my</b>(fr) God.()
+				}
+			
+				\input{psalter/145/direct}
 			
 				\instruct{All then stand.}
 				
@@ -169,7 +181,7 @@
 					
 					<sp>v</sp>(::) From(h) the(h) gate(h) of(f) hell.(g)
 					
-					<sp>r</sp>(::) De(h)li(h)ver(h) their(h) souls,(h) O(h) Lord.(f)
+					<sp>r</sp>(::) De(h)li(h)ver(h) their(h) souls,(h) O(f) Lord.(f)
 					
 					<sp>v</sp>(::) I(h) be(h)lieve(h) to(h) see(h) the(h) good(h) things(h) of(h) the(f) Lord.(g)
 					
@@ -214,7 +226,17 @@
 			
 			\cleardoublepage\vesection{At Vigils}
 			
-				\skiplines{-1}\veheading{Inviatatory}
+				\instruct{The congregation and ministers kneel and quietly make these prayers.}
+				
+%				In the name \red{\GreCross{17}} of the all-holy and undivided Trinity. Amen.
+				
+				Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+				
+				Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+				
+				I believe in God the Father almighty, maker of heaven and earth. And in Jesus Christ his only Son our Lord: who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and buried. He descended into hell. The third day he rose again from the dead; he ascended into heaven, and sitteth on the right hand of God the Father almighty. From whence he shall come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of the Saints, the remission of sins, the resurrection of the body, and the life everlasting. Amen.
+			
+				\skiplines{-2}\veheading{Inviatatory}
 			
 					\instruct{The precantor and succentor stand side-by-side and the officiant behind them in the doors of the narthrex. The officiant sings this antiphon.}
 					
@@ -226,7 +248,7 @@
 					
 					\skiplines{0.5}\input{inviatatory/6-b}
 				
-				\clearpage\skiplines{-2}\veheading{First Nocturn}
+				\skiplines{-1}\veheading{First Nocturn}
 				
 					\veant{1}{vii. ii}
 					\gregorioscore{ant/dirige_domine.gabc}
@@ -237,12 +259,27 @@
 						(c3) Pon(ir)<b>der</b>(k) my(jr) <b>words</b>(i), O Lord(jr) <sp>*</sp>(:) consider(ir) my(i) <b>med</b>(j)i(ir)<b>ta</b>(hr)tion.(gh)
 					}
 					
-					\input{psalter/5/7}
+					\input{psalter/5/7-dead}
 					
-					\skiplines{-1}\repant{ant/dirige_domine.gabc}
+					\repant{ant/dirige_domine.gabc}
+					
+					\veant{2}{viii. i}
+					\skiplines{1}\gregorioscore{ant/converte_domine.gabc}
+					
+					\greannotation{\veformat{Ps. 6}}
+					\greannotation{\veformat{viii. i.}}
+					\skiplines{1}\gabcsnippet{
+						(c3) O(e) Lord,(f:?) rebuke(hr) me() not() in thine() in--()dig(h)<b>na</b>(i)tion(hr) <sp>*</sp>(:) neither(hr) chastise() me() in(h) <b>thy</b>(g) dis(h)plea(f)sure.(er)
+					}
+					
+					\input{psalter/6/8-dead}
+					
+					\repant{ant/converte_domine.gabc}
 			
 			\cleardoublepage\vesection{At Lauds}
 			
 			\cleardoublepage\vesection{Commendation of Souls}
+			
+		\vepart{Office of the\\Blessed Virgin Mary}
 	
 \end{document}
