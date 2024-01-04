@@ -646,7 +646,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.advent[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of Advent',
                     color: 'violet',
-                    penance: (d == 3 || d == 5) ? 'fast' : 'none',
+                    penance: (d == 1 || d == 3 || d == 5) ? 'fast' : 'none',
                     rank: 8
                 }
             }
@@ -746,8 +746,8 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         metadata.epiphany.vigil = {
             name: 'Eve of the Epiphany',
             rank: 8,
-            color: 'violet',
-            penance: 'vigil'
+            color: 'white',
+            penance: 'abstinence'
         }
 
         metadata.epiphany.octave = {}
@@ -791,7 +791,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
             for (var d = 1; d < 7; d++) {
                 metadata.epiphany[w][feriaToDay(d)] = {
-                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week after Epiphany',
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w + 1) + ' Week after Epiphany',
                     color: 'green',
                     penance: (d == 3 || d == 5) ? 'abstinence' : 'none',
                     rank: 8
@@ -817,7 +817,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.prelent[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week before Lent',
                     color: 'violet',
-                    penance: (d == 3 || d == 5) ? 'fast' : 'none',
+                    penance: (d == 1 || d == 3 || d == 5) ? 'fast' : 'none',
                     rank: 8
                 }
             }
@@ -864,7 +864,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.lent[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week of Lent',
                     color: 'violet',
-                    penance: (d==3 || d==5) ? 'strict-fast' : 'fast',
+                    penance: (d == 1 || d==3 || d==5) ? 'strict-fast' : 'fast',
                     rank: 8
                 }
             }
@@ -967,7 +967,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.pascha[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w - 1) + ' Week after Pascha',
                     color: 'white',
-                    penance: (d == 3 || d == 5) ? 'abstinence' : 'none',
+                    penance: (d == 1 || d == 3 || d == 5) ? 'abstinence' : 'none',
                     rank: 8
                 }
             }
