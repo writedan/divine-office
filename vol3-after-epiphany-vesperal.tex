@@ -49,6 +49,8 @@
 		
 			\input{compline/order}
 			
+	\gresetinitiallines{1}
+			
 	\vepart{Psalter}
 	
 		\vechapter{Sunday at Vespers}
@@ -86,18 +88,36 @@
 	\vepart{Common Tones}
 		
 		\input{common/vespers}
-		
-		\vechapter{Solemn Compline}
-		
-			\input{compline/sunday}
 			
-		\vechapter{Simple Compline}
+		\vechapter{Compline}
 		
 			\input{compline/feria}
 	
 	\vepart{Temporal}
 	
 		\vechapter{Second Sunday after Epiphany}
+		
+			\skiplines{-1}\vesectionp{At First Vespers}
+			
+				% All Sundays after Epiphany at First Vespers use these propers.
+				
+				\greannotation{\veformat{Ant.}}
+				\greannotation{\veformat{i. i.}}
+				\gregorioscore{ant/peccata_mea_domine.gabc}
+				
+				\vecomment{Canticle of Mary \enquote{Magnificat}}
+				
+				\greannotation{\veformat{Cant.}}
+				\greannotation{\veformat{i. i.}}
+				\gabcsnippet{
+					(f3) My(h) soul(i:?) doth(jr) magni--()fy(j) <b>the</b>(i) Lord(j) <sp>*</sp>(:) and(jr) my() spirit() hath() rejoiced() in(h) God(i) my(h) Sav(ij)ior.(ir)
+				}
+			
+				\input{psalter/magnificat/1}
+				
+				\repant{ant/peccata_mea_domine.gabc}
+			
+			\cleardoublepage\vesection{At Second Vespers}
 		
 		\vechapter{Third Sunday after Epiphany}
 		
@@ -160,5 +180,7 @@
 		\vechapter{Saint Agatha, Virgin-Martyr}
 		
 		\vechapter{Saint Valentine,\\Priest and Martyr}
+		
+		\vechapter{Saints Perpetua and Felicity, Martyrs}
 	
 \end{document}
