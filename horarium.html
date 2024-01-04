@@ -777,7 +777,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in Christmastide',
                  rank: 8,
                  color: 'white',
-                 penance: (d == 3 || d == 5) ? 'abstinence' : 'none'
+                 penance: (d == 1 || d == 3 || d == 5) ? 'abstinence' : 'none'
              }
         }
 
@@ -793,7 +793,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 metadata.epiphany[w][feriaToDay(d)] = {
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w + 1) + ' Week after Epiphany',
                     color: 'green',
-                    penance: (d == 3 || d == 5) ? 'abstinence' : 'none',
+                    penance: (d == 1 || d == 3 || d == 5) ? 'abstinence' : 'none',
                     rank: 8
                 }
             }
@@ -1070,7 +1070,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                     name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w) + ' Week after Pentecost',
                     rank: 8,
                     color: 'green',
-                    penance: (d == 5) ? 'abstinence' : ''
+                    penance: (d == 3 || d == 5) ? 'abstinence' : ''
                 }
             }
         }
