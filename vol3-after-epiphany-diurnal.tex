@@ -1,0 +1,298 @@
+\input{conf}
+
+\begin{document}
+	\newgeometry{margin=0pt}
+	\begin{titlepage}
+		\vspace*{\fill}
+		
+		\begin{center}
+			
+			\textbf{\Huge\color{red} DIURNAL}
+			
+			ACCORDING TO THE RITE OF THE
+			
+			\textbf{\LARGE HOLY ROMAN CHURCH}
+			
+			\vspace*{\fill}
+			
+			\textbf{\Large\color{red} VOLUME III}
+			
+			Second Sunday after Epiphany\\Until the First Sunday in Lent
+			
+		\end{center}
+		
+		\vspace*{\fill}
+	\end{titlepage}
+	
+	\newgeometry{top=0.25in,bottom=0.5in,inner=0.75in,outer=0.75in,includehead,nofoot}
+	\pagestyle{fancy}
+	
+	\pagenumbering{arabic}
+	\gresetinitiallines{0}
+	
+	\raggedbottom
+	
+	%\tableofcontents
+	
+	
+	%%% COPY ABOVE %%%
+	
+	\input{vol3-after-epiphany-calendar}
+	
+	\vepart{Ordinary}
+	
+		\vechapter{The Order of Lauds}
+		
+			\input{lauds/order}
+			
+		\vechapter{The Order of the Daytime Hours}
+		
+			\input{terce/order}
+			
+	\gresetinitiallines{1}
+			
+	\vepart{Psalter}
+	
+		\vechapter{Sunday}
+		
+			\skiplines{-1}\vesectionp{At Lauds}
+			
+				\input{lauds/sunday}
+				
+			\cleardoublepage\vesection{At Prime}
+			
+				\input{prime/sunday}
+				
+			\cleardoublepage\vesection{At Terce}
+			
+				\input{terce/sunday}
+				
+			\cleardoublepage\vesection{At Sext}
+			
+				\input{sext/sunday}
+				
+			\cleardoublepage\vesection{At None}
+			
+				\input{none/sunday}
+				
+		\vechapter{Monday}
+		
+			\skiplines{-1}\vesectionp{At Lauds}
+			
+				\input{lauds/monday}
+				
+			\cleardoublepage\vesection{At Prime}
+			
+				\input{prime/feria}
+				
+			\cleardoublepage\vesection{At Terce}
+			
+				\input{terce/feria}
+				
+			\cleardoublepage\vesection{At Sext}
+			
+				\input{sext/feria}
+				
+			\cleardoublepage\vesection{At None}
+			
+				\input{none/feria}
+				
+		\vechapter{Tuesday at Lauds}
+			
+			\input{lauds/tuesday}
+				
+		\vechapter{Wednesday at Lauds}
+		
+			\input{lauds/wednesday}
+			
+		\vechapter{Thursday at Lauds}
+		
+			\input{lauds/thursday}
+			
+		\vechapter{Friday at Lauds}
+		
+			\input{lauds/friday}
+			
+		\vechapter{Saturday at Lauds}
+		
+			\input{lauds/saturday}
+	
+	\vepart{Common Tones}
+	
+		\vechapter{Sunday}
+		
+			\skiplines{-1}\vesectionp{At Lauds}
+		
+				\input{common/lauds/sunday}
+			
+			\cleardoublepage\vesection{At Prime}
+			
+				\input{common/prime/sunday}
+				
+			\cleardoublepage\vesection{At Terce}
+			
+				\input{common/terce/sunday}
+				
+			\cleardoublepage\vesection{At Sext}
+			
+				\input{common/sext/sunday}
+				
+			\cleardoublepage\vesection{At None}
+			
+				\input{common/none/sunday}
+				
+		\vechapter{Monday}
+		
+			\skiplines{-1}\vesectionp{At Lauds}
+			
+				\input{common/lauds/monday}
+				
+			\cleardoublepage\vesection{At Prime}
+			
+				\input{common/prime/feria}
+				
+			\cleardoublepage\vesection{At Terce}
+			
+				\input{common/terce/feria}
+				
+			\cleardoublepage\vesection{At Sext}
+			
+				\input{common/sext/feria}
+				
+			\cleardoublepage\vesection{At None}
+			
+				\input{common/none/feria}
+				
+		\vechapter{Tuesday at Lauds}
+		
+			\input{common/lauds/tuesday}
+			
+		\vechapter{Wednesday at Lauds}
+		
+			\input{common/lauds/wednesday}
+			
+		\vechapter{Thursday at Lauds}
+		
+			\input{common/lauds/thursday}
+			
+		\vechapter{Friday at Lauds}
+		
+			\input{common/lauds/friday}
+			
+		\vechapter{Saturday at Lauds}
+		
+			\input{common/lauds/saturday}
+			
+	\vepart{Temporal}
+			
+		\vechapter{Second Sunday after Epiphany}
+		
+			\greannotation{\veformat{Ant.}}
+			\greannotation{\veformat{viii. i.}}
+			\gregorioscore{ant/fili_qui_fecisti_nobis.gabc}
+			
+			\greannotation{\veformat{Cant.}}
+			\greannotation{\veformat{viii. i.}}
+			\skiplines{1}\gabcsnippet{
+				(c4) Bles(g)sed(h:?) be(jr) the() Lord() God() of(j) <b>Is</b>(k)rael(jr) <sp>*</sp>(:) for(jr) he() hath() visited() and() re(j)<b>deemed</b>(i) his(j) peo(h)ple.(gr)
+			}
+			
+			\input{psalter/benedictus/8}
+			
+			\repant{ant/fili_qui_fecisti_nobis.gabc}
+			
+			\instruct{Turn back to the \whiteribbon for the conclusion rite pp. \pageref{lauds:conclusion}. Cantors, turn to the \blueribbon for the Kyrie.}
+		
+		\vechapter{Third Sunday after Epiphany}
+		
+			\greannotation{\veformat{Ant.}}
+			\greannotation{\veformat{viii. iv.}}
+			\gregorioscore{ant/nuptie_facte_sunt.gabc}
+			
+			\greannotation{\veformat{Cant.}}
+			\greannotation{\veformat{viii. iv.}}
+			\skiplines{1}\gabcsnippet{
+				(c3) Bles(e)sed(f:?) be(hr) the() Lord() God() of(h) <b>Is</b>(i)rael(hr) <sp>*</sp>(:) for(hr) he() hath() visited() and() re(h)<b>deemed</b>(g) his(h) peo(f er)ple.(efED)
+			}
+			
+			\input{psalter/benedictus/8}
+			
+			\repant{ant/nuptie_facte_sunt.gabc}
+			
+			\instruct{Turn back to the \whiteribbon for the conclusion rite pp. \pageref{lauds:conclusion}. Cantors, turn to the \blueribbon for the Kyrie.}
+		
+		\vechapter{Fourth Sunday after Epiphany}
+		
+			\greannotation{\veformat{Ant.}}
+			\greannotation{\veformat{viii. i.}}
+			\gregorioscore{ant/cum_autem_descendisset.gabc}
+			
+			\greannotation{\veformat{Cant.}}
+			\greannotation{\veformat{viii. i.}}
+			\skiplines{1}\gabcsnippet{
+				(c4) Bles(g)sed(h:?) be(jr) the() Lord() God() of(j) <b>Is</b>(k)rael(jr) <sp>*</sp>(:) for(jr) he() hath() visited() and() re(j)<b>deemed</b>(i) his(j) peo(h)ple.(gr)
+			}
+			
+			\input{psalter/benedictus/8}
+			
+			\repant{ant/cum_autem_descendisset.gabc}
+			
+			\instruct{Turn back to the \whiteribbon for the conclusion rite pp. \pageref{lauds:conclusion}. Cantors, turn to the \blueribbon for the Kyrie.}
+		
+		\vechapter{Fifth Sunday after Epiphany}
+		
+			\greannotation{\veformat{Ant.}}
+			\greannotation{\veformat{vi.}}
+			\gregorioscore{ant/ascendente_jesu_in_naviculam.gabc}
+			
+			\greannotation{\veformat{Cant.}}
+			\greannotation{\veformat{vi.}}
+			\skiplines{1}\gabcsnippet{
+				(c2) Bles(f)sed(g:?) be(hr) the() Lord() God() of() Is(h)<b>ra</b>(g)el(h) <sp>*</sp>(:) for(hr) he() hath() visited() and() re(h)<b>deemed</b>(f) his(gh) peo(g)ple.(fr)
+			}
+			
+			\input{psalter/benedictus/6}
+			
+			\repant{ant/ascendente_jesu_in_naviculam.gabc}
+			
+			\instruct{Turn back to the \whiteribbon for the conclusion rite pp. \pageref{lauds:conclusion}. Cantors, turn to the \blueribbon for the Kyrie.}
+		
+		\vechapter{Sixth Sunday after Epiphany}
+		
+			\greannotation{\veformat{Ant.}}
+			\greannotation{\veformat{i. iii.}}
+			\gregorioscore{ant/domine_nonne_bonum_semen.gabc}
+			
+			\greannotation{\veformat{Cant.}}
+			\greannotation{\veformat{i. iii.}}
+			\skiplines{1}\gabcsnippet{
+				(c4) Bles(f)sed(g:?) be(hr) the() Lord() God() of() Is(h)<b>ra</b>(g)el(h) <sp>*</sp>(:) for(hr) he() hath() visited() and() re(h)<b>deemed</b>(g) his(f) peo(gr)ple.(ghg)
+			}
+			
+			\input{psalter/benedictus/1}
+			
+			\repant{ant/domine_nonne_bonum_semen.gabc}
+			
+			\instruct{Turn back to the \whiteribbon for the conclusion rite pp. \pageref{lauds:conclusion}. Cantors, turn to the \blueribbon for the Kyrie.}
+		
+		\vechapter{Third Week before Lent}
+			
+		\vechapter{Second Week before Lent}
+			
+		\vechapter{First Week before Lent}
+	
+	\vepart{Sanctoral}
+	
+		\vechapter{Saint Agnes, Virgin-Martyr}
+		
+		\vechapter{Conversion of Saint Paul}
+		
+		\vechapter{Purification of the\\Blessed Virgin Mary}
+		
+		\vechapter{Saint Agatha, Virgin-Martyr}
+		
+		\vechapter{Saint Valentine,\\Priest and Martyr}
+		
+		\vechapter{Saints Perpetua\\and Felicity, Martyrs}
+	
+\end{document}
