@@ -1,0 +1,66 @@
+\input{conf}
+
+\begin{document}
+	\newgeometry{margin=0pt}
+	\begin{titlepage}
+		\vspace*{\fill}
+		
+		\begin{center}
+			
+			\textbf{\Huge\color{red} NOCTURNAL}
+			
+			ACCORDING TO THE RITE OF THE
+			
+			\textbf{\LARGE HOLY ROMAN CHURCH}
+			
+			\vspace*{\fill}
+			
+			\textbf{\Large\color{red} VOLUME III}
+			
+			First Sunday after Epiphany\\Until the First Sunday in Lent
+			
+		\end{center}
+		
+		\vspace*{\fill}
+	\end{titlepage}
+	
+	\newgeometry{top=0.25in,bottom=0.5in,inner=0.75in,outer=0.75in,includehead,nofoot}
+	\pagestyle{fancy}
+	
+	\pagenumbering{arabic}
+	\gresetinitiallines{0}
+	
+	\raggedbottom
+	
+	%\tableofcontents
+	
+	%%% COPY ABOVE %%%
+	
+	\vepart{Ordinary}
+	
+		\vechapter{The Order of Vigils}
+	
+			\input{vigils/order}
+	
+	\gresetinitiallines{1}
+	
+	\vepart{Psalter}
+	
+		\vechapter{Sunday}
+		
+			\input{vigils/sunday}
+	
+	\vepart{Common Tones}
+	
+		\vechapter{Sundays after Epiphany}
+		
+			\input{common/vigils/sunday}
+			
+	% This volume uniquely lacks a Temporal, since everything is a common tone
+	% Other volumes would contain the responsories herein
+	
+	\vepart{Temporal}
+	
+	\vepart{Sanctoral}
+	
+\end{document}
