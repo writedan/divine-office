@@ -1642,7 +1642,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
         }
     };
-    function queryTMeta(calendar) {
+    function queryTMeta(calendar, firstVespers = false) {
         // convert calendar data  to its metadata
             var metadata = JSON.parse(JSON.stringify(tMeta));
             var id = calendar.id.split('/');
@@ -1652,8 +1652,6 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                     metadata = metadata[part]
                 }
             }
-
-            console.log(metadata)
 
             if (calendar.oid != undefined) {
                 var oidm = JSON.parse(JSON.stringify(oMeta));
@@ -1705,7 +1703,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 // else, everything is taken from metadata
             }
 
-            if (st != undefined && metadata.rank != 7) {
+            if (st != undefined) {
                 /*metadata.backup = JSON.parse(JSON.stringify(metadata))
                 if (st.rank > 5) {
                     // in this case, merging the two is necessary
@@ -1724,7 +1722,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
                 // if the saint is ranked higher than the feria
                 if (st.rank < metadata.rank) {
-                    metadata = st;
+                    if (metadata.rank != 7) {
+                        metadata = st;
+                    } else if (firstVespers) {
+                        metadata = st;
+                    }
                 }
             }
 
@@ -2438,11 +2440,10 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         var tomorrow = calendar[keyDate(advdat(new Date(dat)))];
 
         var m1 = queryTMeta(today);
-        var m2 = queryTMeta(tomorrow);
+        var m2 = queryTMeta(tomorrow, true);
         
         var today_minus_saint = JSON.parse(JSON.stringify(today));
         delete today_minus_saint.stid;
-        console.log(today_minus_saint)
 
         var m3 = queryTMeta(today_minus_saint)
 
