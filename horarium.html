@@ -2546,7 +2546,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         let content = document.getElementById("content");
         let fasting = document.createElement('p');
         let notes = document.createElement('p');
-        let heading = document.createElement("h2");
+        let heading = document.createElement("h3");
         heading.style.fontWeight = "bold";
         heading.innerHTML = m1.name;
         heading.style.color = m1.color;
@@ -2572,15 +2572,18 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             break;
         }
         default:
-            fasting.innerHTML = '<b>No penance.</b>'
+            fasting.innerHTML = '<b>No penance.</b> Meat and fish may be taken at dinner.'
         }
 
         notes.innerHTML += '<b>Notes. </b>' + m1.note;
 
 
         content.innerHTML = "";
-        content.append(heading);
+        let hH = document.createElement('h2')
+        hH.innerHTML = 'Horarium for ' + dat.toDateString();
+        content.append(hH)
         content.append(fasting);
+        content.append(heading);
         if (m1.note != undefined) content.append(notes);
         content.append(table);
 
@@ -2593,7 +2596,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             let table = getHorariumTable(hours, false, feriaVespers ? true : !separateVespers);
                                                 // whether to print vespers & compile spearetely
                                                         // if true, "Vespers", if false, "First Vespers"
-            let heading = document.createElement("h2");
+            let heading = document.createElement("h3");
             heading.style.fontWeight = "bold";
             heading.innerHTML = (feriaVespers) ? m3.name : m2.name;
             heading.style.color = (feriaVespers) ? m3.color : m2.color;
@@ -2605,7 +2608,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         }
 
             content.append(heading);
-            content.append(fasting.cloneNode(true))
+            //content.append(fasting.cloneNode(true))
             content.append(table);
         }
 
