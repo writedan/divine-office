@@ -900,21 +900,21 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             name: 'Monday in Holy Week',
             color: 'violet',
             penance: 'strict-fast',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].tuesday = {
             name: 'Tuesday in Holy Week',
             color: 'violet',
             penance: 'strict-fast',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].wednesday = {
             name: 'Wednesday in Holy Week',
             color: 'violet',
             penance: 'strict-fast',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].thursday = {
@@ -922,14 +922,14 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             color: 'violet',
             note: 'Liturgical color of the Mass is white.',
             penance: 'vigil',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].friday = {
             name: 'Friday of the Preparation',
             color: 'black',
             penance: 'vigil',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].saturday = {
@@ -937,7 +937,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             color: 'violet',
             note: 'Mass begins at the prescribed time for Vespers.<br/>Liturgical color changes to white at the Litany.',
             penance: 'vigil',
-            rank: 8
+            rank: 7
         }
 
         metadata.pascha[1] = {}
@@ -1653,6 +1653,8 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
                 }
             }
 
+            console.log(metadata)
+
             if (calendar.oid != undefined) {
                 var oidm = JSON.parse(JSON.stringify(oMeta));
                 var id = calendar.oid.split('/');
@@ -1687,23 +1689,23 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
 
             if (om != undefined) {
-                if (om.rank < metadata.rank) {
-                    // everything from subid
-                    metadata = JSON.parse(JSON.stringify(om))
-                } else if (om.rank == metadata.rank) {
-                    // merge: om has priority
-                    metadata.backup = JSON.parse(JSON.stringify(metadata))
-                    metadata.backup.id = calendar.id
-                    om.id = calendar.subid
-                    mergeDeep(metadata, om)
-                    var id = metadata.backup.id.split('/')
-                    metadata.name = om.name + ' and ' + ordinal_suffix_of(id[1]) + ' after ' + id[0].charAt(0).toUpperCase() + id[0].slice(1)
-                }
+                    if (om.rank < metadata.rank ) {
+                        // everything from subid
+                        metadata = JSON.parse(JSON.stringify(om))
+                    } else if (om.rank == metadata.rank && metadata.rank != 7) {
+                        // merge: om has priority
+                        metadata.backup = JSON.parse(JSON.stringify(metadata))
+                        metadata.backup.id = calendar.id
+                        om.id = calendar.subid
+                        mergeDeep(metadata, om)
+                        var id = metadata.backup.id.split('/')
+                        metadata.name = om.name + ' and ' + ordinal_suffix_of(id[1]) + ' after ' + id[0].charAt(0).toUpperCase() + id[0].slice(1)
+                    }
 
                 // else, everything is taken from metadata
             }
 
-            if (st != undefined) {
+            if (st != undefined && metadata.rank != 7) {
                 /*metadata.backup = JSON.parse(JSON.stringify(metadata))
                 if (st.rank > 5) {
                     // in this case, merging the two is necessary
@@ -2219,7 +2221,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         sanc(gendat(2, 5))
         //sanc(gendat(2, 10))
         sanc(gendat(2, 14))
-        //sanc(gendat(3, 7))
+        sanc(gendat(3, 7))
         //sanc(gendat(3, 12))
         //sanc(gendat(3, 17))
         sanc(gendat(3, 21))
@@ -2453,7 +2455,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         var firstVespers = (m2.rank < 7); // whether tomorrow has first vespers
         var secondVespers = (m1.rank != 6 && m1.rank != 5); // whether today has vespers
 
-        var higherFeast = m2.rank < m1.rank; // whether tomorrow is a greater feast
+        var higherFeast = (m2.rank < m1.rank); // whether tomorrow is a greater feast
 
         var separateVespers; // whether to separate Vespers and Compline
         var feriaVespers = !higherFeast; // if separateVespers, whether to use the ferial (m3)
