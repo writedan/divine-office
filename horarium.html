@@ -363,9 +363,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
     function getHorariumTable(hours, separate, secondVespers=false) {
     	console.log("separate = " + separate, "secondVespers = " + secondVespers);
         let table = document.createElement("table");
-        table.border = "0";
-        table.style.borderCollapse = "collapse";
-        table.style.width = "300px";
+        //table.border = "0";
+        //table.style.borderCollapse = "collapse";
+        table.style.width = "75%";
         let tr = document.createElement("tr");
         tr.style.width = "100%";
         let timeth = document.createElement("th");
@@ -430,32 +430,32 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             liturgytd.style.verticalAlign ='top'
             var metadata = hours[hour].metadata;
 
-            hourtd.innerHTML += '<br/>'
+            //hourtd.innerHTML += '<br/>'
 
             // Mass, Dinner, and Supper ought go last
             if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
                 if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>';
+                    hourtd.innerHTML += '<span class="info"><i>Mass to follow.</i></span>';
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Dinner to follow.</i></span>'
                 }
             } else if (metadata.penance == 'vigil') {
                 if (hour == 'None') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Mass to follow.</i></span>'
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Supper.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Supper to follow.</i></span>'
                 }
             } else {
                 if (hour == 'Terce') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Mass to follow.</i></span>'
                 }
                 if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Dinner to follow.</i></span>'
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Supper.</i></span>'
+                    hourtd.innerHTML += '<span class="info"><i>Supper to follow.</i></span>'
                 }
             }
 
@@ -2606,7 +2606,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             content.append(table);
         }
 
-        document.body.append(content);
+        document.getElementsByClass('container')[0].append(content);
 
         console.log("============================================");
     }
@@ -2653,30 +2653,89 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         <title>Horarium</title>
         <style>
             body {
-                margin: 5%;
-                font-size: 18px;
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
             }
-            td,
+            .container {
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .form-container {
+                float: right;
+                width: 25%;
+                margin-left: 20px;
+                height: 100%;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
             th {
-                padding: 1%;
+                background-color: #f2f2f2;
             }
+            form {
+                margin-bottom: 20px;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+            input[type="number"],
+            input[type="date"] {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+            input[type="date"] {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background: url('calendar-icon.png') no-repeat center right;
+                background-size: 20px;
+                padding-right: 40px;
+            }
+            #content {
+                width: 75%;
+            }
+
             .info {
-               /* font-size: 12px; */
-               float: right;
+                text-align:right;
+                float: right;
             }
         </style>
     </head>
     <body>
-        <form>
-            <label for="lat" visible='false'>Latitude</label>
-            <input type="number" id="lat" visible='false'/>
-            <label for="lon">Longitude</label>
-            <input type="number" id="lon" />
-            <label for="dat">Date</label>
-            <input type="date" id="dat" />
-        </form>
-        <div id="content">
-            <p>Waiting for geolocation.</p>
+       <div class="container">
+            <div class="form-container">
+                <form>
+                    <label for="lat">Latitude</label>
+                    <input type="number" id="lat"/>
+                    <label for="lon">Longitude</label>
+                    <input type="number" id="lon" />
+                    <label for="dat">Date</label>
+                    <input type="date" id="dat" />
+                </form>
+            </div>
+            <div class="content-container">
+                <div id="content">
+                    <p>Waiting for geolocation.</p>
+                </div>
+            </div>
         </div>
     </body>
 
