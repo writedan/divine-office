@@ -3,6 +3,7 @@
 !*.tex
 !*.md
 !horarium.html
+!horarium/*
 !.gitignore
 !docs/*.pdf
 *_model.tex
