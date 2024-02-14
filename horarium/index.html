@@ -2612,15 +2612,28 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             content.append(table);
         }
 
-        document.getElementsByClass('container')[0].append(content);
+        document.getElementsByClassName('container')[0].append(content);
 
         console.log("============================================");
     }
 
 
     function displayRibbons(date, hour) {
-        document.body.innerHTML = ''
+        //document.body.innerHTML = ''
+        document.getElementsByClassName('container')[0].innerHTML = ''
         console.log(date.toDateString() + ' @ ' + hour)
+
+        var container = document.getElementsByClassName('container')[0]
+        /*container2 = document.createElement('div')
+        container2.className = 'content-container'
+        container.append(container2)*/
+        container3 = document.createElement('div')
+        container3.className = 'form-container'
+        container.append(container3)
+        container2 = document.createElement('div')
+        container2.id = 'content'
+        container.append(container2)
+        container = container2
 
         var calendar = getLiturgicalCalendar(date.getFullYear())
         var today = calendar[keyDate(date)]
@@ -2637,7 +2650,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             heading.style.color = '#2B4593'
         }
 
-        document.body.append(heading)
+        container.append(heading)
 
         let hourheading = document.createElement('h3')
         hourheading.innerHTML = 'At ' + hour;
@@ -2646,11 +2659,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             hourheading.innerHTML = 'At First Vespers';
         }
 
-        document.body.append(hourheading)
+        container.append(hourheading)
 
         let returnp = document.createElement('p');
         returnp.innerHTML = 'Return to the <a href="?">horarium.</a>'
-        document.body.append(returnp)
+        container3.append(returnp)
     }
 </script>
 
@@ -2675,8 +2688,9 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             .form-container {
                 float: right;
                 width: 25%;
-                margin-left: 20px;
+                margin: 20px auto;
                 /*height: 100%;*/
+                vertical-align: top;
             }
             table {
                 width: 100%;
