@@ -417,7 +417,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             hourtd.innerHTML = "<a href='?hour=" + hour + "&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>" + hour + "</a>";
             if (hours.Vigils === undefined) {
                 if (hour == 'Vespers' && !secondVespers) {
-                    hourtd.innerHTML = "<a href='?hour=FirstVespers&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>First Vespers. </a>";
+                    hourtd.innerHTML = "<a href='?hour=FirstVespers&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>First Vespers</a>";
                 }
             }
             tr.append(hourtd);
@@ -435,27 +435,27 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             // Mass, Dinner, and Supper ought go last
             if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
                 if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass to follow.</i></span>';
+                    hourtd.innerHTML += '<span class="info">Mass</span>';
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner to follow.</i></span>'
+                    hourtd.innerHTML += '<span class="info">Dinner</span>'
                 }
             } else if (metadata.penance == 'vigil') {
                 if (hour == 'None') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass to follow.</i></span>'
+                    hourtd.innerHTML += ' <span class="info">Mass</span>'
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Supper to follow.</i></span>'
+                    hourtd.innerHTML += ' <span class="info">Supper</span>'
                 }
             } else {
                 if (hour == 'Terce') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass to follow.</i></span>'
+                    hourtd.innerHTML += '<span class="info">Mass</span>'
                 }
                 if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner to follow.</i></span>'
+                    hourtd.innerHTML += '<span class="info">Dinner</span>'
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Supper to follow.</i></span>'
+                    hourtd.innerHTML += '<span class="info">Supper</span>'
                 }
             }
 
@@ -2722,6 +2722,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             .info {
                 text-align:right;
                 float: right;
+                font-size: 80%;
             }
         </style>
     </head>
