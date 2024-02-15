@@ -1,623 +1,6 @@
-<script>
 function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item))}function mergeDeep(target,...sources){if(!sources.length){return target}const source=sources.shift();if(isObject(target)&&isObject(source)){for(const key in source){if(isObject(source[key])){if(!target[key]){Object.assign(target,{[key]:{}})}mergeDeep(target[key],source[key])}else{Object.assign(target,{[key]:source[key]})}}}return mergeDeep(target,...sources)}
 
-    /*
- (c) 2011-2015, Vladimir Agafonkin
- SunCalc is a JavaScript library for calculating sun/moon position and light phases.
- https://github.com/mourner/suncalc
-*/
-    (function () {
-        "use strict";
-        var PI = Math.PI,
-            sin = Math.sin,
-            cos = Math.cos,
-            tan = Math.tan,
-            asin = Math.asin,
-            atan = Math.atan2,
-            acos = Math.acos,
-            rad = PI / 180;
-        var dayMs = 1000 * 60 * 60 * 24,
-            J1970 = 2440588,
-            J2000 = 2451545;
-        function toJulian(date) {
-            return date.valueOf() / dayMs - 0.5 + J1970;
-        }
-        function fromJulian(j) {
-            return new Date((j + 0.5 - J1970) * dayMs);
-        }
-        function toDays(date) {
-            return toJulian(date) - J2000;
-        }
-        var e = rad * 23.4397;
-        function rightAscension(l, b) {
-            return atan(sin(l) * cos(e) - tan(b) * sin(e), cos(l));
-        }
-        function declination(l, b) {
-            return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l));
-        }
-        function azimuth(H, phi, dec) {
-            return atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi));
-        }
-        function altitude(H, phi, dec) {
-            return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H));
-        }
-        function siderealTime(d, lw) {
-            return rad * (280.16 + 360.9856235 * d) - lw;
-        }
-        function astroRefraction(h) {
-            if (h < 0) {
-                h = 0;
-            }
-            return 0.0002967 / Math.tan(h + 0.00312536 / (h + 0.08901179));
-        }
-        function solarMeanAnomaly(d) {
-            return rad * (357.5291 + 0.98560028 * d);
-        }
-        function eclipticLongitude(M) {
-            var C = rad * (1.9148 * sin(M) + 0.02 * sin(2 * M) + 0.0003 * sin(3 * M)),
-                P = rad * 102.9372;
-            return M + C + P + PI;
-        }
-        function sunCoords(d) {
-            var M = solarMeanAnomaly(d),
-                L = eclipticLongitude(M);
-            return { dec: declination(L, 0), ra: rightAscension(L, 0) };
-        }
-        var SunCalc = {};
-        SunCalc.getPosition = function (date, lat, lng) {
-            var lw = rad * -lng,
-                phi = rad * lat,
-                d = toDays(date),
-                c = sunCoords(d),
-                H = siderealTime(d, lw) - c.ra;
-            return { azimuth: azimuth(H, phi, c.dec), altitude: altitude(H, phi, c.dec) };
-        };
-        var times = (SunCalc.times = [
-            [-0.833, "sunrise", "sunset"],
-            [-0.3, "sunriseEnd", "sunsetStart"],
-            [-6, "dawn", "dusk"],
-            [-12, "nauticalDawn", "nauticalDusk"],
-            [-18, "nightEnd", "night"],
-            [6, "goldenHourEnd", "goldenHour"],
-        ]);
-        SunCalc.addTime = function (angle, riseName, setName) {
-            times.push([angle, riseName, setName]);
-        };
-        var J0 = 0.0009;
-        function julianCycle(d, lw) {
-            return Math.round(d - J0 - lw / (2 * PI));
-        }
-        function approxTransit(Ht, lw, n) {
-            return J0 + (Ht + lw) / (2 * PI) + n;
-        }
-        function solarTransitJ(ds, M, L) {
-            return J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L);
-        }
-        function hourAngle(h, phi, d) {
-            return acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d)));
-        }
-        function observerAngle(height) {
-            return (-2.076 * Math.sqrt(height)) / 60;
-        }
-        function getSetJ(h, lw, phi, dec, n, M, L) {
-            var w = hourAngle(h, phi, dec),
-                a = approxTransit(w, lw, n);
-            return solarTransitJ(a, M, L);
-        }
-        SunCalc.getTimes = function (date, lat, lng, height) {
-            height = height || 0;
-            var lw = rad * -lng,
-                phi = rad * lat,
-                dh = observerAngle(height),
-                d = toDays(date),
-                n = julianCycle(d, lw),
-                ds = approxTransit(0, lw, n),
-                M = solarMeanAnomaly(ds),
-                L = eclipticLongitude(M),
-                dec = declination(L, 0),
-                Jnoon = solarTransitJ(ds, M, L),
-                i,
-                len,
-                time,
-                h0,
-                Jset,
-                Jrise;
-            var result = { solarNoon: fromJulian(Jnoon), nadir: fromJulian(Jnoon - 0.5) };
-            for (i = 0, len = times.length; i < len; i += 1) {
-                time = times[i];
-                h0 = (time[0] + dh) * rad;
-                Jset = getSetJ(h0, lw, phi, dec, n, M, L);
-                Jrise = Jnoon - (Jset - Jnoon);
-                result[time[1]] = fromJulian(Jrise);
-                result[time[2]] = fromJulian(Jset);
-            }
-            return result;
-        };
-        function moonCoords(d) {
-            var L = rad * (218.316 + 13.176396 * d),
-                M = rad * (134.963 + 13.064993 * d),
-                F = rad * (93.272 + 13.22935 * d),
-                l = L + rad * 6.289 * sin(M),
-                b = rad * 5.128 * sin(F),
-                dt = 385001 - 20905 * cos(M);
-            return { ra: rightAscension(l, b), dec: declination(l, b), dist: dt };
-        }
-        SunCalc.getMoonPosition = function (date, lat, lng) {
-            var lw = rad * -lng,
-                phi = rad * lat,
-                d = toDays(date),
-                c = moonCoords(d),
-                H = siderealTime(d, lw) - c.ra,
-                h = altitude(H, phi, c.dec),
-                pa = atan(sin(H), tan(phi) * cos(c.dec) - sin(c.dec) * cos(H));
-            h = h + astroRefraction(h);
-            return { azimuth: azimuth(H, phi, c.dec), altitude: h, distance: c.dist, parallacticAngle: pa };
-        };
-        SunCalc.getMoonIllumination = function (date) {
-            var d = toDays(date || new Date()),
-                s = sunCoords(d),
-                m = moonCoords(d),
-                sdist = 149598000,
-                phi = acos(sin(s.dec) * sin(m.dec) + cos(s.dec) * cos(m.dec) * cos(s.ra - m.ra)),
-                inc = atan(sdist * sin(phi), m.dist - sdist * cos(phi)),
-                angle = atan(cos(s.dec) * sin(s.ra - m.ra), sin(s.dec) * cos(m.dec) - cos(s.dec) * sin(m.dec) * cos(s.ra - m.ra));
-            return { fraction: (1 + cos(inc)) / 2, phase: 0.5 + (0.5 * inc * (angle < 0 ? -1 : 1)) / Math.PI, angle: angle };
-        };
-        function hoursLater(date, h) {
-            return new Date(date.valueOf() + (h * dayMs) / 24);
-        }
-        SunCalc.getMoonTimes = function (date, lat, lng, inUTC) {
-            var t = new Date(date);
-            if (inUTC) {
-                t.setUTCHours(0, 0, 0, 0);
-            } else {
-                t.setHours(0, 0, 0, 0);
-            }
-            var hc = 0.133 * rad,
-                h0 = SunCalc.getMoonPosition(t, lat, lng).altitude - hc,
-                h1,
-                h2,
-                rise,
-                set,
-                a,
-                b,
-                xe,
-                ye,
-                d,
-                roots,
-                x1,
-                x2,
-                dx;
-            for (var i = 1; i <= 24; i += 2) {
-                h1 = SunCalc.getMoonPosition(hoursLater(t, i), lat, lng).altitude - hc;
-                h2 = SunCalc.getMoonPosition(hoursLater(t, i + 1), lat, lng).altitude - hc;
-                a = (h0 + h2) / 2 - h1;
-                b = (h2 - h0) / 2;
-                xe = -b / (2 * a);
-                ye = (a * xe + b) * xe + h1;
-                d = b * b - 4 * a * h1;
-                roots = 0;
-                if (d >= 0) {
-                    dx = Math.sqrt(d) / (Math.abs(a) * 2);
-                    x1 = xe - dx;
-                    x2 = xe + dx;
-                    if (Math.abs(x1) <= 1) {
-                        roots += 1;
-                    }
-                    if (Math.abs(x2) <= 1) {
-                        roots += 1;
-                    }
-                    if (x1 < -1) {
-                        x1 = x2;
-                    }
-                }
-                if (roots === 1) {
-                    if (h0 < 0) {
-                        rise = i + x1;
-                    } else {
-                        set = i + x1;
-                    }
-                } else if (roots === 2) {
-                    rise = i + (ye < 0 ? x2 : x1);
-                    set = i + (ye < 0 ? x1 : x2);
-                }
-                if (rise && set) {
-                    break;
-                }
-                h0 = h2;
-            }
-            var result = {};
-            if (rise) {
-                result.rise = hoursLater(t, rise);
-            }
-            if (set) {
-                result.set = hoursLater(t, set);
-            }
-            if (!rise && !set) {
-                result[ye > 0 ? "alwaysUp" : "alwaysDown"] = true;
-            }
-            return result;
-        };
-        if (typeof exports === "object" && typeof module !== "undefined") {
-            module.exports = SunCalc;
-        } else if (typeof define === "function" && define.amd) {
-            define(SunCalc);
-        } else {
-            window.SunCalc = SunCalc;
-        }
-    })();
-</script>
-
-<script>
-    // this is the definitons script
-    function computus(y) {
-        var date, a, b, c, m, d;
-        date = new Date();
-        date.setHours(0, 0, 0, 0);
-        date.setFullYear(y);
-        a = y % 19;
-        b = 2200 <= y && y <= 2299 ? (11 * a + 4) % 30 : (11 * a + 5) % 30;
-        c = b === 0 || (b === 1 && a > 10) ? b + 1 : b;
-        m = 1 <= c && c <= 19 ? 3 : 2;
-        d = (50 - c) % 31;
-        date.setMonth(m, d);
-        date.setMonth(m, d + (7 - date.getDay()));
-        return date;
-    }
-    function computus2(y) {
-        var nov27 = new Date();
-        nov27.setFullYear(y);
-        nov27.setMonth(11 - 1);
-        nov27.setDate(27);
-        while (nov27.getDay() != 0) {
-            nov27.setDate(nov27.getDate() + 1);
-        }
-        return nov27;
-    }
-    function dateToSuntime(dat) {
-        var hour = dat.getHours();
-        var mint = dat.getMinutes();
-        return hour + mint / 60;
-    }
-    function w_sunrise(lat, lon, dat) {
-        return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunrise);
-    }
-    function w_sunset(lat, lon, dat) {
-        return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunset);
-    }
-    const roundNearest = (value, nearest) => Math.round(value * (1 / nearest)) / (1 / nearest);
-    function roundTime(time) {
-        time = roundNearest(time, 15 / 60);
-        if (time > 24) {
-            time -= 24;
-        }
-        if (time < 0) {
-            time += 24;
-        }
-        return time;
-    }
-    function suntimeToClocktime(suntime) {
-        if (suntime > 24) suntime -= 24
-        return [Math.floor(suntime), Math.floor((suntime - Math.floor(suntime)) * 60)];
-    }
-    function printClocktime(clocktime) {
-        //if (clocktime[0] >= 24) clocktime[0] -= 24;
-        let am = clocktime[0] < 12;
-        clocktime[0] = am ? clocktime[0] : clocktime[0] - 12;
-        if (clocktime[0] == 0) {
-            clocktime[0] = 12;
-        }
-        return (clocktime[0] < 10 ? "" : "") + clocktime[0] + ":" + (clocktime[1] < 10 ? "0" + clocktime[1] : clocktime[1]) + (clocktime[0] < 10 ? " " : " ") + (am ? "AM" : "PM");
-    }
-
-    function getFormattedDate(date) {
-  var year = date.getFullYear();
-
-  var month = (1 + date.getMonth()).toString();
-  month = month.length > 1 ? month : '0' + month;
-
-  var day = date.getDate().toString();
-  day = day.length > 1 ? day : '0' + day;
-  
-  return year + '/' + month + '/' + day;
-}
-
-    function printDuration(suntime) {
-        var n = suntimeToClocktime(suntime);
-        return (n[0] > 0 ? n[0] + "hr" : "") + (n[1] > 0 ? n[1] + "min" : "");
-    }
-
-    function romanize (num) {
-    if (isNaN(num))
-        return NaN;
-    var digits = String(+num).split(""),
-        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
-               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
-               "","I","II","III","IV","V","VI","VII","VIII","IX"],
-        roman = "",
-        i = 3;
-    while (i--)
-        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
-    return Array(+digits.join("") + 1).join("M") + roman;
-}
-
-    function initBoxes(lat, lon) {
-        var latBox = document.getElementById("lat");
-        var lonBox = document.getElementById("lon");
-        var datBox = document.getElementById("dat");
-
-        var today = new Date();
-        today = new Date(today.toDateString());
-
-        console.log(today)
-
-        datBox.valueAsDate = today;
-        latBox.value = lat;
-        lonBox.value = lon;
-        latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-        lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-        datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-        boxChanged(latBox, lonBox, datBox);
-    }
-
-    function getHorariumTable(hours, separate, secondVespers=false) {
-    	console.log("separate = " + separate, "secondVespers = " + secondVespers);
-        let table = document.createElement("table");
-        table.border = "0";
-        table.style.borderCollapse = "collapse";
-        table.style.width = "300px";
-        let tr = document.createElement("tr");
-        tr.style.width = "100%";
-        let timeth = document.createElement("th");
-        timeth.style.width = "33%";
-        timeth.innerHTML = "Time";
-        timeth.align = "left";
-        tr.append(timeth);
-        let hourth = document.createElement("th");
-        hourth.style.width = "66%";
-        hourth.innerHTML = "Hour";
-        hourth.align = "left";
-        tr.append(hourth);
-        /*let liturgyth = document.createElement('th');
-        liturgyth.style.width = '65%';
-        liturgyth.innerHTML = 'Liturgy';
-        liturgyth.align = 'left';
-        tr.append(liturgyth);*/
-        table.append(tr);
-        {
-            for (i = 0; i < Object.keys(hours).length; i += 1) {
-                name = Object.keys(hours)[i];
-                if (name == 'Vespers' && i == 0) break;
-                hour = hours[name];
-                nextHour = i + 1;
-                if (nextHour == Object.keys(hours).length) {
-                    nextHour = 0;
-                }
-                elapse = hours[Object.keys(hours)[nextHour]].time - hour.time;
-                elapse -= hour.duration;
-                if (elapse < 0) {
-                    elapse += 24;
-                }
-                console.log("Time elapse from " + name + " to " + Object.keys(hours)[nextHour] + ": " + printDuration(elapse));
-            }
-        }
-        for (hour in hours) {
-            if (hour == 'Vespers' || hour == 'Compline') {
-                if (separate) continue;
-            }
-
-            let time = suntimeToClocktime(hours[hour].time);
-            let tr = document.createElement("tr");
-            let timetd = document.createElement("td");
-            timetd.innerHTML = printClocktime(time);
-            tr.append(timetd);
-            let dur = suntimeToClocktime(hours[hour].time + hours[hour].duration);
-            timetd.innerHTML/* += "<br/>" + printClocktime(dur);*/
-            let hourtd = document.createElement("td");
-            hourtd.innerHTML = "<a href='?hour=" + hour + "&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>" + hour + "</a>";
-            if (hours.Vigils === undefined) {
-                if (hour == 'Vespers' && !secondVespers) {
-                    hourtd.innerHTML = "<a href='?hour=FirstVespers&date=" + getFormattedDate(new Date(hours[hour].liturgy.date)) + "'>First Vespers. </a>";
-                }
-            }
-            tr.append(hourtd);
-            tr.style.width = "100%";
-            timetd.style.width = "10%";
-            hourtd.style.width = "10%";
-            hourtd.style.verticalAlign ='top'
-            timetd.style.verticalAlign ='top'
-            let liturgytd = document.createElement('td');
-            liturgytd.style.verticalAlign ='top'
-            var metadata = hours[hour].metadata;
-
-            hourtd.innerHTML += '<br/>'
-
-            // Mass, Dinner, and Supper ought go last
-            if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
-                if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>';
-                }
-                if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner.</i></span>'
-                }
-            } else if (metadata.penance == 'vigil') {
-                if (hour == 'None') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>'
-                }
-                if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Supper.</i></span>'
-                }
-            } else {
-                if (hour == 'Terce') {
-                    hourtd.innerHTML += '<span class="info"><i>Mass.</i></span>'
-                }
-                if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info"><i>Dinner.</i></span>'
-                }
-                if (hour == 'Vespers') {
-                    hourtd.innerHTML += '<span class="info"><i>Supper.</i></span>'
-                }
-            }
-
-            //hourtd.innerHTML += '<br/>'
-            let span = document.createElement('span');
-            //span.style.color = metadata.color;
-            /*if (metadata.color == 'white') {
-                span.style.textShadow = '1px 1px 0 #000,-1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000'
-            }
-
-            if (metadata.color == 'black') {
-                span.style.fontWeight = 999
-                span.style.textShadow = '0.1px 0.1px 0 #000,-0.1px 0.1px 0 #000, -0.1px -0.1px 0 #000, 0.1px -0.1px 0 #000'
-            }*/
-                        //liturgytd.append(span);
-
-                        let volumep = document.createElement('p');
-            //liturgytd.append(volumep);
-            volumep.innerHTML = 'Use the books of <b>Volume ' + romanize(metadata.volume) + '</b>.'
-
-            if (metadata.note != undefined) {
-                let notesp = document.createElement('p')
-                notesp.innerHTML = '<b>Notes. </b> ' + metadata.note;
-                if (hour !='Vespers') liturgytd.append(notesp)
-            }
-
-            if (metadata.vnote != undefined && hour == 'Vespers') {
-                let notesp = document.createElement('p')
-                notesp.innerHTML = '<b>Notes. </b> ' + metadata.vnote;
-                liturgytd.append(notesp)
-            }
-
-
-            /*let penancep = document.createElement('p');
-            liturgytd.append(penancep)
-            switch (metadata.penance) {
-            case 'fast': {
-                penancep.innerHTML = '<b>Fasting. </b>';
-                if (hour != 'Vespers') {
-                    penancep.innerHTML += 'Mass follows  Sext.<br/>Dinner is taken after None.<br/>';
-                } 
-                
-                if (!separate || hour == 'Vespers') {penancep.innerHTML += "Supper is not taken after Vespers."}
-                break;
-            }
-            case 'abstinence': {
-                penancep.innerHTML = '<b>Abstinence. </b>'
-                if (hour != 'Vespers') {
-                    penancep.innerHTML += 'Mass follows Terce.<br/>Dinner is taken after Sext.<br/>'
-                }
-
-                if (!separate || hour=='Vespers') {
-                    //penancep.innerHTML += 'Supper with abstinence is taken after Vespers.';
-                    let m2 = queryTMeta(hours['Vigils'].liturgy);
-                    if (m2.penance == 'vigil') {
-                        penancep.innerHTML += 'Dinner is taken after Vespers.'
-                    } else {
-                        penancep.innerHTML += 'Supper is taken after Vespers.' // supper by default is a meal of absistence
-                    }
-                }
-                break;
-            }
-            case 'vigil': {
-                // vigils can never be separated
-                penancep.innerHTML = '<b>Vigil.</b> Mass follows None.'; 
-                if (!separate) {
-                    penancep.innerHTML += '<br/>Dinner is taken after Vespers.'
-                }
-                break;
-            }
-            default: {
-                    // we know the day after a vigil has no penance
-                    //penancep.innerHTML = '<b>No penance.</b> Mass follows the hour of Terce.<br/>Dinner is taken after Sext.' + ((separate && hour!='Vespers') ? '' : '<br/>Supper is taken after Vespers.')
-                    penancep.innerHTML = '<b>No penance.</b> ';
-                    if (hour != 'Vespers') {
-                        penancep.innerHTML += 'Mass follows Terce.<br/>Dinner is taken after Sext.<br/>'
-                    }
-
-                    if (!separate || hour == 'Vespers') {
-                        //penancep.innerHTML += 'Supper is taken after Vespers.'
-                        let m2 = queryTMeta(hours['Vigils'].liturgy);
-                        if (m2.penance == 'vigil') {
-                            // day preceding was a vigil
-                            penancep.innerHTML += 'Dinner is taken after Vespers.'
-                        } else {
-                            penancep.innerHTML += 'Supper is taken after Vespers.'
-                        }
-                    }
-                }
-            }
-
-            span.innerHTML = metadata.name
-            if (separate) {
-                if (hour == 'Vigils') {
-                    liturgytd.rowSpan = 6;
-                    //tr.append(liturgytd)
-                } else if (hour == 'Vespers') {
-                    liturgytd.rowSpan = 2;
-                    //tr.append(liturgytd)
-                }
-            } else {
-                if (hour == 'Vigils') {
-                    liturgytd.rowSpan = 8;
-                    //tr.append(liturgytd)
-                }
-            }*/
-            table.append(tr);
-        }
-        return table;
-    }
-
-    function advdat(dat, n = 1) {
-        // advance date by one
-        dat.setDate(dat.getDate() + n);
-        return dat;
-    }
-
-    function treatAsUTC(date) {
-        var result = new Date(date);
-        result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
-        return result;
-    }
-
-    function daysBetween(startDate, endDate) {
-        var millisecondsPerDay = 24 * 60 * 60 * 1000;
-        return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
-    }
-
-    function keyDate(date) {
-        var now = date;
-        var start = new Date(now.getFullYear(), 0, 0);
-        return Math.floor(daysBetween(start, now));
-    }
-
-    function ordinal_suffix_of(i) {
-        var j = i % 10,
-            k = i % 100;
-        if (j == 1 && k != 11) {
-            return i + "st";
-        }
-        if (j == 2 && k != 12) {
-            return i + "nd";
-        }
-        if (j == 3 && k != 13) {
-            return i + "rd";
-        }
-        return i + "th";
-    }
-
-    function feriaToDay(n) {
-            switch (n) {
-            case 0: return 'sunday'
-            case 1: return 'monday'
-            case 2: return 'tuesday'
-            case 3: return 'wednesday'
-            case 4: return 'thursday'
-            case 5: return 'friday'
-            case 6: return 'saturday'
-            }
-        }
-
-    function getTemporalMetaData() {
+function getTemporalMetaData() {
         var metadata = {
             'advent': {},
             'christmas': {},
@@ -746,8 +129,8 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         metadata.epiphany.vigil = {
             name: 'Eve of the Epiphany',
             rank: 8,
-            color: 'white',
-            penance: 'abstinence'
+            color: 'violet',
+            penance: 'vigil'
         }
 
         metadata.epiphany.octave = {}
@@ -831,21 +214,21 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         }
 
         metadata.prelent[1].thursday = {
-            name: 'Thursday after Ashes',
+            name: 'Thursday after the Ashes',
             color: 'violet',
             penance: 'fast',
             rank: 8
         }
 
         metadata.prelent[1].friday = {
-            name: 'Friday after Ashes',
+            name: 'Friday after the Ashes',
             color: 'violet',
             penance: 'strict-fast',
             rank: 8
         }
 
         metadata.prelent[1].saturday = {
-            name: 'Saturday after Ashes',
+            name: 'Saturday after the Ashes',
             color: 'violet',
             penance: 'fast',
             rank: 8
@@ -873,7 +256,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         metadata.passion = {}
         metadata.passion[1] = {}
         metadata.passion[1].sunday = {
-            name: '1st Sunday of the Passion',
+            name: '5th Sunday in Lent',
             color: 'violet',
             penance: 'abstinence',
             rank: 2
@@ -881,7 +264,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
         for (var d = 1; d < 7; d++) {
             metadata.passion[1][feriaToDay(d)] = {
-                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the First Week of Passiontide',
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the 5th Week of Lent',
                 color: 'violet',
                 penance: 'strict-fast',
                 rank: 8
@@ -900,21 +283,21 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             name: 'Monday in Holy Week',
             color: 'violet',
             penance: 'strict-fast',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].tuesday = {
             name: 'Tuesday in Holy Week',
             color: 'violet',
             penance: 'strict-fast',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].wednesday = {
             name: 'Wednesday in Holy Week',
             color: 'violet',
             penance: 'strict-fast',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].thursday = {
@@ -922,14 +305,14 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             color: 'violet',
             note: 'Liturgical color of the Mass is white.',
             penance: 'vigil',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].friday = {
             name: 'Friday of the Preparation',
             color: 'black',
             penance: 'vigil',
-            rank: 8
+            rank: 7
         }
 
         metadata.passion[2].saturday = {
@@ -937,7 +320,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             color: 'violet',
             note: 'Mass begins at the prescribed time for Vespers.<br/>Liturgical color changes to white at the Litany.',
             penance: 'vigil',
-            rank: 8
+            rank: 7
         }
 
         metadata.pascha[1] = {}
@@ -1008,7 +391,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         }
 
         metadata.pentecost.vigil = {
-            name: 'Eve of Pentecost',
+            name: 'Eve of the Holy Pentecost',
             color: 'white',
             note: 'Liturgical color is white until None, violet until the introit of the Mass, and red thereafter.',
             penance: 'vigil',
@@ -1615,8 +998,6 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         }
     }
 
-    tMeta = getTemporalMetaData();
-    sMeta = getSanctoralMetaData();
     oMeta = {
         december: {
             '17': {
@@ -1642,7 +1023,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
         }
     };
-    function queryTMeta(calendar) {
+
+tMeta = getTemporalMetaData();
+sMeta = getSanctoralMetaData();
+
+function queryTMeta(calendar, firstVespers = false) {
         // convert calendar data  to its metadata
             var metadata = JSON.parse(JSON.stringify(tMeta));
             var id = calendar.id.split('/');
@@ -1687,18 +1072,18 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             }
 
             if (om != undefined) {
-                if (om.rank < metadata.rank) {
-                    // everything from subid
-                    metadata = JSON.parse(JSON.stringify(om))
-                } else if (om.rank == metadata.rank) {
-                    // merge: om has priority
-                    metadata.backup = JSON.parse(JSON.stringify(metadata))
-                    metadata.backup.id = calendar.id
-                    om.id = calendar.subid
-                    mergeDeep(metadata, om)
-                    var id = metadata.backup.id.split('/')
-                    metadata.name = om.name + ' and ' + ordinal_suffix_of(id[1]) + ' after ' + id[0].charAt(0).toUpperCase() + id[0].slice(1)
-                }
+                    if (om.rank < metadata.rank ) {
+                        // everything from subid
+                        metadata = JSON.parse(JSON.stringify(om))
+                    } else if (om.rank == metadata.rank && metadata.rank != 7) {
+                        // merge: om has priority
+                        metadata.backup = JSON.parse(JSON.stringify(metadata))
+                        metadata.backup.id = calendar.id
+                        om.id = calendar.subid
+                        mergeDeep(metadata, om)
+                        var id = metadata.backup.id.split('/')
+                        metadata.name = om.name + ' and ' + ordinal_suffix_of(id[1]) + ' after ' + id[0].charAt(0).toUpperCase() + id[0].slice(1)
+                    }
 
                 // else, everything is taken from metadata
             }
@@ -1722,7 +1107,11 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
 
                 // if the saint is ranked higher than the feria
                 if (st.rank < metadata.rank) {
-                    metadata = st;
+                    if (metadata.rank != 7) {
+                        metadata = st;
+                    } else if (firstVespers) {
+                        metadata = st;
+                    }
                 }
             }
 
@@ -1751,8 +1140,8 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             return n;
         }
 
-        var easterSunday = computus(year);
-        var adventSunday = computus2(year);
+        var easterSunday = easter_computus(year);
+        var adventSunday = advent_computus(year);
 
         var calendar = {};
 
@@ -2219,7 +1608,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         sanc(gendat(2, 5))
         //sanc(gendat(2, 10))
         sanc(gendat(2, 14))
-        //sanc(gendat(3, 7))
+        sanc(gendat(3, 7))
         //sanc(gendat(3, 12))
         //sanc(gendat(3, 17))
         sanc(gendat(3, 21))
@@ -2387,79 +1776,35 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
         return calendar;
     }
 
-    function boxChanged(latBox, lonBox, datBox) {
-        // this is the main logic loop
-        var lat = latBox.value;
-        var lon = lonBox.value;
-        var dat = datBox.value.replace(/-/g, '\/').split('/');
+function getLiturgicalDay(date) {
+    console.log(date)
+    var easter = easter_computus(date.getFullYear());
+    var advent = advent_computus(date.getFullYear());
+    var calendar = getLiturgicalCalendar(date.getFullYear());
+
+    var today = calendar[keyDate(date)]
+    var tomorrow = calendar[keyDate(advdat(new Date(date)))];
+
+    var m1 = queryTMeta(today);
+    var m2 = queryTMeta(tomorrow, true);
         
-        dat = new Date(dat[0], dat[1] -1 , dat[2])
+    var today_minus_saint = JSON.parse(JSON.stringify(today));
+    delete today_minus_saint.stid;
 
-        console.log(datBox.value.replace(/-/g, '\/'))
+    var m3 = queryTMeta(today_minus_saint)
 
-        console.log(datBox.value)
+    m2.penance = m1.penance;
+    m3.penance = m2.penance; // this is necessary to ensure proper supper/dinner after first vespers
 
-        console.log(dat);
+    var firstVespers = (m2.rank < 7); // whether tomorrow has first vespers
+    var secondVespers = (m1.rank != 6 && m1.rank != 5); // whether today has vespers
 
-        var easterSunday = computus(dat.getFullYear());
-        var advent = computus2(dat.getFullYear());
+    var higherFeast = (m2.rank < m1.rank); // whether tomorrow is a greater feast
 
-        console.log("================= NEW DATE =================");
-        console.log("Today is " + dat.toDateString());
-        console.log(dat)
-
-        var calendar = getLiturgicalCalendar(dat.getFullYear());
-
-        console.log("---------------- HORARIUM ----------------");
-
-        suntimes = SunCalc.getTimes(dat, lat, lon);
-        for (let x in suntimes) {
-            suntimes[x] = dateToSuntime(suntimes[x]);
-        }
-
-        suntimes = SunCalc.getTimes(dat, lat, lon);
-        for (let x in suntimes) {
-            suntimes[x] = dateToSuntime(suntimes[x]);
-        }
-
-        var sunrise = suntimes.sunrise;
-        var sunset = suntimes.sunset;
-
-        var dayhours = (sunset - sunrise) / 12;
-        var nighthours = (sunrise - sunset + 24) / 12;
-
-        console.log("Sunrise is at " + printClocktime(suntimeToClocktime(sunrise)));
-        console.log("Day hours are " + printDuration(dayhours) + " long");
-        console.log("Night hours are " + printDuration(nighthours) + " long");
-
-        var today = calendar[keyDate(dat)]
-        var tomorrow = calendar[keyDate(advdat(new Date(dat)))];
-
-        var m1 = queryTMeta(today);
-        var m2 = queryTMeta(tomorrow);
-        
-        var today_minus_saint = JSON.parse(JSON.stringify(today));
-        delete today_minus_saint.stid;
-        console.log(today_minus_saint)
-
-        var m3 = queryTMeta(today_minus_saint)
-
-        console.log("Today is " + today.id);
-        console.log("Tomorrow is " + tomorrow.id)
-
-        m2.penance = m1.penance;
-        m3.penance = m2.penance; // this is necessary to ensure proper supper/dinner after first vespers
-
-        var firstVespers = (m2.rank < 7); // whether tomorrow has first vespers
-        var secondVespers = (m1.rank != 6 && m1.rank != 5); // whether today has vespers
-
-        var higherFeast = m2.rank < m1.rank; // whether tomorrow is a greater feast
-
-        var separateVespers; // whether to separate Vespers and Compline
-        var feriaVespers = !higherFeast; // if separateVespers, whether to use the ferial (m3)
+    var separateVespers; // whether to separate Vespers and Compline
+    var ferialVespers = !higherFeast; // if separateVespers, whether to use the ferial (m3)
                             // if false, uses with saints (m2)
-
-        if (secondVespers && firstVespers) {
+    if (secondVespers && firstVespers) {
             console.log('Today has Vespers, and tomorrow has first Vespers.')
             if (higherFeast) {
                 console.log("Vespers and Compline of tomorrow")
@@ -2472,7 +1817,7 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             console.log('Today has no Vespers, but tomorrow has first Vespers.')
             console.log('Vespers and Compline of tomorrow')
             separateVespers = true;
-            feriaVespers = false;
+            ferialVespers = false;
         } else if (secondVespers && !firstVespers) {
             console.log('Today has second Vespers and tomorrow has no first Vespers.')
             console.log('Vespers and Compline of today.')
@@ -2481,230 +1826,59 @@ function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item
             console.log('Today has no Vespers and tomorrow has no first Vespers.')
             console.log('We will default to ferial!')
             separateVespers = true;
-            feriaVespers = true
+            ferialVespers = true
         }
 
-        console.log('separateVespers = ' + separateVespers + ', feriaVespers = ' + feriaVespers)
+        console.log('separateVespers = ' + separateVespers + ', ferialVespers = ' + ferialVespers)
 
-        let hours = {
+    let hours = {
             Vigils: {
-                time: roundTime(suntimes.nadir),
                 duration: 1.5,
                 liturgy: today,
                 metadata: m1
             },
             Lauds: {
-                time: roundTime(suntimes.nauticalDawn),
                 duration: 0.75,
                 liturgy: today,
                 metadata: m1
             },
             Prime: {
-                time: roundTime(sunrise + dayhours * 1),
                 duration: 0.25,
                 liturgy: today,
                 metadata: m1
             },
             Terce: {
-                time: roundTime(sunrise + dayhours * 3),
                 duration: 0.25,
                 liturgy: today,
                 metadata: m1
             },
             Sext: {
-                time: roundTime(sunrise + dayhours * 6),
                 duration: 0.25,
                 liturgy: today,
                 metadata: m1
             },
             None: {
-                time: roundTime(sunrise + dayhours * 9),
                 duration: 0.25,
                 liturgy: today,
                 metadata: m1
             },
             Vespers: {
-                time: roundTime(sunset),
                 duration: 0.5,
-                liturgy: separateVespers ? (feriaVespers ? today_minus_saint : tomorrow) : today,
-                metadata: separateVespers ? (feriaVespers ? m3 : m2) : m1
+                liturgy: separateVespers ? (ferialVespers ? today_minus_saint : tomorrow) : today,
+                metadata: separateVespers ? (ferialVespers ? m3 : m2) : m1
             },
             Compline: {
-                time: roundTime(suntimes.night),
                 duration: 0.5,
-                liturgy: separateVespers ? (feriaVespers ? today_minus_saint : tomorrow) : today,
-                metadata: separateVespers ? (feriaVespers ? m3 : m2) : m1
+                liturgy: separateVespers ? (ferialVespers ? today_minus_saint : tomorrow) : today,
+                metadata: separateVespers ? (ferialVespers ? m3 : m2) : m1
             },
         };
-
-        console.log(hours)
-
-        var table = getHorariumTable(hours, (separateVespers));
-        let content = document.getElementById("content");
-        let fasting = document.createElement('p');
-        let notes = document.createElement('p');
-        let heading = document.createElement("h2");
-        heading.style.fontWeight = "bold";
-        heading.innerHTML = m1.name;
-        heading.style.color = m1.color;
-        if (m1.color == 'white') {
-            //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
-            heading.style['-webkit-text-stroke'] = '0.75px black';
-        } else if (m1.color == 'blue') {
-            heading.style.color = '#2B4593'
+        return {
+            hours : hours,
+            m1: m1,
+            m2: m2,
+            m3: m3,
+            separateVespers: separateVespers,
+            ferialVespers: ferialVespers
         }
-
-        switch (m1.penance) {
-        case 'fast': {
-            fasting.innerHTML = '<b>Fasting.</b> Refrain from meat, fish, dairy, and eggs.'
-            break;
-        }
-        case 'abstinence': {
-            fasting.innerHTML = '<b>Abstinence.</b> Refrain from meat, dairy, and eggs.'
-            break;
-        }
-        case 'strict-fast': // same as vigil
-        case 'vigil': {
-            fasting.innerHTML = '<b>Fasting.</b> Refrain from meat, fish, oil, wine, dairy, and eggs.'
-            break;
-        }
-        default:
-            fasting.innerHTML = '<b>No penance.</b>'
-        }
-
-        notes.innerHTML += '<b>Notes. </b>' + m1.note;
-
-
-        content.innerHTML = "";
-        content.append(heading);
-        content.append(fasting);
-        if (m1.note != undefined) content.append(notes);
-        content.append(table);
-
-        if (separateVespers) {
-            for (x in hours) {
-                if (x == 'Vespers' || x == 'Compline') continue;
-                delete hours[x]
-            }
-
-            let table = getHorariumTable(hours, false, feriaVespers ? true : !separateVespers);
-                                                // whether to print vespers & compile spearetely
-                                                        // if true, "Vespers", if false, "First Vespers"
-            let heading = document.createElement("h2");
-            heading.style.fontWeight = "bold";
-            heading.innerHTML = (feriaVespers) ? m3.name : m2.name;
-            heading.style.color = (feriaVespers) ? m3.color : m2.color;
-            if (heading.style.color == 'white') {
-                //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
-                heading.style['-webkit-text-stroke'] = '0.75px black';
-            } else if (heading.style.color == 'blue') {
-            heading.style.color = '#2B4593'
-        }
-
-            content.append(heading);
-            content.append(fasting.cloneNode(true))
-            content.append(table);
-        }
-
-        document.body.append(content);
-
-        console.log("============================================");
-    }
-
-
-    function displayRibbons(date, hour) {
-        document.body.innerHTML = ''
-        console.log(date.toDateString() + ' @ ' + hour)
-
-        var calendar = getLiturgicalCalendar(date.getFullYear())
-        var today = calendar[keyDate(date)]
-        var meta = queryTMeta(today)
-        console.log(meta)
-
-        let heading = document.createElement('h2')
-        heading.innerHTML = meta.name;
-        heading.style.color = meta.color;
-        if (meta.color == 'white') {
-            //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
-            heading.style['-webkit-text-stroke'] = '0.75px black';
-        } else if (meta.color == 'blue') {
-            heading.style.color = '#2B4593'
-        }
-
-        document.body.append(heading)
-
-        let hourheading = document.createElement('h3')
-        hourheading.innerHTML = 'At ' + hour;
-        heading.style.fontWeight = "bold";
-        if (hour == 'FirstVespers') {
-            hourheading.innerHTML = 'At First Vespers';
-        }
-
-        document.body.append(hourheading)
-
-        let returnp = document.createElement('p');
-        returnp.innerHTML = 'Return to the <a href="?">horarium.</a>'
-        document.body.append(returnp)
-    }
-</script>
-
-<html>
-    <head>
-        <title>Horarium</title>
-        <style>
-            body {
-                margin: 5%;
-                font-size: 18px;
-            }
-            td,
-            th {
-                padding: 1%;
-            }
-            .info {
-               /* font-size: 12px; */
-               float: right;
-            }
-        </style>
-    </head>
-    <body>
-        <form>
-            <label for="lat" visible='false'>Latitude</label>
-            <input type="number" id="lat" visible='false'/>
-            <label for="lon">Longitude</label>
-            <input type="number" id="lon" />
-            <label for="dat">Date</label>
-            <input type="date" id="dat" />
-        </form>
-        <div id="content">
-            <p>Waiting for geolocation.</p>
-        </div>
-    </body>
-
-    <script>
-        let params = new URLSearchParams(window.location.search);
-        if (params.get('hour') == undefined || params.get('date') == undefined) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (pos) {
-                        initBoxes(pos.coords.latitude, pos.coords.longitude);
-                    },
-                    function () {
-                        alert("Geolocation failed. Manual entry is required.");
-                        initBoxes(0, 0);
-                    }
-                );
-            } else {
-                alert("Geolocation is not supported on this device. Manual entry is required.");
-                initBoxes(0, 0);
-            }
-        } else {
-            let date = new Date();
-            let parts = params.get('date').split('/');
-            date.setFullYear(parts[0])
-            date.setMonth(parts[1] - 1)
-            date.setDate(parts[2])
-
-            displayRibbons(date, params.get('hour'));
-        }
-    </script>
-</html>
+}
