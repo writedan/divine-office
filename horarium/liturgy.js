@@ -256,7 +256,7 @@ function getTemporalMetaData() {
         metadata.passion = {}
         metadata.passion[1] = {}
         metadata.passion[1].sunday = {
-            name: '1st Sunday of the Passion',
+            name: '5th Sunday in Lent',
             color: 'violet',
             penance: 'abstinence',
             rank: 2
@@ -264,7 +264,7 @@ function getTemporalMetaData() {
 
         for (var d = 1; d < 7; d++) {
             metadata.passion[1][feriaToDay(d)] = {
-                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the First Week of Passiontide',
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the 5th Week of Lent',
                 color: 'violet',
                 penance: 'strict-fast',
                 rank: 8
@@ -391,7 +391,7 @@ function getTemporalMetaData() {
         }
 
         metadata.pentecost.vigil = {
-            name: 'Eve of Pentecost',
+            name: 'Eve of the Holy Pentecost',
             color: 'white',
             note: 'Liturgical color is white until None, violet until the introit of the Mass, and red thereafter.',
             penance: 'vigil',
