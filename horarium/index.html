@@ -275,7 +275,7 @@
         let m2 = stuff.m2;
         let m3 = stuff.m3;
         let separateVespers = stuff.separateVespers;
-        let ferialVespers = stuff.feriaVespers
+        let ferialVespers = stuff.ferialVespers
 
         hours.Vigils.time = roundTime(suntimes.nadir);
         hours.Lauds.time = roundTime(suntimes.nauticalDawn);
@@ -361,55 +361,6 @@
         document.getElementById('container').append(content);
 
         console.log("============================================");
-    }
-
-
-    function displayRibbons(date, hour) {
-        //document.body.innerHTML = ''
-        document.getElementById('container').innerHTML = ''
-        console.log(date.toDateString() + ' @ ' + hour)
-
-        var container = document.getElementById('container')
-        /*container2 = document.createElement('div')
-        container2.className = 'content-container'
-        container.append(container2)*/
-        container3 = document.createElement('div')
-        container3.className = 'form-container'
-        container.append(container3)
-        container2 = document.createElement('div')
-        container2.id = 'content'
-        container.append(container2)
-        container = container2
-
-        var calendar = getLiturgicalCalendar(date.getFullYear())
-        var today = calendar[keyDate(date)]
-        var meta = queryTMeta(today)
-        console.log(meta)
-
-        let heading = document.createElement('h2')
-        heading.innerHTML = meta.name;
-        heading.style.color = meta.color;
-        if (meta.color == 'white') {
-            //heading.style.textShadow = '0.5px 0.5px 0 #000,-0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000'
-            heading.style['-webkit-text-stroke'] = '0.75px black';
-        } else if (meta.color == 'blue') {
-            heading.style.color = '#2B4593'
-        }
-
-        container.append(heading)
-
-        let hourheading = document.createElement('h3')
-        hourheading.innerHTML = 'At ' + hour;
-        heading.style.fontWeight = "bold";
-        if (hour == 'FirstVespers') {
-            hourheading.innerHTML = 'At First Vespers';
-        }
-
-        container.append(hourheading)
-
-        let returnp = document.createElement('p');
-        returnp.innerHTML = 'Return to the <a href="?">horarium.</a>'
-        container3.append(returnp)
     }
 </script>
 
