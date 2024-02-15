@@ -93,21 +93,21 @@
             // Mass, Dinner, and Supper ought go last
             if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
                 if (hour == 'Sext') {
-                    hourtd.innerHTML += '<span class="info">Mass</span>';
+                    //hourtd.innerHTML += '<span class="info">Mass</span>';
                 }
                 if (hour == 'Vespers') {
                     hourtd.innerHTML += '<span class="info">Dinner</span>'
                 }
             } else if (metadata.penance == 'vigil') {
                 if (hour == 'None') {
-                    hourtd.innerHTML += ' <span class="info">Mass</span>'
+                    //hourtd.innerHTML += ' <span class="info">Mass</span>'
                 }
                 if (hour == 'Vespers') {
                     hourtd.innerHTML += ' <span class="info">Supper</span>'
                 }
             } else {
                 if (hour == 'Terce') {
-                    hourtd.innerHTML += '<span class="info">Mass</span>'
+                    //hourtd.innerHTML += '<span class="info">Mass</span>'
                 }
                 if (hour == 'Sext') {
                     hourtd.innerHTML += '<span class="info">Dinner</span>'
@@ -330,7 +330,7 @@
         content.append(hH)
         content.append(fasting);
         content.append(heading);
-        if (m1.note != undefined) content.append(notes);
+        //if (m1.note != undefined) content.append(notes);
         content.append(table);
 
         if (separateVespers) {
