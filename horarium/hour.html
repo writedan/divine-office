@@ -18,31 +18,28 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        let today = new Date(urlParams.get('date'))
+        let today = getLiturgicalDay(new Date(urlParams.get('date')))
         let hour = urlParams.get('hour')
         var firstVespers = false;
         if (hour == 'FirstVespers') {
             firstVespers = true;
             hour = 'Vespers'
         }
-        let metadata = getLiturgicalDay(today).hours[hour].metadata;
+        let metadata = today.hours[hour].metadata;
         document.title = metadata.name + ' at ' + (firstVespers ? 'First Vespers' : hour);
 
         let content = document.getElementById('content');
         let sidebar = document.getElementById('form-container');
 
-        let h1 = document.createElement('p');
+        let h1 = document.createElement('h2');
         h1.innerHTML = metadata.name;
         h1.style.color = metadata.color;
-        h1.style.fontWeight = 'bold'
-        //h1.style.textAlign = 'justify'
-        h1.style.textJustify="inter-word"
-        h1.style.width = '100%'
-        let span = document.createElement('span')
-        span.innerHTML = ' at ' + (firstVespers? 'First Vespers' : hour);
-        span.style.color = 'black';
-        h1.append(span);
-        sidebar.append(h1);
+        content.append(h1);
+
+        let h2 = document.createElement('h2');
+        h2.innerHTML = 'Horarium';
+        h2.style.width = '100%'
+        sidebar.append(h2);
 
 
     </script>
