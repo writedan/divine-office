@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Horarium</title>
+        <script src='./suncalc.js'></script>
+        <script src ='./lit-time.js'></script>
+        <script src='./liturgy.js'></script>
+        <link rel='stylesheet' type='text/css' href='./liturgy.css'/>
+    </head>
+    <body>
+       <div id="container">
+            <div id="form-container">
+            </div>
+            <div id='content-container'></div>
+            <div id="content">
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let today = new Date(urlParams.get('date'))
+        let hour = urlParams.get('hour')
+        var firstVespers = false;
+        if (hour == 'FirstVespers') {
+            firstVespers = true;
+            hour = 'Vespers'
+        }
+        let metadata = getLiturgicalDay(today).hours[hour].metadata;
+        document.title = metadata.name + ' at ' + (firstVespers ? 'First Vespers' : hour);
+
+        let content = document.getElementById('content');
+        let sidebar = document.getElementById('form-container');
+
+        let h1 = document.createElement('p');
+        h1.innerHTML = metadata.name;
+        h1.style.color = metadata.color;
+        h1.style.fontWeight = 'bold'
+        //h1.style.textAlign = 'justify'
+        h1.style.textJustify="inter-word"
+        h1.style.width = '100%'
+        let span = document.createElement('span')
+        span.innerHTML = ' at ' + (firstVespers? 'First Vespers' : hour);
+        span.style.color = 'black';
+        h1.append(span);
+        sidebar.append(h1);
+
+
+    </script>
+</html>
