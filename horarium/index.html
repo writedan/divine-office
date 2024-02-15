@@ -93,21 +93,21 @@
             // Mass, Dinner, and Supper ought go last
             if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
                 if (hour == 'Sext') {
-                    //hourtd.innerHTML += '<span class="info">Mass</span>';
+                    //hourtd.innerHTML += ' <sup>M</sup>';
                 }
                 if (hour == 'Vespers') {
                     hourtd.innerHTML += '<span class="info">Dinner</span>'
                 }
             } else if (metadata.penance == 'vigil') {
                 if (hour == 'None') {
-                    //hourtd.innerHTML += ' <span class="info">Mass</span>'
+                    //hourtd.innerHTML += ' <sup> M</sup>';
                 }
                 if (hour == 'Vespers') {
-                    hourtd.innerHTML += ' <span class="info">Supper</span>'
+                    hourtd.innerHTML += '<span class="info">Supper</span>'
                 }
             } else {
                 if (hour == 'Terce') {
-                    //hourtd.innerHTML += '<span class="info">Mass</span>'
+                    //hourtd.innerHTML += ' <sup> M</sup>';
                 }
                 if (hour == 'Sext') {
                     hourtd.innerHTML += '<span class="info">Dinner</span>'
@@ -221,6 +221,42 @@
                 }
             }*/
             table.append(tr);
+
+            let mtr = document.createElement('tr');
+            mtr.append(document.createElement('td'));
+            let mtd = document.createElement('td');
+            mtr.append(mtd);
+
+            if (metadata.penance == 'fast' || metadata.penance == 'strict-fast') {
+                if (hour == 'Sext') {
+                    mtd.innerHTML += 'Mass';
+                }
+                if (hour == 'Vespers') {
+                    //mtd.innerHTML += '<span class="info">Dinner</span>'
+                }
+            } else if (metadata.penance == 'vigil') {
+                if (hour == 'None') {
+                    mtd.innerHTML += 'Mass'
+                }
+                if (hour == 'Vespers') {
+                    //mtd.innerHTML += ' <span class="info">Supper</span>'
+                }
+            } else {
+                if (hour == 'Terce') {
+                    mtd.innerHTML += 'Mass'
+                }
+                if (hour == 'Sext') {
+                    //mtd.innerHTML += '<span class="info">Dinner</span>'
+                }
+                if (hour == 'Vespers') {
+                    //mtd.innerHTML += '<span class="info">Supper</span>'
+                }
+            }
+
+            if (mtd.innerHTML != '') {
+                table.append(mtr);
+            }
+
         }
         return table;
     }
@@ -303,22 +339,28 @@
             heading.style.color = '#2B4593'
         }
 
+        let mealtimes = document.createElement('p');
+
         switch (m1.penance) {
         case 'fast': {
             fasting.innerHTML = '<b>Fasting.</b> Refrain from meat, fish, dairy, and eggs.'
+            mealtimes.innerHTML = '<b>One meal.</b> Dinner is taken after Vespers.'
             break;
         }
         case 'abstinence': {
             fasting.innerHTML = '<b>Abstinence.</b> Refrain from meat, dairy, and eggs.'
+            mealtimes.innerHTML = '<b>Two meals.</b> Dinner is taken after Sext. Supper is taken after Vespers.'
             break;
         }
         case 'strict-fast': // same as vigil
         case 'vigil': {
             fasting.innerHTML = '<b>Fasting.</b> Refrain from meat, fish, oil, wine, dairy, and eggs.'
+            mealtimes.innerHTML = (m1.penance == 'vigil' ? '<b>Vigil.</b> Supper may be taken after Vespers.' : '<b>One meal.</b> Dinner is taken after Vespers.')
             break;
         }
         default:
             fasting.innerHTML = '<b>No penance.</b> Meat and fish may be taken at dinner.'
+            mealtimes.innerHTML = '<b>Two meals.</b> Dinner is taken after Sext. Supper is taken after Vespers.'
         }
 
         notes.innerHTML += '<b>Notes. </b>' + m1.note;
@@ -329,6 +371,7 @@
         hH.innerHTML = 'Horarium for ' + dat.toDateString();
         content.append(hH)
         content.append(fasting);
+        //content.append(mealtimes);
         content.append(heading);
         //if (m1.note != undefined) content.append(notes);
         content.append(table);
