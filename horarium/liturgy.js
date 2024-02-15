@@ -214,21 +214,21 @@ function getTemporalMetaData() {
         }
 
         metadata.prelent[1].thursday = {
-            name: 'Thursday after Ashes',
+            name: 'Thursday after the Ashes',
             color: 'violet',
             penance: 'fast',
             rank: 8
         }
 
         metadata.prelent[1].friday = {
-            name: 'Friday after Ashes',
+            name: 'Friday after the Ashes',
             color: 'violet',
             penance: 'strict-fast',
             rank: 8
         }
 
         metadata.prelent[1].saturday = {
-            name: 'Saturday after Ashes',
+            name: 'Saturday after the Ashes',
             color: 'violet',
             penance: 'fast',
             rank: 8
