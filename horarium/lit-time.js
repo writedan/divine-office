@@ -1,4 +1,4 @@
-function computus(y) {
+function easter_computus(y) {
         var date, a, b, c, m, d;
         date = new Date();
         date.setHours(0, 0, 0, 0);
@@ -12,7 +12,7 @@ function computus(y) {
         date.setMonth(m, d + (7 - date.getDay()));
         return date;
     }
-    function computus2(y) {
+    function advent_computus(y) {
         var nov27 = new Date();
         nov27.setFullYear(y);
         nov27.setMonth(11 - 1);

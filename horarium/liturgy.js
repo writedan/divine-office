@@ -1,3 +1,5 @@
+function isObject(item){return(item&&typeof item==='object'&&!Array.isArray(item))}function mergeDeep(target,...sources){if(!sources.length){return target}const source=sources.shift();if(isObject(target)&&isObject(source)){for(const key in source){if(isObject(source[key])){if(!target[key]){Object.assign(target,{[key]:{}})}mergeDeep(target[key],source[key])}else{Object.assign(target,{[key]:source[key]})}}}return mergeDeep(target,...sources)}
+
 function getTemporalMetaData() {
         var metadata = {
             'advent': {},
@@ -1138,8 +1140,8 @@ function queryTMeta(calendar, firstVespers = false) {
             return n;
         }
 
-        var easterSunday = computus(year);
-        var adventSunday = computus2(year);
+        var easterSunday = easter_computus(year);
+        var adventSunday = advent_computus(year);
 
         var calendar = {};
 
@@ -1773,3 +1775,110 @@ function queryTMeta(calendar, firstVespers = false) {
 
         return calendar;
     }
+
+function getLiturgicalDay(date) {
+    console.log(date)
+    var easter = easter_computus(date.getFullYear());
+    var advent = advent_computus(date.getFullYear());
+    var calendar = getLiturgicalCalendar(date.getFullYear());
+
+    var today = calendar[keyDate(date)]
+    var tomorrow = calendar[keyDate(advdat(new Date(date)))];
+
+    var m1 = queryTMeta(today);
+    var m2 = queryTMeta(tomorrow, true);
+        
+    var today_minus_saint = JSON.parse(JSON.stringify(today));
+    delete today_minus_saint.stid;
+
+    var m3 = queryTMeta(today_minus_saint)
+
+    m2.penance = m1.penance;
+    m3.penance = m2.penance; // this is necessary to ensure proper supper/dinner after first vespers
+
+    var firstVespers = (m2.rank < 7); // whether tomorrow has first vespers
+    var secondVespers = (m1.rank != 6 && m1.rank != 5); // whether today has vespers
+
+    var higherFeast = (m2.rank < m1.rank); // whether tomorrow is a greater feast
+
+    var separateVespers; // whether to separate Vespers and Compline
+    var ferialVespers = !higherFeast; // if separateVespers, whether to use the ferial (m3)
+                            // if false, uses with saints (m2)
+    if (secondVespers && firstVespers) {
+            console.log('Today has Vespers, and tomorrow has first Vespers.')
+            if (higherFeast) {
+                console.log("Vespers and Compline of tomorrow")
+                separateVespers = true;
+            } else {
+                console.log("Vespers and Compline of today")
+                separateVespers = false;
+            }
+        } else if (!secondVespers && firstVespers) {
+            console.log('Today has no Vespers, but tomorrow has first Vespers.')
+            console.log('Vespers and Compline of tomorrow')
+            separateVespers = true;
+            ferialVespers = false;
+        } else if (secondVespers && !firstVespers) {
+            console.log('Today has second Vespers and tomorrow has no first Vespers.')
+            console.log('Vespers and Compline of today.')
+            separateVespers = false;
+        } else {
+            console.log('Today has no Vespers and tomorrow has no first Vespers.')
+            console.log('We will default to ferial!')
+            separateVespers = true;
+            ferialVespers = true
+        }
+
+        console.log('separateVespers = ' + separateVespers + ', ferialVespers = ' + ferialVespers)
+
+    let hours = {
+            Vigils: {
+                duration: 1.5,
+                liturgy: today,
+                metadata: m1
+            },
+            Lauds: {
+                duration: 0.75,
+                liturgy: today,
+                metadata: m1
+            },
+            Prime: {
+                duration: 0.25,
+                liturgy: today,
+                metadata: m1
+            },
+            Terce: {
+                duration: 0.25,
+                liturgy: today,
+                metadata: m1
+            },
+            Sext: {
+                duration: 0.25,
+                liturgy: today,
+                metadata: m1
+            },
+            None: {
+                duration: 0.25,
+                liturgy: today,
+                metadata: m1
+            },
+            Vespers: {
+                duration: 0.5,
+                liturgy: separateVespers ? (ferialVespers ? today_minus_saint : tomorrow) : today,
+                metadata: separateVespers ? (ferialVespers ? m3 : m2) : m1
+            },
+            Compline: {
+                duration: 0.5,
+                liturgy: separateVespers ? (ferialVespers ? today_minus_saint : tomorrow) : today,
+                metadata: separateVespers ? (ferialVespers ? m3 : m2) : m1
+            },
+        };
+        return {
+            hours : hours,
+            m1: m1,
+            m2: m2,
+            m3: m3,
+            separateVespers: separateVespers,
+            ferialVespers: ferialVespers
+        }
+}
