@@ -3,6 +3,11 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 	// TODO: christmas
 	// TODO: epiphany
 	// TODO: prelent
+	metadata.prelent[1].friday.hours = {
+		Vigils: {
+			psalter: 'vigils/friday.lit'
+		}
+	}
 	// TODO: lent
 	// TODO: passion
 	// TODO: pascha
