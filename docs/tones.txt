@@ -1,0 +1,75 @@
+=Tones=
+I believe three symbols are necessary for notating each tone: one (~) for any preparatory syllables to be indicated on the first such, one (\`) for the accent itself, and one (^) for the flex accent where applicable.
+
+I note that each tone has only two intoning syllables, no more than two accents, and presumably no more than 3 preparatory syllables before an accent. Thus, we need about 12 notes to fully note any tone.
+
+==Tone 1==
+2 syllable intonation
+1 accent mediant (0 preparatory) (when applicable)
+1 accent final (2 preparatory)
+
+==Tone 2==
+2 syllable intonation
+1 accent mediant (0 preparatory)
+1 accent final (1 preparatory)
+
+==Tone 3==
+2 syllable intonation
+2 accent mediant (0 preparatory, 0 preparatory) (2nd when applicable)
+
+	===Endings i, ii, and iii (3a)===
+	1 accent final (2 preparatory)
+
+	===Endings iv, v (3b)===
+	1 accent final (1 preparatory)
+
+	===Ending vi (3c)===
+	1 accent fina; (3 preparatory)
+
+==Tone 4==
+2 syllable intonation
+1 accent mediation (2 preparatory)
+
+	===Endings i, ii, iii, iv, v (4a)===
+	1 accent final (3 preparatory)
+
+	===Ending vi (4b)===
+	0 accent final
+
+	===Endings vii, viii, ix (4c)===
+	1 accent final (0 preparatory) (when applicable exception for viii)
+
+==Tone 5==
+2 syllable intonation
+1 accent mediation (0 preparatory)
+
+	===Endings i, ii (5a)===
+	2 accent final (0 preparatory, 0 preparatory)
+
+	===Ending iii (5b)===
+	1 accent final (2 preparatory)
+
+==Tone 6a==
+2 syllable intonation
+1 accent mediation (0 preparatory) (when applicable)
+1 accent final (2 preparatory)
+
+==Tone 6b==
+2 syllable intonation
+2 accent mediation (0 preparatory, 0 preparatory)
+1 accent final (2 preparatory)
+
+==Tone 7==
+2 syllable intonation
+2 accent mediation (0 preparatory, 0 preparatory)
+2 accent final (0 preparatory, 0 preparatory)
+
+==Tone 8==
+2 syllable intonation
+1 accent mediation (0 preparatory)
+1 accent final (2 preparatory)
+
+==Peregrine Tone==
+0 syllable intonation
+1 accent mediation (3 preparatory)
+1 accent final (1 preparatory)
