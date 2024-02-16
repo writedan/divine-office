@@ -2,8 +2,11 @@
 !*/
 !*.tex
 !*.md
+!*.lit
+!*.gabc
 !horarium.html
 !horarium/*
 !.gitignore
 !docs/*.pdf
 *_model.tex
+!docs/tones.txt
