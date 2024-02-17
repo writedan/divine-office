@@ -61,7 +61,7 @@ function formatPsalm(verses) {
             try {
                 const response = await fetch(this.url);
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch file, status: ${response.status}`);
+                    throw new Error(`Failed to fetch ${this.url}, status: ${response.status}`);
                 }
 
                 this.code = await response.text();
@@ -76,37 +76,49 @@ function formatPsalm(verses) {
     }
 
  	async execute() {
- 		if (!this.ready) {
- 			await this.loaded;
- 		}
+ 		try {
+	 		if (!this.ready) {
+	 			await this.loaded;
+	 		}
 
- 		let output = [];
- 		let lines = this.code.split('\n');
+	 		let output = [];
+	 		let lines = this.code.split('\n');
 
- 		lines.forEach(line => {
- 			line = line.trim();
- 			if (line.length == 0) {
- 				return;
- 			}
+	 		lines.forEach(line => {
+	 			line = line.trim();
+	 			if (line.length == 0) {
+	 				return;
+	 			}
 
- 			if (line.startsWith('#')) {
- 				const argsRegex = /"([^"]+)"/g;
- 				const args = line.match(argsRegex).map(arg => arg.slice(1, -1));
-            const command = line.substring(0, line.indexOf('"', 1)).slice(1).trim();
-	            output.push(this.handleCommand(command, args));
- 			} else {
- 				let p = document.createElement('p');
- 				p.innerHTML = line;
- 				output.push(p);
- 			}
- 		})
+	 			if (line.startsWith('#')) {
+	 				const argsRegex = /"([^"]+)"/g;
+	 				const argsMatch = line.match(argsRegex);
+	 				const args = argsMatch ? line.match(argsRegex).map(arg => arg.slice(1, -1)) : [];
+	            const command = line.substring(0, line.indexOf('"', 1)).slice(1).trim();
+		            output.push(this.handleCommand(command, args));
+	 			} else {
+	 				let p = document.createElement('p');
+	 				p.innerHTML = line;
+	 				output.push(p);
+	 			}
+	 		})
 
- 		for (let i in output) {
- 			let r = await output[i];
- 			output[i] = r;
- 		}
+	 		for (let i in output) {
+	 			let r = await output[i];
+	 			output[i] = r;
+	 		}
 
- 		return output;
+	 		return output;
+	 	} catch (error) {
+	 		console.error('Error on LiturgyContext(' + this.url+')')
+	 		console.error(error)
+
+	 		let div = document.createElement('div');
+	 		div.className = 'error';
+	 		div.innerHTML = error;
+	 		div.innerHTML += '<br/>' + error.stack;
+	 		return [div];
+	 	}
  	}
 
  	setField(name, value) {
@@ -121,7 +133,7 @@ function formatPsalm(verses) {
 
  		else if (cmd == 'antiphon') {
  			this.setField('antiphon', args[0]);
- 			return undefined;
+ 			//return undefined;
  		}
 
  		else if (cmd == 'psalm') {
@@ -133,12 +145,14 @@ function formatPsalm(verses) {
 
  			let title = document.createElement('p');
  			title.className = 'title';
- 			title.innerHTML = 'Psalm' + args[0];
+ 			title.innerHTML = 'Psalm ' + args[0] + '.';
 
  			if (verses[0].className == 'title') {
- 				title.innerHTML += ' ' + verses[0].innerHTML;
+ 				title.innerHTML += '<br/>' + verses[0].innerHTML;
  				verses.splice(0, 1);
  			}
+
+ 			div.append(title)
 
  			for (let v of verses) {
  				div.appendChild(v);
@@ -147,11 +161,17 @@ function formatPsalm(verses) {
  			return div;
  		}
 
+ 		else if (cmd == 'gloria') {
+ 			return this.handleCommand('score', ['common/glorybe/' + args[0]])
+ 		}
+
  		else if (cmd == 'include') {
  			let div = document.createElement('div');
- 			div.className = 'error'
- 			let url = this[args[0]];
- 			div.innerHTML = 'Can\'t resolve symbol: ' + args[0] + '<br/>' + URL_BASE + url;
+ 			let ctx = new LiturgyContext(this[args[0]]);
+ 			let res = await ctx.execute();
+ 			for (let r of res) {
+ 				div.appendChild(r);
+ 			}
 
  			return div;
  		}
@@ -177,7 +197,7 @@ function formatPsalm(verses) {
  				this.setField('tone-initial', arg[2])
  			}
 
- 			return undefined;
+ 			//return undefined;
  		}
 
  		else {
@@ -186,5 +206,7 @@ function formatPsalm(verses) {
  			div.innerHTML = 'Unknown command: ' + cmd;
  			return div;
  		}
+
+ 		return document.createElement('blank')
  	}
  }
