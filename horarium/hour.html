@@ -18,6 +18,8 @@
     </body>
 
     <script>
+        annotateTemporalMetadata(tMeta)
+        
         const urlParams = new URLSearchParams(window.location.search);
         let today = getLiturgicalDay(new Date(urlParams.get('date')))
         let hour = urlParams.get('hour')
