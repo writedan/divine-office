@@ -43,6 +43,10 @@ function resolveTone(tone, ending='?') {
 
 	return tone;
 }
+
+function formatPsalm(verses) {
+
+}
  
  class LiturgyContext {
  	constructor(url) {

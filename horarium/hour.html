@@ -7,6 +7,20 @@
         <script src='./lit-calendar.js'></script>
         <script src='./lit-compile.js'></script>
         <link rel='stylesheet' type='text/css' href='./liturgy.css'/>
+        <style>
+            .error {
+                background-color: red;
+            }
+
+            p {
+                text-align: justify;
+            }
+
+            .instruction {
+                color: red;
+                font-style: oblique;
+            }
+        </style>
     </head>
     <body>
        <div id="container">
@@ -47,6 +61,20 @@
         h2.style.width = '100%'
         sidebar.append(h2);
 
+        let hourData = metadata.hours[urlParams.get('hour')]
+        let lctx = new LiturgyContext(hourData.order);
+        lctx.setField('psalter', hourData.psalter);
+        lctx.setField('hymn', hourData.commons.hymn);
+        lctx.setField('kyrie', hourData.kyrie);
+        lctx.setField('invitatory', hourData.invitatory);
 
+        async function append_liturgy() {
+            let elements = await lctx.execute();
+            for (let e of elements) {
+                document.getElementById('content').appendChild(e);
+            }
+        }
+
+        append_liturgy();
     </script>
 </html>
