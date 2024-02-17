@@ -1,0 +1,33 @@
+#instruction "Kneel and make these prayers quietly before the service begins."
+
+Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+
+Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+
+#instruction "Reaching the front of the chapel, the officiant begins again in a higher voice."
+
+#gabc "(c3) <sp>v</sp> O(f) God,(h) make(h) speed(i) to(h) save(g) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
+
+#include "hymn"
+
+#include "psalter"
+
+#include "chapter"
+
+#include "versicle"
+
+#instruction "Everyone then kneels as the precantor and succentor antiphonally sing the Kyrie."
+
+#include "kyrie"
+
+Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+
+#instruction "Everyone stands as the officiant begins."
+
+#gabc "(c3) <sp>v</sp> O(f) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) thee.(f) (::) Let(h) us(g) pray.(h)"
+
+#include "collect"
+
+#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+#score "common/conclusion.gabc"
