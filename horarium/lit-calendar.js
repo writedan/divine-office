@@ -39,7 +39,9 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					commons: {
 						hymn: 'hymn/te-lucis-ante-terminum.gabc',
 						chapter: 'common/compline/chapter(ordinary).gabc',
-						versicle: 'common/compline/chapter(ordinary).gabc'
+						versicle: 'common/compline/chapter(ordinary).gabc',
+						canticle: 'common/compline/canticle(ordinary).gabc',
+						anthem: 'anthem/ave-regina-celorum.gabc'
 					}
 				}
 			}
