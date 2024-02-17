@@ -26,14 +26,23 @@
                 font-style: italic;
             }
 
-            .psalm {
-                display: grid;
-                  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
-                  grid-column-gap: 40px; /* Adjust the gap between columns */
+            .psalm table {
+                border:none;
+                border-collapse: collapse;
             }
 
-            .psalm p {
-                margin-bottom: 5px;
+            .psalm table td {
+                border: none;
+                border-left: 1px solid #000;
+                border-right: 1px solid #000;
+            }
+
+            .psalm table td:first-child {
+                border-left: none;
+            }
+
+            .psalm table td:last-child {
+                border-right: none;
             }
 
             .title {

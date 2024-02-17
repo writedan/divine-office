@@ -94,7 +94,7 @@ function formatPsalm(verses) {
 	 				const argsRegex = /"([^"]+)"/g;
 	 				const argsMatch = line.match(argsRegex);
 	 				const args = argsMatch ? line.match(argsRegex).map(arg => arg.slice(1, -1)) : [];
-	            const command = line.substring(0, line.indexOf('"', 1)).slice(1).trim();
+	            	const command = argsMatch ? line.substring(0, line.indexOf('"', 1)).slice(1).trim() : line.substring(1);
 		            output.push(this.handleCommand(command, args));
 	 			} else {
 	 				let p = document.createElement('p');
@@ -138,7 +138,10 @@ function formatPsalm(verses) {
 
  		else if (cmd == 'psalm') {
  			let div = document.createElement('div');
- 			div.className = 'psalm';
+ 			div.className = 'psalm'
+ 			let table = document.createElement('table');
+
+ 			table.className = 'psalm';
  			let tone = (this.tone === undefined ? 'text' : resolveTone(this.tone));
  			let ctx = new LiturgyContext('psalter/' + args[0] + '/' + tone + '.lit')
  			let verses = await ctx.execute();
@@ -152,11 +155,29 @@ function formatPsalm(verses) {
  				verses.splice(0, 1);
  			}
 
+ 			let numRows = Math.ceil(verses.length / 2)
+
  			div.append(title)
 
- 			for (let v of verses) {
- 				div.appendChild(v);
+ 			for (let i = 0; i < numRows; i++) {
+ 				let left = verses[i];
+ 				let right = verses[i + numRows];
+ 				let tr = document.createElement('tr');
+ 				let left_td = document.createElement('td');
+ 				left_td.append(left);
+ 				tr.append(left_td);
+ 				let right_td = document.createElement('td');
+ 				right_td.append((right === undefined ? document.createElement('p') : right));
+ 				tr.append(right_td)
+ 				table.append(tr)
+ 				left_td.style.width = '50%'
+ 				right_td.style.width = '50%'
+ 				left_td.style.verticalAlign = 'top'
+ 				right_td.style.verticalAlign = 'top'
  			}
+
+ 			div.append(table)
+
 
  			return div;
  		}
@@ -167,7 +188,13 @@ function formatPsalm(verses) {
 
  		else if (cmd == 'include') {
  			let div = document.createElement('div');
- 			let ctx = new LiturgyContext(this[args[0]]);
+ 			let url = this[args[0]];
+ 			url = (url === undefined ? 'resource:'+args[0] : url)
+ 			if (url.endsWith(".gabc")) {
+ 				return this.handleCommand('score', url);
+ 			}
+
+ 			let ctx = new LiturgyContext(url);
  			let res = await ctx.execute();
  			for (let r of res) {
  				div.appendChild(r);
@@ -200,13 +227,13 @@ function formatPsalm(verses) {
  			//return undefined;
  		}
 
- 		else {
+ 		 {
  			let div = document.createElement('div');
  			div.className = 'error';
  			div.innerHTML = 'Unknown command: ' + cmd;
  			return div;
  		}
 
- 		return document.createElement('blank')
+ 		//return document.createElement('blank')
  	}
  }
