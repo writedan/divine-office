@@ -9,7 +9,12 @@
         <link rel='stylesheet' type='text/css' href='./liturgy.css'/>
         <style>
             .error {
-                background-color: red;
+                background-color: #f8d7da; /* Light red */
+                border: 1px solid #f5c6cb; /* Darker red */
+                color: #721c24; /* Dark red */
+                padding: 10px 15px;
+                margin-bottom: 20px;
+                border-radius: 5px;
             }
 
             p {
@@ -18,7 +23,8 @@
 
             .instruction {
                 color: red;
-                font-style: oblique;
+                font-style: oblique 1deg;
+                font-size: 90%;
             }
         </style>
     </head>
@@ -66,15 +72,14 @@
         lctx.setField('psalter', hourData.psalter);
         lctx.setField('hymn', hourData.commons.hymn);
         lctx.setField('kyrie', hourData.kyrie);
-        lctx.setField('invitatory', hourData.invitatory);
+        lctx.setField('invitatory', hourData.commons.invitatory);
+        lctx.setField('chapter', hourData.commons.chapter);
+        lctx.setField('versicle', hourData.commons.versicle);
 
-        async function append_liturgy() {
-            let elements = await lctx.execute();
-            for (let e of elements) {
-                document.getElementById('content').appendChild(e);
+        lctx.execute().then(result => {
+            for (let r of result) {
+                document.getElementById('content').appendChild(r);
             }
-        }
-
-        append_liturgy();
+        })
     </script>
 </html>

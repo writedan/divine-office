@@ -6,6 +6,7 @@
  * INDEX OF COMMANDS
  * #antiphon <antiphon> -- inserts the specified antiphon from antiphon/
  * #gabc <music> -- directly creates a score
+ * #gloria <type> -- imports the specified Glory Be from common/glorybe
  * #psalm <psalm> [tone] -- inserts the psalm text from psalter/. It will load the tone previously given by #tone or, in absence, load the text, or you can specify the tone to use. Diacritics in the file will be automatically converted. Also adjoins the psalm number to the following title, if any is given.
  * #include <what> -- paramaters passed in by the calling agent as links to other .lit or .gabc, parses and displays
  * #instruction <text> -- prints as an instruction
@@ -142,6 +143,15 @@ function formatPsalm(verses) {
  			for (let v of verses) {
  				div.appendChild(v);
  			}
+
+ 			return div;
+ 		}
+
+ 		else if (cmd == 'include') {
+ 			let div = document.createElement('div');
+ 			div.className = 'error'
+ 			let url = this[args[0]];
+ 			div.innerHTML = 'Can\'t resolve symbol: ' + args[0] + '<br/>' + URL_BASE + url;
 
  			return div;
  		}
