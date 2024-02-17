@@ -23,8 +23,24 @@
 
             .instruction {
                 color: red;
-                font-style: oblique 1deg;
-                font-size: 90%;
+                font-style: italic;
+            }
+
+            .psalm {
+                display: grid;
+                  grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+                  grid-column-gap: 40px; /* Adjust the gap between columns */
+            }
+
+            .psalm p {
+                margin-bottom: 5px;
+            }
+
+            .title {
+                text-align:center;
+                font-size: 85%;
+                font-weight: bold;
+                grid-column: 1 / -1;
             }
         </style>
     </head>
