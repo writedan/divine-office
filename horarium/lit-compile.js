@@ -10,8 +10,9 @@
  * #psalm <psalm> [tone] -- inserts the psalm text from psalter/. It will load the tone previously given by #tone or, in absence, load the text, or you can specify the tone to use. Diacritics in the file will be automatically converted. Also adjoins the psalm number to the following title, if any is given.
  * #include <what> -- paramaters passed in by the calling agent as links to other .lit or .gabc, parses and displays
  * #instruction <text> -- prints as an instruction
- * #import <link> -- includes wholesale a .lit
+ * #import <link> -- includes wholesale a .lit (for internal use only?)
  * #nogloria -- suppresses any gloria until the next appears
+ * #raw-gabc <gabc> -- for internal use only! directly formulates a gabc element
  * #repeat-antiphon -- repeats the previous antiphon given by #antiphon but without initial lines and without any * or +.
  * #score <link> -- imports a score
  * #title <title> -- prints right-aligned small italic text for a title
@@ -45,10 +46,6 @@ function resolveTone(tone, ending='?') {
 
 	return tone;
 }
-
-function formatPsalm(verses) {
-
-}
  
  class LiturgyContext {
  	constructor(url, base=undefined) {
@@ -77,6 +74,17 @@ function formatPsalm(verses) {
         });
     }
 
+    handleError(error) {
+    	console.error('Error on LiturgyContext(' + this.url+')')
+	 	console.error(error)
+
+	 	let div = document.createElement('div');
+	 	div.className = 'error';
+	 	div.innerHTML = error;
+	 	div.innerHTML += '<br/>' + error.stack;
+	 	return div;
+    }
+
  	async execute() {
  		try {
 	 		if (!this.ready) {
@@ -97,7 +105,12 @@ function formatPsalm(verses) {
 	 				const argsMatch = line.match(argsRegex);
 	 				const args = argsMatch ? line.match(argsRegex).map(arg => arg.slice(1, -1)) : [];
 	            	const command = argsMatch ? line.substring(0, line.indexOf('"', 1)).slice(1).trim() : line.substring(1);
-		            output.push(this.handleCommand(command, args));
+		            try {
+		            	output.push(this.handleCommand(command, args));
+		        	} catch (error) {
+		        		console.error('Error while executing:', line)
+		        		output.push(this.handleError(error));
+		        	}
 	 			} else {
 	 				let p = document.createElement('p');
 	 				p.innerHTML = line;
@@ -106,20 +119,19 @@ function formatPsalm(verses) {
 	 		})
 
 	 		for (let i in output) {
-	 			let r = await output[i];
-	 			output[i] = r;
+	 			try {
+	 				let r = await output[i];
+	 				output[i] = r;
+	 			} catch (error) {
+	 				console.error('Error while awaiting execution:', output[i]);
+	 				output[i] = this.handleError(error);
+	 			}
 	 		}
 
 	 		return output;
 	 	} catch (error) {
-	 		console.error('Error on LiturgyContext(' + this.url+')')
-	 		console.error(error)
-
-	 		let div = document.createElement('div');
-	 		div.className = 'error';
-	 		div.innerHTML = error;
-	 		div.innerHTML += '<br/>' + error.stack;
-	 		return [div];
+	 		console.error('General error in execution.')
+	 		return [this.handleError(error)];
 	 	}
  	}
 
@@ -142,13 +154,14 @@ function formatPsalm(verses) {
  	}
 
  	async handleCommand(cmd, args) {
+
  		if (cmd == 'a') {
  			return 'a'
  		}
 
  		else if (cmd == 'antiphon') {
  			this.setField('antiphon', args[0]);
- 			//return undefined;
+ 			return this.handleCommand('score', ['anitphon/' + args[0] + '.gabc']);
  		}
 
  		else if (cmd == 'psalm') {
@@ -197,8 +210,17 @@ function formatPsalm(verses) {
  			return div;
  		}
 
+ 		else if (cmd == 'gabc') {
+ 			let gabc = `
+initial-style: 0;
+centering-scheme: english;
+%%
+${args[0]}
+ 			`
+ 			return this.handleCommand('raw-gabc', [gabc])
+ 		}
+
  		else if (cmd == 'gloria') {
- 			console.log(this.getField('nogloria'))
  			if (this.getField('nogloria') == true) {
  				this.setField('nogloria', false);
  				return document.createElement('blank')
@@ -216,7 +238,7 @@ function formatPsalm(verses) {
  			let url = this.getField(args[0]);
  			url = (url === undefined ? 'resource:'+args[0] : url)
  			if (url.endsWith(".gabc")) {
- 				return this.handleCommand('score', url);
+ 				return this.handleCommand('score', [url]);
  			}
 
  			return this.handleCommand('import', [url]);
@@ -259,7 +281,48 @@ function formatPsalm(verses) {
  				this.setField('tone-initial', arg[2])
  			}
 
- 			//return undefined;
+ 			return this.handleCommand('score', ['tones/' + args[0] + '.gabc'])
+ 		}
+
+ 		else if (cmd == 'raw-gabc') {
+ 			let ctxt = new exsurge.ChantContext();
+ 			let gabc = args[0].replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>')
+	 			.replaceAll('<sp>v</sp>', '<v>\\vbar</v>')
+	 			.replaceAll('<sp>r</sp>', '<v>\\rbar</v>')
+	 			.replaceAll('<sp>a</sp>', '<v>\\abar</v>')
+	 			.replaceAll('<sp>*</sp>', '<v>\\greheightstar</v>')
+			      .replaceAll(/<v>\\([VRAvra])bar<\/v>/g,'$1/.')
+			      .replaceAll(/<sp>([VRAvra])\/<\/sp>\.?/g,'$1/.')
+			      .replaceAll(/<b><\/b>/g,'')
+			      .replaceAll(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
+			      .replaceAll(/<sp>'(?:oe|œ)<\/sp>/g,'œ́')
+			      .replaceAll(/<v>\\greheightstar<\/v>/g,'*')
+			      .replaceAll(/<\/?sc>/g,'%')
+			      .replaceAll(/<\/?b>/g,'*')
+			      .replaceAll(/<\/?i>/g,'_')
+			        .replaceAll(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
+			        .replaceAll(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
+ 			let mappings = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
+			let score = new exsurge.ChantScore(ctxt, mappings, true);
+			let div = document.createElement('div');
+			div.className = 'gabc-score'
+			await score.performLayoutAsync(ctxt, async function() {
+			  await score.layoutChantLines(ctxt, document.getElementById('content').offsetWidth, async function() {
+			    let svg = await score.createSvgNode(ctxt);
+			    div.appendChild(svg);
+			  });
+			});
+ 			return div;
+ 		}
+
+ 		else if (cmd == 'score') {
+ 			let resp = await fetch(URL_BASE + args[0]);
+ 			if (!resp.ok) {
+ 				throw new Error(`Failed to fetch ${args[0]}, status code: ${resp.status}.`)
+ 			}
+
+ 			let gabc = await resp.text();
+ 			return this.handleCommand('raw-gabc', [gabc]);
  		}
 
  		 {
