@@ -11,6 +11,7 @@
  * #include <what> -- paramaters passed in by the calling agent as links to other .lit or .gabc, parses and displays
  * #instruction <text> -- prints as an instruction
  * #import <link> -- includes wholesale a .lit
+ * #nogloria -- suppresses any gloria until the next appears
  * #repeat-antiphon -- repeats the previous antiphon given by #antiphon but without initial lines and without any * or +.
  * #score <link> -- imports a score
  * #title <title> -- prints right-aligned small italic text for a title
@@ -50,9 +51,10 @@ function formatPsalm(verses) {
 }
  
  class LiturgyContext {
- 	constructor(url) {
+ 	constructor(url, base=undefined) {
  		this.url = URL_BASE + url;
  		this.ready = false;
+ 		this.base = base;
  		this.load();
  	}
 
@@ -126,6 +128,19 @@ function formatPsalm(verses) {
  		return this[name]
  	}
 
+ 	getField(name) {
+ 		let r = this[name];
+ 		if (r === undefined) {
+ 			if (this.base != undefined) {
+ 				return this.base[name];
+ 			} else {
+ 				return r;
+ 			}
+ 		} else {
+ 			return r;
+ 		}
+ 	}
+
  	async handleCommand(cmd, args) {
  		if (cmd == 'a') {
  			return 'a'
@@ -143,7 +158,7 @@ function formatPsalm(verses) {
 
  			table.className = 'psalm';
  			let tone = (this.tone === undefined ? 'text' : resolveTone(this.tone));
- 			let ctx = new LiturgyContext('psalter/' + args[0] + '/' + tone + '.lit')
+ 			let ctx = new LiturgyContext('psalter/' + args[0] + '/' + tone + '.lit', this)
  			let verses = await ctx.execute();
 
  			let title = document.createElement('p');
@@ -183,18 +198,40 @@ function formatPsalm(verses) {
  		}
 
  		else if (cmd == 'gloria') {
- 			return this.handleCommand('score', ['common/glorybe/' + args[0]])
+ 			console.log(this.getField('nogloria'))
+ 			if (this.getField('nogloria') == true) {
+ 				this.setField('nogloria', false);
+ 				return document.createElement('blank')
+ 			}
+
+ 			let end = (args[0] == 'laus-tibi' || args[0] == 'alleluia') ? '.gabc' : '.lit'
+ 			if (end == '.gabc') {
+ 				return this.handleCommand('score', ['common/glorybe/' + args[0] + end]);
+ 			} else {
+ 				return this.handleCommand('import', ['common/glorybe/' + args[0] + end])
+ 			}
  		}
 
  		else if (cmd == 'include') {
- 			let div = document.createElement('div');
- 			let url = this[args[0]];
+ 			let url = this.getField(args[0]);
  			url = (url === undefined ? 'resource:'+args[0] : url)
  			if (url.endsWith(".gabc")) {
  				return this.handleCommand('score', url);
  			}
 
- 			let ctx = new LiturgyContext(url);
+ 			return this.handleCommand('import', [url]);
+ 		}
+
+ 		else if (cmd == 'instruction') {
+ 			let p = document.createElement('p');
+ 			p.className = 'instruction';
+ 			p.innerHTML = args[0];
+ 			return p;
+ 		}
+
+ 		else if (cmd == 'import') {
+ 			let div = document.createElement('div');
+ 			let ctx = new LiturgyContext(args[0], this);
  			let res = await ctx.execute();
  			for (let r of res) {
  				div.appendChild(r);
@@ -203,11 +240,9 @@ function formatPsalm(verses) {
  			return div;
  		}
 
- 		else if (cmd == 'instruction') {
- 			let p = document.createElement('p');
- 			p.className = 'instruction';
- 			p.innerHTML = args[0];
- 			return p;
+ 		else if (cmd == 'nogloria') {
+ 			this.setField('nogloria', true);
+ 			return document.createElement('blank')
  		}
 
  		else if (cmd == 'title') {
