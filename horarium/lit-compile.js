@@ -228,9 +228,9 @@ ${args[0]}
 
  			let end = (args[0] == 'laus-tibi' || args[0] == 'alleluia') ? '.gabc' : '.lit'
  			if (end == '.gabc') {
- 				return this.handleCommand('score', ['common/glorybe/' + args[0] + end]);
+ 				return this.handleCommand('score', ['common/gloria/' + args[0] + end]);
  			} else {
- 				return this.handleCommand('import', ['common/glorybe/' + args[0] + end])
+ 				return this.handleCommand('import', ['common/gloria/' + args[0] + end])
  			}
  		}
 
@@ -286,10 +286,17 @@ ${args[0]}
 
  		else if (cmd == 'raw-gabc') {
  			let ctxt = new exsurge.ChantContext();
+ 			ctxt.setFont("'Arial, sans-serif'", 16 * 1.2);
+		    ctxt.dropCapTextFont = ctxt.lyricTextFont;
+		    ctxt.annotationTextFont = ctxt.lyricTextFont;
+		    ctxt.textMeasuringStrategy = exsurge.TextMeasuringStrategy.Canvas;
+		    ctxt.minLyricWordSpacing = ctxt.hyphenWidth * 0.7;
+		    console.log(ctxt.textStyles);
+
  			let gabc = args[0].replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>')
-	 			.replaceAll('<sp>v</sp>', '<v>\\vbar</v>')
-	 			.replaceAll('<sp>r</sp>', '<v>\\rbar</v>')
-	 			.replaceAll('<sp>a</sp>', '<v>\\abar</v>')
+	 			.replaceAll('<sp>v</sp>', '<v>\\Vbar</v>')
+	 			.replaceAll('<sp>r</sp>', '<v>\\Rbar</v>')
+	 			.replaceAll('<sp>a</sp>', '<v>\\Abar</v>')
 	 			.replaceAll('<sp>*</sp>', '<v>\\greheightstar</v>')
 			      .replaceAll(/<v>\\([VRAvra])bar<\/v>/g,'$1/.')
 			      .replaceAll(/<sp>([VRAvra])\/<\/sp>\.?/g,'$1/.')
