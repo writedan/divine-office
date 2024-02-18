@@ -24,7 +24,7 @@ const URL_BASE = 'http://localhost:3000/'
 function resolveTone(tone, ending='?') {
 	if (ending == '?') {
 		let parts = tone.split('-');
-		return resolveTone(parts[0], parts[1])
+		return resolveTone(parts[0], (parts[1] === undefined ? '' : parts[1]))
 	}
 
 	if (tone == '3') {
