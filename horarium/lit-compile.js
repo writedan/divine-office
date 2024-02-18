@@ -153,6 +153,13 @@ function resolveTone(tone, ending='?') {
  		}
  	}
 
+ 	createTitle(text) {
+ 		let p = document.createElement('p')
+ 		p.className = 'title'
+ 		p.innerHTML = text;
+ 		return p;
+ 	}
+
  	async handleCommand(cmd, args) {
 
  		if (cmd == 'a') {
@@ -176,18 +183,15 @@ function resolveTone(tone, ending='?') {
 
  			console.log(verses)
 
- 			let title = document.createElement('p');
- 			title.className = 'title';
- 			title.innerHTML = 'Psalm ' + args[0] + '.';
+ 			div.append(this.createTitle('Psalm ' + args[0] + '.'))
 
  			if (verses[0].className == 'title') {
- 				title.innerHTML += '<br/>' + verses[0].innerHTML;
+ 				//title.innerHTML += '<br/>' + verses[0].innerHTML;
+ 				div.append(this.createTitle(verses[0].innerHTML))
  				verses.splice(0, 1);
  			}
 
- 			let numRows = Math.ceil(verses.length / 2)
-
- 			div.append(title)
+ 			let numRows = Math.ceil(verses.length / 2);
 
  			for (let i = 0; i < numRows; i++) {
  				let left = verses[i];
