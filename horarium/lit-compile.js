@@ -172,7 +172,9 @@ function resolveTone(tone, ending='?') {
  			table.className = 'psalm';
  			let tone = (this.tone === undefined ? 'text' : resolveTone(this.tone));
  			let ctx = new LiturgyContext('psalter/' + args[0] + '/' + tone + '.lit', this)
- 			let verses = await ctx.execute();
+ 			let verses = (await ctx.execute()).flat();
+
+ 			console.log(verses)
 
  			let title = document.createElement('p');
  			title.className = 'title';
@@ -230,7 +232,7 @@ ${args[0]}
  			if (end == '.gabc') {
  				return this.handleCommand('score', ['common/gloria/' + args[0] + end]);
  			} else {
- 				return this.handleCommand('import', ['common/gloria/' + args[0] + end])
+ 				return this.handleCommand('raw-import', ['common/gloria/' + args[0] + end])
  			}
  		}
 
@@ -320,6 +322,25 @@ ${args[0]}
 			  });
 			});
  			return div;
+ 		}
+
+ 		else if (cmd == 'raw-import') {
+ 			let resp = await fetch(URL_BASE + args[0]);
+ 			let text = await resp.text();
+ 			let lines = text.split('\n')
+ 			let output = []
+ 			for (let line of lines) {
+ 				line = line.trim();
+ 				if (line.length == 0) {
+ 					continue;
+ 				}
+
+ 				let p = document.createElement('p')
+ 				p.innerHTML = line;
+ 				output.push(p)
+ 			}
+
+ 			return output;
  		}
 
  		else if (cmd == 'score') {
