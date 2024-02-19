@@ -218,10 +218,30 @@ function getHeaders(gabcheaders) {
  			}
 
  			let numRows = Math.ceil(verses.length / 2);
+ 			let left_column = [];
+ 			let right_column = [];
+
+ 			for (let i in verses) {
+ 				if (i < numRows) {
+ 					if (numRows % 2 != 0 && i == numRows - 1) {
+ 						let v = verses[i].textContent.split('*');
+ 						let v1 = verses[i].cloneNode(true);
+ 						let v2 = verses[i].cloneNode(true);
+ 						v1.textContent = v[0] + '*';
+ 						v2.textContent = v[1];
+ 						left_column.push(v1)
+ 						right_column.push(v2)
+ 					} else {
+ 						left_column.push(verses[i]);
+ 					}
+ 				} else {
+ 					right_column.push(verses[i]);
+ 				}
+ 			}
 
  			for (let i = 0; i < numRows; i++) {
- 				let left = verses[i];
- 				let right = verses[i + numRows];
+ 				let left = left_column[i];
+ 				let right = right_column[i];
  				let tr = document.createElement('tr');
  				let left_td = document.createElement('td');
  				left_td.append(left);
