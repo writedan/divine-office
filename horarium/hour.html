@@ -75,6 +75,10 @@
                 margin-top: -15px;
             }
 
+            .gabc-score .title {
+                padding-top: 20px;
+            }
+
             .gabc-score + .gabc-score, .gabc-score ~ div .gabc-score {
                 margin-top: 0;
             }
@@ -120,7 +124,6 @@
         let lctx = new LiturgyContext(hourData.order);
         lctx.setField('psalter', hourData.psalter);
         for (let field of Object.keys(hourData.commons)) {
-            console.log(field)
             lctx.setField(field, hourData.commons[field])
         }
 
