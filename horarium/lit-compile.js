@@ -438,7 +438,6 @@ centering-scheme: english;
 %%
 ${gabc.split('%%')[1]}
  			`
- 			console.log(gabc)
  			div.append(await this.handleCommand('raw-gabc', [newgabc]))
  			return div;
  		}
