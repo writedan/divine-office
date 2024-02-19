@@ -19,7 +19,7 @@
  * #tone <tone> <clef> [starting note] -- loads the Euouae from tones/ and adjusts it to the given clef. It will automatically reassign the notes to such clef, unless a different starting note is provided, in which case it will set the first note to such and adjust the others accordingly.
  */
 
-const URL_BASE = window.location.protocol + '//' + window.location.host + '/'
+const URL_BASE = window.location.href.split('horarium')[0];
 
 function resolveTone(tone, ending='?') {
 	if (ending == '?') {
