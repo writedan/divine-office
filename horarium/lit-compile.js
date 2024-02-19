@@ -417,6 +417,8 @@ ${args[0]}
 
 			div.className = 'gabc-score'
 			window.score = score;
+
+			let lctx = this;
 			await score.performLayoutAsync(ctxt, async function() {
 			  await score.layoutChantLines(ctxt, document.getElementById('content').offsetWidth, async function() {
 			    let svg = await score.createSvgNode(ctxt);
@@ -429,9 +431,15 @@ ${args[0]}
 			    		e.style.fontWeight = 'bold'
 			    	}
 			    }
-			    div.appendChild(svg);
+			    
+			    div.appendChild(svg); 
+
+			    if (headers.resp) {
+					div.appendChild(await lctx.handleCommand('score', ['resp/' + headers.resp]))
+				}
 			  });
 			});
+
  			return div;
  		}
 
