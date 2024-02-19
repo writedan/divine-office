@@ -400,7 +400,7 @@ ${args[0]}
 				if (headers['annotation']) {
 					let a = [headers['annotation']].flat();
 					if (a.length == 1) {
-						score.annotation = new exsurge.Annotations(ctxt, a[0]);
+						score.annotation = new exsurge.Annotations(ctxt, a[0], '');
 					} else {
 						score.annotation = new exsurge.Annotations(ctxt, a[0], a[1])
 					}
