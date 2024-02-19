@@ -2,4 +2,4 @@ initial-style: 0;
 centering-scheme: english;
 euouae: 0;
 %%
-(c4) (f[alt:°]) (g[alt:°]) (hr) (h[alt:^]) (gr) +(;) (hr) (gr2) (hr) *(:) e() u(hr) o(g[alt:~]) u(f) a(ghr2) e(gr)
+(c4) (f[alt:°]) (g[alt:°]) (hr) (h[alt:^]) (gr) +(,) (hr) (gr2) (hr) *(:) e(hr) u() o(g[alt:~]) u(f) a(ghr2) e(gr)
