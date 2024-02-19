@@ -303,6 +303,7 @@ ${args[0]}
 
 		    ctxt.markupSymbolDictionary['^'] = 'c'
 		    ctxt.textStyles.al.prefix = '<b>'
+		    ctxt.defaultLanguage = new exsurge.English;
 		    window.ctx = ctxt;
 
  			let gabc = args[0].replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>')
