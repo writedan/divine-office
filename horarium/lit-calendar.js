@@ -17,8 +17,10 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 				Lauds: {
 					order: 'lauds/penitential-order.lit',
 					psalter: 'lauds/' + d + '.lit',
-					commons: lauds_commons(d),
-					kyrie: kyrie
+					commons: mergeDeep(lauds_commons(d), {
+						benedictus: 'propers/prelent/' + w + '/' + d + '/lauds/benedictus.lit',
+						kyrie: kyrie,
+					}),
 				},
 
 				Prime: minor_hours('prime', d, kyrie),
@@ -29,8 +31,9 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
-					commons: vespers_commons(d),
-					kyrie: kyrie
+					commons: mergeDeep(vespers_commons(d), {
+						magnificat: 'propers/prelent/' + w + '/' + d + '/vespers/magnificat.lit'
+					}),
 				},
 
 				Compline: {
@@ -41,11 +44,15 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						chapter: 'common/compline/chapter(ordinary).gabc',
 						versicle: 'common/compline/chapter(ordinary).gabc',
 						canticle: 'common/compline/canticle(ordinary).lit',
-						anthem: 'anthem/ave-regina-celorum.gabc'
+						anthem: 'anthem/ave-regina-celorum.gabc',
+						kyrie: kyrie
 					}
 				}
 			}
 		}
+
+		metadata.prelent[w].sunday.hours.FirstVespers = metadata.prelent[w].saturday.hours.Vespers;
+		metadata.prelent[w].sunday.hours.FirstCompline = metadata.prelent[w].saturday.hours.Compline;
 	}
 
 	// TODO: lent
@@ -82,6 +89,8 @@ function vigils_commons(day) {
 			}
 		}
 	}
+
+	return {}
 }
 
 function lauds_commons(day) {
@@ -94,6 +103,8 @@ function lauds_commons(day) {
 			}
 		}
 	}
+
+	return {}
 }
 
 function minor_commons(hour, day) {
@@ -126,8 +137,9 @@ function minor_hours(hour, day, kyrie) { // produces the whole for a given minor
 	return {
 		order: 'terce/penitential-order.lit',
 		psalter: hour + '/' + (day == 'sunday' ? 'sunday' : 'feria') + '.lit',
-		commons: minor_commons(hour, day),
-		kyrie: kyrie
+		commons: mergeDeep(minor_commons(hour, day), {
+			kyrie: kyrie
+		}),
 	}
 }
 
@@ -139,4 +151,6 @@ function vespers_commons(day) {
 			versicle: 'common/vespers/versicle/feria.gabc'
 		}
 	}
+
+	return {}
 }

@@ -228,7 +228,7 @@ function getHeaders(gabcheaders) {
  			for (let i in verses) {
  				if (i < numRows) {
  					if (numRows % 2 != 0 && i == Math.floor(numRows)) {
- 						let v = verses[i].innerHTML.split('*');
+ 						let v = verses[i].textContent.split('*');
  						let v1 = verses[i].cloneNode(true);
  						let v2 = verses[i].cloneNode(true);
  						v1.textContent = v[0] + '*';
