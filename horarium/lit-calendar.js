@@ -1,3 +1,12 @@
+function lessons(prefix) {
+	let res = {};
+	for (let i = 0; i < 9; i++) {
+		res['lesson-' + (i + 1)] = prefix + 'lesson-' + (i + 1) + '.gabc'
+	}
+
+	return res;
+}
+
 function annotateTemporalMetadata(metadata) { // attach hour information
 	// TODO: advent
 	// TODO: christmas
@@ -10,8 +19,9 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 				Vigils: {
 					order: d == 'sunday' ? 'vigils/penitential-order-sunday.lit' : 'vigils/penitential-order-feria.lit',
 					psalter: 'vigils/' + d + '.lit',
-					commons: vigils_commons(d),
-					kyrie: kyrie
+					commons: mergeDeep(vigils_commons(d), lessons('propers/prelent/' + w + '/' + d + '/vigils/'), {
+						kyrie: kyrie
+					}),
 				},
 
 				Lauds: {
