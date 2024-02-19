@@ -16,6 +16,8 @@ Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women an
 
 #include "versicle"
 
+#include "benedictus"
+
 #instruction "Everyone then kneels as the precantor and succentor antiphonally sing the Kyrie."
 
 #include "kyrie"
