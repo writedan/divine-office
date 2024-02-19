@@ -403,6 +403,9 @@ ${args[0]}
 
  		else if (cmd == 'raw-import') {
  			let resp = await fetch(URL_BASE + args[0]);
+ 			if (!resp.ok) {
+ 				throw new Error(`Failed to fetch ${args[0]}, status code: ${resp.status}.`)
+ 			}
  			let text = await resp.text();
  			let lines = text.split('\n')
  			let output = []
@@ -418,6 +421,26 @@ ${args[0]}
  			}
 
  			return output;
+ 		}
+
+ 		else if (cmd == 'repeat-antiphon') {
+ 			let div = document.createElement('div')
+ 			div.className = 'antiphon'
+ 			let resp = await fetch(URL_BASE + 'antiphon/' + this.getField('antiphon') + '.gabc')
+ 			if (!resp.ok) {
+ 				throw new Error(`Failed to fetch ${this.getField('antiphon')}, status code: ${resp.status}.`)
+ 			}
+ 			let gabc = (await resp.text())
+ 				.replaceAll('<sp>*</sp>', '');
+ 			let newgabc = `
+initial-style: 0;
+centering-scheme: english;
+%%
+${gabc.split('%%')[1]}
+ 			`
+ 			console.log(gabc)
+ 			div.append(await this.handleCommand('raw-gabc', [newgabc]))
+ 			return div;
  		}
 
  		else if (cmd == 'score') {
