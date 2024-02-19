@@ -404,7 +404,7 @@ ${args[0]}
  		else if (cmd == 'raw-import') {
  			let resp = await fetch(URL_BASE + args[0]);
  			if (!resp.ok) {
- 				throw new Error(`Failed to fetch ${args[0]}, status code: ${resp.status}.`)
+ 				throw new Error(`Failed to fetch ${URL_BASE + args[0]}, status code: ${resp.status}.`)
  			}
  			let text = await resp.text();
  			let lines = text.split('\n')
@@ -428,7 +428,7 @@ ${args[0]}
  			div.className = 'antiphon'
  			let resp = await fetch(URL_BASE + 'antiphon/' + this.getField('antiphon') + '.gabc')
  			if (!resp.ok) {
- 				throw new Error(`Failed to fetch ${this.getField('antiphon')}, status code: ${resp.status}.`)
+ 				throw new Error(`Failed to fetch ${URL_BASE + this.getField('antiphon')}, status code: ${resp.status}.`)
  			}
  			let gabc = (await resp.text())
  				.replaceAll('<sp>*</sp>', '');
@@ -446,7 +446,7 @@ ${gabc.split('%%')[1]}
  		else if (cmd == 'score') {
  			let resp = await fetch(URL_BASE + args[0]);
  			if (!resp.ok) {
- 				throw new Error(`Failed to fetch ${args[0]}, status code: ${resp.status}.`)
+ 				throw new Error(`Failed to fetch ${URL_BASE + args[0]}, status code: ${resp.status}.`)
  			}
 
  			let gabc = await resp.text();
