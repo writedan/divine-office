@@ -185,6 +185,14 @@ function getHeaders(gabcheaders) {
  	}
 
  	async handleCommand(cmd, args) {
+ 		try {
+ 			return (await this.internal_handleCommand(cmd, args));
+ 		} catch (error) {
+ 			return this.handleError(error);
+ 		}
+ 	}
+
+ 	async internal_handleCommand(cmd, args) {
 
  		if (cmd == 'a') {
  			return 'a'
