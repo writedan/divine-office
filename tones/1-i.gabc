@@ -1,4 +1,4 @@
 initial-style: 0;
 centering-scheme: english;
 %%
-(c4) (fr3) (gr3) (hr) (h[alt:ʌ]) (gr) +(;) (hr) (gr1) (hr) *(:) e(hr) u(g[alt:~]) o(f) u(ghr1) æ(gr)
+(c4) (f[alt:°]) (g[alt:°]) (hr) (h[cs:^]) (gr) +(;) (hr) (gr1) (hr) *(:) e(hr) u(g[cs:~]) o(f) u(ghr1) æ(gr)
