@@ -167,8 +167,12 @@ function resolveTone(tone, ending='?') {
  		}
 
  		else if (cmd == 'antiphon') {
+ 			let div = document.createElement('div')
+ 			div.className = 'antiphon'
  			this.setField('antiphon', args[0]);
- 			return this.handleCommand('score', ['anitphon/' + args[0] + '.gabc']);
+ 			div.append(this.createTitle('Antiphon.'))
+ 			div.append(await this.handleCommand('score', ['antiphon/' + args[0] + '.gabc']));
+ 			return div;
  		}
 
  		else if (cmd == 'psalm') {
@@ -180,8 +184,6 @@ function resolveTone(tone, ending='?') {
  			let tone = (this.tone === undefined ? 'text' : resolveTone(this.tone));
  			let ctx = new LiturgyContext('psalter/' + args[0] + '/' + tone + '.lit', this)
  			let verses = (await ctx.execute()).flat();
-
- 			console.log(verses)
 
  			div.append(this.createTitle('Psalm ' + args[0] + '.'))
 
@@ -292,12 +294,16 @@ ${args[0]}
 
  		else if (cmd == 'raw-gabc') {
  			let ctxt = new exsurge.ChantContext();
- 			ctxt.setFont("'Arial, sans-serif'", 16 * 1.2);
-		    ctxt.dropCapTextFont = ctxt.lyricTextFont;
-		    ctxt.annotationTextFont = ctxt.lyricTextFont;
-		    ctxt.textMeasuringStrategy = exsurge.TextMeasuringStrategy.Canvas;
-		    ctxt.minLyricWordSpacing = ctxt.hyphenWidth * 0.7;
-		    console.log(ctxt.textStyles);
+ 			ctxt.setFont("'Arial, sans-serif'", 16 * 1.25);
+		    //ctxt.dropCapTextFont = ctxt.lyricTextFont;
+		    //ctxt.annotationTextFont = ctxt.lyricTextFont;
+		    //ctxt.textMeasuringStrategy = exsurge.TextMeasuringStrategy.Canvas;
+		    //ctxt.minLyricWordSpacing = ctxt.hyphenWidth * 0.7;
+		    ctxt.glyphScaling = 0.08
+
+		    ctxt.markupSymbolDictionary['^'] = 'c'
+		    ctxt.textStyles.al.prefix = '<b>'
+		    window.ctx = ctxt;
 
  			let gabc = args[0].replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>')
 	 			.replaceAll('<sp>v</sp>', '<v>\\Vbar</v>')
@@ -316,12 +322,23 @@ ${args[0]}
 			        .replaceAll(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
 			        .replaceAll(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
  			let mappings = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
+			
 			let score = new exsurge.ChantScore(ctxt, mappings, true);
 			let div = document.createElement('div');
 			div.className = 'gabc-score'
+			window.score = score;
 			await score.performLayoutAsync(ctxt, async function() {
 			  await score.layoutChantLines(ctxt, document.getElementById('content').offsetWidth, async function() {
 			    let svg = await score.createSvgNode(ctxt);
+			    for (let e of svg.getElementsByClassName('aboveLinesText')) {
+			    	let offset = (e.textContent == '~' ? 15 : 20);
+			    	e.setAttribute('test', parseFloat(e.getAttribute('y')) + offset)
+			    	e.setAttribute('y', e.getAttribute('test'))
+			    	if (e.innerHTML == '') {
+			    		e.innerHTML = '^'
+			    		e.style.fontWeight = 'bold'
+			    	}
+			    }
 			    div.appendChild(svg);
 			  });
 			});
