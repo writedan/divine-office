@@ -217,14 +217,18 @@ function getHeaders(gabcheaders) {
  				verses.splice(0, 1);
  			}
 
- 			let numRows = Math.ceil(verses.length / 2);
+ 			let numRows = (verses.length / 2);
  			let left_column = [];
  			let right_column = [];
 
+ 			console.log(args[0])
+ 			console.log('NUM ROWS = ', numRows)
+ 			console.log("SPLITTING = ", numRows % 2 != 0)
+
  			for (let i in verses) {
  				if (i < numRows) {
- 					if (numRows % 2 != 0 && i == numRows - 1) {
- 						let v = verses[i].textContent.split('*');
+ 					if (numRows % 2 != 0 && i == Math.floor(numRows)) {
+ 						let v = verses[i].innerHTML.split('*');
  						let v1 = verses[i].cloneNode(true);
  						let v2 = verses[i].cloneNode(true);
  						v1.textContent = v[0] + '*';
@@ -238,6 +242,8 @@ function getHeaders(gabcheaders) {
  					right_column.push(verses[i]);
  				}
  			}
+
+ 			numRows = Math.ceil(verses.length / 2);
 
  			for (let i = 0; i < numRows; i++) {
  				let left = left_column[i];
