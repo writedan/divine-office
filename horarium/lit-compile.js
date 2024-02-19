@@ -46,6 +46,30 @@ function resolveTone(tone, ending='?') {
 
 	return tone;
 }
+
+function getHeaders(gabcheaders) {
+	const headerLines = gabcheaders.split('\n');
+    const headerObject = {};
+
+    for (let line of headerLines) {
+        line = line.trim();
+        if (line !== '') {
+            let [key, value] = line.split(':').map(part => part.trim());
+            value = value.substring(0, value.length - 1)
+            if (headerObject.hasOwnProperty(key)) {
+                if (Array.isArray(headerObject[key])) {
+                    headerObject[key].push(value);
+                } else {
+                    headerObject[key] = [headerObject[key], value];
+                }
+            } else {
+                headerObject[key] = value;
+            }
+        }
+    }
+
+    return headerObject;
+}
  
  class LiturgyContext {
  	constructor(url, base=undefined) {
@@ -289,7 +313,11 @@ ${args[0]}
  				this.setField('tone-initial', arg[2])
  			}
 
- 			return this.handleCommand('score', ['tones/' + args[0] + '.gabc'])
+ 			let div = document.createElement('div')
+ 			//div.append(this.createTitle('Tone ' + resolveTone(args[0]) + '.'))
+
+ 			div.append(await this.handleCommand('score', ['tones/' + args[0] + '.gabc']))
+ 			return div;
  		}
 
  		else if (cmd == 'raw-gabc') {
@@ -298,15 +326,23 @@ ${args[0]}
 		    //ctxt.dropCapTextFont = ctxt.lyricTextFont;
 		    //ctxt.annotationTextFont = ctxt.lyricTextFont;
 		    //ctxt.textMeasuringStrategy = exsurge.TextMeasuringStrategy.Canvas;
-		    //ctxt.minLyricWordSpacing = ctxt.hyphenWidth * 0.7;
-		    ctxt.glyphScaling = 0.08
+		    //ctxt.minLyricWordSpacing; = ctxt.hyphenWidth * 0.7;
+		    //ctxt.glyphScaling = 0.08
+		    ctxt.setGlyphScaling(0.08)
+
+		    let headers = getHeaders(args[0].split('%%')[0]);
 
 		    ctxt.markupSymbolDictionary['^'] = 'c'
 		    ctxt.textStyles.al.prefix = '<b>'
-		    ctxt.defaultLanguage = new exsurge.English;
+		    
+		    ctxt.defaultLanguage = (headers['centering-scheme'] == 'english' ? new exsurge.English : new exsurge.Latin);
+		    
+		    ctxt.textStyles.annotation.size = 16;
+
+
 		    window.ctx = ctxt;
 
- 			let gabc = args[0].replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>')
+ 			let gabc = args[0].split('%%')[1].replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>')
 	 			.replaceAll('<sp>v</sp>', '<v>\\Vbar</v>')
 	 			.replaceAll('<sp>r</sp>', '<v>\\Rbar</v>')
 	 			.replaceAll('<sp>a</sp>', '<v>\\Abar</v>')
@@ -322,10 +358,29 @@ ${args[0]}
 			      .replaceAll(/<\/?i>/g,'_')
 			        .replaceAll(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
 			        .replaceAll(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
+ 			
  			let mappings = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
 			
-			let score = new exsurge.ChantScore(ctxt, mappings, true);
+			let score = new exsurge.ChantScore(ctxt, mappings, headers['initial-style'] == '1');
+			if (headers['initial-style'] == '1') {
+				if (headers['annotation']) {
+					let a = [headers['annotation']].flat();
+					if (a.length == 1) {
+						score.annotation = new exsurge.Annotations(ctxt, '%^*'+a[0]+'*%');
+					} else {
+						score.annotation = new exsurge.Annotations(ctxt, '%^*'+a[0]+'*', '^*'+a[1]+'*%')
+					}
+				}
+			}
+
+			score.updateNotations(ctxt);
+
 			let div = document.createElement('div');
+
+			if (headers.heading) {
+				div.append(this.createTitle(headers.heading))
+			}
+
 			div.className = 'gabc-score'
 			window.score = score;
 			await score.performLayoutAsync(ctxt, async function() {
