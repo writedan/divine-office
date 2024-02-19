@@ -364,7 +364,7 @@ ${args[0]}
 		    ctxt.defaultLanguage = (headers['centering-scheme'] == 'english' ? new exsurge.English : new exsurge.Latin);
 		    
 		    ctxt.textStyles.annotation.size = 16;
-
+		    ctxt.textStyles.annotation.color ='red';
 
 		    window.ctx = ctxt;
 
@@ -392,9 +392,9 @@ ${args[0]}
 				if (headers['annotation']) {
 					let a = [headers['annotation']].flat();
 					if (a.length == 1) {
-						score.annotation = new exsurge.Annotations(ctxt, '%^*'+a[0]+'*%');
+						score.annotation = new exsurge.Annotations(ctxt, a[0]);
 					} else {
-						score.annotation = new exsurge.Annotations(ctxt, '%^*'+a[0]+'*', '^*'+a[1]+'*%')
+						score.annotation = new exsurge.Annotations(ctxt, a[0], a[1])
 					}
 				}
 			}
