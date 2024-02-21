@@ -67,7 +67,9 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
 					propers: mergeDeep(vespers_commons(d), {
-						magnificat: 'propers/prelent/' + w + '/' + d + '/vespers/magnificat.lit'
+						magnificat: 'propers/prelent/' + w + '/' + d + '/vespers/magnificat.lit',
+						kyrie: kyrie,
+						collect: collect
 					}),
 				},
 
@@ -109,6 +111,25 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 function vigils_commons(day) {
 	switch (day) {
+		case 'sunday': return {
+			invitatory: 'invitatory/preoccupemus.lit',
+			hymn: 'hymn/primo-dierum-omnium.lit',
+			'absolution-1': 'common/vigils/1st-nocturn/absolution.gabc',
+			'blessing-1': 'common/vigils/1st-nocturn/blessing-1.gabc',
+			'blessing-2': 'common/vigils/1st-nocturn/blessing-2.gabc',
+			'blessing-3': 'common/vigils/1st-nocturn/blessing-3.gabc',
+
+			'absolution-2': 'common/vigils/2nd-nocturn/absolution.gabc',
+			'blessing-4': 'common/vigils/2nd-nocturn/blessing-1.gabc',
+			'blessing-5': 'common/vigils/2nd-nocturn/blessing-2.gabc',
+			'blessing-6': 'common/vigils/2nd-nocturn/blessing-3.gabc',
+
+			'absolution-3': 'common/vigils/3rd-nocturn/absolution.gabc',
+			'blessing-7': 'common/vigils/3rd-nocturn/blessing-1.gabc',
+			'blessing-8': 'common/vigils/3rd-nocturn/blessing-2.gabc',
+			'blessing-9': 'common/vigils/3rdå-nocturn/blessing-3.gabc',
+		}
+
 		case 'friday': {
 			return {
 				invitatory: 'invitatory/dominum-qui-fecit-nos.lit',
@@ -189,6 +210,12 @@ function vespers_commons(day) {
 			hymn: 'hymn/plasmator-hominis.gabc',
 			chapter: 'common/vespers/chapters/feria.gabc',
 			versicle: 'common/vespers/versicle/feria.gabc'
+		}
+
+		case 'saturday': return {
+			hymn: 'hymn/o-lux-beata-trinitas.lit',
+			chapter: 'common/vespers/chapters/sunday.gabc',
+			versicle: 'common/vespers/veriscle/sunday.gabc' // NOTE: only the saturday office (first vespers) uses the sunday chapter and versicle; second vespers of sundays uses the ferial
 		}
 	}
 

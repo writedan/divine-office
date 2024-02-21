@@ -344,7 +344,7 @@ ${args[0]}
  			this.setField('tone', args[0])
  			this.setField('tone-clef', args[1])
  			if (args.length > 2) {
- 				this.setField('tone-initial', arg[2])
+ 				this.setField('tone-initial', args[2])
  			}
 
  			let div = document.createElement('div')
