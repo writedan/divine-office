@@ -1,0 +1,18 @@
+#title "Hymn."
+#title "O Lux beata Trinitas"
+
+#clef "c4"
+
+#melody "gh" "gvFEfv" "d" "ev" "fv" "gh" "hg" "g"
+#verse "O" "Tri-" "ni-" "ty" "of" "bles-" "sed" "light,"
+
+#melody "gh" "gvFEfv" "d" "ev" "fv" "gh" "hg" "g"
+#verse "O" "U-" "ni-" "ty" "of" "prince-" "ly" "might,"
+
+#melody "gh" "jv" "ij" "h" "gf" "gh" "gvFE" "e"
+#verse "The" "fie-" "ry" "sun" "now" "goes" "his" "way;"
+
+#melody "gh" "gvFEfv" "d" "ev" "fv" "gh" "hg" "g"
+#verse "Shed" "thou" "with-" "in" "our" "hearts" "thy" "ray."
+
+#amen "ghg" "h"

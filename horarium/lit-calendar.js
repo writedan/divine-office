@@ -69,7 +69,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					propers: mergeDeep(vespers_commons(d), {
 						magnificat: 'propers/prelent/' + w + '/' + d + '/vespers/magnificat.lit',
 						kyrie: kyrie,
-						collect: collect
+						collect: collect,
+						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/prelent/' + w + '/' + d + '/vespers/chapter.gabc' : vespers_commons(d).chapter
 					}),
 				},
 
@@ -215,7 +216,7 @@ function vespers_commons(day) {
 		case 'saturday': return {
 			hymn: 'hymn/o-lux-beata-trinitas.lit',
 			chapter: 'common/vespers/chapters/sunday.gabc',
-			versicle: 'common/vespers/veriscle/sunday.gabc' // NOTE: only the saturday office (first vespers) uses the sunday chapter and versicle; second vespers of sundays uses the ferial
+			versicle: 'common/vespers/versicle/sunday.gabc' // NOTE: only the saturday office (first vespers) uses the sunday chapter and versicle; second vespers of sundays uses the ferial
 		}
 	}
 

@@ -16,6 +16,10 @@ Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women an
 
 #include "chapter"
 
+#instruction "The people respond."
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
 #include "hymn"
 
 #include "versicle"
