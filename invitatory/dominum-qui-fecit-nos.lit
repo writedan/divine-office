@@ -1,0 +1,14 @@
+#import "invitatory/explanation.lit"
+#antiphon "dominum-qui-fecit-nos"
+#score "invitatory/6c/verse-1.gabc"
+#repeat-antiphon
+#score "invitatory/6c/verse-2.gabc"
+#repeat-antiphon "partial"
+#score "invitatory/6c/verse-3.gabc"
+#repeat-antiphon
+#score "invitatory/6c/verse-4.gabc"
+#repeat-antiphon "partial"
+#score "invitatory/6c/verse-5.gabc"
+#repeat-antiphon
+#score "invitatory/6c/gloria.gabc"
+#repeat-antiphon "partial"
