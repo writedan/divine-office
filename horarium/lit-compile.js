@@ -472,14 +472,20 @@ ${args[0]}
  			if (!resp.ok) {
  				throw new Error(`Failed to fetch ${URL_BASE + this.getField('antiphon')}, status code: ${resp.status}.`)
  			}
- 			let gabc = (await resp.text())
- 				.replaceAll('<sp>*</sp>', '');
+ 			let gabc = (await resp.text()).split('%%')[1]
+ 			if (args[0] == 'partial') {
+ 				gabc = gabc.split('<sp>*</sp>')[1]
+ 			}
+
+ 			gabc = gabc.replaceAll('<sp>*</sp>', '')
+
  			let newgabc = `
 initial-style: 0;
 centering-scheme: english;
 %%
 ${gabc.split('%%')[1]}
- 			`
+`
+ 			
  			div.append(await this.handleCommand('raw-gabc', [newgabc]))
  			return div;
  		}
