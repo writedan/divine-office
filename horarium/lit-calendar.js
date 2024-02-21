@@ -13,7 +13,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 	// TODO: epiphany
 	for (let w in metadata.prelent) {
 		for (let d in metadata.prelent[w]) {
-			let kyrie = d == 'sunday' ? 'common/kyrie/xvii.gabc' : 'kyrie/xviii.gabc';
+			let kyrie = d == 'sunday' ? 'common/kyrie/xvii.gabc' : 'common/kyrie/xviii.gabc';
 			let collect = 'propers/prelent/' + w + '/collect.gabc'
 			metadata.prelent[w][d].hours = {
 				Vigils: {
