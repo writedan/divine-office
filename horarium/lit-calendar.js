@@ -113,7 +113,10 @@ function vigils_commons(day) {
 			return {
 				invitatory: 'invitatory/dominum-qui-fecit-nos.lit',
 				hymn: 'hymn/tu-trinitatis-unitas.gabc',
-				'absolution-1': 'common/vigils/2nd-nocturn/absolution.gabc'
+				'absolution-1': 'common/vigils/2nd-nocturn/absolution.gabc',
+				'blessing-1': 'common/vigils/2nd-nocturn/blessing-1.gabc',
+				'blessing-2': 'common/vigils/2nd-nocturn/blessing-2.gabc',
+				'blessing-3': 'common/vigils/2nd-nocturn/blessing-3.gabc',
 			}
 		}
 
@@ -121,7 +124,10 @@ function vigils_commons(day) {
 			return {
 				invitatory: 'invitatory/dominum-deum-nostrum.lit',
 				hymn: 'hymn/summe-deus-clementie.gabc',
-				'absolution-1': 'common/vigils/3rd-nocturn/absolution.gabc'
+				'absolution-1': 'common/vigils/3rd-nocturn/absolution.gabc',
+				'blessing-1': 'common/vigils/3rd-nocturn/blessing-1.gabc',
+				'blessing-2': 'common/vigils/3rd-nocturn/blessing-2.gabc',
+				'blessing-3': 'common/vigils/3rd-nocturn/blessing-3.gabc',
 			}
 		}
 	}
