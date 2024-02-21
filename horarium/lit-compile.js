@@ -381,6 +381,7 @@ ${args[0]}
 	 			.replaceAll('<sp>r</sp>', '<v>\\Rbar</v>')
 	 			.replaceAll('<sp>a</sp>', '<v>\\Abar</v>')
 	 			.replaceAll('<sp>*</sp>', '<v>\\greheightstar</v>')
+	 			.replaceAll('<sp>+</sp>', '<v>+</v>')
 			      .replaceAll(/<v>\\([VRAvra])bar<\/v>/g,'$1/.')
 			      .replaceAll(/<sp>([VRAvra])\/<\/sp>\.?/g,'$1/.')
 			      .replaceAll(/<b><\/b>/g,'')
@@ -474,7 +475,8 @@ ${args[0]}
  			}
  			let gabc = (await resp.text()).split('%%')[1]
  			if (args[0] == 'partial') {
- 				gabc = gabc.split('<sp>*</sp>')[1]
+ 				gabc = gabc.split('<sp>+</sp>(:)')[1]
+ 				console.log(gabc)
  			}
 
  			gabc = gabc.replaceAll('<sp>*</sp>', '')
@@ -483,7 +485,7 @@ ${args[0]}
 initial-style: 0;
 centering-scheme: english;
 %%
-${gabc.split('%%')[1]}
+${gabc}
 `
  			
  			div.append(await this.handleCommand('raw-gabc', [newgabc]))
