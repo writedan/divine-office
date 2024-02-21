@@ -11,37 +11,62 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 	// TODO: advent
 	// TODO: christmas
 	// TODO: epiphany
-	// TODO: prelent
 	for (let w in metadata.prelent) {
 		for (let d in metadata.prelent[w]) {
 			let kyrie = d == 'sunday' ? 'common/kyrie/xvii.gabc' : 'kyrie/xviii.gabc';
+			let collect = 'propers/prelent/' + w + '/collect.gabc'
 			metadata.prelent[w][d].hours = {
 				Vigils: {
 					order: d == 'sunday' ? 'vigils/penitential-order-sunday.lit' : 'vigils/penitential-order-feria.lit',
 					psalter: 'vigils/' + d + '.lit',
-					commons: mergeDeep(vigils_commons(d), lessons('propers/prelent/' + w + '/' + d + '/vigils/'), {
-						kyrie: kyrie
+					propers: mergeDeep(vigils_commons(d), lessons('propers/prelent/' + w + '/' + d + '/vigils/'), {
+						kyrie: kyrie,
+						collect: collect
 					}),
 				},
 
 				Lauds: {
 					order: 'lauds/penitential-order.lit',
 					psalter: 'lauds/' + d + '.lit',
-					commons: mergeDeep(lauds_commons(d), {
+					propers: mergeDeep(lauds_commons(d), {
 						benedictus: 'propers/prelent/' + w + '/' + d + '/lauds/benedictus.lit',
 						kyrie: kyrie,
+						collect: collect
 					}),
 				},
 
-				Prime: minor_hours('prime', d, kyrie),
-				Terce: minor_hours('terce', d, kyrie),
-				Sext: minor_hours('sext', d, kyrie),
-				None: minor_hours('none', d, kyrie),
+				Prime: mergeDeep(minor_hours('prime', d), {
+					propers: {
+						collect: collect,
+						kyrie: kyrie
+					}
+				}),
+
+				Terce: mergeDeep(minor_hours('terce', d), {
+					propers: {
+						collect: collect,
+						kyrie: kyrie
+					}
+				}),
+
+				Sext: mergeDeep(minor_hours('sext', d), {
+					propers: {
+						collect: collect,
+						kyrie: kyrie
+					}
+				}),
+				
+				None: mergeDeep(minor_hours('none', d), {
+					propers: {
+						collect: collect,
+						kyrie: kyrie
+					}
+				}),
 
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
-					commons: mergeDeep(vespers_commons(d), {
+					propers: mergeDeep(vespers_commons(d), {
 						magnificat: 'propers/prelent/' + w + '/' + d + '/vespers/magnificat.lit'
 					}),
 				},
@@ -49,13 +74,14 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 				Compline: {
 					order: 'compline/penitential-order.lit',
 					psalter: 'compline/ordinary.lit',
-					commons: {
+					propers: {
 						hymn: 'hymn/te-lucis-ante-terminum.gabc',
 						chapter: 'common/compline/chapter(ordinary).gabc',
 						versicle: 'common/compline/chapter(ordinary).gabc',
 						canticle: 'common/compline/canticle(ordinary).lit',
 						anthem: 'anthem/ave-regina-celorum.gabc',
-						kyrie: kyrie
+						kyrie: kyrie,
+						collect: 'common/compline/collect.gabc'
 					}
 				}
 			}
@@ -87,7 +113,7 @@ function vigils_commons(day) {
 			return {
 				invitatory: 'invitatory/dominum-qui-fecit-nos.lit',
 				hymn: 'hymn/tu-trinitatis-unitas.gabc',
-				blessings: 'common/vigils/2nd-nocturn/'
+				'absolution-1': 'common/vigils/2nd-nocturn/absolution.gabc'
 			}
 		}
 
@@ -95,7 +121,7 @@ function vigils_commons(day) {
 			return {
 				invitatory: 'invitatory/dominum-deum-nostrum.lit',
 				hymn: 'hymn/summe-deus-clementie.gabc',
-				blessings: 'common/vigils/3rd-nocturn/'
+				'absolution-1': 'common/vigils/3rd-nocturn/absolution.gabc'
 			}
 		}
 	}
@@ -147,9 +173,7 @@ function minor_hours(hour, day, kyrie) { // produces the whole for a given minor
 	return {
 		order: 'terce/penitential-order.lit',
 		psalter: hour + '/' + (day == 'sunday' ? 'sunday' : 'feria') + '.lit',
-		commons: mergeDeep(minor_commons(hour, day), {
-			kyrie: kyrie
-		}),
+		propers: minor_commons(hour, day),
 	}
 }
 
