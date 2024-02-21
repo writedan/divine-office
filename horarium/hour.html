@@ -119,8 +119,8 @@
         let hourData = metadata.hours[urlParams.get('hour')]
         let lctx = new LiturgyContext(hourData.order);
         lctx.setField('psalter', hourData.psalter);
-        for (let field of Object.keys(hourData.commons)) {
-            lctx.setField(field, hourData.commons[field])
+        for (let field of Object.keys(hourData.propers)) {
+            lctx.setField(field, hourData.propers[field])
         }
 
         lctx.execute().then(result => {
