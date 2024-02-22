@@ -229,10 +229,6 @@ function getHeaders(gabcheaders) {
  			let left_column = [];
  			let right_column = [];
 
- 			console.log(args[0])
- 			console.log('NUM ROWS = ', numRows)
- 			console.log("SPLITTING = ", numRows % 2 != 0)
-
  			for (let i in verses) {
  				if (i < numRows) {
  					if (numRows % 2 != 0 && i == Math.floor(numRows)) {
