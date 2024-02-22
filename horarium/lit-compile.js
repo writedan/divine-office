@@ -516,6 +516,7 @@ ${gabc}
  			// back guard will review the list of executed commands, find the front guard
  			// then send the intervening commands to a HymnContext for execution
  			let execs = this.executed.slice(0);
+ 			execs.push(['end-hymn'])
 
  			while (execs.length) {
  				let instr = execs.shift();
@@ -554,6 +555,7 @@ ${gabc}
  		this.code = code;
  		this.base = base;
  		this.verses = [];
+ 		this.combined = [];
  	}
 
  	async execute() {
@@ -611,37 +613,40 @@ ${gabc}
  				throw new Error("Cannot build without verses!");
  			}
 
- 			console.log(this.verses)
-
- 			let gabcbase = `initial-style: 0;
-centering-scheme: english;
-%%
-(${this.clef})`
-
- 			for (let i in this.melody) {
- 				for (let vi in this.verses) {
- 					let verse = this.verses[vi];
- 					if (i == 0) {
-	 					let num = parseInt(vi) + 1;
-	 					gabcbase += ' ' + num + '. '
-	 				}
-
-	 				if (!verse[i]) {
-	 					gabcbase += '|';
-	 					continue;
-	 				}
-
-	 				let continuous = verse[i].endsWith('-');
-
-	 				gabcbase += (continuous ? verse[i].substring(0, verse[i].length - 1) : verse[i] + ' ') + '|'
- 				}
- 				gabcbase += '(' + this.melody[i] + ')';
+ 			for (let v of this.verses) {
+ 				this.combined.push([v, this.melody]);
  			}
-
- 			delete this.melody;
+ 			this.vlen = this.verses.length;
  			this.verses = [];
 
- 			return await this.base.handleCommand('raw-gabc', [gabcbase])
+ 			return document.createElement('blank'); // make is used for compiling to LaTeX, not now
+ 		}
+
+ 		else if (cmd == 'end-hymn') {
+ 			let gabc = 'initial-style: 0;\ncentering-scheme: english;\n%%\n'
+
+ 			for (let vi of Array(this.vlen).keys()) {
+ 				for (let i = 0; i < this.combined.length; i += this.vlen) {
+ 					let v = this.combined[vi + i];
+ 					let melody = v[1];
+ 					let verse = v[0];
+
+ 					for (let verse_idx in verse) {
+ 						let syllable = verse[verse_idx];
+ 						let notes = melody[verse_idx];
+ 						if (verse_idx == 0 && i==0) {
+ 							gabc += (vi + 1) + '. ' + (vi == 0 ? '' : ' (::)')
+ 						}
+
+ 						let continuous = syllable.endsWith('-');
+ 						gabc += (continuous ? syllable : syllable + ' ') + '(' + notes + ')';
+ 					}
+
+ 					gabc += (i % 2 == 0) ? '(,)' : '(;)'
+ 				}
+ 			}
+
+ 			return this.base.handleCommand('raw-gabc', [gabc])
  		}
 
  		throw new Error("Unknown command: " + cmd);
