@@ -627,6 +627,7 @@ centering-scheme: english;
 	 				}
 
 	 				if (!verse[i]) {
+	 					gabcbase += '|';
 	 					continue;
 	 				}
 
