@@ -1,6 +1,8 @@
 #title "Hymn."
 #title "O Lux beata Trinitas"
 
+#begin-hymn
+
 #clef "c4"
 
 #melody "gh" "gvFEfv" "d" "ev" "fv" "gh" "hg" "g"
@@ -24,3 +26,5 @@
 #verse "To" "God" "the" "Ho-" "ly" "Pa-" "ra-" "clete."
 
 #amen "ghg" "h"
+
+#end-hymn
