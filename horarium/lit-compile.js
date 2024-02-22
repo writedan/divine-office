@@ -72,11 +72,18 @@ function getHeaders(gabcheaders) {
 }
  
  class LiturgyContext {
+
  	constructor(url, base=undefined) {
- 		this.url = URL_BASE + url;
- 		this.ready = false;
- 		this.base = base;
- 		this.load();
+ 		if (url) {
+	 		this.url = URL_BASE + url;
+	 		this.ready = false;
+	 		this.base = base;
+	 		this.load();
+ 		} else {
+ 			this.ready = true;
+ 		}
+
+ 		this.executed = [];
  	}
 
  	async load() {
@@ -87,7 +94,7 @@ function getHeaders(gabcheaders) {
                     throw new Error(`Failed to fetch ${this.url}, status: ${response.status}`);
                 }
 
-                this.code = await response.text();
+                this.code = (await response.text()).split('\n').map((entry) => entry.trim()).filter(function(entry) {return entry!=''})
                 this.ready = true;
                 console.log(`Loaded liturgy: ${this.url}`);
                 resolve();
@@ -99,8 +106,7 @@ function getHeaders(gabcheaders) {
     }
 
     handleError(error) {
-    	console.error('Error on LiturgyContext(' + this.url+')')
-	 	console.error(error)
+    	console.error('Error on LiturgyContext(' + this.url+'): ', error)
 
 	 	let div = document.createElement('div');
 	 	div.className = 'error';
@@ -116,45 +122,32 @@ function getHeaders(gabcheaders) {
 	 		}
 
 	 		let output = [];
-	 		let lines = this.code.split('\n');
 
-	 		lines.forEach(line => {
-	 			line = line.trim();
-	 			if (line.length == 0) {
-	 				return;
-	 			}
-
+	 		while (this.code.length && !this.yielded) {
+	 			const line = this.code.shift();	// dequeue
 	 			if (line.startsWith('#')) {
-	 				const argsRegex = /"([^"]+)"/g;
-	 				const argsMatch = line.match(argsRegex);
-	 				const args = argsMatch ? line.match(argsRegex).map(arg => arg.slice(1, -1)) : [];
-	            	const command = argsMatch ? line.substring(0, line.indexOf('"', 1)).slice(1).trim() : line.substring(1);
-		            try {
-		            	output.push(this.handleCommand(command, args));
-		        	} catch (error) {
-		        		console.error('Error while executing:', line)
-		        		output.push(this.handleError(error));
-		        	}
+	 				const regex = /"([^"]+)"/g;
+	 				const match = line.match(regex);
+	 				const args = match ? line.match(regex).map(arg => arg.slice(1, -1)) : [];
+	 				const command = (match ? line.substring(0, line.indexOf('"', 1)).slice(1) : line.substring(1)).trim();
+	 				output.push(this.handleCommand(command, args));
+	 				this.executed.push([command, args].flat())
 	 			} else {
 	 				let p = document.createElement('p');
 	 				p.innerHTML = line;
 	 				output.push(p);
 	 			}
-	 		})
-
-	 		for (let i in output) {
-	 			try {
-	 				let r = await output[i];
-	 				output[i] = r;
-	 			} catch (error) {
-	 				console.error('Error while awaiting execution:', output[i]);
-	 				output[i] = this.handleError(error);
-	 			}
 	 		}
 
-	 		return output;
+	 		return await Promise.all(output.map(async (r) => {
+	 			try {
+	 				return (await r);
+	 			} catch (error) {
+	 				return this.handleError(error);
+	 			}
+	 		}));
+
 	 	} catch (error) {
-	 		console.error('General error in execution.')
 	 		return [this.handleError(error)];
 	 	}
  	}
@@ -498,13 +491,158 @@ ${gabc}
  			return this.handleCommand('raw-gabc', [gabc]);
  		}
 
- 		 {
+ 		else if (cmd == 'yield') {
+ 			if (!this.base) {
+ 				throw new Error("Attempted to yield from main execution!");
+ 			}
+
+ 			base.setField('ctx:' + this.url, this);
+ 			this.yielded = true;
+ 		}
+
+ 		else if (cmd == 'resume') {
+ 			let div = document.createElement('div')
+ 			(await this.getField('ctx:'+this.getField(args[0])).execute()).forEach(e => div.appendChild(e));
+ 			return div;
+ 		}
+
+ 		else if (cmd == 'begin-hymn') {
+ 			this.tolerate = true; // tolerate unknown commands
+ 			return document.createElement('blank'); // front guard is just to identify where the hymn begins
+ 		}
+
+ 		else if (cmd == 'end-hymn') {
+ 			this.tolerate = false;
+ 			// back guard will review the list of executed commands, find the front guard
+ 			// then send the intervening commands to a HymnContext for execution
+ 			let execs = this.executed.slice(0);
+
+ 			while (execs.length) {
+ 				let instr = execs.shift();
+ 				if (instr[0] != 'begin-hymn') {
+ 					continue;
+ 				}
+
+ 				break;
+ 			}
+
+ 			let htx = new HymnContext(execs, this);
+ 			let div = document.createElement('div');
+ 			console.log(htx);
+ 			(await htx.execute()).forEach(e => div.appendChild(e));
+ 			return div;
+ 		}
+
+
+ 		// unrecognized command control
+ 		if (!this.tolerate) {
  			let div = document.createElement('div');
  			div.className = 'error';
  			div.innerHTML = 'Unknown command: ' + cmd;
  			return div;
+ 		} else {
+ 			return document.createElement('blank')
  		}
 
  		//return document.createElement('blank')
+ 	}
+ }
+
+ class HymnContext extends LiturgyContext {
+ 	constructor(code, base) {
+ 		super(); // we don't need to load anything
+ 		this.code = code;
+ 		this.base = base;
+ 		this.verses = [];
+ 	}
+
+ 	async execute() {
+ 		let output = [];
+ 		while (this.code.length) {
+ 			let instr = this.code.shift();
+ 			
+ 			let command = instr[0];
+ 			let args = instr.slice(1);
+
+ 			output.push(await this.handleCommand(command, args));
+ 		}
+
+ 		return output;
+ 	}
+
+ 	async handleCommand(cmd, args) {
+ 		try {
+ 			return this.internal_handleCommand(cmd, args);
+ 		} catch (error) {
+ 			return this.handleError(error);
+ 		}
+ 	}
+
+ 	async internal_handleCommand(cmd, args) {
+ 		if (cmd == 'a') {
+ 			return 'a';
+ 		}
+
+ 		else if (cmd == 'clef') {
+ 			this.clef = args[0];
+ 			return document.createElement('blank')
+ 		}
+
+ 		else if (cmd == 'melody') {
+ 			if (!this.clef) {
+ 				throw new Error("Attempted to have hymn melody without a defined clef!")
+ 			}
+
+ 			this.melody = args;
+ 			return document.createElement('blank')
+ 		}
+
+ 		else if (cmd == 'verse') {
+ 			this.verses.push(args);
+ 			return document.createElement('blank')
+ 		}
+
+ 		else if (cmd == 'make') {
+ 			if (!this.clef) {
+ 				throw new Error("Cannot build without clef!");
+ 			}
+
+ 			if (this.verses.length == 0) {
+ 				throw new Error("Cannot build without verses!");
+ 			}
+
+ 			console.log(this.verses)
+
+ 			let gabcbase = `initial-style: 0;
+centering-scheme: english;
+%%
+(${this.clef})`
+
+ 			for (let i in this.melody) {
+ 				for (let vi in this.verses) {
+ 					let verse = this.verses[vi];
+ 					if (i == 0) {
+	 					let num = parseInt(vi) + 1;
+	 					gabcbase += ' ' + num + '. '
+	 				}
+
+	 				if (!verse[i]) {
+	 					continue;
+	 				}
+
+	 				let continuous = verse[i].endsWith('-');
+
+	 				gabcbase += (continuous ? verse[i].substring(0, verse[i].length - 1) : verse[i] + ' ') + '|'
+ 				}
+ 				gabcbase += '(' + this.melody[i] + ')';
+ 			}
+
+ 			delete this.melody;
+ 			this.verses = [];
+
+ 			return await this.base.handleCommand('raw-gabc', [gabcbase])
+ 		}
+
+ 		throw new Error("Unknown command: " + cmd);
  	}
  }
