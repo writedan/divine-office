@@ -92,6 +92,9 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 		metadata.prelent[w].sunday.hours.FirstVespers = metadata.prelent[w].saturday.hours.Vespers;
 		metadata.prelent[w].sunday.hours.FirstCompline = metadata.prelent[w].saturday.hours.Compline;
+
+		metadata.prelent[w].sunday.hours.FirstVespers.propers.kyrie = 'common/kyrie/xvii.gabc';
+		metadata.prelent[w].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';
 	}
 
 	// TODO: lent
