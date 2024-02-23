@@ -130,7 +130,7 @@ function getHeaders(gabcheaders) {
 	 				const match = line.match(regex);
 	 				const args = match ? line.match(regex).map(arg => arg.slice(1, -1)) : [];
 	 				const command = (match ? line.substring(0, line.indexOf('"', 1)).slice(1) : line.substring(1)).trim();
-	 				output.push(this.handleCommand(command, args));
+	 				output.push(await this.handleCommand(command, args));
 	 				this.executed.push([command, args].flat())
 	 			} else {
 	 				let p = document.createElement('p');
@@ -299,6 +299,16 @@ ${args[0]}
  			return this.handleCommand('import', [url]);
  		}
 
+ 		else if (cmd == 'if-include') {
+ 			let url = this.getField(args[0]);
+ 			if (!url) {
+ 				console.warn('!!! CHEECK IF-INCLUDE !!!', args[0])
+ 				return document.createElement('blank')
+ 			}
+
+ 			return this.handleCommand('include', [args[0]])
+ 		}
+
  		else if (cmd == 'instruction') {
  			let p = document.createElement('p');
  			p.className = 'instruction';
@@ -395,6 +405,10 @@ ${args[0]}
 						score.annotation = new exsurge.Annotations(ctxt, a[0], a[1])
 					}
 				}
+			}
+
+			if (headers.responsory) {
+				this.setField('responsory', 'resp/' + headers.responsory + '.gabc');
 			}
 
 			score.updateNotations(ctxt);
