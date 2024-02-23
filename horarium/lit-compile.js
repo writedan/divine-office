@@ -642,6 +642,10 @@ ${gabc}
  						gabc += (continuous ? syllable : syllable + ' ') + '(' + notes + ')';
  					}
 
+ 					if ((i + this.vlen) >= this.combined.length) {
+ 						continue;
+ 					}
+ 					
  					gabc += (i % 2 == 0) ? '(,)' : '(;)'
  				}
  			}
