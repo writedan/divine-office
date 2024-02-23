@@ -630,7 +630,7 @@ ${gabc}
  		}
 
  		else if (cmd == 'end-hymn') {
- 			let gabc = 'initial-style: 0;\ncentering-scheme: english;\n%%\n'
+ 			let gabc = `initial-style: 0;\ncentering-scheme: english;\n%%\n(${this.clef})`
 
  			for (let vi of Array(this.vlen).keys()) {
  				for (let i = 0; i < this.combined.length; i += this.vlen) {
