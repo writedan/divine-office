@@ -20,9 +20,21 @@ I believe in God the Father almighty, creator of heaven and earth. And in Jesus 
 
 #gloria "laus-tibi"
 
+
+
+
 #include "hymn"
 
+
+
+
+
 #include "psalter"
+
+
+
+
+
 
 #instruction "All kneel and pray quietly."
 
@@ -52,23 +64,61 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #include "lesson-1"
 
+#instruction "The people respond."
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
+
+
+
+#instruction "Before each lesson, the lector begs a blessing."
+
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
 #include "blessing-2"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-2"
 
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
+
+
+#instruction "Before each lesson, the lector begs a blessing."
+
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
-#include "blessing-2"
+#include "blessing-3"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-3"
 
+#instruction "The people respond."
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
+
+
 #resume "psalter"
+
 
 #instruction "All kneel and pray quietly."
 
@@ -98,23 +148,60 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #include "lesson-4"
 
+#instruction "The people respond."
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
+
+
+
+#instruction "Before each lesson, the lector begs a blessing."
+
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
 #include "blessing-5"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-5"
 
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
+
+
+#instruction "Before each lesson, the lector begs a blessing."
+
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
 #include "blessing-6"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-6"
 
+#instruction "The people respond."
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
 #resume "psalter"
+
+
 
 #instruction "All kneel and pray quietly."
 
@@ -144,27 +231,62 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #include "lesson-7"
 
+#instruction "The people respond."
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
+
+
+
+#instruction "Before each lesson, the lector begs a blessing."
+
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
 #include "blessing-8"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-8"
 
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#include "responsory"
+
+
+
+
+
+#instruction "Before each lesson, the lector begs a blessing."
+
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
 #include "blessing-9"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-9"
 
-#instruction "Everyone then kneels as the precantor and succentor antiphonally sing the Kyrie."
+#instruction "The people respond."
 
-#include "kyrie"
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+#include "responsory"
+
+
+
+
+
+
+
+
 
 #instruction "Everyone stands as the officiant begins."
 
@@ -172,7 +294,11 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #include "collect"
 
+#instruction "The congregation responds."
+
 #gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+#instruction "The officiant begins."
 
 #score "common/conclusion.gabc"
 
