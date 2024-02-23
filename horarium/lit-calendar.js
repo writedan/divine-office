@@ -98,6 +98,44 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 	}
 
 	// TODO: lent
+	// lent weeks 1 and 2
+	for (let w = 1; w <= 2; w += 1) {
+		for (let d in metadata.lent[w]) {
+			let kyrie = d == 'sunday' ? 'common/kyrie/xvii.gabc' : 'common/kyrie/xviii.gabc';
+			let collectpath = 'propers/lent/' + w + '/' + d + '/';
+
+			metadata.lent[w][d].hours = {
+				Vigils: {
+					order: d == 'sunday' ? 'vigils/penitential-order-sunday.lit' : 'vigils/penitential-order-feria.lit',
+					psalter: 'vigils/' + d + '.lit',
+					propers: mergeDeep(vigils_commons(d), lessons('propers/lent/' + w + '/' + d + '/vigils/'), {
+						invitatory: (d == 'sunday') ? 'propers/lent' + w + '/' + d + '/vigils/invitatory.lit' : vigils_commons(d).invitatory,
+						hymn: 'hymn/summi-largitor-premii.lit',
+						kyrie: kyrie,
+						collect: collectpath + 'collect.gabc'
+					}),
+				},
+
+				Vespers: {
+					order: 'vespers/penitential-order.lit',
+					psalter: 'vespers/' + d + '.lit',
+					propers: mergeDeep(vespers_commons(d), {
+						magnificat: 'propers/lent/' + w + '/' + d + '/vespers/magnificat.lit',
+						kyrie: kyrie,
+						hymn: 'hymn/ex-more-docte-mystico.lit',
+						collect: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/sunday/collect.gabc' : collectpath + 'blessing.gabc',
+						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.gabc' : 'common/vespers/lent-chapter(feria).gabc'
+					}),
+				}
+			}
+		}
+
+		metadata.lent[w].sunday.hours.FirstVespers = metadata.lent[w].saturday.hours.Vespers;
+		metadata.lent[w].sunday.hours.FirstCompline = metadata.lent[w].saturday.hours.Compline;
+
+		metadata.lent[w].sunday.hours.FirstVespers.propers.kyrie = 'common/kyrie/xvii.gabc';
+		/*metadata.lent[w].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';*/
+	}
 	// TODO: passion
 	// TODO: pascha
 	// TODO: ascension
@@ -131,7 +169,7 @@ function vigils_commons(day) {
 			'absolution-3': 'common/vigils/3rd-nocturn/absolution.gabc',
 			'blessing-7': 'common/vigils/3rd-nocturn/blessing-1.gabc',
 			'blessing-8': 'common/vigils/3rd-nocturn/blessing-2.gabc',
-			'blessing-9': 'common/vigils/3rdå-nocturn/blessing-3.gabc',
+			'blessing-9': 'common/vigils/3rd-nocturn/blessing-3.gabc',
 		}
 
 		case 'friday': {
