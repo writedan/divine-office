@@ -15,17 +15,14 @@ body {
             }
             #form-container {
                 float: right;
-                width: 14%;
-                left: 65%;
-                /*height: 100%;*/
+                width: 25%;                /*height: 100%;*/
                 vertical-align: top;
                 background-color: #fff;
                 border-radius: 5px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 padding: 20px;
                 margin: 5px;
-                position: fixed;
-            }
+                }            
             table {
                 width: 100%;
                 border-collapse: collapse;
