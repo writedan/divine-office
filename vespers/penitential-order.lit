@@ -20,6 +20,8 @@ Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women an
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
+#if-include "responsory"
+
 #include "hymn"
 
 #include "versicle"
@@ -27,6 +29,8 @@ Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women an
 #include "magnificat"
 
 #include "kyrie"
+
+#instruction "Make this prayer quietly."
 
 Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
