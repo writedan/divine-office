@@ -460,7 +460,7 @@ ${args[0]}
  			div.className = 'antiphon'
  			let resp = await fetch(URL_BASE + 'antiphon/' + this.getField('antiphon') + '.gabc')
  			if (!resp.ok) {
- 				throw new Error(`Failed to fetch ${URL_BASE + this.getField('antiphon')}, status code: ${resp.status}.`)
+ 				throw new Error(`Failed to fetch ${URL_BASE}antiphon/${this.getField('antiphon')}.gabc, status code: ${resp.status}.`)
  			}
  			let gabc = (await resp.text()).split('%%')[1]
  			if (args[0] == 'partial') {
