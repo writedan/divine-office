@@ -496,13 +496,20 @@ ${gabc}
  				throw new Error("Attempted to yield from main execution!");
  			}
 
- 			base.setField('ctx:' + this.url, this);
+ 			this.base.setField('ctx:' + this.url, this);
+ 			console.log(this, 'YIELDS')
  			this.yielded = true;
+ 			return document.createElement('blank')
  		}
 
  		else if (cmd == 'resume') {
  			let div = document.createElement('div')
- 			(await this.getField('ctx:'+this.getField(args[0])).execute()).forEach(e => div.appendChild(e));
+ 			let ref = ('ctx:' + (URL_BASE + this.getField(args[0])))
+ 			console.log(ref, this.getField(ref))
+ 			console.log(Object.keys(this));
+ 			this.getField(ref).yielded = false;
+ 			let res = await this.getField(ref).execute();
+ 			console.log(res);
  			return div;
  		}
 
@@ -642,6 +649,10 @@ ${gabc}
  						gabc += (continuous ? syllable : syllable + ' ') + '(' + notes + ')';
  					}
 
+ 					if ((i + this.vlen) >= this.combined.length) {
+ 						continue;
+ 					}
+ 					
  					gabc += (i % 2 == 0) ? '(,)' : '(;)'
  				}
  			}
