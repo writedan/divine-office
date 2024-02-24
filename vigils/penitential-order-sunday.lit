@@ -79,6 +79,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
+#instruction "The officiant proclaims the blessing."
+
 #include "blessing-2"
 
 #instruction "The people respond."
@@ -86,6 +88,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-2"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
@@ -98,6 +102,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 #instruction "Before each lesson, the lector begs a blessing."
 
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
+
+#instruction "The officiant proclaims the blessing."
 
 #include "blessing-3"
 
@@ -163,6 +169,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
+#instruction "The officiant proclaims the blessing."
+
 #include "blessing-5"
 
 #instruction "The people respond."
@@ -170,6 +178,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-5"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
@@ -182,6 +192,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 #instruction "Before each lesson, the lector begs a blessing."
 
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
+
+#instruction "The officiant proclaims the blessing."
 
 #include "blessing-6"
 
@@ -246,6 +258,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
 
+#instruction "The officiant proclaims the blessing."
+
 #include "blessing-8"
 
 #instruction "The people respond."
@@ -253,6 +267,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 #include "lesson-8"
+
+#instruction "The people respond."
 
 #gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
@@ -265,6 +281,8 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 #instruction "Before each lesson, the lector begs a blessing."
 
 #gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
+
+#instruction "The officiant proclaims the blessing."
 
 #include "blessing-9"
 
