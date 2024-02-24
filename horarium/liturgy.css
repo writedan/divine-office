@@ -1,6 +1,5 @@
 body {
                 font-family: Arial, sans-serif;
-                font-size: 16px;
                 margin: 0;
                 padding: 0;
                 background-color: #f4f4f4;
@@ -62,6 +61,7 @@ body {
             }
             #content {
                 width: 70%;
+                font-size: calc(max(16px, 16px + (800px - 100vw) * 0.02));
             }
 
             .info {

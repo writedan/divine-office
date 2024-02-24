@@ -355,13 +355,19 @@ ${args[0]}
 
  		else if (cmd == 'raw-gabc') {
  			let ctxt = new exsurge.ChantContext();
- 			ctxt.setFont("'Arial, sans-serif'", 16 * 1.25);
+ 			var style = parseFloat(window.getComputedStyle(document.getElementById('content'), null).getPropertyValue('font-size').split('px')[0]) * 1.25;
+ 			console.log('FONT SIZE', style);
+ 			//ctxt.setFont("'Arial, sans-serif'", style);
 		    //ctxt.dropCapTextFont = ctxt.lyricTextFont;
 		    //ctxt.annotationTextFont = ctxt.lyricTextFont;
 		    //ctxt.textMeasuringStrategy = exsurge.TextMeasuringStrategy.Canvas;
 		    //ctxt.minLyricWordSpacing; = ctxt.hyphenWidth * 0.7;
-		    //ctxt.glyphScaling = 0.08
-		    ctxt.setGlyphScaling(0.08)
+		    //ctxt.setGlyphScaling(0.08)
+
+		    let scaleFactor = (ctxt.glyphScaling * style) / ctxt.textStyles.lyric.size;
+		    ctxt.setGlyphScaling(scaleFactor)
+		    console.log('SCALE', scaleFactor)
+		    ctxt.setFont("'Arial, sans-serif'", style);
 
 		    let headers = getHeaders(args[0].split('%%')[0]);
 
