@@ -517,13 +517,16 @@ ${gabc}
  		}
 
  		else if (cmd == 'resume') {
- 			let div = document.createElement('div')
- 			let ref = ('ctx:' + (URL_BASE + this.getField(args[0])))
- 			console.log(ref, this.getField(ref))
- 			console.log(Object.keys(this));
+ 			return this.handleCommand('return', [this.getField(args[0])])
+ 		}
+
+ 		else if (cmd == 'return') {
+ 			// kinda like #resume but receives a raw URL
+ 			let div = document.createElement('div');
+ 			let ref = 'ctx:' + (URL_BASE + args[0])
  			this.getField(ref).yielded = false;
  			let res = await this.getField(ref).execute();
- 			console.log(res);
+ 			res.forEach(e => div.appendChild(e))
  			return div;
  		}
 
