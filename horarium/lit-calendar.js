@@ -109,7 +109,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					order: d == 'sunday' ? 'vigils/penitential-order-sunday.lit' : 'vigils/penitential-order-feria.lit',
 					psalter: 'vigils/' + d + '.lit',
 					propers: mergeDeep(vigils_commons(d), lessons('propers/lent/' + w + '/' + d + '/vigils/'), {
-						invitatory: (d == 'sunday') ? 'propers/lent' + w + '/' + d + '/vigils/invitatory.lit' : vigils_commons(d).invitatory,
+						invitatory: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/vigils/invitatory.lit' : vigils_commons(d).invitatory,
 						hymn: 'hymn/summi-largitor-premii.lit',
 						kyrie: kyrie,
 						collect: collectpath + 'collect.gabc'
