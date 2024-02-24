@@ -56,4 +56,19 @@
 
 
 
-#title "Second Nocturn!"
+#antiphon "bonorum-meorum"
+#tone "3-iv" "c3"
+#psalm "15"
+#repeat-antiphon
+
+#antiphon "inclina-domine"
+#tone "7-ii" "c3"
+#psalm "16"
+#repeat-antiphon
+
+#antiphon "dominus-firmamentum"
+#tone "8-i" "c3"
+#psalm "19"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> At(h) mid(h)night(h) I(h) a(h)rose(h) to(h) give(h) thanks(h) un(h)to(f) thee.(g) <sp>r</sp>(::) For(h) the(h) judg(h)ments(h) of(h) thy(h) right(h)eous(f)ness.(f)"
