@@ -129,5 +129,9 @@
                 document.getElementById('content').appendChild(r);
             }
         })
+
+        let p =document.createElement('p');
+        p.innerHTML = parseFloat(window.getComputedStyle(document.getElementById('content'), null).getPropertyValue('font-size').split('px')[0]);
+         document.body.appendChild(p);
     </script>
 </html>
