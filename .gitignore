@@ -5,7 +5,7 @@
 !*.lit
 !*.gabc
 !horarium.html
-!horarium/*
+!horarium/*/*
 !.gitignore
 !docs/*.pdf
 *_model.tex

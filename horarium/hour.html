@@ -6,7 +6,8 @@
         <script src='./liturgy.js'></script>
         <script src='./lit-calendar.js'></script>
         <script src='./exsurge.min.js'></script>
-        <script src='./lit-compile.js'></script>
+        <script src='./lit-engine/parser.js'></script>
+        <script src='./lit-engine/compiler.js'></script>
         <link rel='stylesheet' type='text/css' href='./liturgy.css'/>
         <style>
             .error {
@@ -117,16 +118,35 @@
         h2.innerHTML = 'At' + document.title.split(' at')[1];
         content.append(h2);
 
+        let msg = document.createElement('p');
+        msg.innerHTML = 'Rendering chant. This should only take a few seconds.';
+        content.appendChild(msg);
+
         let hourData = metadata.hours[urlParams.get('hour')]
         let lctx = new LiturgyContext(hourData.order);
+        //lctx.setField('responsory', 'dummy-value')
         lctx.setField('psalter', hourData.psalter);
         for (let field of Object.keys(hourData.propers || {})) {
             lctx.setField(field, hourData.propers[field])
         }
 
+        function resolveNode(node, placeholder) {
+            if (!Array.isArray(node)) {
+                placeholder.replaceWith(node);
+            } else {
+                console.log(node.flat(Infinity))
+                placeholder.replaceWith(...node.flat(Infinity)) // we have already guaranteed all sub-promises have been resolved
+            }
+        }
+
         lctx.execute().then(result => {
-            for (let r of result) {
-                document.getElementById('content').appendChild(r);
+            content.removeChild(msg);
+
+            for (let idx in result) {
+                let placeholder = document.createElement('div');
+                placeholder.appendChild(msg.cloneNode(true));
+                content.append(placeholder)
+                result[idx].then(r => resolveNode(r, placeholder));
             }
         })
     </script>
