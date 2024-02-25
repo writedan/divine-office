@@ -120,6 +120,7 @@ class Node {
 			for (let idx in psalmody.children[0].children) {
 				let node = await psalmody.children[0].children[idx];
 				if (node.directive.type != 'text' && node.directive.type != 'gloria') {
+					psalmody.children[0].children.splice(idx, 1);
 					root.addBefore(node, psalmody);
 				}
 			}

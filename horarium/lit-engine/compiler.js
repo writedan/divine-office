@@ -104,6 +104,65 @@ class LiturgyContext {
 				return div;
 			}
 
+			else if (node.directive.type == 'psalmody') {
+				let nodes = node.children[0].children; // theres a `import` and thus root node in between
+				let contentWidth = document.getElementById('content').offsetWidth;
+				if (contentWidth < 800) {
+					// display in single list
+					let output = [];
+					for (let n of nodes) {
+						output.push(await this.compile(n));
+					}
+					
+					return output;
+				} else {
+					// display as table
+					let numRows = (nodes.length / 2);
+					let left_column = [];
+					let right_column = [];
+					for (let i in nodes) {
+						if (i < numRows) {
+							if (numRows % 2 != 0 && i == Math.floor(numRows)) {
+								let node = await this.compile(nodes[i]);
+								let v = node.textContent.split('*');
+								let v1 = node.cloneNode(true);
+								let v2 = node.cloneNode(true);
+								v1.textContent = v[0] + '*';
+								v2.textContent = v[1];
+								left_column.push(v1);
+								right_column.push(v2);
+							} else {
+								left_column.push(await this.compile(nodes[i]))
+							}
+						} else {
+							right_column.push(await this.compile(nodes[i]));
+						}
+					}
+
+					let table = document.createElement('table')
+					table.className = 'psalm';
+					numRows = Math.ceil(nodes.length / 2);
+					for (let i = 0; i < numRows; i++) {
+						let left = left_column[i];
+						let right = right_column[i];
+						let tr = document.createElement('tr');
+						let left_td = document.createElement('td');
+						let right_td = document.createElement('td');
+						left_td.append(...[left].flat());
+						right_td.append(...[right].flat());
+						left_td.style.width = '50%';
+						right_td.style.width = '50%'
+						left_td.style.verticalAlign = 'top'
+						right_td.style.verticalAlign = 'top'
+						tr.append(left_td);
+						tr.append(right_td);
+						table.append(tr);
+					}
+
+					return table;
+				}
+			}
+
 			throw new Error('Unknown node directive: ' + node.directive.type + '[' + node.directive.args +']')
 		} catch (error) {
 			return this.handleError(error)
