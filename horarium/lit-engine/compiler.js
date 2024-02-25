@@ -21,7 +21,6 @@ class LiturgyContext {
 				output.push(this.compile(node))
 			}
 
-			console.log(output)
 			return output;
 		} catch (error) {
 			return this.handleError(error);

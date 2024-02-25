@@ -67,7 +67,9 @@ class Node {
 
 		if (this.directive.type == 'score') {
 			return (await GabcParser.fromUrl(this.directive.args[0])).buildTree();
-		} else if (this.directive.type == 'include') {
+		} 
+
+		else if (this.directive.type == 'include') {
 			let url = await ctx.getPromisedField(this.directive.args[0]);
 			let new_ctx = new LiturgyContext(url, ctx);
 			return (await new_ctx.parser).buildTree();
@@ -77,7 +79,16 @@ class Node {
 			let new_ctx = new LiturgyContext(url, ctx);
 			return (await new_ctx.parser).buildTree();
 
-		} else if (this.directive.type == 'antiphon') {
+		} else if (this.directive.type == 'if-include') {
+			let url = ctx.getField(this.directive.args[0]);
+			if (!val) {
+				return undefined;
+			} else {
+				return await new Node(Directive.new('include', [this.directive.args[0]])).preprocess(ctx);
+			}
+		}
+
+		else if (this.directive.type == 'antiphon') {
 			let path = 'antiphon/' + this.directive.args[0] + '.gabc';
 			ctx.setField('last-antiphon', this.directive.args[0])
 			let root = new Node(Directive.new('root'));
