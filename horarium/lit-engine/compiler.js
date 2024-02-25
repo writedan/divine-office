@@ -1,3 +1,9 @@
+function uuidv4() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+} // https://stackoverflow.com/a/2117523
+
 class LiturgyContext {
 	parameters = {};
 	constructor(url, base) {
@@ -15,7 +21,7 @@ class LiturgyContext {
 		try {
 			this.parser = await this.parser;
 			let root = this.parser.buildTree();
-			let ctx = this;
+			this.setField('scores', [])
 			let output = [];
 			for (let node of root.children) {
 				output.push(this.compile(node))
@@ -82,6 +88,20 @@ class LiturgyContext {
 				p.innerHTML = node.directive.args[0];
 				p.className = 'title'
 				return p;
+			} 
+
+			else if (node.directive.type == 'raw-gabc') {
+				let div = document.createElement('div');
+				//div.innerHTML = node.directive.args[0];
+				let uuid = uuidv4();
+				div.setAttribute('score-id', uuid);
+				this.setField('score:' + uuid, {
+					div: div,
+					node: node
+				})
+				div.className = 'gabc-score';
+				div.innerHTML = node.directive.args[0];
+				return div;
 			}
 
 			throw new Error('Unknown node directive: ' + node.directive.type + '[' + node.directive.args +']')

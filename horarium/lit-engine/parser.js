@@ -81,7 +81,7 @@ class Node {
 
 		} else if (this.directive.type == 'if-include') {
 			let url = ctx.getField(this.directive.args[0]);
-			if (!val) {
+			if (!url) {
 				return undefined;
 			} else {
 				return await new Node(Directive.new('include', [this.directive.args[0]])).preprocess(ctx);
@@ -221,7 +221,7 @@ class GabcParser {
 	}
 
 	buildTree() {
-		this.parseHeaders();
+		this.headers = GabcParser.parseHeaders(this.lines);
 		let root = new Node(Directive.new('root'));
 		if (this.headers.heading) {
 			root.add(new Node(Directive.new('title', [this.headers.heading])))
@@ -231,8 +231,8 @@ class GabcParser {
 		return root;
 	}
 
-	parseHeaders() {
-		const headerLines = this.lines.split('%%')[0].split('\n');
+	static parseHeaders(lines) {
+		const headerLines = lines.split('%%')[0].split('\n');
 	    const headerObject = {};
 
 	    for (let line of headerLines) {
@@ -252,6 +252,6 @@ class GabcParser {
 	        }
 	    }
 
-	    this.headers = headerObject;
+	    return headerObject;
 	}
 }
