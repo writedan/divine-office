@@ -230,6 +230,8 @@
                             e.style.fontWeight = 'bold';
                         }
                     }
+
+                    element.innerHTML = '';
                     element.appendChild(svg);
                 })
             })
@@ -241,5 +243,13 @@
                 renderChant(chant);
             }
         }
+
+        let contentWidth = content.offsetWidth;
+        window.addEventListener('resize', function(event) {
+            if (content.offsetWidth != contentWidth) {
+                contentWidth = content.offsetWidth;
+                renderAllChants();
+            }
+        }, true);
     </script>
 </html>
