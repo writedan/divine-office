@@ -21,7 +21,6 @@ class LiturgyContext {
 				output.push(this.compile(node))
 			}
 
-			//return (await Promise.all(output)).filter(e => e != undefined).flat(Infinity);
 			console.log(output)
 			return output;
 		} catch (error) {
@@ -52,6 +51,9 @@ class LiturgyContext {
 	async compile(node) {
 		try {
 			node = await node; // wait for the node to become available
+			if (!node) {
+				return undefined;
+			}
 
 			if (node.directive.type == 'root') {
 				let output = [];

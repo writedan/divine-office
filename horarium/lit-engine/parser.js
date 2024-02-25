@@ -60,20 +60,6 @@ class Node {
 		this.children.splice(this.children.indexOf(before), 0, node);
 	}
 
-	findPrevious(type) {
-		// finds the previous directive of the given type
-		let ancestor = this.root;
-		while (ancestor !== undefined) {
-			if (ancestor.root !== undefined) {
-				ancestor = ancestor.root;
-			} else {
-				break;
-			}
-		}
-
-		console.log('ANESTROY:',ancestor);
-	}
-
 	async preprocess(ctx) {
 		if (!ctx) {
 			throw new Error('LiturgyContext is necessary to preprocess nodes.');
@@ -145,12 +131,27 @@ class Node {
 			}
 
 		} else if (this.directive.type == 'begin-hymn') {
-			ctx.setField('hymn', []);
+			let node = new Node(Directive.new('hymn'))
+			ctx.setField('hymn', node);
 			return undefined;
+		}
+
+		else if (this.directive.type == 'clef' || this.directive.type == 'melody' || this.directive.type == 'verse' || this.directive.type == 'make' || this.directive.type == 'amen') {
+			let node = await ctx.getPromisedField('hymn');
+			node.add(this);
+			return undefined;
+		}
+
+		else if (this.directive.type == 'end-hymn') {
+			return await (await ctx.getPromisedField('hymn')).preprocess(ctx);
 		}
 
 
 		for (let child_idx in this.children) {
+			if (!this.children[child_idx]) {
+				this.children.splice(child_idx, 1);
+			}
+
 			this.children[child_idx] = await (await this.children[child_idx]).preprocess(ctx);
 		}
 
