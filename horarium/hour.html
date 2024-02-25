@@ -131,6 +131,14 @@
         }
 
         function resolveNode(node, idx, placeholder) {
+            if (!node) {
+                console.warn('Passed undefined node, these ought be filtered by now.')
+                console.warn('Index', idx);
+                console.warn('Placeholder', placeholder, 'will now be removed.')
+                content.removeChild(placeholder)
+                return;
+            }
+
             if (!Array.isArray(node)) {
                 placeholder.replaceWith(node);
                 node.id = 'node-' + idx;
@@ -153,7 +161,7 @@
             for (let idx in result) {
                 let placeholder = document.createElement('div');
                 placeholder.appendChild(msg.cloneNode(true));
-                content.append(placeholder)
+                content.appendChild(placeholder)
                 result[idx].then(r => resolveNode(r, idx, placeholder));
             }
 
