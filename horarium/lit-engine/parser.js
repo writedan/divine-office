@@ -1,5 +1,5 @@
 async function fetch_text(url) {
-	let resp = await fetch('/' + url);
+	let resp = await fetch(window.location.href.split('horarium')[0] + url);
 	if (!resp.ok) {
 		throw new Error(`Fetch failed for "${url}". Status code ${resp.status}.`);
 	}
