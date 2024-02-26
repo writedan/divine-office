@@ -65,6 +65,11 @@ class Node {
 		return this.children.splice(this.children.indexOf(node), 1);
 	}
 
+	childrenAfter(node) {
+		console.log(this.children.indexOf(node))
+		return this.children.slice(this.children.indexOf(node))
+	}
+
 	async cleanTree() {
 		for (let node of this.children) {
 			node = await node;
@@ -81,6 +86,36 @@ class Node {
 		}
 	}
 
+	getAttribute(attr) {
+		return this.attributes[attr]
+	}
+
+	setAttribute(attr, value) {
+		this.attributes[attr] = value;
+	}
+
+	async getPromisedAttribute(attr) {
+		let node = this;
+	    return await new Promise((resolve, reject) => {
+	        const timeout = 2000;
+	        const startTime = Date.now();
+
+	        const loop = () => {
+	            if (node.getAttribute(attr) !== undefined) {
+	                resolve(node.getAttribute(attr));
+	            } else {
+	                if (Date.now() - startTime >= timeout) {
+	                    reject(new Error(`Timeout: Unable to get attribute ${attr} within ${timeout} milliseconds`));
+	                } else {
+	                    setTimeout(loop);
+	                }
+	            }
+	        };
+
+	        loop();
+	    });
+	}
+
 	async preprocess(ctx) {
 		if (!ctx) {
 			throw new Error('LiturgyContext is necessary to preprocess nodes.');
@@ -93,21 +128,23 @@ class Node {
 		} 
 
 		else if (this.directive.type == 'include') {
-			let url = await ctx.getPromisedField(this.directive.args[0]);
-			let new_ctx = new LiturgyContext(url, ctx);
-			return (await new_ctx.parser).buildTree();
+			let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])])).preprocess(ctx);
+			root.name = this.directive.args[0];
+			return root;
 
 		} else if (this.directive.type == 'import') {
 			let url = this.directive.args[0];
 			let new_ctx = new LiturgyContext(url, ctx);
-			return (await new_ctx.parser).buildTree();
+			let root = await (await new_ctx.parser).buildTree();
+			root.source = url;
+			return root;
 
 		} else if (this.directive.type == 'if-include') {
 			let url = ctx.getField(this.directive.args[0]);
 			if (!url) {
 				return undefined;
 			} else {
-				return await new Node(Directive.new('include', [this.directive.args[0]])).preprocess(ctx);
+				return await new Node(Directive.new('import', [url])).preprocess(ctx);
 			}
 		}
 
@@ -245,7 +282,6 @@ class Node {
 
 			return await new Node(Directive.new('gabc', [gabc])).preprocess(ctx);
 		}
-
 
 		for (let child_idx in this.children) {
 			if (!this.children[child_idx]) {
