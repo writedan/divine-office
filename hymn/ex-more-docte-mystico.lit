@@ -41,7 +41,7 @@
 	#verse "That" "we" "from" "this" "our" "abs-" "ti-" "nence"
 	#make
 
-	#melody "e" "hg" "hi" "hg" "e" "gh" "f" "f" "::" "fg" "fef"
+	#melody "e" "hg" "hi" "hg" "e" "gh" "f" "f"
 	#verse "In" "for-" "ty" "days" "of" "year-" "ly" "round."
 	#verse "In" "af-" "ter" "ag-" "es" "sanc-" "ti-" "fied."
 	#verse "Be" "ev-" "ery" "sense" "in" "ho-" "ly" "guard."
@@ -50,7 +50,8 @@
 	#verse "O" "par-" "doning" "One," "thy" "clem-" "en-" "cy."
 	#verse "Be" "by" "an-" "o-" "ther" "put" "to" "shame."
 	#verse "May" "please" "thee" "here" "and" "ev-" "er-" "more."
-	#verse "May" "reap" "the" "fruits" "of" "pe-" "ni-" "tence." " " "A-" "men."
+	#verse "May" "reap" "the" "fruits" "of" "pe-" "ni-" "tence."
+	#amen "fg" "fef"
 	#make
 
 #end-hymn

@@ -29,12 +29,13 @@
 	#verse "In" "whom" "so" "long" "as" "worlds" "a-" "bide"
 	#make
 
-	#melody "e" "fv" "gv" "hg" "f" "gf" "ef" "fv" "::" "fg" "fef"
+	#melody "e" "fv" "gv" "hg" "f" "gf" "ef" "fv"
 	#verse "Mixt" "with" "meet" "psalms" "and" "chants" "of" "praise."
 	#verse "From" "sins" "of" "thought" "and" "word" "and" "deed."
 	#verse "That" "pure" "in" "heart" "we" "make" "our" "prayer."
 	#verse "The" "sa-" "cra-" "ments" "of" "Pas-" "chal" "days."
-	#verse "One" "on-" "ly" "God" "is" "glo-" "ri-" "fied." " " "A-" "men."
+	#verse "One" "on-" "ly" "God" "is" "glo-" "ri-" "fied."
+	#amen "fg" "fef"
 	#make
 
 #end-hymn

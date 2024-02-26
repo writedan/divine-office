@@ -41,7 +41,7 @@
 	#verse "Who," "with" "the" "Ho-" "ly" "Ghost" "and" "thee,"
 	#make
 
-	#melody "hv" "hv" "hv" "g" "f" "gv" "f" "e" "::" "ef" "ede"
+	#melody "hv" "hv" "hv" "g" "f" "gv" "f" "e"
 	#verse "And" "con-" "quering" "death," "gave" "life" "to" "men."
 	#verse "The" "heart's" "de-" "sire" "to" "God" "be" "told:"
 	#verse "Through" "earth-" "ly" "stain" "our" "heav'n-" "ly" "bliss."
@@ -50,7 +50,8 @@
 	#verse "Of" "pas-" "sions" "which" "our" "bo-" "soms" "rend."
 	#verse "What-" "ev'er" "of" "good" "our" "spir-" "its" "want:"
 	#verse "Some" "fore-" "taste" "of" "the" "heav'n-" "ly" "song."
-	#verse "Doth" "live" "and" "reign" "e-" "ter-" "nal-" "ly." " " "A-" "men."
+	#verse "Doth" "live" "and" "reign" "e-" "ter-" "nal-" "ly."
+	#amen "ef" "ede"
 	#make
 
 #end-hymn
