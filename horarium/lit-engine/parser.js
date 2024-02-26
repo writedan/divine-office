@@ -183,6 +183,69 @@ class Node {
 			return await (await ctx.getPromisedField('hymn')).preprocess(ctx);
 		}
 
+		else if (this.directive.type == 'hymn') {
+			await this.cleanTree();
+			let melody;
+			let verses = [];
+			let combined = [];
+			let clef;
+			let vlen;
+			for (let n of this.children) {
+				if (n.directive.type == 'clef') {
+					clef = n.directive.args[0];
+				} else if (n.directive.type == 'melody') {
+					melody = n.directive.args;
+				} else if (n.directive.type == 'verse') {
+					verses.push(n.directive.args);
+				} else if (n.directive.type == 'amen') {
+					melody.push('::')
+					melody.push(n.directive.args[0]);
+					melody.push(n.directive.args[1]);
+					verses[verses.length - 1].push(' ')
+					verses[verses.length - 1].push('A-')
+					verses[verses.length - 1].push('men.')
+				} else if (n.directive.type == 'make') {
+					for (let v of verses) {
+						combined.push([v, melody]);
+					}
+
+					vlen = verses.length;
+					verses = [];
+				} else {
+					throw new Error('Unknown directive while parsing hymn: ' + n.directive.type + '['  + n.directive.args + ']');
+				}
+			}
+
+			let gabc = '(' + clef + ') ';
+
+			for (let vi of Array(vlen).keys()) {
+				for (let i = 0; i < combined.length; i+= vlen) {
+					let v = combined[vi + i];
+					let verse = v[0];
+					let melody = v[1];
+
+					for (let verse_idx in verse) {
+						let syllable = verse[verse_idx];
+						let notes = melody[verse_idx];
+						if (verse_idx == 0 && i == 0) {
+							gabc += (vi + 1) + '. ' + (vi == 0 ? '' : ' (::)');
+						}
+
+						let continuous = syllable.endsWith('-')
+						gabc += (continuous ? syllable : syllable + ' ') + '(' + notes + ')';
+					}
+
+					if ((i + vlen) >= combined.length) {
+						continue;
+					}
+
+					gabc += (i % 2 == 0) ? '(;)' : '(,)';
+				}
+			}
+
+			return await new Node(Directive.new('gabc', [gabc])).preprocess(ctx);
+		}
+
 
 		for (let child_idx in this.children) {
 			if (!this.children[child_idx]) {

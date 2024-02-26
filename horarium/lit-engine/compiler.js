@@ -7,6 +7,11 @@ function uuidv4() {
 class LiturgyContext {
 	parameters = {};
 	constructor(url, base) {
+		if (!url) {
+			console.warn('LiturgyContext created without an url!');
+			return;
+		}
+
 		this.url = url;
 		this.base = base;
 		if (url.endsWith('.gabc')) {
@@ -105,7 +110,6 @@ class LiturgyContext {
 			}
 
 			else if (node.directive.type == 'psalmody') {
-				console.log('PSALMODY',node);
 				let nodes = node.children; 
 				let contentWidth = document.getElementById('content').offsetWidth;
 				if (contentWidth < 800) {
