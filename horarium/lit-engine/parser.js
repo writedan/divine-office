@@ -48,6 +48,7 @@ class Node {
 	constructor(directive, children=[]) {
 		this.directive = directive;
 		this.children = children;
+		this.attributes = {};
 	}
 
 	add(node) {
