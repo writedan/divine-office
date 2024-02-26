@@ -51,12 +51,26 @@ class LiturgyContext {
 	}
 
 	async getPromisedField(field) {
-		let ctx = this;
-		return await new Promise((resolve, reject) => {
-			const loop = () => ctx.getField(field) !== undefined ? resolve(ctx.getField(field)) : setTimeout(loop);
-			loop();
-		})
-	}
+    let ctx = this;
+    return await new Promise((resolve, reject) => {
+        const timeout = 250;
+        const startTime = Date.now();
+
+        const loop = () => {
+            if (ctx.getField(field) !== undefined) {
+                resolve(ctx.getField(field));
+            } else {
+                if (Date.now() - startTime >= timeout) {
+                    reject(new Error(`Timeout: Unable to get field ${field} within ${timeout} milliseconds`));
+                } else {
+                    setTimeout(loop);
+                }
+            }
+        };
+
+        loop();
+    });
+}
 
 	async compile(node) {
 		try {
@@ -97,7 +111,13 @@ class LiturgyContext {
 
 			else if (node.directive.type == 'raw-gabc') {
 				let div = document.createElement('div');
-				//div.innerHTML = node.directive.args[0];
+				let headers = GabcParser.parseHeaders(node.directive.args[0].split('%%')[0]);
+				for (let header in headers) {
+					if (header.startsWith('responsory')) {
+						this.setField(header, 'resp/' + headers[header] + '.gabc')
+					} 
+				}
+
 				let uuid = uuidv4();
 				div.setAttribute('score-id', uuid);
 				this.setField('score:' + uuid, {
