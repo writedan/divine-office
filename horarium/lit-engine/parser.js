@@ -129,14 +129,14 @@ class Node {
 
 		else if (this.directive.type == 'include') {
 			let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])])).preprocess(ctx);
-			root.name = this.directive.args[0];
+			root.setAttribute('name', this.directive.args[0])
 			return root;
 
 		} else if (this.directive.type == 'import') {
 			let url = this.directive.args[0];
 			let new_ctx = new LiturgyContext(url, ctx);
 			let root = await (await new_ctx.parser).buildTree();
-			root.source = url;
+			root.setAttribute('source', url);
 			return root;
 
 		} else if (this.directive.type == 'if-include') {
