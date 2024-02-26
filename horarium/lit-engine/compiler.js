@@ -105,7 +105,8 @@ class LiturgyContext {
 			}
 
 			else if (node.directive.type == 'psalmody') {
-				let nodes = node.children[0].children; // theres a `import` and thus root node in between
+				console.log('PSALMODY',node);
+				let nodes = node.children; 
 				let contentWidth = document.getElementById('content').offsetWidth;
 				if (contentWidth < 800) {
 					// display in single list

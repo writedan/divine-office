@@ -60,10 +60,33 @@ class Node {
 		this.children.splice(this.children.indexOf(before), 0, node);
 	}
 
+	remove(node) {
+		node.root = undefined;
+		return this.children.splice(this.children.indexOf(node), 1);
+	}
+
+	async cleanTree() {
+		for (let node of this.children) {
+			node = await node;
+
+			if (node.directive.type == 'root') {
+				for (let subnode of node.children) {
+					this.addBefore(subnode, node);
+				}
+
+				this.remove(node);
+
+				await node.cleanTree();
+			}
+		}
+	}
+
 	async preprocess(ctx) {
 		if (!ctx) {
 			throw new Error('LiturgyContext is necessary to preprocess nodes.');
 		}
+
+		await this.cleanTree();
 
 		if (this.directive.type == 'score') {
 			return (await GabcParser.fromUrl(this.directive.args[0])).buildTree();
@@ -109,6 +132,7 @@ class Node {
 			return await root.preprocess(ctx);
 
 		} else if (this.directive.type == 'psalm') {
+			//console.log('PSALM', this)
 			let tone = await ctx.getPromisedField('last-tone'); // I really don't know if we can trust this value but it seems to work
 			let num = this.directive.args[0];
 			let root = new Node(Directive.new('root'));
@@ -117,11 +141,12 @@ class Node {
 			psalmody.add(new Node(Directive.new('import', ['psalter/' + num + '/' + resolveTone(tone) + '.lit'])))
 			root.add(psalmody);
 			psalmody = await psalmody.preprocess(ctx);
+			await root.cleanTree();
 			for (let idx in psalmody.children[0].children) {
 				let node = await psalmody.children[0].children[idx];
-				if (node.directive.type != 'text' && node.directive.type != 'gloria') {
-					psalmody.children[0].children.splice(idx, 1);
-					root.addBefore(node, psalmody);
+				if (node.directive.type == 'title') {
+					psalmody.children[0].children.splice(idx, 1); // i don't know why remove doesnt work but it doesnt
+					root.addBefore(node, psalmody)
 				}
 			}
 			return await root.preprocess(ctx);
@@ -139,7 +164,7 @@ class Node {
 			if (link == 'alleluia' || link == 'laus-tibi') {
 				return await new Node(Directive.new('score', ['common/gloria/' + link + '.gabc'])).preprocess(ctx);
 			} else {
-
+				return await new Node(Directive.new('import', ['common/gloria/' + link + '.lit'])).preprocess(ctx);
 			}
 
 		} else if (this.directive.type == 'begin-hymn') {
