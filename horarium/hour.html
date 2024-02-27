@@ -123,6 +123,11 @@
         content.appendChild(msg);
 
         let hourData = metadata.hours[urlParams.get('hour')]
+        if (!hourData) {
+            let lctx = new LiturgyContext();
+            content.removeChild(msg);
+            content.append(...lctx.handleError(new Error('We were unable to load the ordo. This hour/date is probably not implemented yet.')))
+        }
         let lctx = new LiturgyContext(hourData.order);
         //lctx.setField('responsory', 'dummy-value')
         lctx.setField('psalter', hourData.psalter);
