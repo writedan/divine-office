@@ -153,7 +153,10 @@ class Node {
 			root.add(new Node(Directive.new('title', ['Antiphon.'])))
 			root.add(new Node(Directive.new('score', [path])));
 			return root.unfold(this);
-		} 
+		} else if (this.directive.type == 'repeat-antiphon') {
+			this.setAttribute('antiphon', ctx.getField('last-antiphon'));
+			return this; //nothing further we can do synchronously
+		}
 
 		else if (this.directive.type == 'gabc') {
 			let gabc = `initial-style: 0;\ncentering-scheme:english;\n%%\n${this.directive.args[0]}`
@@ -313,7 +316,7 @@ class Node {
 			return await root.preprocess(ctx);
 
 		} else if (this.directive.type == 'repeat-antiphon') {
-			let antiphon = await ctx.getPromisedField('last-antiphon'); // ibid.
+			let antiphon = this.getAttribute('antiphon'); // ibid.
 			let partial = this.directive.args[1] == 'partial';
 			let gabcbase = "initial-style: 0;\ncentering-scheme: english;\n%%\n";
 			let rest = (await fetch_text('antiphon/' + antiphon + '.gabc')).split('%%')[1];
