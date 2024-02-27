@@ -139,7 +139,7 @@ class Node {
 		if (this.directive.type == 'if-include') {
 			let url = ctx.getField(this.directive.args[0]);
 			if (!url) {
-				return undefined;
+				return this; // its possible the field will be set during execution
 			}
 
 			return new Node(Directive.new('import', [url])).unfold(this);
@@ -311,7 +311,21 @@ class Node {
 			root = root.preprocess(ctx);
 			return root;
 
-		} else if (this.directive.type == 'import') {
+		} else if (this.directive.type == 'if-include') {
+			let url;
+			try {
+				url = await ctx.getPromisedField(this.directive.args[0]);
+			} catch (error) {
+				console.warn(`Field ${this.directive.args[0]} did not resolve within timeout.`)
+				console.warn('Ensure this was intended behavior.')
+				console.warn(error);
+				return undefined;
+			}
+
+			return new Node(Directive.new('import', [url])).unfold(ctx).preprocess(ctx);
+		}
+
+		else if (this.directive.type == 'import') {
 			let url = this.directive.args[0];
 			let new_ctx = new LiturgyContext(url, ctx);
 			let root = await (await new_ctx.parser).buildTree();
