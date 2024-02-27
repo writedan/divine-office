@@ -67,7 +67,6 @@ class Node {
 	}
 
 	childrenAfter(node) {
-		console.log(this.children.indexOf(node))
 		return this.children.slice(this.children.indexOf(node))
 	}
 
@@ -265,6 +264,27 @@ class Node {
 			return new Node(Directive.new('gabc', [gabc])).unfold(ctx);
 		}
 
+		else if (this.directive.type == 'yield') {
+			// yield must be given a unqie name in args[0]
+			// anything which comes after a yield in a given root must be grouped under it into a new resumable node
+			// resumable nodes recur only when a #resume is called with their name
+			// we will not presume to derive the name of a resumable
+			if (!this.directive.args[0]) {
+				throw new Error('Cannot yield without resumable name.');
+			}
+			
+			let nodes = this.root.childrenAfter(this);
+			nodes.shift(); // remove this
+			for (let n of nodes) {
+				this.root.remove(n);
+			}
+
+			let resumable = new Node(Directive.new('root'));
+			ctx.setField('resumable:' + this.directive.args[0], resumable);
+			resumable.children.push(...nodes);
+			return undefined;
+		}
+
 		this.children = this.children.map(n => {
 			if (!n.unfold) {
 				throw new Error('We cannot accept promises!');
@@ -286,8 +306,9 @@ class Node {
 		} 
 
 		else if (this.directive.type == 'include') {
-			let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])])).preprocess(ctx);
+			let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])]));
 			root.setAttribute('name', this.directive.args[0])
+			root = root.preprocess(ctx);
 			return root;
 
 		} else if (this.directive.type == 'import') {
@@ -324,6 +345,11 @@ class Node {
 			return await root.preprocess(ctx);
 
 		} 
+
+		else if (this.directive.type == 'resume') {
+			let resumable = await ctx.getPromisedField('resumable:' + this.directive.args[0]);
+			return resumable.unfold(ctx).preprocess(ctx);
+		}
 
 		for (let child_idx in this.children) {
 			if (!this.children[child_idx]) {

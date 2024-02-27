@@ -40,6 +40,9 @@ class LiturgyContext {
 
 	setField(field, value) {
 		this.parameters[field] = value;
+		if (this.base) {
+			this.base.setField(field, value);
+		}
 	}
 
 	getField(field) {
@@ -53,7 +56,7 @@ class LiturgyContext {
 	async getPromisedField(field) {
     let ctx = this;
     return await new Promise((resolve, reject) => {
-        const timeout = 250;
+        const timeout = 1000;
         const startTime = Date.now();
 
         const loop = () => {
