@@ -142,31 +142,32 @@ class LiturgyContext {
 					return output;
 				} else {
 					// display as table
-					let numRows = (nodes.length / 2);
+					let elements = (await this.compile(nodes[0])).flat();
+					let numRows = (elements.length / 2);
 					let left_column = [];
 					let right_column = [];
-					for (let i in nodes) {
+					for (let i in elements) {
+						let element = elements[i];
 						if (i < numRows) {
 							if (numRows % 2 != 0 && i == Math.floor(numRows)) {
-								let node = await this.compile(nodes[i]);
-								let v = node.textContent.split('*');
-								let v1 = node.cloneNode(true);
-								let v2 = node.cloneNode(true);
+								let v = element.textContent.split('*');
+								let v1 = element.cloneNode(true);
+								let v2 = element.cloneNode(true);
 								v1.textContent = v[0] + '*';
 								v2.textContent = v[1];
 								left_column.push(v1);
 								right_column.push(v2);
 							} else {
-								left_column.push(await this.compile(nodes[i]))
+								left_column.push(element)
 							}
 						} else {
-							right_column.push(await this.compile(nodes[i]));
+							right_column.push(element);
 						}
 					}
 
 					let table = document.createElement('table')
 					table.className = 'psalm';
-					numRows = Math.ceil(nodes.length / 2);
+					numRows = Math.ceil(elements.length / 2);
 					for (let i = 0; i < numRows; i++) {
 						let left = left_column[i];
 						let right = right_column[i];

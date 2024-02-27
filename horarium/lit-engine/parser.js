@@ -87,6 +87,19 @@ class Node {
 		}
 	}
 
+	syncCleanTree() {
+		for (let node of this.children) {
+			if (node.directive.type == 'root') {
+				for (let subnode of node.children) {
+					this.addBefore(subnode, node);
+				}
+
+				this.remove(node);
+				node.syncCleanTree();
+			}
+		}
+	}
+
 	getAttribute(attr) {
 		return this.attributes[attr]
 	}
@@ -121,6 +134,8 @@ class Node {
 		if (!ctx) {
 			throw new Error('LiturgyContext is necessary to unfold nodes.');
 		}
+
+		this.syncCleanTree();
 
 		if (this.directive.type == 'if-include') {
 			let url = ctx.getField(this.directive.args[0]);
@@ -289,7 +304,11 @@ class Node {
 			root.add(psalmody);
 			psalmody = await psalmody.preprocess(ctx);
 			await root.cleanTree();
-			console.log('PSALM', root)
+			for (let node of root.children[1].children[0].children) {
+				if ((await node).directive.type == 'title') {
+					root.children[1].children[0].remove(node);
+				}
+			} 
 
 			return await root.preprocess(ctx);
 
