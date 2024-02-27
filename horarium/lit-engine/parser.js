@@ -345,6 +345,7 @@ class Node {
 			for (let node of root.children[1].children[0].children) {
 				if ((await node).directive.type == 'title') {
 					root.children[1].children[0].remove(node);
+					root.addBefore(node, psalmody);
 				}
 			} 
 
