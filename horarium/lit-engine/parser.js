@@ -117,36 +117,18 @@ class Node {
 	    });
 	}
 
-	async preprocess(ctx) {
+	unfold(ctx) {
 		if (!ctx) {
-			throw new Error('LiturgyContext is necessary to preprocess nodes.');
+			throw new Error('LiturgyContext is necessary to unfold nodes.');
 		}
 
-		await this.cleanTree();
-
-		if (this.directive.type == 'score') {
-			return (await GabcParser.fromUrl(this.directive.args[0])).buildTree();
-		} 
-
-		else if (this.directive.type == 'include') {
-			let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])])).preprocess(ctx);
-			root.setAttribute('name', this.directive.args[0])
-			return root;
-
-		} else if (this.directive.type == 'import') {
-			let url = this.directive.args[0];
-			let new_ctx = new LiturgyContext(url, ctx);
-			let root = await (await new_ctx.parser).buildTree();
-			root.setAttribute('source', url);
-			return root;
-
-		} else if (this.directive.type == 'if-include') {
+		if (this.directive.type == 'if-include') {
 			let url = ctx.getField(this.directive.args[0]);
 			if (!url) {
 				return undefined;
-			} else {
-				return await new Node(Directive.new('import', [url])).preprocess(ctx);
 			}
+
+			return new Node(Directive.new('import', [url])).unfold(this);
 		}
 
 		else if (this.directive.type == 'antiphon') {
@@ -155,74 +137,55 @@ class Node {
 			let root = new Node(Directive.new('root'));
 			root.add(new Node(Directive.new('title', ['Antiphon.'])))
 			root.add(new Node(Directive.new('score', [path])));
-			return await root.preprocess(ctx);
+			return root.unfold(this);
+		} 
 
-		} else if (this.directive.type == 'gabc') {
+		else if (this.directive.type == 'gabc') {
 			let gabc = `initial-style: 0;\ncentering-scheme:english;\n%%\n${this.directive.args[0]}`
 			let root = new Node(Directive.new('raw-gabc', [gabc]));
-			return await root.preprocess(ctx);
+			return root.unfold(this);
+		}
 
-		} else if (this.directive.type == 'tone') {
+		else if (this.directive.type == 'tone') {
 			ctx.setField('last-tone', this.directive.args[0]);
 			let path = 'tones/' + this.directive.args[0] + '.gabc';
 			let root = new Node(Directive.new('root'));
 			root.add(new Node(Directive.new('score', [path])));
-			return await root.preprocess(ctx);
+			return root.unfold(this);
+		}
 
-		} else if (this.directive.type == 'psalm') {
-			//console.log('PSALM', this)
-			let tone = await ctx.getPromisedField('last-tone'); // I really don't know if we can trust this value but it seems to work
-			let num = this.directive.args[0];
-			let root = new Node(Directive.new('root'));
-			root.add(new Node(Directive.new('title', ['Psalm ' + num + '.'])));
-			let psalmody = new Node(Directive.new('psalmody'))
-			psalmody.add(new Node(Directive.new('import', ['psalter/' + num + '/' + resolveTone(tone) + '.lit'])))
-			root.add(psalmody);
-			psalmody = await psalmody.preprocess(ctx);
-			await root.cleanTree();
-			for (let idx in psalmody.children[0].children) {
-				let node = await psalmody.children[0].children[idx];
-				if (node.directive.type == 'title') {
-					psalmody.children[0].children.splice(idx, 1); // i don't know why remove doesnt work but it doesnt
-					root.addBefore(node, psalmody)
-				}
-			}
-			return await root.preprocess(ctx);
+		else if (this.directive.type == 'psalm') {
+			let tone = ctx.getField('last-tone');
+			this.setAttribute('tone', tone);
+			return this; // we can do nothing further synchronously
+		}
 
-		} else if (this.directive.type == 'repeat-antiphon') {
-			let antiphon = await ctx.getPromisedField('last-antiphon'); // ibid.
-			let partial = this.directive.args[1] == 'partial';
-			let gabcbase = "initial-style: 0;\ncentering-scheme: english;\n%%\n";
-			let rest = (await fetch_text('antiphon/' + antiphon + '.gabc')).split('%%')[1];
-			let root = new Node(Directive.new('raw-gabc', [gabcbase + rest]))
-			return await root.preprocess(ctx);
-
-		} else if (this.directive.type == 'gloria') {
+		else if (this.directive.type == 'gloria') {
 			let link = this.directive.args[0];
 			if (link == 'alleluia' || link == 'laus-tibi') {
-				return await new Node(Directive.new('score', ['common/gloria/' + link + '.gabc'])).preprocess(ctx);
+				return new Node(Directive.new('score', ['common/gloria/' + link + '.gabc'])).unfold(ctx);
 			} else {
-				return await new Node(Directive.new('import', ['common/gloria/' + link + '.lit'])).preprocess(ctx);
+				return new Node(Directive.new('import', ['common/gloria/' + link + '.lit'])).unfold(ctx);
 			}
+		}
 
-		} else if (this.directive.type == 'begin-hymn') {
+		else if (this.directive.type == 'begin-hymn') {
 			let node = new Node(Directive.new('hymn'))
 			ctx.setField('hymn', node);
 			return undefined;
 		}
 
 		else if (this.directive.type == 'clef' || this.directive.type == 'melody' || this.directive.type == 'verse' || this.directive.type == 'make' || this.directive.type == 'amen') {
-			let node = await ctx.getPromisedField('hymn');
+			let node = ctx.getField('hymn');
 			node.add(this);
 			return undefined;
 		}
 
 		else if (this.directive.type == 'end-hymn') {
-			return await (await ctx.getPromisedField('hymn')).preprocess(ctx);
+			return ctx.getField('hymn').unfold(ctx);
 		}
 
 		else if (this.directive.type == 'hymn') {
-			await this.cleanTree();
 			let melody;
 			let verses = [];
 			let combined = [];
@@ -281,8 +244,64 @@ class Node {
 				}
 			}
 
-			return await new Node(Directive.new('gabc', [gabc])).preprocess(ctx);
+			return new Node(Directive.new('gabc', [gabc])).unfold(ctx);
 		}
+
+		this.children = this.children.map(n => {
+			if (!n.unfold) {
+				throw new Error('We cannot accept promises!');
+			}
+
+			return n.unfold(ctx);
+		})
+
+		return this;
+	}
+
+	async preprocess(ctx) {
+		if (!ctx) {
+			throw new Error('LiturgyContext is necessary to preprocess nodes.');
+		}
+
+		if (this.directive.type == 'score') {
+			return (await GabcParser.fromUrl(this.directive.args[0])).buildTree();
+		} 
+
+		else if (this.directive.type == 'include') {
+			let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])])).preprocess(ctx);
+			root.setAttribute('name', this.directive.args[0])
+			return root;
+
+		} else if (this.directive.type == 'import') {
+			let url = this.directive.args[0];
+			let new_ctx = new LiturgyContext(url, ctx);
+			let root = await (await new_ctx.parser).buildTree();
+			root.setAttribute('source', url);
+			return root;
+
+		} else if (this.directive.type == 'psalm') {
+			let tone = this.getAttribute('tone');
+			let num = this.directive.args[0];
+			let root = new Node(Directive.new('root'));
+			root.add(new Node(Directive.new('title', ['Psalm ' + num + '.'])));
+			let psalmody = new Node(Directive.new('psalmody'))
+			psalmody.add(new Node(Directive.new('import', ['psalter/' + num + '/' + resolveTone(tone) + '.lit'])))
+			root.add(psalmody);
+			psalmody = await psalmody.preprocess(ctx);
+			await root.cleanTree();
+			console.log('PSALM', root)
+
+			return await root.preprocess(ctx);
+
+		} else if (this.directive.type == 'repeat-antiphon') {
+			let antiphon = await ctx.getPromisedField('last-antiphon'); // ibid.
+			let partial = this.directive.args[1] == 'partial';
+			let gabcbase = "initial-style: 0;\ncentering-scheme: english;\n%%\n";
+			let rest = (await fetch_text('antiphon/' + antiphon + '.gabc')).split('%%')[1];
+			let root = new Node(Directive.new('raw-gabc', [gabcbase + rest]))
+			return await root.preprocess(ctx);
+
+		} 
 
 		for (let child_idx in this.children) {
 			if (!this.children[child_idx]) {
@@ -322,6 +341,9 @@ class LiturgyParser {
 		});
 
 		let ctx = this.ctx;
+		root.unfold(ctx);
+		root.children = root.children.filter(n => n!==undefined);
+
 		root.children = root.children.map(async n => {
 			return n.preprocess(ctx);
 			// some nodes need to be preprocessed
