@@ -167,9 +167,9 @@ function vigils_commons(day) {
 			'blessing-6': 'common/vigils/2nd-nocturn/blessing-3.gabc',
 
 			'absolution-3': 'common/vigils/3rd-nocturn/absolution.gabc',
-			'blessing-7': 'common/vigils/3rd-nocturn/blessing-1.gabc',
-			'blessing-8': 'common/vigils/3rd-nocturn/blessing-2.gabc',
-			'blessing-9': 'common/vigils/3rd-nocturn/blessing-3.gabc',
+			'blessing-7': 'common/vigils/3rd-nocturn/blessing-1(sunday).gabc',
+			'blessing-8': 'common/vigils/3rd-nocturn/blessing-2(sunday).gabc',
+			'blessing-9': 'common/vigils/3rd-nocturn/blessing-3(sunday).gabc',
 		}
 
 		case 'friday': {
