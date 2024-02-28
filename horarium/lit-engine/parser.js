@@ -275,14 +275,15 @@ class Node {
 				}
 				
 				let nodes = this.root.childrenAfter(this);
+				let resumable = new Node(Directive.new('root'));
 				nodes.shift(); // remove this
 				for (let n of nodes) {
 					this.root.remove(n);
+					resumable.add(n);
 				}
 
-				let resumable = new Node(Directive.new('root'));
 				ctx.setField('resumable:' + this.directive.args[0], resumable);
-				resumable.children.push(...nodes);
+				//resumable.children.push(...nodes);
 				//resumable = resumable.unfold(ctx).preprocess(ctx);
 				return undefined;
 			}
@@ -373,8 +374,9 @@ class Node {
 			}
 
 			for (let child_idx in this.children) {
-				if (!this.children[child_idx]) {
+				if (!(this.children[child_idx])) {
 					this.children.splice(child_idx, 1);
+					continue;
 				}
 
 				this.children[child_idx] = await (await this.children[child_idx]).preprocess(ctx);
