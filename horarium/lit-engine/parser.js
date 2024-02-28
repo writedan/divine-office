@@ -283,7 +283,7 @@ class Node {
 				let resumable = new Node(Directive.new('root'));
 				ctx.setField('resumable:' + this.directive.args[0], resumable);
 				resumable.children.push(...nodes);
-				resumable = resumable.unfold(ctx).preprocess(ctx);
+				//resumable = resumable.unfold(ctx).preprocess(ctx);
 				return undefined;
 			}
 
