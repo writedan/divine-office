@@ -192,6 +192,10 @@ class LiturgyContext {
 				}
 			}
 
+			else if (node.directive.type == 'error') {
+				return this.handleError(node.directive.args[0])
+			}
+
 			throw new Error('Unknown node directive: ' + node.directive.type + '[' + node.directive.args +']')
 		} catch (error) {
 			return this.handleError(error)

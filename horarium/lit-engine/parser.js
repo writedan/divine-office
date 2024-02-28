@@ -130,251 +130,260 @@ class Node {
 	}
 
 	unfold(ctx) {
-		if (!ctx) {
-			throw new Error('LiturgyContext is necessary to unfold nodes.');
-		}
-
-		this.syncCleanTree();
-
-		if (this.directive.type == 'if-include') {
-			let url = ctx.getField(this.directive.args[0]);
-			if (!url) {
-				return this; // its possible the field will be set during execution
+		try {
+			if (!ctx) {
+				throw new Error('LiturgyContext is necessary to unfold nodes.');
 			}
 
-			return new Node(Directive.new('import', [url])).unfold(this);
-		}
+			this.syncCleanTree();
 
-		else if (this.directive.type == 'antiphon') {
-			let path = 'antiphon/' + this.directive.args[0] + '.gabc';
-			ctx.setField('last-antiphon', this.directive.args[0])
-			let root = new Node(Directive.new('root'));
-			root.add(new Node(Directive.new('title', ['Antiphon.'])))
-			root.add(new Node(Directive.new('score', [path])));
-			return root.unfold(this);
-		} else if (this.directive.type == 'repeat-antiphon') {
-			this.setAttribute('antiphon', ctx.getField('last-antiphon'));
-			return this; //nothing further we can do synchronously
-		}
+			if (this.directive.type == 'if-include') {
+				let url = ctx.getField(this.directive.args[0]);
+				if (!url) {
+					return this; // its possible the field will be set during execution
+				}
 
-		else if (this.directive.type == 'gabc') {
-			let gabc = `initial-style: 0;\ncentering-scheme:english;\n%%\n${this.directive.args[0]}`
-			let root = new Node(Directive.new('raw-gabc', [gabc]));
-			return root.unfold(this);
-		}
-
-		else if (this.directive.type == 'tone') {
-			ctx.setField('last-tone', this.directive.args[0]);
-			let path = 'tones/' + this.directive.args[0] + '.gabc';
-			let root = new Node(Directive.new('root'));
-			root.add(new Node(Directive.new('score', [path])));
-			return root.unfold(this);
-		}
-
-		else if (this.directive.type == 'psalm') {
-			let tone = ctx.getField('last-tone');
-			this.setAttribute('tone', tone);
-			return this; // we can do nothing further synchronously
-		}
-
-		else if (this.directive.type == 'gloria') {
-			let link = this.directive.args[0];
-			if (link == 'alleluia' || link == 'laus-tibi') {
-				return new Node(Directive.new('score', ['common/gloria/' + link + '.gabc'])).unfold(ctx);
-			} else {
-				return new Node(Directive.new('import', ['common/gloria/' + link + '.lit'])).unfold(ctx);
+				return new Node(Directive.new('import', [url])).unfold(this);
 			}
-		}
 
-		else if (this.directive.type == 'begin-hymn') {
-			let node = new Node(Directive.new('hymn'))
-			ctx.setField('hymn', node);
-			return undefined;
-		}
+			else if (this.directive.type == 'antiphon') {
+				let path = 'antiphon/' + this.directive.args[0] + '.gabc';
+				ctx.setField('last-antiphon', this.directive.args[0])
+				let root = new Node(Directive.new('root'));
+				root.add(new Node(Directive.new('title', ['Antiphon.'])))
+				root.add(new Node(Directive.new('score', [path])));
+				return root.unfold(this);
+			} else if (this.directive.type == 'repeat-antiphon') {
+				this.setAttribute('antiphon', ctx.getField('last-antiphon'));
+				return this; //nothing further we can do synchronously
+			}
 
-		else if (this.directive.type == 'clef' || this.directive.type == 'melody' || this.directive.type == 'verse' || this.directive.type == 'make' || this.directive.type == 'amen') {
-			let node = ctx.getField('hymn');
-			node.add(this);
-			return undefined;
-		}
+			else if (this.directive.type == 'gabc') {
+				let gabc = `initial-style: 0;\ncentering-scheme:english;\n%%\n${this.directive.args[0]}`
+				let root = new Node(Directive.new('raw-gabc', [gabc]));
+				return root.unfold(this);
+			}
 
-		else if (this.directive.type == 'end-hymn') {
-			return ctx.getField('hymn').unfold(ctx);
-		}
+			else if (this.directive.type == 'tone') {
+				ctx.setField('last-tone', this.directive.args[0]);
+				let path = 'tones/' + this.directive.args[0] + '.gabc';
+				let root = new Node(Directive.new('root'));
+				root.add(new Node(Directive.new('score', [path])));
+				return root.unfold(this);
+			}
 
-		else if (this.directive.type == 'hymn') {
-			let melody;
-			let verses = [];
-			let combined = [];
-			let clef;
-			let vlen;
-			for (let n of this.children) {
-				if (n.directive.type == 'clef') {
-					clef = n.directive.args[0];
-				} else if (n.directive.type == 'melody') {
-					melody = n.directive.args;
-				} else if (n.directive.type == 'verse') {
-					verses.push(n.directive.args);
-				} else if (n.directive.type == 'amen') {
-					melody.push('::')
-					melody.push(n.directive.args[0]);
-					melody.push(n.directive.args[1]);
-					verses[verses.length - 1].push(' ')
-					verses[verses.length - 1].push('A-')
-					verses[verses.length - 1].push('men.')
-				} else if (n.directive.type == 'make') {
-					for (let v of verses) {
-						combined.push([v, melody]);
-					}
+			else if (this.directive.type == 'psalm') {
+				let tone = ctx.getField('last-tone');
+				this.setAttribute('tone', tone);
+				return this; // we can do nothing further synchronously
+			}
 
-					vlen = verses.length;
-					verses = [];
+			else if (this.directive.type == 'gloria') {
+				let link = this.directive.args[0];
+				if (link == 'alleluia' || link == 'laus-tibi') {
+					return new Node(Directive.new('score', ['common/gloria/' + link + '.gabc'])).unfold(ctx);
 				} else {
-					throw new Error('Unknown directive while parsing hymn: ' + n.directive.type + '['  + n.directive.args + ']');
+					return new Node(Directive.new('import', ['common/gloria/' + link + '.lit'])).unfold(ctx);
 				}
 			}
 
-			let gabc = '(' + clef + ') ';
-
-			for (let vi of Array(vlen).keys()) {
-				for (let i = 0; i < combined.length; i+= vlen) {
-					let v = combined[vi + i];
-					let verse = v[0];
-					let melody = v[1];
-
-					for (let verse_idx in verse) {
-						let syllable = verse[verse_idx];
-						let notes = melody[verse_idx];
-						if (verse_idx == 0 && i == 0) {
-							gabc += (vi + 1) + '. ' + (vi == 0 ? '' : ' (::)');
-						}
-
-						let continuous = syllable.endsWith('-')
-						gabc += (continuous ? syllable : syllable + ' ') + '(' + notes + ')';
-					}
-
-					if ((i + vlen) >= combined.length) {
-						continue;
-					}
-
-					gabc += (i % 2 == 0) ? '(;)' : '(,)';
-				}
-			}
-
-			return new Node(Directive.new('gabc', [gabc])).unfold(ctx);
-		}
-
-		else if (this.directive.type == 'yield') {
-			// yield must be given a unqie name in args[0]
-			// anything which comes after a yield in a given root must be grouped under it into a new resumable node
-			// resumable nodes recur only when a #resume is called with their name
-			// we will not presume to derive the name of a resumable
-			if (!this.directive.args[0]) {
-				throw new Error('Cannot yield without resumable name.');
-			}
-			
-			let nodes = this.root.childrenAfter(this);
-			nodes.shift(); // remove this
-			for (let n of nodes) {
-				this.root.remove(n);
-			}
-
-			let resumable = new Node(Directive.new('root'));
-			ctx.setField('resumable:' + this.directive.args[0], resumable);
-			resumable.children.push(...nodes);
-			return undefined;
-		}
-
-		this.children = this.children.map(n => {
-			if (!n.unfold) {
-				throw new Error('We cannot accept promises!');
-			}
-
-			return n.unfold(ctx);
-		})
-
-		return this;
-	}
-
-	async preprocess(ctx) {
-		if (!ctx) {
-			throw new Error('LiturgyContext is necessary to preprocess nodes.');
-		}
-
-		if (this.directive.type == 'score') {
-			return (await GabcParser.fromUrl(this.directive.args[0])).buildTree();
-		} 
-
-		else if (this.directive.type == 'include') {
-			let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])]));
-			root.setAttribute('name', this.directive.args[0])
-			root = root.preprocess(ctx);
-			return root;
-
-		} else if (this.directive.type == 'if-include') {
-			let url;
-			try {
-				url = await ctx.getPromisedField(this.directive.args[0]);
-			} catch (error) {
-				console.warn(`Field ${this.directive.args[0]} did not resolve within timeout.`)
-				console.warn('Ensure this was intended behavior.')
-				console.warn(error);
+			else if (this.directive.type == 'begin-hymn') {
+				let node = new Node(Directive.new('hymn'))
+				ctx.setField('hymn', node);
 				return undefined;
 			}
 
-			return new Node(Directive.new('import', [url])).unfold(ctx).preprocess(ctx);
-		}
-
-		else if (this.directive.type == 'import') {
-			let url = this.directive.args[0];
-			let new_ctx = new LiturgyContext(url, ctx);
-			let root = await (await new_ctx.parser).buildTree();
-			root.setAttribute('source', url);
-			return root;
-
-		} else if (this.directive.type == 'psalm') {
-			let tone = this.getAttribute('tone');
-			let num = this.directive.args[0];
-			let root = new Node(Directive.new('root'));
-			root.add(new Node(Directive.new('title', ['Psalm ' + num + '.'])));
-			let psalmody = new Node(Directive.new('psalmody'))
-			psalmody.add(new Node(Directive.new('import', ['psalter/' + num + '/' + resolveTone(tone) + '.lit'])))
-			root.add(psalmody);
-			psalmody = await psalmody.preprocess(ctx);
-			await root.cleanTree();
-			for (let node of root.children[1].children[0].children) {
-				if ((await node).directive.type == 'title') {
-					root.children[1].children[0].remove(node);
-					root.addBefore(node, psalmody);
-				}
-			} 
-
-			return await root.preprocess(ctx);
-
-		} else if (this.directive.type == 'repeat-antiphon') {
-			let antiphon = this.getAttribute('antiphon'); // ibid.
-			let partial = this.directive.args[1] == 'partial';
-			let gabcbase = "initial-style: 0;\ncentering-scheme: english;\n%%\n";
-			let rest = (await fetch_text('antiphon/' + antiphon + '.gabc')).split('%%')[1];
-			let root = new Node(Directive.new('raw-gabc', [gabcbase + rest]))
-			return await root.preprocess(ctx);
-
-		} 
-
-		else if (this.directive.type == 'resume') {
-			let resumable = await ctx.getPromisedField('resumable:' + this.directive.args[0]);
-			return resumable.unfold(ctx).preprocess(ctx);
-		}
-
-		for (let child_idx in this.children) {
-			if (!this.children[child_idx]) {
-				this.children.splice(child_idx, 1);
+			else if (this.directive.type == 'clef' || this.directive.type == 'melody' || this.directive.type == 'verse' || this.directive.type == 'make' || this.directive.type == 'amen') {
+				let node = ctx.getField('hymn');
+				node.add(this);
+				return undefined;
 			}
 
-			this.children[child_idx] = await (await this.children[child_idx]).preprocess(ctx);
-		}
+			else if (this.directive.type == 'end-hymn') {
+				return ctx.getField('hymn').unfold(ctx);
+			}
 
-		return this;
+			else if (this.directive.type == 'hymn') {
+				let melody;
+				let verses = [];
+				let combined = [];
+				let clef;
+				let vlen;
+				for (let n of this.children) {
+					if (n.directive.type == 'clef') {
+						clef = n.directive.args[0];
+					} else if (n.directive.type == 'melody') {
+						melody = n.directive.args;
+					} else if (n.directive.type == 'verse') {
+						verses.push(n.directive.args);
+					} else if (n.directive.type == 'amen') {
+						melody.push('::')
+						melody.push(n.directive.args[0]);
+						melody.push(n.directive.args[1]);
+						verses[verses.length - 1].push(' ')
+						verses[verses.length - 1].push('A-')
+						verses[verses.length - 1].push('men.')
+					} else if (n.directive.type == 'make') {
+						for (let v of verses) {
+							combined.push([v, melody]);
+						}
+
+						vlen = verses.length;
+						verses = [];
+					} else {
+						throw new Error('Unknown directive while parsing hymn: ' + n.directive.type + '['  + n.directive.args + ']');
+					}
+				}
+
+				let gabc = '(' + clef + ') ';
+
+				for (let vi of Array(vlen).keys()) {
+					for (let i = 0; i < combined.length; i+= vlen) {
+						let v = combined[vi + i];
+						let verse = v[0];
+						let melody = v[1];
+
+						for (let verse_idx in verse) {
+							let syllable = verse[verse_idx];
+							let notes = melody[verse_idx];
+							if (verse_idx == 0 && i == 0) {
+								gabc += (vi + 1) + '. ' + (vi == 0 ? '' : ' (::)');
+							}
+
+							let continuous = syllable.endsWith('-')
+							gabc += (continuous ? syllable : syllable + ' ') + '(' + notes + ')';
+						}
+
+						if ((i + vlen) >= combined.length) {
+							continue;
+						}
+
+						gabc += (i % 2 == 0) ? '(;)' : '(,)';
+					}
+				}
+
+				return new Node(Directive.new('gabc', [gabc])).unfold(ctx);
+			}
+
+			else if (this.directive.type == 'yield') {
+				// yield must be given a unqie name in args[0]
+				// anything which comes after a yield in a given root must be grouped under it into a new resumable node
+				// resumable nodes recur only when a #resume is called with their name
+				// we will not presume to derive the name of a resumable
+				if (!this.directive.args[0]) {
+					throw new Error('Cannot yield without resumable name.');
+				}
+				
+				let nodes = this.root.childrenAfter(this);
+				nodes.shift(); // remove this
+				for (let n of nodes) {
+					this.root.remove(n);
+				}
+
+				let resumable = new Node(Directive.new('root'));
+				ctx.setField('resumable:' + this.directive.args[0], resumable);
+				resumable.children.push(...nodes);
+				resumable = resumable.unfold(ctx).preprocess(ctx);
+				return undefined;
+			}
+
+			this.children = this.children.map(n => {
+				if (!n.unfold) {
+					throw new Error('We cannot accept promises!');
+				}
+
+				return n.unfold(ctx);
+			})
+
+			return this;
+		} catch (error) {
+			return new Node(Directive.new('error', [error]))
+		}
+	}
+
+	async preprocess(ctx) {
+		try {
+			if (!ctx) {
+				throw new Error('LiturgyContext is necessary to preprocess nodes.');
+			}
+
+			if (this.directive.type == 'score') {
+				return (await GabcParser.fromUrl(this.directive.args[0])).buildTree();
+			} 
+
+			else if (this.directive.type == 'include') {
+				let root = await new Node(Directive.new('import', [await ctx.getPromisedField(this.directive.args[0])]));
+				root.setAttribute('name', this.directive.args[0])
+				root = root.preprocess(ctx);
+				return root;
+
+			} else if (this.directive.type == 'if-include') {
+				let url;
+				try {
+					url = await ctx.getPromisedField(this.directive.args[0]);
+				} catch (error) {
+					console.warn(`Field ${this.directive.args[0]} did not resolve within timeout.`)
+					console.warn('Ensure this was intended behavior.')
+					console.warn(error);
+					return undefined;
+				}
+
+				return new Node(Directive.new('import', [url])).unfold(ctx).preprocess(ctx);
+			}
+
+			else if (this.directive.type == 'import') {
+				let url = this.directive.args[0];
+				let new_ctx = new LiturgyContext(url, ctx);
+				let root = await (await new_ctx.parser).buildTree();
+				root.setAttribute('source', url);
+				return root;
+
+			} else if (this.directive.type == 'psalm') {
+				let tone = this.getAttribute('tone');
+				let num = this.directive.args[0];
+				let root = new Node(Directive.new('root'));
+				root.add(new Node(Directive.new('title', ['Psalm ' + num + '.'])));
+				let psalmody = new Node(Directive.new('psalmody'))
+				psalmody.add(new Node(Directive.new('import', ['psalter/' + num + '/' + resolveTone(tone) + '.lit'])))
+				root.add(psalmody);
+				psalmody = await psalmody.preprocess(ctx);
+				await root.cleanTree();
+				for (let node of root.children[1].children[0].children) {
+					if ((await node).directive.type == 'title') {
+						root.children[1].children[0].remove(node);
+						root.addBefore(node, psalmody);
+					}
+				} 
+
+				return await root.preprocess(ctx);
+
+			} else if (this.directive.type == 'repeat-antiphon') {
+				let antiphon = this.getAttribute('antiphon'); // ibid.
+				let partial = this.directive.args[1] == 'partial';
+				let gabcbase = "initial-style: 0;\ncentering-scheme: english;\n%%\n";
+				let rest = (await fetch_text('antiphon/' + antiphon + '.gabc')).split('%%')[1];
+				let root = new Node(Directive.new('raw-gabc', [gabcbase + rest]))
+				return await root.preprocess(ctx);
+
+			} 
+
+			else if (this.directive.type == 'resume') {
+				let resumable = await ctx.getPromisedField('resumable:' + this.directive.args[0]);
+				return await (await resumable).unfold(ctx).preprocess(ctx);
+			}
+
+			for (let child_idx in this.children) {
+				if (!this.children[child_idx]) {
+					this.children.splice(child_idx, 1);
+				}
+
+				this.children[child_idx] = await (await this.children[child_idx]).preprocess(ctx);
+			}
+
+			return this;
+		} catch (error) {
+			return new Node(Directive.new('error', [error]))
+		}
 	}
 }
 
