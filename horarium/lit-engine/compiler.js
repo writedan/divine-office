@@ -118,7 +118,9 @@ class LiturgyContext {
 				for (let header in headers) {
 					if (header.startsWith('responsory')) {
 						this.setField(header, 'resp/' + headers[header] + '.gabc')
-					} 
+					} else if (header == 'gospel-blessing') {
+						this.setField(header, 'common/vigils/3rd-nocturn/matthew.gabc');
+					}
 				}
 
 				let uuid = uuidv4();
