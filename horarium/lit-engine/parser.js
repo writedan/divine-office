@@ -153,9 +153,16 @@ class Node {
 				root.add(new Node(Directive.new('title', ['Antiphon.'])))
 				root.add(new Node(Directive.new('score', [path])));
 				return root.unfold(this);
-			} else if (this.directive.type == 'repeat-antiphon') {
+			} 
+
+			else if (this.directive.type == 'repeat-antiphon') {
 				this.setAttribute('antiphon', ctx.getField('last-antiphon'));
 				return this; //nothing further we can do synchronously
+			}
+
+			else if (this.directive.type == 'define') {
+				ctx.setField(this.directive.args[0], this.directive.args[1]);
+				return undefined;
 			}
 
 			else if (this.directive.type == 'gabc') {
