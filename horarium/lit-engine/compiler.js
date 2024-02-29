@@ -56,7 +56,7 @@ class LiturgyContext {
 	async getPromisedField(field) {
     let ctx = this;
     return await new Promise((resolve, reject) => {
-        const timeout = 250;
+        const timeout = 2000;
         const startTime = Date.now();
 
         const loop = () => {

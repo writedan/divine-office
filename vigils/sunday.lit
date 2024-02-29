@@ -51,10 +51,12 @@
 
 #gabc "(c3) <sp>v</sp> I(h) re(h)mem(h)bered(h) thy(h) name(h) in(h) the(h) night,(h) O(f) Lord.(g) <sp>r</sp>(::) And(h) have(h) kept(h) thy(f) law.(f)"
 
+
+
+
+
+
 #yield "2nd-nocturn"
-
-
-
 
 #antiphon "bonorum-meorum"
 #tone "3-iv" "c3"
@@ -72,3 +74,27 @@
 #repeat-antiphon
 
 #gabc "(c3) <sp>v</sp> At(h) mid(h)night(h) I(h) a(h)rose(h) to(h) give(h) thanks(h) un(h)to(f) thee.(g) <sp>r</sp>(::) For(h) the(h) judg(h)ments(h) of(h) thy(h) right(h)eous(f)ness.(f)"
+
+
+
+
+
+
+#yield "3rd-nocturn"
+
+#antiphon "preceptum-domini"
+#tone "4-i" "c4"
+#psalm "18"
+#repeat-antiphon
+
+#antiphon "impleat-dominus"
+#tone "4-viii" "c4"
+#psalm "19"
+#repeat-antiphon
+
+#antiphon "domine-in-virtute"
+#tone "8-i" "c4"
+#psalm "20"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> Be(h) thou(h) ex(h)alt(h)ed,(h) O(h) Lord,(h) in(h) thine(h) own(f) strength.(g) <sp>r</sp>(::) So(h) will(h) we(h) sing,(h) and(h) praise(h) thy(h) pow(h)er.(f)"
