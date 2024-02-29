@@ -113,7 +113,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						hymn: 'hymn/summi-largitor-premii.lit',
 						kyrie: kyrie,
 						collect: collectpath + 'collect.gabc',
-						gospel: 'propers/lent/' + w + '/' + d + '/vigils/gospel.gabc'
+						gospel: 'propers/lent/' + w + '/' + d + '/gospel.lit'
 					}),
 				},
 
