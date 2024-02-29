@@ -112,7 +112,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						invitatory: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/vigils/invitatory.lit' : vigils_commons(d).invitatory,
 						hymn: 'hymn/summi-largitor-premii.lit',
 						kyrie: kyrie,
-						collect: collectpath + 'collect.gabc'
+						collect: collectpath + 'collect.gabc',
+						gospel: 'propers/lent/' + w + '/' + d + '/vigils/gospel.gabc'
 					}),
 				},
 
