@@ -312,15 +312,23 @@ Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will 
 
 #include "gospel-blessing"
 
+#instruction "The congregation responds."
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
 #instruction "We assume this is not a clerical celebration, else let a deacon proclaim the Gospel in the usual manner. But otherwise the lector begins."
 
 #gabc "(c3) <sp>v</sp> Les(h)son(h) from(h) the(h) ho(h)ly(h) Gos(h)pel(h) ac(h)cord(h)ing(h) to(h) Saint(h) (::) Mark(h) the(h) E(h)van(h)ge(d)list.(d) (::) Mat(h)thew(h) the(h) A(h)post(h)le.(d) (::) Luke(h) the(h) E(h)van(h)ge(d)list.(d) (::) John(h) the(h) A(h)post(h)le.(d)"
 
-#instruction "The liturgical chanting of the Gospel is reserved to clergy. Thus, let it be merely read."
+#instruction "The liturgical chanting of the Gospel is reserved to clergy. Thus, let it be merely read in a recto tono chant."
 
 #include "gospel"
 
-#instruction "The congregation responds with this canticle."
+#instruction "The congregation responds."
+
+#gabc "(c3) <sp>r</sp> Praise(h) be(h) to(h) thee,(h) O(h) Christ(h) our(f) God.(f)"
+
+#instruction "Then this canticle is sung; in clerical celebrations while the Evangeliary is returned to its place."
 
 #score "common/te-decet-laus.gabc"
 
