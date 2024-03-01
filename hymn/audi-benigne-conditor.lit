@@ -1,0 +1,41 @@
+#title "Hymn."
+#title "Audo benigne conditor"
+
+#begin-hymn
+
+	#clef "f3"
+
+	#melody "fe" "fv" "hg" "hv" "fg" "gf" "ef" "fv"
+	#verse "O" "kind" "Cre-" "a-" "tor," "bow" "thine" "ear"
+	#verse "Our" "hearts" "are" "o-" "pen," "Lord," "to" "thee:"
+	#verse "Our" "sins" "are" "ma-" "ny," "this" "we" "know;"
+	#verse "Give" "us" "the" "self-" "con-" "trol" "that" "springs"
+	#verse "We" "pray" "thee," "Ho-" "ly" "Tri-" "ni-" "ty,"
+	#make
+
+	#melody "hg" "hi" "ivHG" "f" "hg" "fg" "fe" "e"
+	#verse "To" "mark" "the" "cry," "to" "know" "the" "tear"
+	#verse "Thou" "know-" "est" "our" "in-" "fir-" "mi-" "ty;"
+	#verse "Spare" "us," "good" "Lord," "thy" "mer-" "cy" "show;"
+	#verse "From" "dis-" "ci-" "pline" "of" "out-" "ward" "things,"
+	#verse "One" "God," "un-" "chang-" "ing" "Un-" "i-" "ty,"
+	#make
+
+	#melody "e" "fv" "gv" "hg" "f" "hg" "hi" "iv"
+	#verse "Be-" "fore" "thy" "throne" "of" "mer-" "cy" "spent"
+	#verse "Pour" "out" "on" "all" "who" "seek" "thy" "face"
+	#verse "And" "for" "the" "ho-" "nor" "of" "thy" "name"
+	#verse "That" "fast-" "ing" "in-" "ward" "se-" "cret-" "ly"
+	#verse "That" "we" "from" "this" "our" "abs-" "ti-" "nence"
+	#make
+
+	#melody "ef" "hi" "g" "hg" "f" "gf" "ef" "fv"
+	#verse "In" "this" "thy" "ho-" "ly" "fast" "of" "Lent."
+	#verse "A-" "bun-" "dance" "of" "thy" "par-" "doning" "grace."
+	#verse "Our" "faint-" "ing" "souls" "to" "life" "re-" "claim."
+	#verse "The" "soul" "may" "pure-" "ly" "dwell" "with" "thee."
+	#verse "May" "reap" "the" "fruits" "of" "pe-" "ni-" "tence."
+	#amen "fg" "fef"
+	#make
+
+#end-hymn

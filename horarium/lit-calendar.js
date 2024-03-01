@@ -117,6 +117,19 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					}),
 				},
 
+				Lauds: {
+					order: 'lauds/penitential-order.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/lauds/psalter.lit' : 'lauds/' + d +'.lit',
+					propers: mergeDeep(lauds_commons(d), {
+						benedictus: 'propers/lent/' + w + '/' + d + '/lauds/benedictus.lit',
+						kyrie: kyrie,
+						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
+						hymn: 'hymn/audi-benigne-conditor.lit',
+						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/lauds/chapter.gabc' : 'common/lauds/chapters/lent-feria.gabc',
+						versicle: 'common/lauds/versicle/lent.gabc'
+					})
+				},
+
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
@@ -125,7 +138,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						kyrie: kyrie,
 						hymn: 'hymn/ex-more-docte-mystico.lit',
 						collect: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/sunday/collect.gabc' : collectpath + 'blessing.gabc',
-						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.gabc' : 'common/vespers/lent-chapter(feria).gabc'
+						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.gabc' : 'common/vespers/lent-chapter(feria).gabc',
 					}),
 				}
 			}
