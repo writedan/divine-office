@@ -367,9 +367,14 @@ class Node {
 
 			} else if (this.directive.type == 'repeat-antiphon') {
 				let antiphon = this.getAttribute('antiphon'); // ibid.
-				let partial = this.directive.args[1] == 'partial';
+				let partial = this.directive.args[0] == 'partial';
 				let gabcbase = "initial-style: 0;\ncentering-scheme: english;\n%%\n";
 				let rest = (await fetch_text('antiphon/' + antiphon + '.gabc')).split('%%')[1];
+
+				if (partial) {
+					rest = rest.split('<sp>+</sp>(:)')[1];
+				}
+
 				let root = new Node(Directive.new('raw-gabc', [gabcbase + rest]))
 				return await root.preprocess(ctx);
 
