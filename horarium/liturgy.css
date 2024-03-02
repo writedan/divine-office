@@ -1,8 +1,9 @@
 body {
-                font-family: Arial, sans-serif;
+                font-family: 'Adobe Garamond Pro', 'EB Garamond', 'Crimson Text', 'Adobe Garamond Pro', 'Garamond','Georgia', serif;
                 margin: 0;
                 padding: 0;
                 background-color: #f4f4f4;
+                font-size: 18.66666603088379px;
             }
             #container {
                 max-width: 800px;
@@ -61,7 +62,7 @@ body {
             }
             #content {
                 width: 70%;
-                font-size: calc(max(16px, 16px + (800px - 100vw) * 0.02));
+                font-size: calc(max(18.66666603088379px, 18.66666603088379px + (800px - 100vw) * 0.02));
             }
 
             .info {

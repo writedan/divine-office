@@ -178,12 +178,13 @@
 
     <script>
         async function renderChant(element) {
+            const FACTOR = 1.15;
             let ctx = new exsurge.ChantContext();
             let fontSize = parseFloat(window.getComputedStyle(content, null).getPropertyValue('font-size').split('px')[0]);
 
-            let scaleFactor = (ctx.glyphScaling * fontSize * 1.25) / ctx.textStyles.lyric.size;
+            let scaleFactor = (ctx.glyphScaling * fontSize * FACTOR) / ctx.textStyles.lyric.size;
             ctx.setGlyphScaling(scaleFactor);
-            ctx.setFont("'Arial, sans-serif'", (fontSize * 1.25));
+            ctx.setFont("'Adobe Garamond Pro', 'EB Garamond', 'Crimson Text', 'Adobe Garamond Pro', 'Garamond','Georgia', serif", (fontSize * FACTOR));
             ctx.markupSymbolDictionary['^'] = 'c'
             ctx.textStyles.al.prefix = '<b>'
             ctx.textStyles.annotation.size = fontSize
@@ -228,7 +229,7 @@
                 await score.layoutChantLines(ctx, content.offsetWidth, async function(){
                     let svg = await score.createSvgNode(ctx);
                     for (let e of svg.getElementsByClassName('aboveLinesText')) {
-                        let offset = (((e.textContent == '~') ? 15 : 20) / (16 * 1.25)) * (fontSize * 1.25);
+                        let offset = (((e.textContent == '~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
                         e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset)
                         if (e.textContent == '') {
                             e.textContent = '^';
