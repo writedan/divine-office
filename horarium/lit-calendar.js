@@ -196,7 +196,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						versicle: 'common/compline/versicle.lit',
 						hymn: 'hymn/christe-qui-lux-est.lit',
 						responsory: 'resp/in-pace-in-idipsum.gabc',
-						collect: 'common/compline/collect.gabc'
+						collect: 'common/compline/collect.gabc',
+						anthem: 'compline/anthems/ave-regina-caelorum.lit'
 					}
 				}
 			}

@@ -70,6 +70,14 @@
 
 	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
+	#instruction "The Marian anthem is sung, with a proper versicle and collect."
+
+	#include "anthem"
+
+	#instruction "The congregation responds."
+
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
 	#instruction "The officiant begins again."
 
 	#score "common/conclusion(compline).gabc"
