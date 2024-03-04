@@ -112,10 +112,14 @@
         let h1 = document.createElement('h1');
         h1.innerHTML = metadata.name;
         h1.style.color = metadata.color;
+        h1.style.letterSpacing = '1vw'
+        h1.style.textTransform = 'uppercase';
         content.append(h1);
 
         let h2 = document.createElement('h2');
         h2.innerHTML = 'At' + document.title.split(' at')[1];
+        h2.style.letterSpacing = '2vw'
+        h2.style.textTransform = 'uppercase';
         content.append(h2);
 
         let msg = document.createElement('p');
