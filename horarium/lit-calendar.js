@@ -162,6 +162,17 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					})
 				},
 
+				None: {
+					order: 'terce/penitential-order.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/none/psalter.lit' : 'none/' + d + '.lit',
+					propers: mergeDeep(minor_commons('none', d), {
+						kyrie: kyrie,
+						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
+						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/none/chapter.lit' : 'common/none/chapters/lent-feria.lit',
+						versicle: (d== 'sunday') ? 'propers/lent/' + w + '/' + d + '/none/versicle.lit' : 'common/none/versicle/lent.lit'
+					})
+				},
+
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
