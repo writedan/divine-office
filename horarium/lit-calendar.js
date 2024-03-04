@@ -140,6 +140,17 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					})
 				},
 
+				Terce: {
+					order: 'terce/penitential-order.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/terce/psalter.lit' : 'terce/' + d + '.lit',
+					propers: mergeDeep(minor_commons('terce', d), {
+						kyrie: kyrie,
+						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
+						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/lauds/chapter.gabc' : 'common/lauds/chapters/lent-feria.gabc',
+						versicle: 'common/lauds/versicle/lent.gabc'
+					})
+				},
+
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
@@ -248,10 +259,10 @@ function minor_commons(hour, day) {
 	let type;
 
 	if (day == 'sunday') {
-		hymn = 'hymn/' + hymn + '(sunday).gabc'
+		hymn = 'hymn/' + hymn + '(sunday).lit'
 		type = 'sunday'
 	} else {
-		hymn = 'hymn/' + hymn + '(feria).gabc'
+		hymn = 'hymn/' + hymn + '(feria).lit'
 		type = 'feria'
 	}
 
