@@ -109,12 +109,12 @@
         let content = document.getElementById('content');
         let sidebar = document.getElementById('form-container');
 
-        let h1 = document.createElement('h3');
+        let h1 = document.createElement('h1');
         h1.innerHTML = metadata.name;
         h1.style.color = metadata.color;
         content.append(h1);
 
-        let h2 = document.createElement('h4');
+        let h2 = document.createElement('h2');
         h2.innerHTML = 'At' + document.title.split(' at')[1];
         content.append(h2);
 

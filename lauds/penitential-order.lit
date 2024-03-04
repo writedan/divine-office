@@ -1,53 +1,65 @@
-#instruction "Kneel and make these prayers quietly before the service begins."
+#heading "Incipit"
 
-Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#instruction "Kneel and make these prayers quietly before the service begins."
 
-Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
-#instruction "The officiant begins."
+	Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
 
-#gabc "(c3) <sp>v</sp> O(f) God,(h) be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
+	#instruction "The officiant begins."
 
-#instruction "Everyone continues together."
+	#gabc "(c3) <sp>v</sp> O(f) God,(h) be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
 
-#gloria "laus-tibi"
+	#instruction "Everyone continues together."
 
-#include "psalter"
+	#gloria "laus-tibi"
 
-#title "Chapter"
+#heading "Psalmody"
 
-#include "chapter"
+	#include "psalter"
 
-#instruction "The people respond."
+#heading "Chapter"
 
-#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+	#include "chapter"
 
-#include "hymn"
+	#instruction "The people respond."
 
-#include "versicle"
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-#include "benedictus"
+#heading "Hymn"
 
-#include "kyrie"
+	#include "hymn"
 
-#instruction "Make this prayer quietly."
+	#include "versicle"
 
-Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+#heading "Benedictus"
 
-#instruction "Everyone stands as the officiant begins."
+	#include "benedictus"
 
-#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) thee.(f) (::) Let(h) us(g) pray.(h)"
+#heading "Preces"
 
-#include "collect"
+	#include "kyrie"
 
-#instruction "The congregation responds."
+	#instruction "Make this prayer quietly."
 
-#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
-#instruction "The officiant begins again."
+#heading "Conclusion"
 
-#score "common/conclusion.gabc"
+	#instruction "Everyone stands as the officiant begins."
 
-#instruction "All kneel and quietly make this prayer."
+	#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) thee.(f) (::) Let(h) us(g) pray.(h)"
 
-Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#include "collect"
+
+	#instruction "The congregation responds."
+
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+	#instruction "The officiant begins again."
+
+	#score "common/conclusion.gabc"
+
+	#instruction "All kneel and quietly make this prayer."
+
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.

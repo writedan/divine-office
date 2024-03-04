@@ -92,6 +92,18 @@ class LiturgyContext {
 				return output;
 			} 
 
+			else if (node.directive.type == 'heading') {
+				let heading = document.createElement('h2');
+				heading.innerHTML = node.directive.args[0];
+				return heading;
+			}
+
+			else if (node.directive.type == 'subheading') {
+				let heading = document.createElement('h3');
+				heading.innerHTML = node.directive.args[0];
+				return heading;
+			}
+
 			else if (node.directive.type == 'instruction') {
 				let p = document.createElement('p');
 				p.innerHTML = node.directive.args[0];

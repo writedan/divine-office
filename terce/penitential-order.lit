@@ -1,61 +1,71 @@
-#instruction "Kneel and make these prayers quietly before the service begins."
+#heading "Incipit"
 
-Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#instruction "Kneel and make these prayers quietly before the service begins."
 
-Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
-#instruction "The officiant begins."
+	Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
 
-#gabc "(c3) <sp>v</sp> O(f) God,(h) be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
+	#instruction "The officiant begins."
 
-#instruction "Everyone continues together."
+	#gabc "(c3) <sp>v</sp> O(f) God,(h) be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
 
-#gloria "laus-tibi"
+	#instruction "Everyone continues together."
 
-#include "hymn"
+	#gloria "laus-tibi"
 
-#include "psalter"
+#heading "Hymn"
 
-#title "Chapter"
+	#include "hymn"
 
-#include "chapter"
+#heading "Psalmody"
 
-#instruction "The people respond."
+	#include "psalter"
 
-#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+#heading "Chapter"
 
-#include "responsory"
+	#include "chapter"
 
-#include "versicle"
+	#instruction "The people respond."
 
-#include "kyrie"
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-#instruction "Make this prayer quietly."
+	#include "responsory"
 
-Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#include "versicle"
 
-#instruction "Then the congregation says together."
+#heading "Preces"
 
-I confess to almighty God and to all the saints, that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. Therefore I beseech blessed Mary, ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul, and all the saints, to pray for me to the Lord our God.
+	#include "kyrie"
 
-#instruction "If the officiant is clergy, then he continues alone, otherwise the congregation continues together."
+	#instruction "Make this prayer quietly."
 
-May almighty God have mercy upon us and forgive us all our sins, deliver us from all evil, and bring us to everlasting life. Amen.
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
-#instruction "Everyone stands as the officiant begins."
+	#instruction "Then the congregation says together."
 
-#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) thee.(f) (::) Let(h) us(g) pray.(h)"
+	I confess to almighty God and to all the saints, that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. Therefore I beseech blessed Mary, ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul, and all the saints, to pray for me to the Lord our God.
 
-#include "collect"
+	#instruction "If the officiant is clergy, then he continues alone, otherwise the congregation continues together."
 
-#instruction "The congregation responds."
+	May almighty God have mercy upon us and forgive us all our sins, deliver us from all evil, and bring us to everlasting life. Amen.
 
-#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+#heading "Conclusion"
 
-#instruction "The officiant begins again."
+	#instruction "Everyone stands as the officiant begins."
 
-#score "common/conclusion(prime).gabc"
+	#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) thee.(f) (::) Let(h) us(g) pray.(h)"
 
-#instruction "All kneel and quietly make this prayer."
+	#include "collect"
 
-Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#instruction "The congregation responds."
+
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+	#instruction "The officiant begins again."
+
+	#score "common/conclusion(prime).gabc"
+
+	#instruction "All kneel and quietly make this prayer."
+
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
