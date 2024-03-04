@@ -120,7 +120,10 @@
         h2.innerHTML = 'At' + document.title.split(' at')[1];
         h2.style.letterSpacing = '2vw'
         h2.style.textTransform = 'uppercase';
+        h2.style.color = 'red';
         content.append(h2);
+
+        content.append(document.createElement('hr'))
 
         let msg = document.createElement('p');
         msg.innerHTML = 'Rendering chant. This should only take a few seconds.';
