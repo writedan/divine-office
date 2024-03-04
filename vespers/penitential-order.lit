@@ -14,6 +14,8 @@ Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women an
 
 #include "psalter"
 
+#title "Chapter"
+
 #include "chapter"
 
 #instruction "The people respond."

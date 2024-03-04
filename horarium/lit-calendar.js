@@ -70,7 +70,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						magnificat: 'propers/prelent/' + w + '/' + d + '/vespers/magnificat.lit',
 						kyrie: kyrie,
 						collect: collect,
-						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/prelent/' + w + '/' + d + '/vespers/chapter.gabc' : vespers_commons(d).chapter
+						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/prelent/' + w + '/' + d + '/vespers/chapter.lit' : vespers_commons(d).chapter
 					}),
 				},
 
@@ -78,9 +78,9 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					order: 'compline/penitential-order.lit',
 					psalter: 'compline/ordinary.lit',
 					propers: {
-						hymn: 'hymn/te-lucis-ante-terminum.gabc',
-						chapter: 'common/compline/chapter(ordinary).gabc',
-						versicle: 'common/compline/chapter(ordinary).gabc',
+						hymn: 'hymn/te-lucis-ante-terminum.lit',
+						chapter: 'common/compline/chapter(ordinary).lit',
+						versicle: 'common/compline/chapter(ordinary).lit',
 						canticle: 'common/compline/canticle(ordinary).lit',
 						anthem: 'anthem/ave-regina-celorum.gabc',
 						kyrie: kyrie,
@@ -125,8 +125,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						kyrie: kyrie,
 						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
 						hymn: 'hymn/audi-benigne-conditor.lit',
-						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/lauds/chapter.gabc' : 'common/lauds/chapters/lent-feria.gabc',
-						versicle: 'common/lauds/versicle/lent.gabc'
+						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/lauds/chapter.lit' : 'common/lauds/chapters/lent-feria.lit',
+						versicle: 'common/lauds/versicle/lent.lit'
 					})
 				},
 
@@ -146,8 +146,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					propers: mergeDeep(minor_commons('terce', d), {
 						kyrie: kyrie,
 						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
-						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/lauds/chapter.gabc' : 'common/lauds/chapters/lent-feria.gabc',
-						versicle: 'common/lauds/versicle/lent.gabc'
+						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/terce/chapter.lit' : 'common/terce/chapters/lent-feria.lit',
+						versicle: 'common/lauds/versicle/lent.lit'
 					})
 				},
 
@@ -159,7 +159,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						kyrie: kyrie,
 						hymn: 'hymn/ex-more-docte-mystico.lit',
 						collect: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/sunday/collect.gabc' : collectpath + 'blessing.gabc',
-						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.gabc' : 'common/vespers/lent-chapter(feria).gabc',
+						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.lit' : 'common/vespers/lent-chapter(feria).lit',
 					}),
 				}
 			}
@@ -210,7 +210,7 @@ function vigils_commons(day) {
 		case 'friday': {
 			return {
 				invitatory: 'invitatory/dominum-qui-fecit-nos.lit',
-				hymn: 'hymn/tu-trinitatis-unitas.gabc',
+				hymn: 'hymn/tu-trinitatis-unitas.lit',
 				'absolution-1': 'common/vigils/2nd-nocturn/absolution.gabc',
 				'blessing-1': 'common/vigils/2nd-nocturn/blessing-1.gabc',
 				'blessing-2': 'common/vigils/2nd-nocturn/blessing-2.gabc',
@@ -237,9 +237,9 @@ function lauds_commons(day) {
 	switch (day) {
 		case 'friday': {
 			return {
-				hymn: 'hymn/eterna-celi-gloria.gabc',
-				chapter: 'common/lauds/chapters/feria.gabc',
-				versicle: 'common/lauds/versicle/feria.gabc'
+				hymn: 'hymn/eterna-celi-gloria.lit',
+				chapter: 'common/lauds/chapters/feria.lit',
+				versicle: 'common/lauds/versicle/feria.lit'
 			}
 		}
 	}
@@ -268,8 +268,8 @@ function minor_commons(hour, day) {
 
 	return {
 		hymn: hymn,
-		chapter: 'common/' + hour + '/chapters/' + type + '.gabc',
-		versicle: 'common/' + hour + '/versicle/' + type + '.gabc'
+		chapter: 'common/' + hour + '/chapters/' + type + '.lit',
+		versicle: 'common/' + hour + '/versicle/' + type + '.lit'
 	}
 }
 
@@ -284,15 +284,15 @@ function minor_hours(hour, day, kyrie) { // produces the whole for a given minor
 function vespers_commons(day) {
 	switch (day) {
 		case 'friday': return {
-			hymn: 'hymn/plasmator-hominis.gabc',
-			chapter: 'common/vespers/chapters/feria.gabc',
-			versicle: 'common/vespers/versicle/feria.gabc'
+			hymn: 'hymn/plasmator-hominis.lit',
+			chapter: 'common/vespers/chapters/feria.lit',
+			versicle: 'common/vespers/versicle/feria.lit'
 		}
 
 		case 'saturday': return {
 			hymn: 'hymn/o-lux-beata-trinitas.lit',
-			chapter: 'common/vespers/chapters/sunday.gabc',
-			versicle: 'common/vespers/versicle/sunday.gabc' // NOTE: only the saturday office (first vespers) uses the sunday chapter and versicle; second vespers of sundays uses the ferial
+			chapter: 'common/vespers/chapters/sunday.lit',
+			versicle: 'common/vespers/versicle/sunday.lit' // NOTE: only the saturday office (first vespers) uses the sunday chapter and versicle; second vespers of sundays uses the ferial
 		}
 	}
 
