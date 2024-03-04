@@ -147,7 +147,18 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						kyrie: kyrie,
 						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
 						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/terce/chapter.lit' : 'common/terce/chapters/lent-feria.lit',
-						versicle: 'common/lauds/versicle/lent.lit'
+						versicle: (d== 'sunday') ? 'propers/lent/' + w + '/' + d + '/terce/versicle.lit' : 'common/terce/versicle/lent.lit'
+					})
+				},
+
+				Sext: {
+					order: 'terce/penitential-order.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/sext/psalter.lit' : 'sext/' + d + '.lit',
+					propers: mergeDeep(minor_commons('sext', d), {
+						kyrie: kyrie,
+						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
+						chapter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/sext/chapter.lit' : 'common/sext/chapters/lent-feria.lit',
+						versicle: (d== 'sunday') ? 'propers/lent/' + w + '/' + d + '/sext/versicle.lit' : 'common/sext/versicle/lent.lit'
 					})
 				},
 
