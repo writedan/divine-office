@@ -1,0 +1,83 @@
+#heading "Incipit"
+
+	#instruction "Kneel and make these prayers quietly before the service begins."
+
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+
+	Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+
+	#instruction "While all remain kneeling, the officiant begins in a low voice."
+
+	#gabc "(f3) <sp>v</sp> Turn(f) us(h) then,(h) O(h) God(h) our(h) Sav(g)ior.(h) <sp>r</sp>(::) And(h) let(h) thine(h) an(h)ger(h) cease(h) from(g) us.(h)"
+
+	#instruction "The officiant begins in a higher voice while all stand."
+
+	#gabc "(c3) <sp>v</sp> O(f) God,(h) be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
+
+	#instruction "Everyone continues together."
+
+	#gloria "laus-tibi"
+
+#heading "Psalmody"
+
+	#include "psalter"
+
+#heading "Chapter"
+
+	#include "chapter"
+
+	#instruction "The people respond."
+
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+	#include "responsory"
+
+#heading "Hymn"
+
+	#include "hymn"
+
+	#include "versicle"
+
+#heading "Nunc dimittis"
+
+	#include "canticle"
+
+#heading "Preces"
+
+	#include "kyrie"
+
+	#instruction "Make this prayer quietly."
+
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+
+	#instruction "Then the congregation says together."
+
+	I confess to almighty God and to all the saints, that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. Therefore I beseech blessed Mary, ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul, and all the saints, to pray for me to the Lord our God.
+
+	#instruction "If the officiant is clergy, then he continues alone, otherwise the congregation continues together."
+
+	May almighty God have mercy upon us and forgive us all our sins, deliver us from all evil, and bring us to everlasting life. Amen.
+
+#heading "Conclusion"
+
+	#instruction "Everyone stands as the officiant begins."
+
+	#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) thee.(f) (::) Let(h) us(g) pray.(h)"
+
+	#include "collect"
+
+	#instruction "The congregation responds."
+
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+	#instruction "The officiant begins again."
+
+	#score "common/conclusion(compline).gabc"
+
+	#instruction "All kneel and quietly make this prayer."
+
+	Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	
+	Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+
+	I believe in God the Father almighty, creator of heaven and earth. And in Jesus Christ his only Son our Lord: who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and buried. He descended into hell. The third day he rose again from the dead; he ascended into heaven, and sitteth on the right hand of God the Father almighty. From whence he shall come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of the Saints, the remission of sins, the resurrection of the body, and the life everlasting. Amen.

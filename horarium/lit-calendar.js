@@ -184,6 +184,20 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.lit' : 'common/vespers/lent-chapter(feria).lit',
 						versicle: 'common/vespers/versicle/lent.lit',
 					}),
+				},
+
+				Compline: {
+					order: 'compline/penitential-order.lit',
+					psalter: 'compline/1st-2nd-lent.lit',
+					propers: {
+						kyrie: kyrie,
+						canticle: 'common/compline/lent-canticle.lit',
+						chapter: 'common/compline/chapter.lit',
+						versicle: 'common/compline/versicle.lit',
+						hymn: 'hymn/christe-qui-lux-est.lit',
+						responsory: 'resp/in-pace-in-idipsum.gabc',
+						collect: 'common/compline/collect.gabc'
+					}
 				}
 			}
 		}
@@ -192,7 +206,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 		metadata.lent[w].sunday.hours.FirstCompline = metadata.lent[w].saturday.hours.Compline;
 
 		metadata.lent[w].sunday.hours.FirstVespers.propers.kyrie = 'common/kyrie/xvii.gabc';
-		/*metadata.lent[w].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';*/
+		metadata.lent[w].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';
 	}
 	// TODO: passion
 	// TODO: pascha
