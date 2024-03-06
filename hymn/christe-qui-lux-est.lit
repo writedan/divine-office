@@ -15,7 +15,7 @@
 	#make
 
 	#melody "f" "f" "hv" "g" "e" "fv" "hv" "g"
-	#verse "Thou" "driv-" "est" "dark-" "some" "night" "away!"
+	#verse "Thou" "driv-" "est" "dark-" "some" "night" "a-" "way!"
 	#verse "Keep" "us" "to-" "night" "from" "dan-" "ger" "free;"
 	#verse "Nor" "craf-" "ty" "foe" "the" "heart" "pos-" "ess:"
 	#verse "Still" "be" "the" "heart" "to" "thee" "a-" "wake;"
@@ -29,7 +29,7 @@
 	#verse "Grant" "us," "dear" "Lord," "in" "thee" "to" "rest,"
 	#verse "Nor" "Sa-" "tan's" "wiles" "the" "flesh" "al-" "lure,"
 	#verse "By" "thy" "right" "hand" "up-" "held" "a-" "bove"
-	#verse "Keep" "us" "fro" "sin," "and" "guide" "for" "good"
+	#verse "Keep" "us" "from" "sin," "and" "guide" "for" "good"
 	#verse "'Tis" "thou" "who" "dost" "the" "soul" "de-" "fend,"
 	#verse "All" "glo-" "ry," "as" "is" "ev-" "er" "meet,"
 	#make
