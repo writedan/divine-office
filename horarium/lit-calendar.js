@@ -132,17 +132,17 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 				Prime: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/prime/psalter.lit' : 'prime/' + d + '.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/prime/psalter.lit' : 'prime/feria-lent.lit',
 					propers: mergeDeep(minor_commons('prime', d), {
 						collect: 'common/prime/collect.gabc',
 						kyrie: kyrie,
-						hymn: 'hymn/jam-lucis-orto-sidere(lent-1st-2nd-sunday).lit'
+						hymn: (d == 'sunday') ? 'hymn/jam-lucis-orto-sidere(lent-1st-2nd-sunday).lit' : 'hymn/jam-lucis-orto-sidere(feria).lit'
 					})
 				},
 
 				Terce: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/terce/psalter.lit' : 'terce/' + d + '.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/terce/psalter.lit' : 'terce/feria-lent.lit',
 					propers: mergeDeep(minor_commons('terce', d), {
 						kyrie: kyrie,
 						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
@@ -153,7 +153,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 				Sext: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/sext/psalter.lit' : 'sext/' + d + '.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/sext/psalter.lit' : 'sext/feria-lent.lit',
 					propers: mergeDeep(minor_commons('sext', d), {
 						kyrie: kyrie,
 						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
@@ -164,7 +164,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 				None: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/none/psalter.lit' : 'none/' + d + '.lit',
+					psalter: (d == 'sunday') ? 'propers/lent/' + w + '/' + d + '/none/psalter.lit' : 'none/feria-lent.lit',
 					propers: mergeDeep(minor_commons('none', d), {
 						kyrie: kyrie,
 						collect: 'propers/lent/' + w + '/' + d + '/collect.gabc',
@@ -316,7 +316,7 @@ function minor_commons(hour, day) {
 	return {
 		hymn: hymn,
 		chapter: 'common/' + hour + '/chapters/' + type + '.lit',
-		versicle: 'common/' + hour + '/versicle/' + type + '.lit'
+		versicle: (hour == 'prime') ? 'common/prime/versicle.lit' : 'common/' + hour + '/versicle/' + type + '.lit'
 	}
 }
 
