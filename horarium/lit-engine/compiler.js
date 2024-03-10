@@ -7,7 +7,7 @@ function uuidv4() {
 function applySpecialCharactersToNextVowel(text) {
     let newText = '';
     let accentMap = {
-    	'°': '\u02DA',	// Combining Degree Circle
+    	'\u00B0': '\u030A',   // Combining Ring Above (◌̊)
         '^': '\u0302',  // Combining Circumflex Accent
         '~': '\u0303',  // Combining Tilde
         "`": '\u0301'   // Combining Acute Accent
