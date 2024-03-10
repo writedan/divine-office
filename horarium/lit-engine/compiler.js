@@ -4,6 +4,55 @@ function uuidv4() {
   );
 } // https://stackoverflow.com/a/2117523
 
+function applySpecialCharactersToNextVowel(text) {
+    let newText = '';
+    let accentMap = {
+    	'°': '\u02DA',	// Combining Degree Circle
+        '^': '\u0302',  // Combining Circumflex Accent
+        '~': '\u0303',  // Combining Tilde
+        "`": '\u0301'   // Combining Acute Accent
+    };
+
+    let vowelAccents = ''; // Store the current accent symbol
+    let boldStartIndex = -1; // Store the start index to bold
+    let vowelIndex = -1;
+
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] in accentMap) {
+            // Store the accent symbol for the next vowel
+            vowelAccents = accentMap[text[i]];
+            // Store the start index for bolding
+            boldStartIndex = newText.length;
+        } else if (isVowel(text[i])) {
+            // Add the vowel with the current accent symbol
+            newText += text[i] + vowelAccents;
+            vowelIndex = i + 1;
+            // Reset the accent symbol for the next vowel
+            vowelAccents = '';
+        } else if (boldStartIndex !== -1 && i == vowelIndex) {
+            // If we find a space after the special character, add the bold tag
+            newText = newText.substring(0, boldStartIndex) + '<b>' + newText.substring(boldStartIndex) + '</b>';
+            boldStartIndex = -1;
+            newText += text[i];
+        } else {
+            // Add other characters as they are
+            newText += text[i];
+        }
+    }
+
+    // In case the special character was at the end, add bold tag
+    if (boldStartIndex !== -1) {
+        newText = newText.substring(0, boldStartIndex) + '<b>' + newText.substring(boldStartIndex) + '</b>';
+    }
+
+    return newText;
+
+    // Function to check if a character is a vowel
+    function isVowel(char) {
+        return 'aeiouyAEIOUY'.indexOf(char) !== -1;
+    }
+}
+
 class LiturgyContext {
 	parameters = {};
 	constructor(url, base) {
@@ -112,8 +161,29 @@ class LiturgyContext {
 			}
 
 			else if (node.directive.type == 'text') {
+				let text = node.directive.args[0];
+				let newtext = '';
+
+				if (text.includes('+')) {
+					let d = text.split('+');
+					let intone = applySpecialCharactersToNextVowel(d[0]);
+					let flex = applySpecialCharactersToNextVowel(d[1]);
+					newtext += intone + ' <span class="symbol">+</span><br/>';
+					text = flex;
+				}
+
+				if (text.includes('*')) {
+					let d = text.split('*');
+					let meditation = applySpecialCharactersToNextVowel(d[0]);
+					let ending = applySpecialCharactersToNextVowel(d[1]);
+
+					newtext += meditation + ' <span class="symbol">*</span><br/>&emsp; ' + ending;
+				} else {
+					newtext = text;
+				}
+
 				let p = document.createElement('p');
-				p.innerHTML = node.directive.args[0];
+				p.innerHTML = newtext;
 				return p;
 			}
 
@@ -154,27 +224,6 @@ class LiturgyContext {
 					let output = [];
 					for (let n of nodes) {
 						output.push(await this.compile(n));
-					}
-
-					output = output.flat(Infinity)
-					for (let p of output) {
-						let text = p.textContent;
-						let newtext = '';
-						if (text.includes('+')) {
-							let d = text.split('+');
-							let intone = d[0];
-							let flex = d[1];
-							newtext += intone + ' <span class="symbol">+</span><br/>';
-							text = flex;
-						}
-
-						let d = text.split('*');
-						let meditation = d[0];
-						let ending = d[1];
-
-						newtext += meditation + ' <span class="symbol">*</span><br/>&emsp; ' + ending;
-
-						p.innerHTML = newtext;
 					}
 					
 					return output;
