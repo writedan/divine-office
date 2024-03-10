@@ -11,3 +11,4 @@
 *_model.tex
 !docs/tones.txt
 horarium/test.html
+!*.py
