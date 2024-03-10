@@ -1,0 +1,10 @@
+#antiphon "commendemus-nosmetipos"
+	#tone "4-v" "c3"
+	#psalm "118-vi"
+
+	#tone "4-v" "c3"
+	#psalm "118-vii"
+
+	#tone "4-v" "c3"
+	#psalm "118-viii"
+#repeat-antiphon

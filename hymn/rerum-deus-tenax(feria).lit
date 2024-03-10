@@ -1,0 +1,32 @@
+#title "Rerum Deus tenax"
+
+#begin-hymn
+
+	#clef "c4"
+
+	#melody "hv" "hv" "hv" "hv" "hv" "hv" "hv" "g"
+	#verse "O" "God," "cre-" "a-" "tion's" "se-" "cret" "force,"
+	#verse "Grant" "us," "when" "this" "short" "life" "is" "past,"
+	#verse "O" "Fa-" "ther," "that" "we" "ask" "be" "done,"
+	#make
+
+	#melody "hv" "hv" "hv" "hv" "hv" "hv" "g" "hv"
+	#verse "Thy-" "self" "un-" "moved," "all" "mo-" "tion's" "source,"
+	#verse "The" "glor-" "ious" "even-" "ing" "that" "shall" "last:"
+	#verse "Through" "Je-" "sus" "Christ," "thine" "on-" "ly" "Son;"
+	#make
+
+	#melody "hv" "hv" "hv" "g" "f" "gv" "f" "e"
+	#verse "Who," "from" "the" "morn" "till" "even-" "ing's" "ray,"
+	#verse "That," "by" "a" "ho-" "ly" "death" "at-" "tained,"
+	#verse "Who," "with" "the" "Ho-" "ly" "Ghost" "and" "thee,"
+	#make
+
+	#melody "fv" "gv" "gv" "gv" "f" "hv" "g" "g"
+	#verse "Through" "all" "its" "chang-" "es" "guid'st" "the" "day."
+	#verse "E-" "ter-" "nal" "glo-" "ry" "may" "be" "gained."
+	#verse "Doth" "live" "and" "reign" "e-" "ter-" "na-" "ly"
+	#amen "ghg" "g"
+	#make
+
+#end-hymn
