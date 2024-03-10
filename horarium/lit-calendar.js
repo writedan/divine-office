@@ -181,7 +181,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						kyrie: kyrie,
 						hymn: 'hymn/ex-more-docte-mystico.lit',
 						collect: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/sunday/collect.gabc' : collectpath + 'blessing.gabc',
-						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.lit' : 'common/vespers/lent-chapter(feria).lit',
+						chapter: (d == 'sunday' || d == 'saturday') ? 'propers/lent/' + w + '/' + d + '/vespers/chapter.lit' : 'common/vespers/chapters/lent-feria.lit',
 						versicle: 'common/vespers/versicle/lent.lit',
 					}),
 				},
