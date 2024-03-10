@@ -150,7 +150,6 @@ class Node {
 				let path = 'antiphon/' + this.directive.args[0] + '.gabc';
 				ctx.setField('last-antiphon', this.directive.args[0])
 				let root = new Node(Directive.new('root'));
-				root.add(new Node(Directive.new('title', ['Antiphon.'])))
 				root.add(new Node(Directive.new('score', [path])));
 				return root.unfold(this);
 			} 
