@@ -149,11 +149,32 @@ class LiturgyContext {
 			else if (node.directive.type == 'psalmody') {
 				let nodes = node.children; 
 				let contentWidth = document.getElementById('content').offsetWidth;
-				if (contentWidth < 800) {
+				if (true) {
 					// display in single list
 					let output = [];
 					for (let n of nodes) {
 						output.push(await this.compile(n));
+					}
+
+					output = output.flat(Infinity)
+					for (let p of output) {
+						let text = p.textContent;
+						let newtext = '';
+						if (text.includes('+')) {
+							let d = text.split('+');
+							let intone = d[0];
+							let flex = d[1];
+							newtext += intone + ' <span class="symbol">+</span><br/>';
+							text = flex;
+						}
+
+						let d = text.split('*');
+						let meditation = d[0];
+						let ending = d[1];
+
+						newtext += meditation + ' <span class="symbol">*</span><br/>&emsp; ' + ending;
+
+						p.innerHTML = newtext;
 					}
 					
 					return output;
