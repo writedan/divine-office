@@ -254,6 +254,15 @@ function vigils_commons(day) {
 			'blessing-3': 'common/vigils/1st-nocturn/blessing-3.gabc',
 		}
 
+		case 'tuesday': return {
+			invitatory: 'invitatory/jubilemus-deo.lit',
+			hymn: 'hymn/consors-paterni-luminis.lit',
+			'absolution-1': 'common/vigils/2nd-nocturn/absolution.gabc',
+			'blessing-1': 'common/vigils/2nd-nocturn/blessing-1.gabc',
+			'blessing-2': 'common/vigils/2nd-nocturn/blessing-2.gabc',
+			'blessing-3': 'common/vigils/2nd-nocturn/blessing-3.gabc',
+		}
+
 		case 'friday': {
 			return {
 				invitatory: 'invitatory/dominum-qui-fecit-nos.lit',
