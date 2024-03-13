@@ -1,0 +1,36 @@
+#antiphon "secundum-magnam"
+	#tone "1-iii" "c4"
+	#psalm "50"
+#repeat-antiphon
+
+#antiphon "salutare"
+	#tone "6a" "c4"
+	#psalm "42"
+#repeat-antiphon
+
+#antiphon "ad-te-de-luce"
+	#tone "7-i" "c3"
+	#no-gloria
+	#psalm "62"
+
+	#tone "7-i" "c3"
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "cunctis-diebus"
+	#tone "3-iv" "c3"
+	#psalm "isaiah-38"
+#repeat-antiphon
+
+#antiphon "in-excelsis"
+	#tone "6a" "c4"
+	#no-gloria
+	#psalm "148"
+
+	#tone "6a" "c4"
+	#no-gloria
+	#psalm "149"
+
+	#tone "6a" "c4"
+	#psalm "150"
+#repeat-antiphon
