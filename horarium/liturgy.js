@@ -256,7 +256,7 @@ function getTemporalMetaData() {
         metadata.passion = {}
         metadata.passion[1] = {}
         metadata.passion[1].sunday = {
-            name: '5th Sunday in Lent',
+            name: 'Sunday before the Passion',
             color: 'violet',
             penance: 'abstinence',
             rank: 2
@@ -264,7 +264,7 @@ function getTemporalMetaData() {
 
         for (var d = 1; d < 7; d++) {
             metadata.passion[1][feriaToDay(d)] = {
-                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the 5th Week of Lent',
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the Week before the Passion',
                 color: 'violet',
                 penance: 'strict-fast',
                 rank: 8
