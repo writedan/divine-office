@@ -1,0 +1,36 @@
+#antiphon "tibi-soli-peccavi"
+	#tone "8-i" "c3"
+	#psalm "50"
+#repeat-antiphon
+
+#antiphon "domine-refugium"
+	#tone "6a" "c4"
+	#psalm "89"
+#repeat-antiphon
+
+#antiphon "in-matutinis"
+	#tone "4-vii" "c4"
+	#no-gloria
+	#psalm "62"
+
+	#tone "4-vii" "c4"
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "in-eternum"
+	#tone "4-i" "c4"
+	#psalm "exodus-15"
+#repeat-antiphon
+
+#antiphon "in-sanctis-ejus"
+	#tone "6a" "c4"
+	#no-gloria
+	#psalm "148"
+
+	#tone "6a" "c4"
+	#no-gloria
+	#psalm "149"
+
+	#tone "6a" "c4"
+	#psalm "150"
+#repeat-antiphon
