@@ -208,6 +208,32 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 		metadata.lent[w].sunday.hours.FirstVespers.propers.kyrie = 'common/kyrie/xvii.gabc';
 		metadata.lent[w].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';
+
+		// passiontide
+		for (let d in metadata.passion[1]) {
+			let kyrie = d == 'sunday' ? 'common/kyrie/xvii.gabc' : 'common/kyrie/xviii.gabc';
+			let collectpath = 'propers/lent/' + w + '/' + d + '/';
+			metadata.passion[1][d].hours = {
+				Vespers: {
+					order: 'vespers/penitential-order.lit',
+					psalter: 'vespers/' + d + '.lit',
+					propers: {
+						kyrie: kyrie,
+						chapter: (d == 'saturday' || d == 'sunday') ? 'propers/passion/1/' + d + '/vespers/chapter.lit' : 'common/vespers/chapters/passion.lit',
+						hymn: 'hymn/vexilla-regis-prodeunt.lit',
+						versicle: 'common/vespers/versicle/passion.lit',
+						collect: (d == 'sunday' || d == 'saturday') ? 'propers/passion/1/sunday/collect.gabc' :collectpath + 'blessing.gabc',
+						magnificat: 'propers/passion/1/' + d + '/vespers/magnificat.lit'
+					}
+				}
+			}
+		}
+
+		metadata.passion[1].sunday.hours.FirstVespers = metadata.passion[1].saturday.hours.Vespers;
+		//metadata.passion[1].sunday.hours.FirstCompline = metadata.passion[1].saturday.hours.Compline;
+
+		metadata.passion[1].sunday.hours.FirstVespers.propers.kyrie = 'common/kyrie/xvii.gabc';
+		//metadata.passion[1].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';
 	}
 	// TODO: passion
 	// TODO: pascha

@@ -1,0 +1,52 @@
+#title "Vexilla regis prodeunt"
+
+#begin-hymn
+
+	#clef "c4"
+
+	#melody "f" "ixgi" "ixiv" "hvGF" "gv" "ghg" "f" "ed"
+	#verse "The" "roy-" "al" "ban-" "ners" "for-" "ward" "go;"
+	#verse "Be-" "hold!" "the" "nails" "with" "an-" "guish" "fierce."
+	#verse "Where" "deep" "for" "us" "the" "spear" "was" "dyed,"
+	#verse "Ful-" "filled" "is" "all" "that" "Da-" "vid" "told"
+	#verse "O" "Tree" "of" "beau-" "ty," "Tree" "of" "light!"
+	#verse "Blest" "Tree," "whose" "cho-" "sen" "bran-" "ches" "bore"
+	#verse "O" "Cross," "our" "one" "re-" "li-" "ance," "hail!"
+	#verse "From" "ev-" "ery" "spir-" "it" "prais-" "es" "be"
+	#make
+
+	#melody "gv" "gv" "hv" "fvED" "fv" "ef" "dc" "cd"
+	#verse "The" "Cross" "shines" "forth" "in" "mys-" "tic" "glow;"
+	#verse "His" "out-" "stretched" "arms" "and" "vi-" "tals" "pierce:"
+	#verse "Life's" "tor-" "rent" "rush-" "ing" "from" "his" "side,"
+	#verse "In" "true" "pro-" "phe-" "tic" "song" "of" "old;"
+	#verse "O" "Tree" "with" "roy-" "al" "pur-" "ple" "dight!"
+	#verse "The" "wealth" "that" "did" "the" "World" "res-" "tore,"
+	#verse "Still" "may" "thy" "power" "with" "us" "a-" "vail"
+	#verse "To" "God" "the" "Bles-" "sed" "Tri-" "ni-" "ty:"
+	#make
+
+	#melody "dv" "dv" "fv" "dc" "fv" "fghv" "g" "gf"
+	#verse "When" "he" "in" "flesh," "our" "flesh" "who" "made,"
+	#verse "Here," "our" "re-" "demp-" "tion" "to" "ob-" "tain,"
+	#verse "To" "wash" "us" "in" "that" "pre-" "cious" "flood,"
+	#verse "A-" "midst" "the" "na-" "tions," "God," "saith" "he,"
+	#verse "E-" "lect" "on" "those" "whose" "tri-" "um-" "phal" "breast"
+	#verse "The" "price" "of" "hu-" "man-" "kind" "to" "pay,"
+	#verse "To" "give" "new" "vir-" "tue" "to" "the" "saint."
+	#verse "Whom" "by" "the" "Cross" "thou" "dost" "re-" "store,"
+	#make
+
+	#melody "f" "ixfhivHG" "hv" "fvED" "fv" "ef" "dc" "cd"
+	#verse "Our" "sen-" "tence" "bore," "our" "ran-" "som" "paid:"
+	#verse "The" "Migh-" "ty" "Sa-" "cri-" "fice" "is" "slain."
+	#verse "Where" "min-" "gled" "Wa-" "ter" "flowed," "and" "Blood."
+	#verse "Hath" "reigned" "and" "tri-" "umphed" "from" "the" "Tree."
+	#verse "Those" "ho-" "ly" "limbs" "should" "find" "their" "rest:"
+	#verse "And" "spoil" "the" "spoil-" "er" "of" "his" "prey."
+	#verse "And" "par-" "don" "to" "the" "pe-" "ni-" "tent."
+	#verse "Pre-" "serve" "and" "gov-" "ern" "ev-" "er-" "more."
+	#amen "de" "dcd"
+	#make
+
+#end-hymn
