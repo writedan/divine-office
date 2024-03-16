@@ -13,6 +13,14 @@ function resolveTone(tone, ending='?') {
 		return resolveTone(parts[0], (parts[1] === undefined ? '' : parts[1]))
 	}
 
+	if (tone == '2') {
+		if (ending == 'i') {
+			return '2';
+		} else if (ending == 'ii') {
+			return '8' // identical stress pattern
+		}
+	}
+
 	if (tone == '3') {
 		if (ending == 'i' || ending == 'ii' || ending == 'iii') return '3a';
 		if (ending == 'iv' || ending == 'v') return '3b';
