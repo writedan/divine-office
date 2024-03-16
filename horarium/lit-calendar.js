@@ -225,15 +225,30 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						collect: (d == 'sunday' || d == 'saturday') ? 'propers/passion/1/sunday/collect.gabc' :collectpath + 'blessing.gabc',
 						magnificat: 'propers/passion/1/' + d + '/vespers/magnificat.lit'
 					}
+				},
+
+				Compline: {
+					order: 'compline/penitential-order.lit',
+					psalter: 'compline/passion.lit',
+					propers: {
+						kyrie: kyrie,
+						hymn: 'hymn/cultor-dei-memento.lit',
+						chapter: 'common/compline/chapter.lit',
+						versicle: 'common/compline/versicle.lit',
+						responsory: 'resp/in-manus-tuas(passion).gabc',
+						canticle: 'common/compline/passion-canticle.lit',
+						collect: 'common/compline/collect.gabc',
+						anthem: 'compline/anthems/ave-regina-caelorum.lit'
+					}
 				}
 			}
 		}
 
 		metadata.passion[1].sunday.hours.FirstVespers = metadata.passion[1].saturday.hours.Vespers;
-		//metadata.passion[1].sunday.hours.FirstCompline = metadata.passion[1].saturday.hours.Compline;
+		metadata.passion[1].sunday.hours.FirstCompline = metadata.passion[1].saturday.hours.Compline;
 
 		metadata.passion[1].sunday.hours.FirstVespers.propers.kyrie = 'common/kyrie/xvii.gabc';
-		//metadata.passion[1].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';
+		metadata.passion[1].sunday.hours.FirstCompline.propers.kyrie = 'common/kyrie/xvii.gabc';
 	}
 	// TODO: passion
 	// TODO: pascha

@@ -1,0 +1,10 @@
+#antiphon "miserere-michi-domine"
+	#tone "8-i" "c4"
+	#psalm "4"
+
+	#tone "8-i" "c4"
+	#psalm "90"
+
+	#tone "8-i" "c4"
+	#psalm "133"
+#repeat-antiphon
