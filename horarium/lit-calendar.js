@@ -240,6 +240,16 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					}
 				},
 
+				Prime: {
+					order: 'terce/penitential-order.lit',
+					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/prime/psalter.lit' : 'prime/feria-lent.lit',
+					propers: mergeDeep(minor_commons('prime', d), {
+						collect: 'common/prime/collect.gabc',
+						kyrie: kyrie,
+						hymn: (d == 'sunday') ? 'hymn/jam-lucis-orto-sidere(passion).lit' : 'hymn/jam-lucis-orto-sidere(feria).lit'
+					})
+				},
+
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
