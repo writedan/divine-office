@@ -227,6 +227,19 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					}),
 				},
 
+				Lauds: {
+					order: 'lauds/penitential-order.lit',
+					psalter: (d == 'sunday') ? 'propers/passion/1/sunday/lauds/psalter.lit' : 'lauds/' + d + '.lit',
+					propers: {
+						hymn: 'hymn/lustra-sex-qui-jam-peracta.lit',
+						kyrie: kyrie,
+						collect: collectpath + 'collect.gabc',
+						benedictus: 'propers/passion/1/' + d + '/lauds/benedictus.lit',
+						chapter: (d == 'sunday') ? 'propers/passion/1/' + d + '/lauds/chapter.lit' : 'common/lauds/chapter/passion.lit',
+						versicle: 'common/lauds/versicle/passion.lit',
+					}
+				},
+
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
