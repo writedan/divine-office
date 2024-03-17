@@ -1,7 +1,7 @@
 function lessons(prefix) {
 	let res = {};
 	for (let i = 0; i < 9; i++) {
-		res['lesson-' + (i + 1)] = prefix + 'lesson-' + (i + 1) + '.gabc'
+		res['lesson-' + (i + 1)] = prefix + 'lesson-' + (i + 1) + '.lit'
 	}
 
 	return res;
@@ -212,8 +212,21 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 		// passiontide
 		for (let d in metadata.passion[1]) {
 			let kyrie = d == 'sunday' ? 'common/kyrie/xvii.gabc' : 'common/kyrie/xviii.gabc';
-			let collectpath = 'propers/lent/' + w + '/' + d + '/';
+			let collectpath = 'propers/passion/1/' + d + '/';
 			metadata.passion[1][d].hours = {
+				Vigils: {
+					order: (d == 'sunday') ? 'vigils/penitential-order-sunday.lit' : 'vigils/penitential-order-feria.lit',
+					psalter: (d == 'sunday') ? 'propers/passion/1/sunday/vigils/psalter.lit' : 'vigils/' + d + '.lit',
+					propers: mergeDeep(vigils_commons(d), lessons('propers/passion/1/' + d + '/vigils/'), {
+						hymn: 'hymn/pange-lingua-gloriosi.lit',
+						invitatory: 'invitatory/hodie-si-vocem-domini.lit',
+						hymn: 'hymn/pange-lingua-gloriosi.lit',
+						kyrie: kyrie,
+						collect: collectpath + 'collect.gabc',
+						gospel: 'propers/passion/1/' + d + '/gospel.lit'
+					}),
+				},
+
 				Vespers: {
 					order: 'vespers/penitential-order.lit',
 					psalter: 'vespers/' + d + '.lit',
