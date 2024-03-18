@@ -219,7 +219,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 					psalter: (d == 'sunday') ? 'propers/passion/1/sunday/vigils/psalter.lit' : 'vigils/' + d + '.lit',
 					propers: mergeDeep(vigils_commons(d), lessons('propers/passion/1/' + d + '/vigils/'), {
 						hymn: 'hymn/pange-lingua-gloriosi.lit',
-						invitatory: 'invitatory/hodie-si-vocem-domini.lit',
+						invitatory: (d == 'sunday') ? 'invitatory/hodie-si-vocem-domini.lit' : 'invitatory/adoremus-dominum(passion).lit',
 						hymn: 'hymn/pange-lingua-gloriosi.lit',
 						kyrie: kyrie,
 						collect: collectpath + 'collect.gabc',
@@ -235,14 +235,14 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						kyrie: kyrie,
 						collect: collectpath + 'collect.gabc',
 						benedictus: 'propers/passion/1/' + d + '/lauds/benedictus.lit',
-						chapter: (d == 'sunday') ? 'propers/passion/1/' + d + '/lauds/chapter.lit' : 'common/lauds/chapter/passion.lit',
+						chapter: (d == 'sunday') ? 'propers/passion/1/' + d + '/lauds/chapter.lit' : 'common/lauds/chapters/passion.lit',
 						versicle: 'common/lauds/versicle/passion.lit',
 					}
 				},
 
 				Prime: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/prime/psalter.lit' : 'prime/feria-lent.lit',
+					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/prime/psalter.lit' : 'prime/feria-passion.lit',
 					propers: mergeDeep(minor_commons('prime', d), {
 						collect: 'common/prime/collect.gabc',
 						kyrie: kyrie,
@@ -252,34 +252,34 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 				Terce: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/terce/psalter.lit' : 'terce/feria-lent.lit',
+					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/terce/psalter.lit' : 'terce/feria-passion.lit',
 					propers: mergeDeep(minor_commons('terce', d), {
 						collect: collectpath + 'collect.gabc',
 						kyrie: kyrie,
-						chapter: 'propers/passion/1/' + d + '/terce/chapter.lit',
-						versicle: 'propers/passion/1/' + d + '/terce/versicle.lit',
+						chapter: (d == 'sunday') ? 'propers/passion/1/' + d + '/terce/chapter.lit' : 'common/terce/chapters/passion.lit',
+						versicle: (d == 'sunday') ? 'propers/passion/1/' + d + '/terce/versicle.lit' : 'common/terce/versicle/passion.lit',
 					})
 				},
 
 				Sext: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/sext/psalter.lit' : 'sext/feria-lent.lit',
+					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/sext/psalter.lit' : 'sext/feria-passion.lit',
 					propers: mergeDeep(minor_commons('sext', d), {
 						collect: collectpath + 'collect.gabc',
 						kyrie: kyrie,
-						chapter: 'propers/passion/1/' + d + '/sext/chapter.lit',
-						versicle: 'propers/passion/1/' + d + '/sext/versicle.lit',
+						chapter: (d == 'sunday') ? 'propers/passion/1/' + d + '/sext/chapter.lit' : 'common/sext/chapters/passion.lit',
+						versicle: (d == 'sunday') ? 'propers/passion/1/' + d + '/sext/versicle.lit' : 'common/sext/versicle/passion.lit',
 					})
 				},
 
 				None: {
 					order: 'terce/penitential-order.lit',
-					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/none/psalter.lit' : 'none/feria-lent.lit',
+					psalter: (d == 'sunday') ? 'propers/passion/1/' + d + '/none/psalter.lit' : 'none/feria-passion.lit',
 					propers: mergeDeep(minor_commons('none', d), {
 						collect: collectpath + 'collect.gabc',
 						kyrie: kyrie,
-						chapter: 'propers/passion/1/' + d + '/none/chapter.lit',
-						versicle: 'propers/passion/1/' + d + '/none/versicle.lit',
+						chapter: (d == 'sunday') ? 'propers/passion/1/' + d + '/none/chapter.lit' : 'common/none/chapters/passion.lit',
+						versicle: (d == 'sunday') ? 'propers/passion/1/' + d + '/none/versicle.lit' : 'common/none/versicle/passion.lit',
 					})
 				},
 
