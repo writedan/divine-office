@@ -7,6 +7,7 @@
         <script src='./lit-calendar.js'></script>
         <script src='./exsurge.min.js'></script>
         <script src='./lit-engine/parser.js'></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script src='./lit-engine/compiler.js'></script>
         <link rel='stylesheet' type='text/css' href='./liturgy.css'/>
         <style>
@@ -208,6 +209,8 @@
                 .replaceAll('<sp>r</sp>', '<v>\\Rbar</v>')
                 .replaceAll('<sp>a</sp>', '<v>\\Abar</v>')
                 .replaceAll('<sp>*</sp>', '<v>\\greheightstar</v>')
+                .replaceAll('<sp>1</sp>', "<c>†</c>")
+                .replaceAll('<sp>2</sp>', "<c>✢</c>")
                 .replaceAll('<sp>+</sp>', '<v>+</v>')
                   .replaceAll(/<v>\\([VRAvra])bar<\/v>/g,'$1/.')
                   .replaceAll(/<sp>([VRAvra])\/<\/sp>\.?/g,'$1/.')
