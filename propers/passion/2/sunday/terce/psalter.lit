@@ -1,0 +1,10 @@
+#antiphon "pueri-hebreorum"
+	#tone "1-ii" "c4"
+	#psalm "118-iii"
+
+	#tone "1-ii" "c4"
+	#psalm "118-iv"
+
+	#tone "1-ii" "c4"
+	#psalm "118-v"
+#repeat-antiphon
