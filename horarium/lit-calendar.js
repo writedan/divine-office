@@ -230,7 +230,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 					Lauds: {
 						order: 'lauds/penitential-order.lit',
-						psalter: (d == 'sunday') ? 'propers/passion/' + w + '/sunday/lauds/psalter.lit' : 'lauds/' + d + '.lit',
+						psalter: (d == 'sunday' || w == 2) ? 'propers/passion/' + w + '/' + d + '/lauds/psalter.lit' : 'lauds/' + d + '.lit',
 						propers: {
 							hymn: 'hymn/lustra-sex-qui-jam-peracta.lit',
 							kyrie: kyrie,
