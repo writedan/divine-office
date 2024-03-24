@@ -260,6 +260,10 @@ class Node {
 						for (let verse_idx in verse) {
 							let syllable = verse[verse_idx];
 							let notes = melody[verse_idx];
+							if (!syllable || !notes) {
+								throw new Error(`On verse "${verse}", syllable "${syllable}" and notes "${notes}" are mismatched."`);
+							}
+
 							if (verse_idx == 0 && i == 0) {
 								gabc += (vi + 1) + '. ' + (vi == 0 ? '' : ' (::)');
 							}
