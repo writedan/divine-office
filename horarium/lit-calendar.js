@@ -289,7 +289,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 						psalter: 'vespers/' + d + '.lit',
 						propers: {
 							kyrie: kyrie,
-							chapter: (d == 'saturday' || d == 'sunday') ? 'propers/passion/' + w + '/' + d + '/vespers/chapter.lit' : 'common/vespers/chapters/passion.lit',
+							chapter: (d == 'saturday' || d == 'sunday' || (d == 'wednesday' && w == 2)) ? 'propers/passion/' + w + '/' + d + '/vespers/chapter.lit' : 'common/vespers/chapters/passion.lit',
 							hymn: 'hymn/vexilla-regis-prodeunt.lit',
 							versicle: 'common/vespers/versicle/passion.lit',
 							collect: (d == 'sunday' || d == 'saturday') ? 'propers/passion/' + w + '/sunday/collect.gabc' :collectpath + 'blessing.gabc',
