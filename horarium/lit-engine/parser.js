@@ -257,6 +257,12 @@ class Node {
 						let verse = v[0];
 						let melody = v[1];
 
+						if (verse.length < melody.length) {
+							if (verse.length < melody.length - 3) {
+								throw new Error(`On verse "${verse}", less syllables than melody, and amen presumably not present.`)
+							}
+						}
+
 						for (let verse_idx in verse) {
 							let syllable = verse[verse_idx];
 							let notes = melody[verse_idx];
