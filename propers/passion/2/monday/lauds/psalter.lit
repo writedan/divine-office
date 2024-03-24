@@ -1,0 +1,36 @@
+#antiphon "faciem-meam-non-averti"
+	#tone "4-iv" "c3"
+	#psalm "50"
+#repeat-antiphon
+
+#antiphon "framea-suscitare"
+	#tone "2-i" "f3"
+	#psalm "5"
+#repeat-antiphon
+
+#antiphon "appenderunt-mercedem"
+	#tone "4-iii" "f3"
+	#no-gloria
+	#psalm "62"
+
+	#tone "4-iii" "f3"
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "inundaverunt-aque"
+	#tone "8-i" "c4"
+	#psalm "isaiah-12"
+#repeat-antiphon
+
+#antiphon "labia-insurgentium"
+	#tone "8-i"
+	#no-gloria
+	#psalm "148"
+
+	#tone "8-i"
+	#no-gloria
+	#psalm "149"
+
+	#tone "8-i"
+	#psalm "150"
+#repeat-antiphon
