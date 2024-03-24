@@ -275,7 +275,7 @@ class Node {
 							}
 
 							let continuous = syllable.endsWith('-')
-							gabc += (continuous ? syllable : syllable + ' ') + '(' + notes + ')';
+							gabc += (continuous ? syllable.substring(0, syllable.length - 1) : syllable + ' ') + '(' + notes + ')';
 						}
 
 						if ((i + vlen) >= combined.length) {
