@@ -1,0 +1,36 @@
+#antiphon "vide-domine-et-considera"
+	#tone "7-vi" "c3"
+	#psalm "50"
+#repeat-antiphon
+
+#antiphon "discerne-causam-meam"
+	#tone "7-iii" "c3"
+	#psalm "42"
+#repeat-antiphon
+
+#antiphon "dum-tribularer-clamavi"
+	#tone "7-i" "c3"
+	#no-gloria
+	#psalm "62"
+
+	#tone "7-i" "c3"
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "domine-vim-patior"
+	#tone "3-iv" "c3"
+	#psalm "isaiah-38"
+#repeat-antiphon
+
+#antiphon "dixerunt-impii-opprimamus"
+	#tone "8-i" "c4"
+	#no-gloria
+	#psalm "148"
+
+	#tone "8-i" "c4"
+	#no-gloria
+	#psalm "149"
+
+	#tone "8-i" "c4"
+	#psalm "150"
+#repeat-antiphon
