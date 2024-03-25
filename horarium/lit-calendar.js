@@ -360,6 +360,14 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			order: 'terce/triduum-order.lit',
 			psalter: 'none/triduum.lit'
 		},
+
+		Vespers: {
+			order: 'vespers/triduum-order.lit',
+			psalter: 'vespers/triduum.lit',
+			propers: {
+				magnificat: 'propers/triduum/thursday/vespers/magnificat.lit'
+			}
+		}
 	}
 
 	// TODO: pascha
