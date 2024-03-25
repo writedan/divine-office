@@ -13,6 +13,14 @@ function resolveTone(tone, ending='?') {
 		return resolveTone(parts[0], (parts[1] === undefined ? '' : parts[1]))
 	}
 
+	if (tone == '1') {
+		return '8';
+	}
+
+	if (tone == '6a') {
+		return '8';
+	}
+
 	if (tone == '2') {
 		if (ending == 'i') {
 			return '2';
@@ -200,7 +208,7 @@ class Node {
 					if (ctx.getField('universal-gloria-disabled')) {
 						return undefined;
 					}
-					return new Node(Directive.new('import', ['common/gloria/' + link + '.lit'])).unfold(ctx);
+					return new Node(Directive.new('import', ['common/gloria/' + resolveTone(link) + '.lit'])).unfold(ctx);
 				}
 			}
 
