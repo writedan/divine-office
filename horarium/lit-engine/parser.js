@@ -197,6 +197,9 @@ class Node {
 				if (link == 'alleluia' || link == 'laus-tibi') {
 					return new Node(Directive.new('score', ['common/gloria/' + link + '.gabc'])).unfold(ctx);
 				} else {
+					if (ctx.getField('universal-gloria-disabled')) {
+						return undefined;
+					}
 					return new Node(Directive.new('import', ['common/gloria/' + link + '.lit'])).unfold(ctx);
 				}
 			}

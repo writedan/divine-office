@@ -328,7 +328,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			psalter: 'tenebrae/holy-thursday.lit',
 			propers: mergeDeep(lessons('propers/triduum/thursday/tenebrae/'), {
 				benedictus: 'propers/triduum/thursday/tenebrae/benedictus.lit',
-				preces: 'propers/triduum/thursday/tenebrae/preces.lit'
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
+				'universal-gloria-disabled': true
 			})
 		},
 
@@ -337,41 +338,58 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			psalter: 'tenebrae/holy-thursday.lit',
 			propers: mergeDeep(lessons('propers/triduum/thursday/tenebrae/'), {
 				benedictus: 'propers/triduum/thursday/tenebrae/benedictus.lit',
-				preces: 'propers/triduum/thursday/tenebrae/preces.lit'
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
+				'universal-gloria-disabled': true
 			})
 		},
 
 		Prime: {
 			order: 'terce/triduum-order.lit',
-			psalter: 'prime/triduum.lit'
+			psalter: 'prime/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true
+			}
 		},
 
 		Terce: {
 			order: 'terce/triduum-order.lit',
-			psalter: 'terce/triduum.lit'
+			psalter: 'terce/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true
+			}
 		},
 
 		Sext: {
 			order: 'terce/triduum-order.lit',
-			psalter: 'sext/triduum.lit'
+			psalter: 'sext/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true
+			}
 		},
 
 		None: {
 			order: 'terce/triduum-order.lit',
-			psalter: 'none/triduum.lit'
+			psalter: 'none/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true
+			}
 		},
 
 		Vespers: {
 			order: 'vespers/triduum-order.lit',
 			psalter: 'vespers/triduum.lit',
 			propers: {
-				magnificat: 'propers/triduum/thursday/vespers/magnificat.lit'
+				magnificat: 'propers/triduum/thursday/vespers/magnificat.lit',
+				'universal-gloria-disabled': true
 			}
 		},
 
 		Compline: {
 			order: 'terce/triduum-order.lit',
-			psalter: 'compline/triduum.lit'
+			psalter: 'compline/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true
+			}
 		}
 	}
 
