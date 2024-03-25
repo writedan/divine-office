@@ -340,6 +340,26 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 				preces: 'propers/triduum/thursday/tenebrae/preces.lit'
 			})
 		},
+
+		Prime: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'prime/triduum.lit'
+		},
+
+		Terce: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'terce/triduum.lit'
+		},
+
+		Sext: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'sext/triduum.lit'
+		},
+
+		None: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'none/triduum.lit'
+		},
 	}
 
 	// TODO: pascha
