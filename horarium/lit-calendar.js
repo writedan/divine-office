@@ -367,6 +367,11 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			propers: {
 				magnificat: 'propers/triduum/thursday/vespers/magnificat.lit'
 			}
+		},
+
+		Compline: {
+			order: 'compline/triduum-order.lit',
+			psalter: 'compline/triduum.lit'
 		}
 	}
 
