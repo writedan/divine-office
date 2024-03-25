@@ -110,9 +110,9 @@
 
 	#subheading "Preces"
 
-		#instruction "All kneel while the preces are sung."
+		#instruction "All kneel."
 
-		#include "preces"
+		#antiphon "christus-factus-est"
 
 	#subheading "Conclusion"
 
