@@ -370,7 +370,7 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 		},
 
 		Compline: {
-			order: 'compline/triduum-order.lit',
+			order: 'terce/triduum-order.lit',
 			psalter: 'compline/triduum.lit'
 		}
 	}
