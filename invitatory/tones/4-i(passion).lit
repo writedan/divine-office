@@ -1,5 +1,5 @@
 #instruction "The procession sings."
-#gabc "(f3) <sp>v</sp> O(f) come,(hg) let(hi) us(i) sing(i) un(jv)to(jv) the(i) Lord,(i,) let(i) us(i) heart(i)ti(i)ly(i) re(jv)joice(jv) in(i) the(i) strength(hg) of(f) our(gv) sal(iv)va(gh)tion:(f;) let(f) us(hg) come(hi) be(iv)fore(iv) his(iv) pres(hg)ence(f) with(gv) thanks(hv)giv(g)ing,(f,) and(e) show(fh) our(hv)selves(hv) glad(iv) in(hf) him(gi) with(hg) psalms.(g)"
+#gabc "(f3) <sp>v</sp> O(f) come,(hg) let(hi) us(i) sing(i) un(jv)to(jv) the(i) Lord,(i,) let(i) us(i) hear(i)ti(i)ly(i) re(jv)joice(jv) in(i) the(i) strength(hg) of(f) our(gv) sal(iv)va(gh)tion:(f;) let(f) us(hg) come(hi) be(iv)fore(iv) his(iv) pres(hg)ence(f) with(gv) thanks(hv)giv(g)ing,(f,) and(e) show(fh) our(hv)selves(hv) glad(iv) in(hf) him(gi) with(hg) psalms.(g)"
 #instruction "The congregation sings together."
 #repeat-antiphon
 
@@ -14,7 +14,7 @@
 #repeat-antiphon
 
 #instruction "The procession sings."
-#gabc "(f3) <sp>v</sp> To(f)day(hg) if(hi) ye(iv) will(jv) hear(jv) his(i) voice,(i,) Har(g)den(iv) not(gh) your(f) hearts:(f;) as(d) in(hg) the(hi) pro(iv)vo(jv)ca(jv)tion,(i,) and(i) as(i) in(i) the(i) day(i) of(i) tempt(jv)ta(jv)tion(i) in(i) the(jv) wild(jv)er(i)ness,(i,) when(hg) your(f) fa(gv)thers(hv) tempt(g)ed(f) me:(f;) proved(e) me(fh) and(hf) saw(gi) my(hg) works.(g)"
+#gabc "(f3) <sp>v</sp> To(f)day(hg) if(hi) ye(iv) will(jv) hear(jv) his(i) voice,(i,) Har(g)den(iv) not(gh) your(f) hearts:(f;) as(f) in(hg) the(hi) pro(iv)vo(jv)ca(jv)tion,(i,) and(i) as(i) in(i) the(i) day(i) of(i) temp(jv)ta(jv)tion(i) in(i) the(jv) wild(jv)er(i)ness,(i,) when(hg) your(f) fa(gv)thers(hv) tempt(g)ed(f) me:(f;) proved(e) me(fh) and(hf) saw(gi) my(hg) works.(g)"
 #instruction "The congregation sings together."
 #repeat-antiphon "partial"
 
