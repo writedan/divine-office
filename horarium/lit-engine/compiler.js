@@ -160,6 +160,12 @@ class LiturgyContext {
 				return p;
 			}
 
+			else if (node.directive.type == 'no-gloria') {
+				if (this.getField('universal-gloria-disabled')) {
+					return undefined;
+				}
+			}
+
 			else if (node.directive.type == 'text') {
 				let text = node.directive.args[0];
 				let newtext = '';
