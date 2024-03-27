@@ -112,7 +112,7 @@
 
 		#instruction "All kneel."
 
-		#antiphon "christus-factus-est"
+		#include "preces"
 
 	#subheading "Conclusion"
 

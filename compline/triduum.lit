@@ -1,13 +1,12 @@
-#antiphon "christus-factus-est"
-	#tone "8-i" "f3"
+	#tone "5-iii" "c4"
 	#psalm "4"
 
-	#tone "8-i" "f3"
+	#tone "5-iii" "c4"
 	#psalm "90"
 
-	#tone "8-i" "f3"
+	#tone "5-iii" "c4"
 	#psalm "133"
 
-	#tone "8-i" "f3"
+	#tone "5-iii" "c4"
 	#psalm "nunc-dimittis"
-#repeat-antiphon
+#include "preces"

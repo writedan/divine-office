@@ -347,7 +347,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			order: 'terce/triduum-order.lit',
 			psalter: 'prime/triduum.lit',
 			propers: {
-				'universal-gloria-disabled': true
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
 			}
 		},
 
@@ -355,7 +356,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			order: 'terce/triduum-order.lit',
 			psalter: 'terce/triduum.lit',
 			propers: {
-				'universal-gloria-disabled': true
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
 			}
 		},
 
@@ -363,7 +365,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			order: 'terce/triduum-order.lit',
 			psalter: 'sext/triduum.lit',
 			propers: {
-				'universal-gloria-disabled': true
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
 			}
 		},
 
@@ -371,7 +374,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			order: 'terce/triduum-order.lit',
 			psalter: 'none/triduum.lit',
 			propers: {
-				'universal-gloria-disabled': true
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
 			}
 		},
 
@@ -380,7 +384,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			psalter: 'vespers/triduum.lit',
 			propers: {
 				magnificat: 'propers/triduum/thursday/vespers/magnificat.lit',
-				'universal-gloria-disabled': true
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
 			}
 		},
 
@@ -388,7 +393,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 			order: 'terce/triduum-order.lit',
 			psalter: 'compline/triduum.lit',
 			propers: {
-				'universal-gloria-disabled': true
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/thursday/tenebrae/preces.lit',
 			}
 		}
 	}

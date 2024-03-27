@@ -10,7 +10,7 @@
 
 	#instruction "All kneel."
 
-	#antiphon "christus-factus-est"
+	#include "preces"
 
 	#instruction "Quietly make this prayer."
 

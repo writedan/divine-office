@@ -43,7 +43,7 @@ function resolveTone(tone, ending='?') {
 
 	if (tone == '5') {
 		if (ending == 'i' || ending == 'ii') return '5a';
-		if (ending == 'iii') return '5b';
+		if (ending == 'iii') return '8';
 	}
 
 	return tone;

@@ -1,10 +1,9 @@
-#antiphon "christus-factus-est"
-	#tone "8-i" "f3"
+	#tone "5-iii" "c4"
 	#psalm "118-iii"
 
-	#tone "8-i" "f3"
+	#tone "5-iii" "c4"
 	#psalm "118-iv"
 
-	#tone "8-i" "f3"
+	#tone "5-iii" "c4"
 	#psalm "118-v"
-#repeat-antiphon
+#include "preces"
