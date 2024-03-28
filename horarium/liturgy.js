@@ -332,7 +332,7 @@ function getTemporalMetaData() {
 
         for (var d = 1; d < 7; d++) {
             metadata.pascha[1][feriaToDay(d)] = {
-                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' after Pascha',
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' after the Holy Pascha',
                 color: 'white',
                 rank: 8
             }
@@ -405,34 +405,34 @@ function getTemporalMetaData() {
                 color: 'red'
             },
             monday: {
-                name: 'Monday after Pentecost',
+                name: 'Monday after the Holy Pentecost',
                 rank: 8,
                 color: 'red'
             },
             tuesday: {
-                name: 'Tuesday after Pentecost',
+                name: 'Tuesday after the Holy Pentecost',
                 rank: 8,
                 color: 'red'
             },
             wednesday: {
-                name: 'Ember Wednesday ater Pentecost',
+                name: 'Ember Wednesday after the Holy Pentecost',
                 rank: 7,
                 color: 'red',
                 penance: 'strict-fast',
             },
             thursday: {
-                name: 'Thursday after Pentecost',
+                name: 'Thursday after the Holy Pentecost',
                 rank: 8,
                 color: 'red'
             },
             friday: {
-                name: 'Ember Friday after Pentecost',
+                name: 'Ember Friday after the Holy Pentecost',
                 rank: 7,
                 color: 'red',
                 penance: 'strict-fast'
             },
             saturday: {
-                name: 'Ember Saturday after Pentecost',
+                name: 'Ember Saturday after the Holy Pentecost',
                 rank: 7,
                 color: 'red',
                 penance: 'vigil'
