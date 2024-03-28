@@ -1,4 +1,6 @@
 function applyEaster(metadata) {
+	const kyrie = 'common/kyrie/i.gabc'
+
 	// TODO: pascha
 	// easter day!
 	metadata.pascha[1].sunday.hours = {
@@ -19,6 +21,17 @@ function applyEaster(metadata) {
 				canticle: 'propers/pascha/1/saturday/compline/canticle.lit',
 				anthem: 'compline/anthems/regina-caeli-laetare.lit'
 			}
+		},
+
+		Vigils: {
+			order: 'propers/pascha/1/sunday/vigils/order.lit',
+			psalter: 'propers/pascha/1/sunday/vigils/psalter.lit',
+			propers: mergeDeep(vigils_commons('sunday'), lessons('propers/pascha/1/sunday/vigils/'), {
+				commemoration: 'propers/pascha/1/sunday/vigils/commemoration.lit',
+				invitatory: 'invitatory/alleluia-alleluia-christus-hodie-surrexit.lit',
+				collect: 'propers/pascha/1/sunday/vigils/collect.gabc',
+				gospel: 'propers/pascha/1/sunday/vigils/gospel.lit'
+			})
 		}
 	}
 }
