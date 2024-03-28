@@ -108,13 +108,11 @@
 
 		#include "benedictus"
 
-	#subheading "Preces"
+	#subheading "Conclusion"
 
 		#instruction "All kneel."
 
 		#include "preces"
-
-	#subheading "Conclusion"
 
 		#instruction "Continuing to kneel, all say this prayer quietly."
 
