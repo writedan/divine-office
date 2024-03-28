@@ -119,6 +119,9 @@
         h1.style.color = metadata.color;
         h1.style.letterSpacing = '1vw'
         h1.style.textTransform = 'uppercase';
+        if (metadata.color == 'white') {
+            h1.style.textShadow = '1px 1px 0 #000,-1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000';
+        }
         content.append(h1);
 
         let h2 = document.createElement('h2');

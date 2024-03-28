@@ -537,6 +537,19 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 	}
 
 	// TODO: pascha
+	// easter day!
+	metadata.pascha[1].sunday.hours = {
+		FirstVespers: {
+			order: 'vespers/pascha-day-order.lit',
+			psalter: 'vespers/pascha-day.lit',
+			propers: {
+				collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
+				magnificat: 'propers/pascha/1/saturday/vespers/magnificat.lit'
+			}
+		}
+	}
+
+
 	// TODO: ascension
 	// TODO: pentecost
 	// TODO: august

@@ -1,0 +1,27 @@
+#instruction "All quietly make these prayers."
+
+Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+
+Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+
+#instruction "Then let a cantor begin."
+
+#include "psalter"
+
+#include "magnificat"
+
+#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) thee.(f) (::) Let(h) us(g) pray.(h)"
+
+#include "collect"
+
+#instruction "The congregation responds."
+
+#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+#instruction "The officiant begins again."
+
+#score "common/pascha-conclusion.gabc"
+
+#instruction "All quietly make this prayer."
+
+Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
