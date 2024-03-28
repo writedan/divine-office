@@ -546,6 +546,16 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 				collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
 				magnificat: 'propers/pascha/1/saturday/vespers/magnificat.lit'
 			}
+		},
+
+		FirstCompline: {
+			order: 'compline/pascha-day-order.lit',
+			psalter: 'compline/pascha.lit',
+			propers: {
+				collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
+				canticle: 'propers/pascha/1/saturday/compline/canticle.lit',
+				anthem: 'compline/anthems/regina-caeli-laetare.lit'
+			}
 		}
 	}
 
