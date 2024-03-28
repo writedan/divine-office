@@ -78,6 +78,22 @@ function applyEaster(metadata) {
 				collect: 'propers/pascha/1/sunday/vigils/collect.gabc',
 				versicle: 'propers/pascha/1/sunday/none/versicle.lit'
 			})
+		},
+
+		Vespers: {
+			order: 'propers/pascha/1/sunday/vespers/order.lit',
+			psalter: 'propers/pascha/1/sunday/vespers/psalter.lit',
+			propers: mergeDeep(vespers_commons('sunday'), {
+				collect: 'propers/pascha/1/sunday/vespers/collect.gabc',
+				'hec-dies': 'gradual/hec-dies-confitemini-domino.gabc',
+				alleluia: 'alleluia/epulemur-in-azimis.gabc',
+				versicle: 'propers/pascha/1/sunday/vespers/versicle.lit',
+				magnificat: 'propers/pascha/1/sunday/vespers/magnificat.lit',
+				'procession-fount-psalter': 'propers/pascha/1/sunday/vespers/fount-procession.lit',
+				'procession-fount-alleluia': 'alleluia/laudate-pueri.gabc',
+				'procession-fount-collect': 'propers/pascha/1/sunday/vespers/fount-collect.gabc',
+				'procession-altar-psalter': 'propers/pascha/1/sunday/vespers/altar-procession.lit'
+			})
 		}
 	}
 }

@@ -13,6 +13,10 @@ function resolveTone(tone, ending='?') {
 		return resolveTone(parts[0], (parts[1] === undefined ? '' : parts[1]))
 	}
 
+	if (ending == 'solemn') {
+		return tone + '-' + ending;
+	}
+
 	if (tone == '1') {
 		return '8';
 	}
