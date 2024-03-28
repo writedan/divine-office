@@ -183,6 +183,16 @@ function applyEaster(metadata) {
 					'procession-fount-collect': 'propers/pascha/1/' + d + '/vespers/fount-collect.gabc',
 					'procession-altar-psalter': 'propers/pascha/1/sunday/vespers/altar-procession.lit'
 				})
+			},
+
+			Compline: {
+				order: 'propers/pascha/1/sunday/compline/order.lit',
+				psalter: 'compline/pascha.lit',
+				propers: {
+					collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
+					anthem: 'compline/anthems/regina-caeli-laetare.lit',
+					'hec-dies': 'gradual/hec-dies.gabc'
+				}
 			}
 		}
 	}
