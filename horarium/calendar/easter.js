@@ -9,16 +9,17 @@ function applyEaster(metadata) {
 			psalter: 'vespers/pascha-day.lit',
 			propers: {
 				collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
-				magnificat: 'propers/pascha/1/saturday/vespers/magnificat.lit'
+				magnificat: 'propers/pascha/1/saturday/vespers/magnificat.lit',
 			}
 		},
 
 		FirstCompline: {
 			order: 'compline/pascha-day-order.lit',
-			psalter: 'compline/pascha.lit',
+			psalter: 'propers/pascha/1/saturday/compline/psalter.lit',
 			propers: {
 				collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
-				anthem: 'compline/anthems/regina-caeli-laetare.lit'
+				anthem: 'compline/anthems/regina-caeli-laetare.lit',
+				canticle: 'propers/pascha/1/saturday/compline/canticle.lit'
 			}
 		},
 
@@ -93,10 +94,20 @@ function applyEaster(metadata) {
 				'procession-fount-collect': 'propers/pascha/1/sunday/vespers/fount-collect.gabc',
 				'procession-altar-psalter': 'propers/pascha/1/sunday/vespers/altar-procession.lit'
 			})
+		},
+
+		Compline: {
+			order: 'propers/pascha/1/sunday/compline/order.lit',
+			psalter: 'compline/pascha.lit',
+			propers: {
+				collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
+				anthem: 'compline/anthems/regina-caeli-laetare.lit',
+				'hec-dies': 'gradual/hec-dies.gabc'
+			}
 		}
 	}
 
-	metadata.pascha[1].sunday.hours.Compline = metadata.pascha[1].sunday.hours.FirstCompline;
+	//metadata.pascha[1].sunday.hours.Compline = metadata.pascha[1].sunday.hours.FirstCompline;
 
 	// easter week
 	for (let d in metadata.pascha[1]) {

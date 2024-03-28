@@ -18,11 +18,9 @@
 
 	#include "psalter"
 
-#heading "Nunc dimittis"
-
-	#include "canticle"
-
 #heading "Conclusion"
+
+	#include "hec-dies"
 
 	#instruction "Everyone stands as the officiant begins."
 
