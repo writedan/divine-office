@@ -477,6 +477,65 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 		}
 	}
 
+	//holy saturday
+	metadata.passion[2].saturday.hours = {
+		Vigils: {
+			order: 'tenebrae/order.lit',
+			psalter: 'tenebrae/holy-saturday.lit',
+			propers: mergeDeep(lessons('propers/triduum/saturday/tenebrae/'), {
+				benedictus: 'propers/triduum/saturday/tenebrae/benedictus.lit',
+				preces: 'propers/triduum/saturday/tenebrae/preces.lit',
+				'universal-gloria-disabled': true
+			})
+		},
+
+		Lauds: {
+			order: 'tenebrae/order.lit',
+			psalter: 'tenebrae/holy-saturday.lit',
+			propers: mergeDeep(lessons('propers/triduum/saturday/tenebrae/'), {
+				benedictus: 'propers/triduum/saturday/tenebrae/benedictus.lit',
+				preces: 'propers/triduum/saturday/tenebrae/preces.lit',
+				'universal-gloria-disabled': true
+			})
+		},
+
+		Prime: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'prime/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/saturday/tenebrae/preces.lit',
+			}
+		},
+
+		Terce: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'terce/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/saturday/tenebrae/preces.lit',
+			}
+		},
+
+		Sext: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'sext/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/saturday/tenebrae/preces.lit',
+			}
+		},
+
+		None: {
+			order: 'terce/triduum-order.lit',
+			psalter: 'none/triduum.lit',
+			propers: {
+				'universal-gloria-disabled': true,
+				preces: 'propers/triduum/saturday/tenebrae/preces.lit',
+			}
+		}
+	}
+
 	// TODO: pascha
 	// TODO: ascension
 	// TODO: pentecost

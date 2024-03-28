@@ -1,0 +1,93 @@
+#antiphon "in-pace-in-idipsum"
+	#tone "8-i" "c3"
+	#psalm "4"
+#repeat-antiphon
+
+#antiphon "habitabit-in-tabernaculo"
+	#tone "4-i" "f3"
+	#psalm "14"
+#repeat-antiphon
+
+#antiphon "caro-mea-requiescat"
+	#tone "7-ii" "c1"
+	#psalm "15"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> In(h) per(h)fect(h) peace(h) and(h) safe(g)ty.(f) <sp>r</sp>(::) I(h) shall(h) sleep(h) and(h) take(g) my(f) rest.(f)"
+
+
+#yield "2nd-nocturn"
+
+#antiphon "elevamini-porte-eternales"
+	#tone "5-i" "c3"
+	#psalm "23"
+#repeat-antiphon
+
+#antiphon "credo-videre-bona"
+	#tone "4-i" "f3"
+	#psalm "26"
+#repeat-antiphon
+
+#antiphon "domine-abstraxisti"
+	#tone "8-i" "c3"
+	#psalm "29"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> But(h) thou,(g) O(f) Lord.(f) <sp>r</sp>(::) Have(h) mer(h)cy(h) u(h)pon(g) me.(f)"
+
+
+#yield "3rd-nocturn"
+
+#antiphon "deus-adjuvat-me"
+	#tone "8-i" "c3"
+	#psalm "53"
+#repeat-antiphon
+
+#antiphon "in-pace-factus-est"
+	#tone "7-i" "c3"
+	#psalm "76"
+#repeat-antiphon
+
+#antiphon "factus-sum-sicut-homo"
+	#tone "4-viii"
+	#psalm "87"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> He(h) hath(h) laid(g) me.(f) <sp>r</sp>(::) In(h) the(h) dark(g)ness.(f)"
+
+
+#yield "lauds"
+
+#antiphon "o-mors-ero-mors-tua"
+	#tone "4-viii"
+	#psalm "50"
+#repeat-antiphon
+
+#antiphon "attendite-universi-populi"
+	#tone "7-iii"
+	#psalm "91"
+#repeat-antiphon
+
+#antiphon "o-vos-omnes"
+	#tone "8-ii" "c3"
+	#psalm "62"
+
+	#tone "8-ii" "c3"
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "a-porta-inferi"
+	#tone "2-i" "f3"
+	#psalm "isaiah-38"
+#repeat-antiphon
+
+#antiphon "plangent-eum-quasi-unigenitum"
+	#tone "4-v" "c3"
+	#psalm "148"
+
+	#tone "4-v" "c3"
+	#psalm "149"
+
+	#tone "4-v" "c3"
+	#psalm "150"
+#repeat-antiphon
