@@ -18,7 +18,6 @@ function applyEaster(metadata) {
 			psalter: 'compline/pascha.lit',
 			propers: {
 				collect: 'propers/pascha/1/saturday/vespers/collect.gabc',
-				canticle: 'propers/pascha/1/saturday/compline/canticle.lit',
 				anthem: 'compline/anthems/regina-caeli-laetare.lit'
 			}
 		},
@@ -96,4 +95,6 @@ function applyEaster(metadata) {
 			})
 		}
 	}
+
+	metadata.pascha[1].sunday.hours.Compline = metadata.pascha[1].sunday.hours.FirstCompline;
 }
