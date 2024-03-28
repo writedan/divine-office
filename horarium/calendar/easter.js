@@ -51,6 +51,15 @@ function applyEaster(metadata) {
 				collect: 'propers/pascha/1/sunday/vigils/collect.gabc',
 				versicle: 'propers/pascha/1/sunday/prime/versicle.lit'
 			})
+		},
+
+		Terce: {
+			order: 'propers/pascha/1/sunday/terce/order.lit',
+			psalter: 'propers/pascha/1/sunday/terce/psalter.lit',
+			propers: mergeDeep(minor_commons('terce', 'sunday'), {
+				collect: 'propers/pascha/1/sunday/vigils/collect.gabc',
+				versicle: 'propers/pascha/1/sunday/terce/versicle.lit'
+			})
 		}
 	}
 }

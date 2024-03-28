@@ -1,0 +1,12 @@
+#antiphon "et-ecce-terremotus-factus-est"
+	#tone "7-ii" "c3"
+	#psalm "118-iii"
+
+	#tone "7-ii" "c3"
+	#psalm "118-iv"
+
+	#tone "7-ii" "c3"
+	#psalm "118-v"
+#repeat-antiphon
+
+#score "gradual/hec-dies.gabc"
