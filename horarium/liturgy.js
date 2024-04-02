@@ -325,14 +325,14 @@ function getTemporalMetaData() {
 
         metadata.pascha[1] = {}
         metadata.pascha[1].sunday = {
-            name: 'Sunday of the Holy Pascha',
+            name: 'Holy Pasch of the Lord',
             color: 'white',
             rank: 0
         }
 
         for (var d = 1; d < 7; d++) {
             metadata.pascha[1][feriaToDay(d)] = {
-                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' after the Holy Pascha',
+                name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' after the Holy Pasch',
                 color: 'white',
                 rank: 8
             }
@@ -341,14 +341,14 @@ function getTemporalMetaData() {
         for (var w = 2; w <= 6; w++) {
             metadata.pascha[w] = {}
             metadata.pascha[w].sunday = {
-                name: ordinal_suffix_of(w - 1) + ' Sunday after Pascha',
+                name: ordinal_suffix_of(w - 1) + ' Sunday after the Pasch',
                 color: 'white',
                 rank: 2
             }
 
             for (var d = 1; d < 7; d++) {
                 metadata.pascha[w][feriaToDay(d)] = {
-                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w - 1) + ' Week after Pascha',
+                    name: feriaToDay(d).charAt(0).toUpperCase() + feriaToDay(d).slice(1) + ' in the ' + ordinal_suffix_of(w - 1) + ' Week after the Pasch',
                     color: 'white',
                     penance: (d == 3 || d == 5) ? 'abstinence' : 'none',
                     rank: 8
