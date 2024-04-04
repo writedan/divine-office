@@ -33,7 +33,8 @@ function easter_computus(y) {
     function w_sunset(lat, lon, dat) {
         return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunset);
     }
-    const roundNearest = (value, nearest) => Math.round(value * (1 / nearest)) / (1 / nearest);
+    const roundNearest = (value, nearest) => Math.ceil(value * (1 / nearest)) / (1 / nearest);
+
     function roundTime(time) {
         time = roundNearest(time, 15 / 60);
         if (time > 24) {
