@@ -1,0 +1,51 @@
+#title "Ad cenam agni"
+
+#begin-hymn
+
+	#clef "c4"
+
+	#melody "g" "jv" "hg" "ji" "jk" "j" "i" "h"
+	#verse "The" "Lamb's" "high" "ban-" "quet" "we" "a-" "wait,"
+	#verse "U-" "pon" "the" "Al-" "tar" "of" "the" "Cross"
+	#verse "That" "Pas-" "chal" "eve" "God's" "arm" "was" "bared:"
+	#verse "Now" "Christ," "our" "Pas-" "chal" "Lamb," "is" "slan,"
+	#verse "O" "thou" "from" "whom" "hell's" "mon-" "arch" "flies,"
+	#verse "For" "Christ," "a-" "ris-" "ing" "from" "the" "dead,"
+	#verse "We" "pray" "thee," "King" "with" "glo-" "ry" "decked,"
+	#verse "To" "thee" "who" "dead" "a-" "gain" "dost" "live,"
+	#make
+
+	#melody "h" "hg" "ef" "gv" "eg" "f" "e" "d"
+	#verse "In" "snow- " "white" "robes" "of" "roy-" "al" "state:"
+	#verse "His" "Bo-" "dy" "hath" "re-" "deemed" "our" "loss:"
+	#verse "The" "de-" "vas-" "ta-" "ting" "An-" "gel" "spared:"
+	#verse "The" "Lamb" "of" "God" "that" "knows" "no" "stain,"
+	#verse "O" "great," "O" "ve-" "ry" "sa-" "cri-" "fice,"
+	#verse "From" "con-" "quered" "hell" "vic-" "tor-" "ious" "sped:"
+	#verse "In" "this" "our" "Pas-" "chal" "joy," "pro-" "tect"
+	#verse "All" "glo-" "ry," "Lord," "thy" "peo-" "ple" "give:"
+	#make
+
+	#melody "ev" "ev" "dc" "gv" "gh" "jv" "jv" "i"
+	#verse "And" "now," "the" "Red" "Sea's" "chan-" "nel" "past,"
+	#verse "And" "tast-" "ing" "of" "his" "rose-" "ate" "Blood,"
+	#verse "By" "strength" "of" "hand" "our" "hosts" "went" "free"
+	#verse "The" "true" "ob-" "la-" "tion" "of-" "fered" "here,"
+	#verse "Thy" "cap-" "tive" "peo-" "ple" "are" "set" "free,"
+	#verse "He" "thrusts" "the" "ty-" "rant" "down" "to" "chains,"
+	#verse "From" "all" "that" "death" "would" "fain" "ef-" "fect,"
+	#verse "All" "glo-" "ry," "as" "is" "ev-" "er" "meet,"
+	#make
+
+	#melody "jk" "ji" "hg" "iv" "hijv" "h" "g" "g"
+	#verse "To" "Christ," "our" "Prince," "we" "sing" "at" "last."
+	#verse "Our" "life" "is" "hid" "with" "him" "in" "God."
+	#verse "From" "Pha-" "roah's" "ruth-" "less" "ty-" "ran-" "ny."
+	#verse "Our" "own" "un-" "leav-" "ened" "Bread" "sin-" "cere."
+	#verse "And" "end-" "less" "life" "re-" "stored" "in" "thee."
+	#verse "And" "Pa-" "ra-" "dise" "for" "man" "re-" "gains."
+	#verse "Thy" "ran-" "somed" "flock," "thine" "own" "e-" "lect."
+	#verse "To" "Fa-" "ther" "and" "to" "Pa-" "ra-" "clete."
+	#amen "gh" "gfg"
+	#make
+#end-hymn
