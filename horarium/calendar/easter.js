@@ -196,4 +196,37 @@ function applyEaster(metadata) {
 			}
 		}
 	}
+
+	// easter weeks
+	for (let w = 2; w <= 6; w++) {
+		for (let d in metadata.pascha[w]) {
+			metadata.pascha[w][d].hours = {
+				Lauds: {
+					order: 'lauds/order.lit',
+					psalter: (d == 'sunday') ? 'propers/pascha/1/sunday/lauds/psalter.lit' : 'lauds/' + d + '(pascha).lit',
+					propers: mergeDeep(lauds_commons(d), {
+						collect: 'propers/pascha/' + w + '/sunday/collect.gabc',
+						chapter: 'propers/pascha/' + w + '/sunday/lauds/chapter.lit',
+						versicle: 'common/lauds/veriscle/easter.lit',
+						hymn: 'hymn/sermone-blando-angelus.lit',
+						benedictus: 'propers/pascha/' + w + '/' + d + '/lauds/benedictus.lit',
+						kyrie: 'common/kyrie/1.gabc',
+					})
+				},
+
+				Vespers: {
+					order: 'vespers/order.lit',
+					psalter: 'vespers/' + d + '(pascha).lit',
+					propers: mergeDeep(vespers_commons(d), {
+						chapter: 'propers/pascha/' + w + '/sunday/lauds/chapter.lit',
+						versicle: 'common/vespers/veriscle/easter.lit',
+						collect: 'propers/pascha/' + w + '/sunday/collect.gabc',
+						kyrie: 'common/kyrie/1.gabc',
+						magnificat: 'propers/pascha/' + w + '/' + d + '/vespers/magnificat.lit',
+						hymn: 'hymn/ad-cenam-agni.lit'
+					})
+				}
+			}
+		}
+	}
 }
