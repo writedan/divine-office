@@ -207,7 +207,7 @@ function applyEaster(metadata) {
 					propers: mergeDeep(lauds_commons(d), {
 						collect: 'propers/pascha/' + w + '/sunday/collect.gabc',
 						chapter: 'propers/pascha/' + w + '/sunday/lauds/chapter.lit',
-						versicle: 'common/lauds/veriscle/easter.lit',
+						versicle: 'common/lauds/versicle/easter.lit',
 						hymn: 'hymn/sermone-blando-angelus.lit',
 						benedictus: 'propers/pascha/' + w + '/' + d + '/lauds/benedictus.lit',
 						kyrie: 'common/kyrie/1.gabc',
@@ -219,7 +219,7 @@ function applyEaster(metadata) {
 					psalter: 'vespers/' + d + '(pascha).lit',
 					propers: mergeDeep(vespers_commons(d), {
 						chapter: 'propers/pascha/' + w + '/sunday/lauds/chapter.lit',
-						versicle: 'common/vespers/veriscle/easter.lit',
+						versicle: 'common/vespers/versicle/easter.lit',
 						collect: 'propers/pascha/' + w + '/sunday/collect.gabc',
 						kyrie: 'common/kyrie/1.gabc',
 						magnificat: 'propers/pascha/' + w + '/' + d + '/vespers/magnificat.lit',
