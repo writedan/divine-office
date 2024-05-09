@@ -22,8 +22,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 	applyEaster(metadata);
 
-
-	// TODO: ascension
+	applyAscension(metadata);
+	
 	// TODO: pentecost
 	// TODO: august
 	// TODO: september
