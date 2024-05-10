@@ -63,11 +63,9 @@
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
+		#title "Lesson 1"
+
 		#include "lesson-1"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 		#include "responsory-1"
 
@@ -84,11 +82,9 @@
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
+		#title "Lesson 2"
+
 		#include "lesson-2"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 		#include "responsory-2"
 
@@ -105,11 +101,9 @@
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
+		#title "Lesson 3"
+
 		#include "lesson-3"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 		#include "responsory-3"
 

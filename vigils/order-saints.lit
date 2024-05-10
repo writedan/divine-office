@@ -22,14 +22,14 @@
 
 	#instruction "Everyone continues together."
 
-	#gloria "laus-tibi"
+	#gloria "alleluia"
 
 
 #heading "Hymn"
 
 	#include "hymn"
 
-#heading "First Nocturn"
+#heading "Nocturn"
 
 	#subheading "Psalmody"
 
@@ -106,163 +106,6 @@
 		#include "lesson-3"
 
 		#include "responsory-3"
-
-#heading "Second Nocturn"
-
-	#subheading "Psalmody"
-
-		#resume "2nd-nocturn"
-
-	#subheading "Lections"
-
-		#instruction "All kneel and pray quietly."
-
-		Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
-
-		#instruction "The officiant then gives the absolution."
-
-		#include "absolution-2"
-
-		#instruction "The congregation responds."
-
-		#gabc "(c3) A(gh)men.(h)"
-
-		#instruction "All then stand for the lessons."
-
-		#instruction "Before each lesson, the lector begs a blessing."
-
-		#gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
-
-		#instruction "The officiant proclaims the blessing."
-
-		#include "blessing-4"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-		#title "Lesson 4"
-
-		#include "lesson-4"
-
-		#include "responsory-4"
-
-
-		#instruction "Before each lesson, the lector begs a blessing."
-
-		#gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
-
-		#instruction "The officiant proclaims the blessing."
-
-		#include "blessing-5"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-		#title "Lesson 5"
-
-		#include "lesson-5"
-
-		#include "responsory-5"
-
-
-		#instruction "Before each lesson, the lector begs a blessing."
-
-		#gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
-
-		#instruction "The officiant proclaims the blessing."
-
-		#include "blessing-6"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-		#title "Lesson 6"
-
-		#include "lesson-6"
-
-		#include "responsory-6"
-
-
-#heading "Third Nocturn"
-
-	#subheading "Psalmody"
-
-		#resume "3rd-nocturn"
-
-	#subheading "Lections"
-
-		#instruction "All kneel and pray quietly."
-
-		Our Father, who art in heaven, hallowed be thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
-
-		#instruction "The officiant then gives the absolution."
-
-		#include "absolution-3"
-
-		#instruction "The congregation responds."
-
-		#gabc "(c3) A(gh)men.(h)"
-
-		#instruction "All then stand for the lessons."
-
-		#instruction "Before each lesson, the lector begs a blessing."
-
-		#gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
-
-		#instruction "The officiant proclaims the blessing."
-
-		#include "blessing-7"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-		#title "Lesson 7"
-
-		#include "lesson-7"
-
-		#include "responsory-7"
-
-
-		#instruction "Before each lesson, the lector begs a blessing."
-
-		#gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
-
-		#instruction "The officiant proclaims the blessing."
-
-		#include "blessing-8"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-		#title "Lesson 8"
-
-		#include "lesson-8"
-
-		#include "responsory-8"
-
-
-		#instruction "Before each lesson, the lector begs a blessing."
-
-		#gabc "(c3) <sp>v</sp> O(h) Lord,(h) grant(h) thy(h) bless(h)ing.(f)"
-
-		#instruction "The officiant proclaims the blessing."
-
-		#include "blessing-9"
-
-		#instruction "The people respond."
-
-		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-		#title "Lesson 9"
-
-		#include "lesson-9"
-
-		#include "responsory-9"
 
 #heading "Evangeliary"
 
