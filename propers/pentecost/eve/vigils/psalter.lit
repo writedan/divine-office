@@ -1,0 +1,12 @@
+#antiphon "alleluia(iii)(easter)"
+	#tone "1-iv" "f3"
+	#psalm "97"
+
+	#tone "1-iv" "f3"
+	#psalm "98"
+
+	#tone "1-iv" "f3"
+	#psalm "100"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> Thou(h) hast(h) set(h) thy(h) glo(h)ry.(f) <sp>r</sp>(::) A(h)bove(h) the(h) hea(h)vens,(h) O(h) God,(h) al(h)le(h)lu(h)ia.(f)"

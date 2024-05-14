@@ -4,6 +4,8 @@ function lessons(prefix) {
 		res['lesson-' + (i + 1)] = prefix + 'lesson-' + (i + 1) + '.lit'
 	}
 
+	res['gospel'] = prefix + 'gospel.lit'
+
 	return res;
 }
 
@@ -24,7 +26,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 
 	applyAscension(metadata);
 	
-	// TODO: pentecost
+	applyPentecost(metadata);
+	
 	// TODO: august
 	// TODO: september
 	// TODO: october
