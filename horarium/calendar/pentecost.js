@@ -16,7 +16,15 @@ function applyPentecost(metadata) {
 
 		Lauds: {
 			order: 'lauds/order.lit',
-			psalter: 'propers/pentecost/eve/lauds/psalter.lit'
+			psalter: 'propers/pentecost/eve/lauds/psalter.lit',
+			propers: mergeDeep(lauds_commons('saturday'), {
+				chapter: 'propers/pentecost/eve/lauds/chapter.lit',
+				hymn: 'hymn/tu-christe-nostrum-gaudium.lit',
+				versicle: 'common/lauds/versicle/ascension.lit',
+				benedictus: 'propers/pentecost/eve/lauds/benedictus.lit',
+				collect: collect,
+				kyrie: kyrie
+			})
 		}
 	}
 }
