@@ -155,11 +155,17 @@ function minor_commons(hour, day) {
 		type = 'feria'
 	}
 
-	return {
+	let base = {
 		hymn: hymn,
 		chapter: 'common/' + hour + '/chapters/' + type + '.lit',
 		versicle: (hour == 'prime') ? 'common/prime/versicle.lit' : 'common/' + hour + '/versicle/' + type + '.lit'
 	}
+
+	if (hour == 'prime') {
+		base.collect = 'common/prime/collect.gabc'
+	}
+
+	return base;
 }
 
 function minor_hours(hour, day, kyrie) { // produces the whole for a given minor hour in ordinary time

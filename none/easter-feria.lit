@@ -1,0 +1,10 @@
+#antiphon "alleluia(ii)(pentecost-vigil)"
+	#tone "4-i" "f3"
+	#psalm "118-ix"
+
+	#tone "4-i" "f3"
+	#psalm "118-x"
+
+	#tone "4-i" "f3"
+	#psalm "118-xi"
+#repeat-antiphon

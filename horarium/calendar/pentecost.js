@@ -25,6 +25,56 @@ function applyPentecost(metadata) {
 				collect: collect,
 				kyrie: kyrie
 			})
+		},
+
+		Prime: {
+			order: 'terce/order.lit',
+			psalter: 'prime/easter-feria.lit',
+			propers: mergeDeep(minor_commons('prime', 'saturday'), {
+				kyrie: kyrie,
+				responsory: 'resp/jesu-christe-fili-dei(ascension).gabc',
+				hymn: 'hymn/jam-lucis-orto-sidere(ascension).lit',
+				chapter: 'common/prime/chapters/advent.lit'
+			})
+		},
+
+		Terce: {
+			order: 'terce/order.lit',
+			psalter: 'terce/easter-feria.lit',
+			propers: mergeDeep(minor_commons('terce', 'saturday'), {
+				kyrie: kyrie,
+				collect: collect,
+				chapter: 'propers/pentecost/eve/lauds/chapter.lit',
+				responsory: 'resp/elevata-est-magnificentia-tua.gabc',
+				versicle: 'common/lauds/versicle/ascension.lit',
+				hymn: 'hymn/nunc-sancte-nobis-spiritus(ascension).lit'
+			})
+		},
+
+		Sext: {
+			order: 'terce/order.lit',
+			psalter: 'sext/easter-feria.lit',
+			propers: mergeDeep(minor_commons('sext', 'saturday'), {
+				kyrie: kyrie,
+				collect: collect,
+				hymn: 'hymn/rector-potens-verax(ascension).lit',
+				chapter: 'propers/pentecost/eve/sext/chapter.lit',
+				versicle: 'common/sext/versicle/ascension.lit',
+				responsory: 'resp/ascendit-deus-in-jubilatione.gabc'
+			})
+		},
+
+		None: {
+			order: 'terce/order.lit',
+			psalter: 'none/easter-feria.lit',
+			propers: mergeDeep(minor_commons('none', 'saturday'), {
+				kyrie: kyrie,
+				collect: collect,
+				hymn: 'hymn/rerum-deus-tenax(ascension).lit',
+				chapter: 'propers/pentecost/eve/none/chapter.lit',
+				versicle: 'common/none/versicle/ascension.lit',
+				responsory: 'resp/ascendens-christus-in-altum.gabc'
+			})
 		}
 	}
 }
