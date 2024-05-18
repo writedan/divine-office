@@ -119,7 +119,7 @@
             today = getLiturgicalDay(advdat(new Date(urlParams.get('date')), -1))
         }
         let metadata = today.hours[hour].metadata;
-        document.title = metadata.name + ' at ' + ((firstVespers && hour != 'Compline') ? 'First ' : '') + hour;
+        document.title = metadata.name + ' at ' + ((firstVespers) ? 'First ' : '') + hour;
 
         let content = document.getElementById('content');
         let sidebar = document.getElementById('form-container');
