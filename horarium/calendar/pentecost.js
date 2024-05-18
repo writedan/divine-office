@@ -92,6 +92,21 @@ function applyPentecost(metadata) {
 				versicle: 'propers/pentecost/eve/vespers/versicle.lit',
 				magnificat: 'propers/pentecost/eve/vespers/magnificat.lit'
 			}
+		},
+
+		FirstCompline: {
+			order: 'compline/order.lit',
+			psalter: 'compline/pentecost.lit',
+			propers: {
+				kyrie: kyrie,
+				collect: 'common/compline/collect.gabc',
+				chapter: 'common/compline/chapter.lit',
+				responsory: 'resp/in-manus-tuas.gabc',
+				canticle: 'common/compline/pentecost-canticle.lit',
+				hymn: 'hymn/salvator-mundi-domine(ascension).lit',
+				versicle: 'common/compline/versicle.lit',
+				anthem: 'compline/anthems/regina-caeli-laetare.lit'
+			}
 		}
 	}
 }

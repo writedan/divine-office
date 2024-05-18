@@ -1,0 +1,10 @@
+#antiphon "alleluia(iv)"
+	#tone "7-vi" "c3"
+	#psalm "4"
+
+	#tone "7-vi" "c3"
+	#psalm "90"
+
+	#tone "7-vi" "c3"
+	#psalm "133"
+#repeat-antiphon
