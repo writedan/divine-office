@@ -77,4 +77,21 @@ function applyPentecost(metadata) {
 			})
 		}
 	}
+
+	// pentecost day
+	metadata.pentecost[0].sunday.hours = {
+		FirstVespers: {
+			order: 'vespers/order.lit',
+			psalter: 'propers/pentecost/eve/vespers/psalter.lit',
+			propers: {
+				kyrie: kyrie,
+				collect: collect,
+				responsory: 'resp/loquebantur-variis-linquis.gabc',
+				chapter: 'propers/pentecost/eve/vespers/chapter.lit',
+				hymn: 'hymn/jam-christus-astra-ascenderat.lit',
+				versicle: 'propers/pentecost/eve/vespers/versicle.lit',
+				magnificat: 'propers/pentecost/eve/vespers/magnificat.lit'
+			}
+		}
+	}
 }

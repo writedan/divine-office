@@ -1,0 +1,44 @@
+#title "Jam Christus astra ascenderat"
+
+#begin-hymn
+
+	#clef "c4"
+
+	#melody "d" "d" "fv" "d" "dc" "fv" "gv" "hv"
+	#verse "Now" "Christ," "as-" "cend-" "ing" "whence" "he" "came,"
+	#verse "The" "so-" "lemn" "time" "was" "draw-" "ing" "nigh,"
+	#verse "When" "the" "third" "hour" "shone" "all" "a-" "round,"
+	#verse "Forth" "from" "the" "Fa-" "ther's" "light" "it" "came,"
+	#verse "Thou" "once" "in" "ev-" "ery" "ho-" "ly" "breast"
+	#verse "To" "God" "the" "Fa-" "ther," "God" "the" "Son,"
+	#make
+
+	#melody "hg" "jv" "jk" "j" "ji" "h" "g" "hv"
+	#verse "Had" "mount-" "ed" "o'er" "the" "star-" "ry" "frame:"
+	#verse "Re-" "plete" "with" "heav-n-" "ly" "mys-" "te-" 'ry,"
+	#verse "There" "came" "a" "rush-" "ing" "migh-" "ty" "sound,"
+	#verse "That" "beau-" "ti-" "ful" "and" "kind-" "ly" "flame,"
+	#verse "Didst" "bid" "in-" "dwel-" "ling" "grace" "to" "rest:"
+	#verse "And" "God" "the" "Spir-" "it," "praise" "be" "done;"
+	#make
+
+	#melody "hv" "hv" "hjIH" "gf" "ed" "fv" "ed" "de"
+	#verse "The" "Ho-" "ly" "Ghost" "on" "men" "to" "pour,"
+	#verse "On" "sev'n" "days'" "sev'n-" "fold" "cir-" "cles" "born,"
+	#verse "And" "told" "the" "'post-" "les," "while" "in" "prayer,"
+	#verse "To" "fill," "with" "fer-" "vor" "of" "his" "word,"
+	#verse "This" "day" "our" "sins," "we" "pray," "re-" "lease,"
+	#verse "And" "Christ" "the" "Lord" "u-" "pon" "us" "pour"
+	#make
+
+	#melody "c" "ed" "gv" "ghg" "fe" "d" "c" "dv"
+	#verse "As" "God" "the" "Fa-" "ther's" "pro-" "mise" "bore."
+	#verse "That" "first" "and" "bles-" "sed" "Whit-" "sun" "morn."
+	#verse "That," "was" "'twas" "pro-" "mised," "God" "was" "there."
+	#verse "The" "spir-" "its" "faith-" "ful" "to" "their" "Lord."
+	#verse "And" "in" "our" "time," "O" "Lord," "give" "peace."
+	#verse "The" "Spir-" "it's" "gift" "for-" "ev-" "er-" "more."
+	#amen "ded" "d"
+	#make
+
+#end-hymn
