@@ -78,9 +78,21 @@ function applyPentecost(metadata) {
 		}
 	}
 
-	// pentecost day
-	metadata.pentecost[0].sunday.hours = {
-		FirstVespers: {
+	for (d in metadata.pentecost[0]) {
+		metadata.pentecost[0][d].hours = {
+			Vigils: {
+				order: 'vigils/order-saints.lit',
+				psalter: 'vigils/pentecost.lit',
+				propers: mergeDeep(vigils_commons('sunday'), lessons('propers/pentecost/' + d + '/vigils/'), {
+					invitatory: 'invitatory/alleluia-spiritus-domini.lit',
+					hymn: 'hymn/jam-christus-astra-ascenderat.lit'
+				})
+			}
+		}
+	}
+
+	// pentecost day prior evening
+	metadata.pentecost[0].sunday.hours.FirstVespers = {
 			order: 'vespers/order.lit',
 			psalter: 'propers/pentecost/eve/vespers/psalter.lit',
 			propers: {
@@ -92,9 +104,9 @@ function applyPentecost(metadata) {
 				versicle: 'propers/pentecost/eve/vespers/versicle.lit',
 				magnificat: 'propers/pentecost/eve/vespers/magnificat.lit'
 			}
-		},
+		};
 
-		FirstCompline: {
+	metadata.pentecost[0].sunday.hours.FirstCompline = {
 			order: 'compline/order.lit',
 			psalter: 'compline/pentecost.lit',
 			propers: {
@@ -108,5 +120,4 @@ function applyPentecost(metadata) {
 				anthem: 'compline/anthems/regina-caeli-laetare.lit'
 			}
 		}
-	}
 }

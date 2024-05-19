@@ -1,0 +1,16 @@
+#antiphon "factus-est-repente"
+	#tone "8-ii" "c3"
+	#psalm "47"
+#repeat-antiphon
+
+#antiphon "confirma-hoc-deus"
+	#tone "8-ii" "c3"
+	#psalm "67"
+#repeat-antiphon
+
+#antiphon "emitte-spiritum-tuum"
+	#tone "8-ii" "c3"
+	#psalm "103"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> They(h) were(h) all(h) filled(h) with(h) the(h) Ho(h)ly(h) Spir(h)it.(f) <sp>r</sp>(::) And(h) be(h)gan(h) to(h) speak,(h) al(h)le(h)lu(hg~)ia.(f)"
