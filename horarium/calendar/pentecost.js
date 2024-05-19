@@ -85,8 +85,22 @@ function applyPentecost(metadata) {
 				psalter: 'vigils/pentecost.lit',
 				propers: mergeDeep(vigils_commons('sunday'), lessons('propers/pentecost/' + d + '/vigils/'), {
 					invitatory: 'invitatory/alleluia-spiritus-domini.lit',
-					hymn: 'hymn/jam-christus-astra-ascenderat.lit'
+					hymn: 'hymn/jam-christus-astra-ascenderat.lit',
+					collect: 'propers/pentecost/' + d + '/collect.gabc'
 				})
+			},
+
+			Lauds: {
+				order: 'lauds/order.lit',
+				psalter: 'lauds/pentecost.lit',
+				propers: {
+					chapter: 'propers/pentecost/eve/vespers/chapter.lit',
+					hymn: 'hymn/impleta-gaudent-viscera.lit',
+					versicle: 'propers/pentecost/sunday/lauds/versicle.lit',
+					benedictus: 'propers/pentecost/' + d + '/lauds/benedictus.lit',
+					kyrie: kyrie,
+					collect: 'propers/pentecost/' + d + '/collect.gabc'
+				}
 			}
 		}
 	}

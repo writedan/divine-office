@@ -1,0 +1,36 @@
+#antiphon "dum-complerentur-dies"
+	#tone "3-i" "c4"
+	#psalm "92"
+#repeat-antiphon
+
+#antiphon "spiritus-domini-replevit"
+	#tone "8-i" "c4"
+	#psalm "99"
+#repeat-antiphon
+
+#antiphon "repleti-sunt-omnes-spiritusancto"
+	#tone "8-i" "c3"
+	#no-gloria
+	#psalm "62"
+
+	#tone "8-i" "c3"
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "fontes-et-omnia-que-moventur"
+	#tone "1-iv" "c4"
+	#psalm "daniel-3"
+#repeat-antiphon
+
+#antiphon "loquebantur-variis-linguis"
+	#tone "7-v" "c3"
+	#no-gloria
+	#psalm "148"
+
+	#tone "7-v" "c3"
+	#no-gloria
+	#psalm "149"
+
+	#tone "7-v" "c3"
+	#psalm "150"
+#repeat-antiphon
