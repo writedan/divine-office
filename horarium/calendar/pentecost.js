@@ -137,6 +137,19 @@ function applyPentecost(metadata) {
 					responsory: 'resp/loquebantur-variis-linguis(simple).gabc',
 					versicle: 'propers/pentecost/sunday/sext/versicle.lit'
 				})
+			},
+
+			None: {
+				order: 'terce/order.lit',
+				psalter: 'none/pentecost.lit',
+				propers: mergeDeep(minor_commons('none', 'sunday'), {
+					kyrie: kyrie,
+					collect: 'propers/pentecost/' + d + '/collect.gabc',
+					hymn: 'hymn/rerum-deus-tenax(pentecost).lit',
+					chapter: 'propers/pentecost/sunday/none/chapter.lit',
+					responsory: 'resp/spiritus-domini-replevit.gabc',
+					versicle: 'propers/pentecost/sunday/none/versicle.lit'
+				})
 			}
 		}
 	}
