@@ -1,0 +1,47 @@
+#title "Beata nobis gaudia"
+
+#begin-hymn
+
+	#clef "f3"
+
+	#melody "ef" "kxfjkv" "j" "j" "ji" "ij" "i" "ih"
+	#verse "Blest" "joys" "for" "migh-" "ty" "won-" "ders" "wrought"
+	#verse "The" "qui-" "vering" "fire" "their" "heads" "be-" "dewed"
+	#verse "In" "vary-" "ing" "tongues" "the" "Lord" "they" "praise,"
+	#verse "These" "things" "were" "done" "in" "type" "to-" "day,"
+	#verse "Thy" "ser-" "vants," "fal-" "ling" "on" "their" "face,"
+	#verse "Thou" "once" "in" "ev-" "ery" "ho-" "ly" "breast"
+	#verse "To" "God" "the" "Fa-" "ther," "God" "the" "Son,"
+	#make
+
+	#melody "jv" "jv" "i" "hg" "f" "gh" "fe" "ef"
+	#verse "The" "year's" "re-" "volv-" "ing" "orb" "hath" "brought,"
+	#verse "In" "clo-" "ven" "tongues'" "si-" "mi-" "li-" "tude"
+	#verse "The" "ga-" "thering" "peo-" "ple" "stood" "a-" "mazed;"
+	#verse "When" "Eas-" "ter-" "tide" "had" "worn" "a-" "way,"
+	#verse "Be-" "seech" "thy" "mer-" "cy," "God" "of" "Grace,"
+	#verse "Didst" "bid" "in-" "dwel-" "lng" "grace" "to" "rest:"
+	#verse "And" "God" "the" "Spir-" "it," "praise" "be" "done;"
+	#make
+
+	#melody "c" "ef" "fv" "fh" "hf" "gv" "f" "e"
+	#verse "What" "time" "the" "Ho-" "ly" "Ghost" "in" "flame"
+	#verse "That" "e-" "lo-" "quent" "their" "words" "might" "be,"
+	#verse "And" "whom" "the" "Com-" "fort-" "er" "di-" "vine"
+	#verse "The" "num-" "ber" "told" "which" "once" "set" "free"
+	#verse "To" "send" "us" "from" "thy" "heav'n-" "ly" "seat"
+	#verse "This" "day" "our" "sins," "we" "pray," "re-" "lease,"
+	#verse "And" "Christ" "the" "Lord" "u-" "pon" "us" "pour"
+	#make
+
+	#melody "iv" "iv" "h" "iji" "gf" "gh" "fe" "ef"
+	#verse "U-" "pon" "the" "Lord's" "dis-" "ci-" "ples" "came."
+	#verse "And" "fer-" "vid" "all" "their" "cha-" "ri-" "ty."
+	#verse "In-" "spired," "they" "mocked" "as" "full" "of" "wine."
+	#verse "The" "cap-" "tive" "at" "the" "ju-" "bi-" "lee."
+	#verse "The" "bles-" "sings" "of" "the" "Pa-" "ra-" "clete."
+	#verse "And" "in" "our" "time," "O" "Lord," "give" "peace."
+	#verse "The" "Spir-" "it's" "gift" "for-" "ev-" "er-" "more."
+	#amen "fg" "fef"
+	#make
+#end-hymn

@@ -150,6 +150,19 @@ function applyPentecost(metadata) {
 					responsory: 'resp/spiritus-domini-replevit.gabc',
 					versicle: 'propers/pentecost/sunday/none/versicle.lit'
 				})
+			},
+
+			Vespers: {
+				order: 'vespers/order.lit',
+				psalter: 'vespers/pentecost.lit',
+				propers: {
+					kyrie: kyrie,
+					collect: 'propers/pentecost/' + d + '/collect.gabc',
+					chapter: 'propers/pentecost/sunday/vespers/chapter.lit',
+					hymn: 'hymn/beata-nobis-gaudia.lit',
+					versicle: 'propers/pentecost/sunday/sext/versicle.lit',
+					magnificat: 'propers/pentecost/' + d + '/vespers/magnificat.lit'
+				}
 			}
 		}
 	}

@@ -1,0 +1,24 @@
+#antiphon "dum-complerentur-dies"
+	#tone "3-i" "c3"
+	#psalm "109"
+#repeat-antiphon
+
+#antiphon "spiritus-domini-replevit"
+	#tone "8-i" "c4"
+	#psalm "110"
+#repeat-antiphon
+
+#antiphon "repleti-sunt-omnes-spiritusancto"
+	#tone "8-i" "c3"
+	#psalm "111"
+#repeat-antiphon
+
+#antiphon "fontes-et-omnia-que-moventur"
+	#tone "1-iv" "c4"
+	#psalm "112"
+#repeat-antiphon
+
+#antiphon "loquebantur-variis-linguis"
+	#tone "7-v" "c3"
+	#psalm "113"
+#repeat-antiphon
