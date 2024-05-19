@@ -111,6 +111,32 @@ function applyPentecost(metadata) {
 					hymn: 'hymn/jam-lucis-orto-sidere(pentecost).lit',
 					responsory: 'resp/jesu-christe-fili-dei(ascension).gabc'
 				})
+			},
+
+			Terce: {
+				order: 'terce/order.lit',
+				psalter: 'terce/pentecost.lit',
+				propers: mergeDeep(minor_commons('terce', 'sunday'), {
+					kyrie: kyrie,
+					collect: 'propers/pentecost/' + d + '/collect.gabc',
+					hymn: 'hymn/nunc-sancte-nobis-spiritus(pentecost).lit',
+					chapter: 'propers/pentecost/eve/vespers/chapter.lit',
+					responsory: 'resp/repleti-sunt-omnes-spiritusancto.gabc',
+					versicle: 'propers/pentecost/sunday/lauds/versicle.lit'
+				})
+			},
+
+			Sext: {
+				order: 'terce/order.lit',
+				psalter: 'sext/pentecost.lit',
+				propers: mergeDeep(minor_commons('sext', 'sunday'), {
+					kyrie: kyrie,
+					collect: 'propers/pentecost/' + d + '/collect.gabc',
+					hymn: 'hymn/rector-potens-verax(pentecost).lit',
+					chapter: 'propers/pentecost/sunday/sext/chapter.lit',
+					responsory: 'resp/loquebantur-variis-linguis(simple).gabc',
+					versicle: 'propers/pentecost/sunday/sext/versicle.lit'
+				})
 			}
 		}
 	}

@@ -1,0 +1,48 @@
+#title "Veni Creator Spiritus"
+
+#begin-hymn
+
+	#clef "c3"
+
+	#melody "e" "fv" "ed" "ev" "fe" "hv" "ih" "h"
+	#verse "Come," "Ho-" "ly" "Ghost," "Cre-" "a-" "tor" "blest,"
+	#verse "To" "thee," "the" "Pa-" "ra-" "clete," "we" "cry;"
+	#verse "The" "sev'n-" "fold" "gifts" "of" "grace" "are" "thine,"
+	#verse "Thy" "light" "to" "ev-" "ery" "sense" "im-" "part,"
+	#verse "Drive" "far" "a-" "way" "our" "ghost-" "ly" "foe,"
+	#verse "Make" "thou" "to" "us" "the" "Fa-" "ther" "known,"
+	#verse "All" "praie" "be" "thine," "O" "ri-" "sen" "Lord,"
+	#make
+
+	#melody "h" "e" "fv" "hv" "ih" "ij" "ih" "iv"
+	#verse "Vouch-" "safe" "with-" "in" "our" "souls" "to" "rest;"
+	#verse "To" "thee," "the" "Gift" "of" "God" "most" "high,"
+	#verse "O" "Fin-" "ger" "of" "the" "Hand" "Di-" "vine;"
+	#verse "And" "shed" "thy" "love" "in" "ev-" "ery" "heart;"
+	#verse "And" "thine" "a-" "bid-" "ing" "peace" "be-" "stow;"
+	#verse "Teach" "us" "the" "e-" "ter-" "nal" "Son" "to" "own,"
+	#verse "From" "death" "to" "end-" "less" "life" "re-" "stored;"
+	#make
+
+	#melody "h" "ij" "hg" "fe" "hi" "e" "fv" "hv"
+	#verse "Come" "with" "thy" "grace" "and" "heav'n-" "ly" "aid,"
+	#verse "The" "Fount" "of" "life," "the" "Fire" "of" "love,"
+	#verse "True" "Pro-" "mise" "of" "the" "Fa-" "ther" "thou,"
+	#verse "Thine" "own" "un-" "fail-" "ing" "might" "sup-" "ply"
+	#verse "If" "thou" "be" "our" "pre-" "vent-" "ing" "Guide,"
+	#verse "Be" "this" "our" "ne-" "ver-" "end-" "ing" "creed,"
+	#verse "Whom" "the" "Fa-" "ther" "we" "a-" "dore,"
+	#make
+
+	#melody "gh" "fvED" "fv" "fgf" "e" "d" "ev" "ev"
+	#verse "And" "fill" "the" "hearts" "which" "thou" "hast" "made."
+	#verse "The" "souls" "A-" "noint-" "ing" "from" "a-" "bove."
+	#verse "Who" "dost" "the" "tongue" "with" "speech" "en-" "dow."
+	#verse "To" "strength-" "en" "our" "in-" "fir-" "mi-" "ty."
+	#verse "No" "e-" "vil" "can" "our" "steps" "be-" "tide."
+	#verse "That" "thou" "dost" "from" "them" "both" "pro-" "ceed."
+	#verse "And" "Ho-" "ly" "Ghost" "for-" "ev-" "er-" "more."
+	#amen "efe" "e"
+	#make
+
+#end-hymn
