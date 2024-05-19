@@ -101,6 +101,16 @@ function applyPentecost(metadata) {
 					kyrie: kyrie,
 					collect: 'propers/pentecost/' + d + '/collect.gabc'
 				}
+			},
+
+			Prime: {
+				order: 'terce/order.lit',
+				psalter: 'prime/pentecost.lit',
+				propers: mergeDeep(minor_commons('prime', 'sunday'), {
+					kyrie: kyrie,
+					hymn: 'hymn/jam-lucis-orto-sidere(pentecost).lit',
+					responsory: 'resp/jesu-christe-fili-dei(ascension).gabc'
+				})
 			}
 		}
 	}
