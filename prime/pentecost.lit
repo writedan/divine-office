@@ -8,3 +8,8 @@
 	#tone "3-i" "c4"
 	#psalm "118-ii"
 #repeat-antiphon
+
+#antiphon "te-jure-laudant"
+	#tone "5-i" "c3"
+	#psalm "athanasian"
+#repeat-antiphon
