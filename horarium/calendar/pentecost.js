@@ -83,7 +83,7 @@ function applyPentecost(metadata) {
 			Vigils: {
 				order: 'vigils/order-saints.lit',
 				psalter: 'vigils/pentecost.lit',
-				propers: mergeDeep(vigils_commons('sunday'), lessons('propers/pentecost/' + d + '/vigils/'), {
+				propers: mergeDeep(vigils_commons(d), lessons('propers/pentecost/' + d + '/vigils/'), {
 					invitatory: 'invitatory/alleluia-spiritus-domini.lit',
 					hymn: 'hymn/jam-christus-astra-ascenderat.lit',
 					collect: 'propers/pentecost/' + d + '/collect.gabc'
@@ -94,7 +94,7 @@ function applyPentecost(metadata) {
 				order: 'lauds/order.lit',
 				psalter: 'lauds/pentecost.lit',
 				propers: {
-					chapter: 'propers/pentecost/eve/vespers/chapter.lit',
+					chapter: d == 'sunday' ? 'propers/pentecost/eve/vespers/chapter.lit' : 'propers/pentecost/sunday/sext/chapter.lit',
 					hymn: 'hymn/impleta-gaudent-viscera.lit',
 					versicle: 'propers/pentecost/sunday/lauds/versicle.lit',
 					benedictus: 'propers/pentecost/' + d + '/lauds/benedictus.lit',
@@ -120,7 +120,7 @@ function applyPentecost(metadata) {
 					kyrie: kyrie,
 					collect: 'propers/pentecost/' + d + '/collect.gabc',
 					hymn: 'hymn/nunc-sancte-nobis-spiritus(pentecost).lit',
-					chapter: 'propers/pentecost/eve/vespers/chapter.lit',
+					chapter: d == 'sunday' ? 'propers/pentecost/eve/vespers/chapter.lit' : 'propers/pentecost/sunday/sext/chapter.lit',
 					responsory: 'resp/repleti-sunt-omnes-spiritusancto.gabc',
 					versicle: 'propers/pentecost/sunday/lauds/versicle.lit'
 				})
@@ -133,7 +133,7 @@ function applyPentecost(metadata) {
 					kyrie: kyrie,
 					collect: 'propers/pentecost/' + d + '/collect.gabc',
 					hymn: 'hymn/rector-potens-verax(pentecost).lit',
-					chapter: 'propers/pentecost/sunday/sext/chapter.lit',
+					chapter: d == 'sunday' ? 'propers/pentecost/sunday/sext/chapter.lit' : 'propers/pentecost/sunday/none/chapter.lit',
 					responsory: 'resp/loquebantur-variis-linguis(simple).gabc',
 					versicle: 'propers/pentecost/sunday/sext/versicle.lit'
 				})
@@ -146,7 +146,7 @@ function applyPentecost(metadata) {
 					kyrie: kyrie,
 					collect: 'propers/pentecost/' + d + '/collect.gabc',
 					hymn: 'hymn/rerum-deus-tenax(pentecost).lit',
-					chapter: 'propers/pentecost/sunday/none/chapter.lit',
+					chapter: d == 'sunday' ? 'propers/pentecost/sunday/none/chapter.lit' : 'propers/pentecost/monday/none/chapter.lit',
 					responsory: 'resp/spiritus-domini-replevit.gabc',
 					versicle: 'propers/pentecost/sunday/none/versicle.lit'
 				})
