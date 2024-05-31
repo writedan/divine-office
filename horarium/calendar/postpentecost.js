@@ -29,7 +29,7 @@ function applyPostPentecost(metadata) {
 					psalter: (d == 'sunday') ? 'prime/sunday.lit' : 'prime/feria.lit',
 					propers: mergeDeep(minor_commons('prime', d), {
 						kyrie: kyrie,
-						collect: collect
+						collect: 'common/prime/collect.gabc'
 					})
 				},
 
