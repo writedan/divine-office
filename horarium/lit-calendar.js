@@ -126,6 +126,12 @@ function vigils_commons(day) {
 
 function lauds_commons(day) {
 	switch (day) {
+		case 'sunday': return {
+			chapter: 'common/lauds/chapters/sunday.lit',
+			// hymn is dependent upon after epiphany/pentecost
+			versicle: 'common/lauds/versicle/sunday.lit'
+		}
+
 		case 'friday': {
 			return {
 				hymn: 'hymn/eterna-celi-gloria.lit',

@@ -1,0 +1,36 @@
+#antiphon "regnavit-dominus"
+	#tone "3-iv" "c3"
+	#psalm "92"
+#repeat-antiphon
+
+#antiphon "sciamus-omnes"
+	#tone "4-i" "c4"
+	#psalm "99"
+#repeat-antiphon
+
+#antiphon "benedicam-te-domine"
+	#tone "5-ii" "c3"
+	#no-gloria
+	#psalm "62"
+
+	#tone "5-ii" "c3"
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "omnis-creatura"
+	#tone "4-i" "c4"
+	#psalm "daniel-3"
+#repeat-antiphon
+
+#antiphon "spiritus-omnis"
+	#tone "8-i" "c3"
+	#no-gloria
+	#psalm "148"
+
+	#tone "8-i" "c3"
+	#no-gloria
+	#psalm "149"
+
+	#tone "8-i" "c3"
+	#psalm "150"
+#repeat-antiphon

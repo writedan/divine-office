@@ -1,0 +1,32 @@
+#title "Ecce jam noctis"
+
+#begin-hymn
+
+	#clef "f3"
+
+	#melody "f" "hv" "g" "hv" "hv" "f" "gv" "e" "fv" "hv" "hv"
+	#verse "Lo!" "the" "dim" "sha-" "dows" "of" "the" "night" "are" "wa-" "ning;"
+	#verse "So" "shall" "our" "Ma-" "ker," "of" "his" "great" "com-" "pas-" "sion,"
+	#verse "This" "he" "vouch-" "safe" "us," "God" "for-" "ev-" "er" "bles-" "sed,"
+	#make
+
+	#melody "hv" "hv" "hv" "iv" "h" "h" "h" "h" "iv" "jv" "i"
+	#verse "Glim-" "mer-" "ing" "bright-" "ly," "dawn" "of" "day" "re-" "turn-" "eth;"
+	#verse "Ba-" "nish" "all" "sick-" "ness," "kind-" "ly" "health" "be-" "stow-" "ing;"
+	#verse "Fa-" "ther" "E-" "ter-" "nal," "Son," "and" "Ho-" "ly" "Spir-" "it,"
+	#make
+
+	#melody "jv" "i" "h" "iv" "h" "iv" "jv" "h" "g" "fh" "e"
+	#verse "Fer-" "vent" "in" "spir-" "it," "to" "the" "migh-" "ty" "Fa-" "ther"
+	#verse "And" "may" "he" "grant" "us," "of" "a" "Fa-" "ther's" "good-" "ness,"
+	#verse "Whose" "is" "the" "glo-" "ry," "which" "through" "all" "cre-" "a-" "tion"
+	#make
+
+	#melody "fv" "e" "fv" "hv" "hv"
+	#verse "Pray" "we" "de-" "vout-" "ly."
+	#verse "Man-" "sions" "in" "hea-" "ven."
+	#verse "Ev-" "er" "re-" "sound-" "eth."
+	#amen "hi/ji" "ih"
+	#make
+
+#end-hymn

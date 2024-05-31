@@ -20,6 +20,7 @@ function applyPostPentecost(metadata) {
 					propers: mergeDeep(lauds_commons(d), {
 						kyrie: kyrie,
 						collect: collect,
+						hymn: (d == 'sunday') ? 'hymn/ecce-jam-noctis.lit' : lauds_commons(d).hymn,
 						benedictus: (d == 'sunday' || d == 'saturday') ? 'propers/post-pentecost/' + w + '/' + d + '/lauds/benedictus.lit' : lauds_commons(d).benedictus
 					})
 				},
