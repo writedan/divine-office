@@ -1134,9 +1134,9 @@ function queryTMeta(calendar, firstVespers = false) {
     function getLiturgicalCalendar(year) {
         function gendat(m, d, y = year) {
             var n = new Date();
-            n.setMonth(m - 1);
             n.setDate(d);
             n.setFullYear(y);
+            n.setMonth(m - 1);
             return n;
         }
 

@@ -15,8 +15,8 @@ function easter_computus(y) {
     function advent_computus(y) {
         var nov27 = new Date();
         nov27.setFullYear(y);
-        nov27.setMonth(11 - 1);
         nov27.setDate(27);
+        nov27.setMonth(11 - 1);
         while (nov27.getDay() != 0) {
             nov27.setDate(nov27.getDate() + 1);
         }
