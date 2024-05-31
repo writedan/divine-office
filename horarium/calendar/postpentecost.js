@@ -86,5 +86,8 @@ function applyPostPentecost(metadata) {
 				}
 			}
 		}
+
+		metadata.pentecost[w].sunday.hours.FirstVespers = metadata.pentecost[w].saturday.hours.Vespers;
+		metadata.pentecost[w].sunday.hours.FirstCompline = metadata.pentecost[w].saturday.hours.Compline;
 	}
 }
