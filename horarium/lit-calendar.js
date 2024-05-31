@@ -27,6 +27,8 @@ function annotateTemporalMetadata(metadata) { // attach hour information
 	applyAscension(metadata);
 	
 	applyPentecost(metadata);
+
+	applyPostPentecost(metadata);
 	
 	// TODO: august
 	// TODO: september
@@ -128,7 +130,8 @@ function lauds_commons(day) {
 			return {
 				hymn: 'hymn/eterna-celi-gloria.lit',
 				chapter: 'common/lauds/chapters/feria.lit',
-				versicle: 'common/lauds/versicle/feria.lit'
+				versicle: 'common/lauds/versicle/feria.lit',
+				benedictus: 'common/lauds/benedictus/friday.lit'
 			}
 		}
 	}
@@ -181,7 +184,8 @@ function vespers_commons(day) {
 		case 'friday': return {
 			hymn: 'hymn/plasmator-hominis.lit',
 			chapter: 'common/vespers/chapters/feria.lit',
-			versicle: 'common/vespers/versicle/feria.lit'
+			versicle: 'common/vespers/versicle/feria.lit',
+			magnificat: 'common/vespers/magnificat/friday.lit'
 		}
 
 		case 'saturday': return {
