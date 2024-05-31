@@ -1786,7 +1786,7 @@ function getLiturgicalDay(date) {
     var tomorrow = calendar[keyDate(advdat(new Date(date)))];
 
     var m1 = queryTMeta(today);
-    var m2 = queryTMeta(tomorrow, true);
+    var m2 = queryTMeta(tomorrow, false);
         
     var today_minus_saint = JSON.parse(JSON.stringify(today));
     delete today_minus_saint.stid;
