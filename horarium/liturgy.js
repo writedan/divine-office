@@ -1133,10 +1133,12 @@ function queryTMeta(calendar, firstVespers = false) {
 
     function getLiturgicalCalendar(year) {
         function gendat(m, d, y = year) {
-            var n = new Date();
-            n.setDate(d);
-            n.setFullYear(y);
-            n.setMonth(m - 1);
+            var n = new Date(y, m - 1, d);
+            if (n.getMonth() != (m -1) || n.getDate() != d) {
+                console.error('request for ' +m + '/' + d + 'failed')
+                alert('gendat failed')
+                throw new Error('gendat failed')
+            }
             return n;
         }
 
@@ -1768,6 +1770,14 @@ function queryTMeta(calendar, firstVespers = false) {
                 alert("ERROR: calendar["+i+"].subid = undefined")
             }
         }
+
+        for (var i = 1; i <= 366; i++) {
+            if (calendar[i] === undefined) {
+                console.error(i)
+            }
+        }
+
+        console.log(calendar)
 
         for (var x = 17; x < 24; x++) {
             calendar[keyDate(gendat(12, x))].oid = 'december/' + x
