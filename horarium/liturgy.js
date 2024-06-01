@@ -1771,14 +1771,6 @@ function queryTMeta(calendar, firstVespers = false) {
             }
         }
 
-        for (var i = 1; i <= 366; i++) {
-            if (calendar[i] === undefined) {
-                console.error(i)
-            }
-        }
-
-        console.log(calendar)
-
         for (var x = 17; x < 24; x++) {
             calendar[keyDate(gendat(12, x))].oid = 'december/' + x
         }
