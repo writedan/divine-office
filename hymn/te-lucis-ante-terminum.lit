@@ -1,0 +1,32 @@
+#title "Te lucis ante terminum"
+
+#begin-hymn
+
+	#clef "c3"
+
+	#melody "f" "hv" "hv" "hv" "hv" "iv" "h" "g"
+	#verse "To" "thee," "be-" "fore" "the" "close" "of" "day,"
+	#verse "From" "all" "ill" "dreams" "de-" "fend" "our" "eyes,"
+	#verse "O" "Fa-" "ther," "that" "we" "ask" "be" "done,"
+	#make
+
+	#melody "f" "f" "f" "f" "gv" "gv" "f" "e"
+	#verse "Cre-" "a-" "tor" "of" "the" "world," "we" "pray,"
+	#verse "From" "night-" "ly" "fears" "and" "fant-" "a-" "sies:"
+	#verse "Through" "Je-" "sus" "Christ," "thine" "on-" "ly" "Son:"
+	#make
+
+	#melody "gv" "gv" "f" "e" "c" "ev" "fv" "fv"
+	#verse "That" "with" "thy" "wont-" "ed" "fa-" "vor," "thou"
+	#verse "Tread" "un-" "der" "foot" "our" "ghost-" "ly" "foe,"
+	#verse "Who," "with" "the" "Ho-" "ly" "Ghost" "and" "thee,"
+	#make
+
+	#melody "hv" "hv" "hv" "hv" "f" "gv" "f" "e"
+	#verse "Wouldst" "be" "our" "guard" "and" "keep-" "er" "now."
+	#verse "That" "no" "pol" "lu-" "tion" "we" "may" "know."
+	#verse "Doth" "live" "and" "reign" "e-" "ter-" "nal-" "ly."
+	#amen "efe" "e"
+	#make
+
+#end-hymn
