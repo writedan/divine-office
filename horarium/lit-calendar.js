@@ -187,6 +187,12 @@ function minor_hours(hour, day, kyrie) { // produces the whole for a given minor
 
 function vespers_commons(day) {
 	switch (day) {
+		case 'sunday': return {
+			hymn: 'hymn/lucis-creator-optime.lit',
+			chapter: 'common/vespers/chapters/feria.lit',
+			versicle: 'common/vespers/versicle/feria.lit'
+		}
+
 		case 'friday': return {
 			hymn: 'hymn/plasmator-hominis.lit',
 			chapter: 'common/vespers/chapters/feria.lit',

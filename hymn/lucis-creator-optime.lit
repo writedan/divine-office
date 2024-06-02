@@ -1,0 +1,40 @@
+#title "Lucis creator optime"
+
+#begin-hymn
+
+	#clef "c4"
+
+	#melody "ghg" "f" "hj" "jv" "g" "hg" "fg" "gv"
+	#verse "O" "blest" "Cre-" "a-" "tor" "of" "the" "light,"
+	#verse "Whose" "wis-" "dom" "joined" "in" "meet" "ar-" "ray"
+	#verse "Lest," "sunk" "in" "sin," "and" "whelmed" "with" "strife,"
+	#verse "But" "grant" "them" "grace" "that" "they" "may" "strain"
+	#verse "O" "Fa-" "ther," "that" "we" "ask" "be" "done,"
+	#make
+
+	#melody "gk" "klk" "j" "ji" "h" "ji" "hg" "ghg"
+	#verse "Who" "mak'st" "the" "day" "with" "ra-" "diance" "bright,"
+	#verse "The" "morn" "and" "eve," "and" "named" "them" "day:"
+	#verse "They" "lose" "the" "gift" "of" "end-" "less" "life;"
+	#verse "The" "heav'n-" "ly" "gate" "and" "prize" "to" "gain:"
+	#verse "Through" "Je-" "sus" "Christ," "thine" "on-" "ly" "Son:"
+	#make
+
+	#melody "d" "dfe" "fg" "gh" "gf" "gv" "gh" "hv"
+	#verse "And" "o'er" "the" "form-" "ing" "world" "didst" "call"
+	#verse "Night" "comes" "with" "all" "its" "dark-" "ling" "fears,"
+	#verse "While," "think-" "ing" "but" "the" "thoughts" "of" "time,"
+	#verse "Each" "harm-" "ful" "lure" "a-" "side" "to" "cast,"
+	#verse "Who," "with" "the" "Ho-" "ly" "Ghost" "and" "thee,"
+	#make
+
+	#melody "jv" "jkj" "h" "ixih" "g" "hg" "fg" "gv"
+	#verse "The" "light" "from" "cha-" "os" "first" "of" "all."
+	#verse "Re-" "gard" "thy" "peo-" "ple's" "prayers" "and" "tears."
+	#verse "They" "weave" "new" "chains" "of" "woe" "and" "crime."
+	#verse "And" "purge" "a-" "way" "each" "er-" "ror" "past."
+	#verse "Doth" "live" "and" "reign" "e-" "ter-" "nal-" "ly."
+	#amen "gh" "gfg"
+	#make
+
+#end-hymn
