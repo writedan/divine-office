@@ -1,0 +1,10 @@
+#antiphon "gloria-laudis"
+	#tone "3-i" "c4"
+	#psalm "118-vi"
+
+	#tone "3-i" "c4"
+	#psalm "118-vii"
+
+	#tone "3-i" "c4"
+	#psalm "118-viii"
+#repeat-antiphon
