@@ -1,9 +1,0 @@
-#instruction "Let this be sung as the antiphon."
-
-#gabc "(f3) Al(f)le(fh)lu(e)ia,(e) <sp>*</sp>() al(e)le(ef)lu(fv)ia,(ec,) al(ev)le(ef)lu(fv)ia,(fe) al(fv)le(ghg)lu(f)ia.(f)"
-	#tone "2-solemn" "f3"
-	#psalm "112"
-
-#instruction "And let the antiphon be repeated."
-
-#gabc "(f3) Al(f)le(fh)lu(e)ia,(e) al(e)le(ef)lu(fv)ia,(ec,) al(ev)le(ef)lu(fv)ia,(fe) al(fv)le(ghg)lu(f)ia.(f)"

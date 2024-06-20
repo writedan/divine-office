@@ -12,3 +12,7 @@
 !docs/tones.txt
 horarium/test.html
 !*.py
+
+# Added by cargo
+
+/target
