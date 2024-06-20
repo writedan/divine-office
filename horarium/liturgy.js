@@ -1147,7 +1147,7 @@ function queryTMeta(calendar, firstVespers = false) {
 
         var calendar = {};
 
-        console.log("In the year of Our Lord " + year)
+        console.log("In the year of our Lord " + year)
 
         console.log("Easter is " + easterSunday.toDateString());
         console.log("Advent is " + adventSunday.toDateString());
@@ -1779,7 +1779,6 @@ function queryTMeta(calendar, firstVespers = false) {
     }
 
 function getLiturgicalDay(date) {
-    console.log(date)
     var easter = easter_computus(date.getFullYear());
     var advent = advent_computus(date.getFullYear());
     var calendar = getLiturgicalCalendar(date.getFullYear());

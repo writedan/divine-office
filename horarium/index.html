@@ -7,8 +7,6 @@
         var today = new Date();
         today = new Date(today.toDateString());
 
-        console.log(today)
-
         datBox.valueAsDate = today;
         latBox.value = lat;
         lonBox.value = lon;
@@ -43,6 +41,8 @@
         tr.append(liturgyth);*/
         table.append(tr);
         {
+            let elapses = {};
+
             for (i = 0; i < Object.keys(hours).length; i += 1) {
                 name = Object.keys(hours)[i];
                 if (name == 'Vespers' && i == 0) break;
@@ -57,7 +57,10 @@
                     elapse += 24;
                 }
                 console.log("Time elapse from " + name + " to " + Object.keys(hours)[nextHour] + ": " + printDuration(elapse));
+                elapses[name] = elapse;
             }
+
+            console.log('Total sleep = ' + printDuration(elapses.Vigils + elapses.Compline))
         }
         for (hour in hours) {
             if (hour == 'Vespers' || hour == 'Compline') {
@@ -199,15 +202,8 @@
         
         dat = new Date(dat[0], dat[1] -1 , dat[2])
 
-        console.log(datBox.value.replace(/-/g, '\/'))
-
-        console.log(datBox.value)
-
-        console.log(dat);
-
         console.log("================= NEW DATE =================");
         console.log("Today is " + dat.toDateString());
-        console.log(dat)
 
         var calendar = getLiturgicalCalendar(dat.getFullYear());
 
@@ -230,8 +226,8 @@
         var nighthours = (sunrise - sunset + 24) / 12;
 
         console.log("Sunrise is at " + printClocktime(suntimeToClocktime(sunrise)));
-        console.log("Day hours are " + printDuration(dayhours) + " long");
-        console.log("Night hours are " + printDuration(nighthours) + " long");
+        console.log("Day hours are " + printDuration(dayhours) + " long (day lasts " + printDuration(dayhours * 12) + ")");
+        console.log("Night hours are " + printDuration(nighthours) + " long (night lasts " + printDuration(nighthours * 12) + ")");
         
         let stuff = getLiturgicalDay(dat)
         let hours = stuff.hours;
@@ -242,7 +238,7 @@
         let ferialVespers = stuff.ferialVespers
 
         hours.Vigils.time = roundTime(suntimes.nadir);
-        hours.Lauds.time = roundTime(suntimes.nauticalDawn);
+        hours.Lauds.time = roundTime(suntimes.dawn - hours.Lauds.duration);
         hours.Prime.time = roundTime(sunrise + dayhours * 1);
         hours.Terce.time = roundTime(sunrise + dayhours * 3);
         hours.Sext.time = roundTime(sunrise + dayhours * 6);
@@ -250,7 +246,17 @@
         hours.Vespers.time = roundTime(sunset);
         hours.Compline.time = roundTime(suntimes.night)
 
-        console.log(hours)
+        // // summer
+        // hours.Lauds.time = roundTime(sunrise + dayhours * 1);
+        // hours.Vigils.time = roundTime(hours.Lauds.time - hours.Vigils.duration);
+        // hours.Prime.time = roundTime(sunrise + dayhours * 2.5);
+        // hours.Terce.time = roundTime(sunrise + dayhours * 4);
+        // hours.Sext.time = roundTime(sunrise + dayhours * 6);
+        // hours.None.time = roundTime(sunrise + dayhours * 8);
+        // hours.Vespers.time = roundTime(sunrise + dayhours * 10);
+        // hours.Compline.time = roundTime(sunset);
+
+        console.log(hours);
 
         var table = getHorariumTable(hours, (separateVespers));
         let content = document.getElementById("content");
