@@ -1,0 +1,9 @@
+[package]
+name = "divine-office"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+rouille = "3.6"
+chrono = "0.4"

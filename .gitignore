@@ -12,7 +12,11 @@
 !docs/tones.txt
 horarium/test.html
 !*.py
+
+# rust support
+
 !src/*
+!Cargo.toml
 
 # Added by cargo
 
