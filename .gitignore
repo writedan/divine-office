@@ -16,6 +16,7 @@ horarium/test.html
 # rust support
 
 !src/*
+!src/*/*
 !Cargo.toml
 
 # Added by cargo
