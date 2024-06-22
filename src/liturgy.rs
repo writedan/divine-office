@@ -1,9 +1,9 @@
 mod advent;
 mod christmas;
 
-use chrono::{NaiveDate, Datelike, Weekday, Days};
+use chrono::{NaiveDate, Datelike, Days};
 use crate::timehelp::{Sunday, Betwixt};
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashSet};
 
 #[derive(Debug)]
 pub struct Kalendar {

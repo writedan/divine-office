@@ -1,6 +1,6 @@
 use chrono::{NaiveDate, Datelike, Weekday};
 use crate::liturgy::{Kalendar, Celebration, Penance, Color, Season, Rank, Identifier};
-use crate::timehelp::{Betwixt, Ordinal, FullName};
+use crate::timehelp::{Betwixt, FullName};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	let distance = NaiveDate::days_since(ly.christmas, date);
