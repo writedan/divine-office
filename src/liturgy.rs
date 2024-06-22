@@ -1,5 +1,7 @@
 mod advent;
 mod christmas;
+mod postepiphany;
+mod prelent;
 
 use chrono::{NaiveDate, Datelike, Days};
 use crate::timehelp::{Sunday, Betwixt};
@@ -10,7 +12,6 @@ pub struct Kalendar {
 	// these are the sentiels of the calendar
 	advent: NaiveDate,
 	christmas: NaiveDate,
-	epiphany: NaiveDate,
 	epiphany_sunday: NaiveDate, // the sunday after epiphany
 	septuagesima: NaiveDate,
 	ash_wednesday: NaiveDate,
@@ -70,12 +71,11 @@ impl Kalendar {
         Some(Kalendar {
             advent: NaiveDate::from_ymd_opt(year, 11, 27)?.this_or_next_sunday()?,
             christmas: NaiveDate::from_ymd_opt(year, 12, 24)?,
-            epiphany: NaiveDate::from_ymd_opt(year + 1, 1, 6)?,
             epiphany_sunday: NaiveDate::from_ymd_opt(year + 1, 1, 6)?.this_or_next_sunday()?,
             septuagesima: easter.checked_sub_days(Days::new(63))?,
             ash_wednesday: easter.checked_sub_days(Days::new(46))?,
             easter,
-            pentecost: easter.checked_add_days(Days::new(50))?,
+            pentecost: easter.checked_add_days(Days::new(49))?,
             next_advent: NaiveDate::from_ymd_opt(year + 1, 11, 27)?.this_or_next_sunday()?
         })
     }
@@ -105,6 +105,8 @@ impl Kalendar {
     	match self.get_season(date) {
     		Season::Advent => set.insert(Some(advent::get_celebration(self, date))),
     		Season::Christmas => set.insert(Some(christmas::get_celebration(self, date))),
+    		Season::PostEpiphany => set.insert(Some(postepiphany::get_celebration(self, date))),
+    		Season::PreLent => set.insert(Some(prelent::get_celebration(self, date))),
     		_ => todo!()
     	};
 
@@ -125,18 +127,22 @@ mod tests {
 		assert_eq!(ly.epiphany_sunday, NaiveDate::from_ymd(2024, 1, 7));
 		assert_eq!(ly.septuagesima, NaiveDate::from_ymd(2024, 1, 28));
 		assert_eq!(ly.easter, NaiveDate::from_ymd(2024, 3, 31));
+		assert_eq!(ly.pentecost, NaiveDate::from_ymd(2024, 5, 19));
+
 
 		let ly = Kalendar::from_year(1817).unwrap();
 		assert_eq!(ly.advent, NaiveDate::from_ymd(1817, 11, 30));
 		assert_eq!(ly.epiphany_sunday, NaiveDate::from_ymd(1818, 1, 11));
 		assert_eq!(ly.septuagesima, NaiveDate::from_ymd(1818, 1, 18));
 		assert_eq!(ly.easter, NaiveDate::from_ymd(1818, 3, 22));
+		assert_eq!(ly.pentecost, NaiveDate::from_ymd(1818, 5, 10));
 
 		let ly = Kalendar::from_year(2004).unwrap();
 		assert_eq!(ly.advent, NaiveDate::from_ymd(2004, 11, 28));
 		assert_eq!(ly.epiphany_sunday, NaiveDate::from_ymd(2005, 1, 9));
 		assert_eq!(ly.septuagesima, NaiveDate::from_ymd(2005, 1, 23));
-		assert_eq!(ly.easter, NaiveDate::from_ymd(2005, 3, 27))
+		assert_eq!(ly.easter, NaiveDate::from_ymd(2005, 3, 27));
+		assert_eq!(ly.pentecost, NaiveDate::from_ymd(2005, 5, 15));
 	}
 
 	#[test]
