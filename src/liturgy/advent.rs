@@ -10,7 +10,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			format!("{} Sunday of Advent", week_num.ordinal()),
 			if week_num == 3 { Color::Rose } else { Color::Violet },
 			None,
-			Rank::Duplex
+			Rank::StrongSunday
 		),
 
 		Weekday::Mon => (
@@ -63,8 +63,8 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		rank,
 		identifier: Identifier {
 			season: Season::Advent,
-			week: week_num,
-			day: date.weekday()
+			week: week_num.to_string(),
+			day: date.weekday().to_string()
 		}
 	}
 }

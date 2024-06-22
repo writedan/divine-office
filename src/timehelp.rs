@@ -11,10 +11,30 @@ pub trait Sunday {
 pub trait Betwixt {
     fn is_between(self, _: NaiveDate, _: NaiveDate) -> bool;
     fn weeks_since(_: NaiveDate, _: NaiveDate) -> i64;
+    fn days_since(_: NaiveDate, _: NaiveDate) -> i64;
 }
 
 pub trait Ordinal {
     fn ordinal(self) -> String;
+}
+
+pub trait FullName {
+    fn fullname(self) -> &'static str;
+}
+
+impl FullName for chrono::Weekday {
+    fn fullname(self) -> &'static str {
+        use chrono::Weekday::*;
+        match self {
+            Sun => "Sunday",
+            Mon => "Monday",
+            Tue => "Tuesday",
+            Wed => "Wednesday",
+            Thu => "Thursday",
+            Fri => "Friday",
+            Sat => "Saturday"
+        }
+    }
 }
 
 impl Ordinal for i64 {
@@ -100,6 +120,10 @@ impl Betwixt for NaiveDate {
 
     fn weeks_since(d1: NaiveDate, d2: NaiveDate) -> i64 {
         ((d2 - d1).num_days() / 7) as i64
+    }
+
+    fn days_since(d1: NaiveDate, d2: NaiveDate) -> i64 {
+        (d2 - d1).num_days()
     }
 }
 

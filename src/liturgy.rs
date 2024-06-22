@@ -1,9 +1,11 @@
 mod advent;
+mod christmas;
 
 use chrono::{NaiveDate, Datelike, Weekday, Days};
 use crate::timehelp::{Sunday, Betwixt};
 use std::collections::{HashSet, HashMap};
 
+#[derive(Debug)]
 pub struct Kalendar {
 	// these are the sentiels of the calendar
 	advent: NaiveDate,
@@ -14,7 +16,7 @@ pub struct Kalendar {
 	ash_wednesday: NaiveDate,
 	easter: NaiveDate,
 	pentecost: NaiveDate,
-	dec31: NaiveDate // for validation purposes only
+	next_advent: NaiveDate // for validation purposes only
 }
 
 #[derive(Eq, PartialEq, Hash, Debug)]
@@ -30,10 +32,12 @@ enum Color {
 #[derive(Eq, PartialEq, Hash, Debug)]
 enum Rank {
 	Feria,
-	StrongFeria, // strong feria cannot be replaced by anything
+	StrongFeria, // cannot be superseded by anything
 	Simplex,
 	Semiduplex,
+	Sunday,
 	Duplex,
+	StrongSunday,
 	Triplex
 }
 
@@ -45,8 +49,8 @@ enum Season {
 #[derive(Eq, PartialEq, Hash, Debug)]
 struct Identifier {
 	season: Season,
-	week: u8,
-	day: chrono::Weekday
+	week: String,
+	day: String
 }
 
 #[derive(Eq, PartialEq, Hash, Debug)]
@@ -65,14 +69,14 @@ impl Kalendar {
 		let easter = computus::gregorian_naive(year + 1).ok()?; // liturgical year begins advent year prior
         Some(Kalendar {
             advent: NaiveDate::from_ymd_opt(year, 11, 27)?.this_or_next_sunday()?,
-            christmas: NaiveDate::from_ymd_opt(year, 12, 25)?,
+            christmas: NaiveDate::from_ymd_opt(year, 12, 24)?,
             epiphany: NaiveDate::from_ymd_opt(year + 1, 1, 6)?,
             epiphany_sunday: NaiveDate::from_ymd_opt(year + 1, 1, 6)?.this_or_next_sunday()?,
             septuagesima: easter.checked_sub_days(Days::new(63))?,
             ash_wednesday: easter.checked_sub_days(Days::new(46))?,
             easter,
             pentecost: easter.checked_add_days(Days::new(50))?,
-            dec31: NaiveDate::from_ymd_opt(year + 1, 12, 31)?
+            next_advent: NaiveDate::from_ymd_opt(year + 1, 11, 27)?.this_or_next_sunday()?
         })
     }
 
@@ -84,7 +88,7 @@ impl Kalendar {
     		(Season::PreLent, self.septuagesima, self.ash_wednesday),
     		(Season::Lent, self.ash_wednesday, self.easter),
     		(Season::Easter, self.easter, self.pentecost.next_sunday().unwrap()), // this case can be safely unwrapped since we have a valid kalendar
-    		(Season::PostPentecost, self.pentecost.next_sunday().unwrap(), self.dec31)
+    		(Season::PostPentecost, self.pentecost.next_sunday().unwrap(), self.next_advent)
     	];
 
     	for (season, start, end) in seasons {
@@ -100,6 +104,7 @@ impl Kalendar {
     	let mut set = HashSet::new();
     	match self.get_season(date) {
     		Season::Advent => set.insert(Some(advent::get_celebration(self, date))),
+    		Season::Christmas => set.insert(Some(christmas::get_celebration(self, date))),
     		_ => todo!()
     	};
 
