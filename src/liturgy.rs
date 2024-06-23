@@ -2,6 +2,9 @@ mod advent;
 mod christmas;
 mod postepiphany;
 mod prelent;
+mod lent;
+mod easter;
+mod postpentecost;
 
 use chrono::{NaiveDate, Datelike, Days};
 use crate::timehelp::{Sunday, Betwixt};
@@ -16,6 +19,7 @@ pub struct Kalendar {
 	septuagesima: NaiveDate,
 	ash_wednesday: NaiveDate,
 	easter: NaiveDate,
+	ascension: NaiveDate,
 	pentecost: NaiveDate,
 	next_advent: NaiveDate // for validation purposes only
 }
@@ -75,6 +79,7 @@ impl Kalendar {
             septuagesima: easter.checked_sub_days(Days::new(63))?,
             ash_wednesday: easter.checked_sub_days(Days::new(46))?,
             easter,
+            ascension: easter.checked_add_days(Days::new(40))?,
             pentecost: easter.checked_add_days(Days::new(49))?,
             next_advent: NaiveDate::from_ymd_opt(year + 1, 11, 27)?.this_or_next_sunday()?
         })
@@ -100,17 +105,16 @@ impl Kalendar {
     	panic!("Requested season of a date beyond the bounds of liturgical year {}.", self.advent.year());
     }
 
-    pub fn get_celebrations(&self, date: NaiveDate) -> HashSet<Option<Celebration>> {
-    	let mut set = HashSet::new();
+    pub fn get_temporal(&self, date: NaiveDate) -> Celebration {
     	match self.get_season(date) {
-    		Season::Advent => set.insert(Some(advent::get_celebration(self, date))),
-    		Season::Christmas => set.insert(Some(christmas::get_celebration(self, date))),
-    		Season::PostEpiphany => set.insert(Some(postepiphany::get_celebration(self, date))),
-    		Season::PreLent => set.insert(Some(prelent::get_celebration(self, date))),
-    		_ => todo!()
-    	};
-
-    	set
+    		Season::Advent => advent::get_celebration(self, date),
+    		Season::Christmas =>christmas::get_celebration(self, date),
+    		Season::PostEpiphany => postepiphany::get_celebration(self, date),
+    		Season::PreLent => prelent::get_celebration(self, date),
+    		Season::Lent => lent::get_celebration(self, date),
+    		Season::Easter => easter::get_celebration(self, date),
+    		Season::PostPentecost => postpentecost::get_celebration(self, date)
+    	}
     }
 }
 
