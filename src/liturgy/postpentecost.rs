@@ -103,6 +103,14 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		_ => (format!("{} in the {} Week of {} and {} after Pentecost", date.weekday().fullname(), month_week_num.ordinal(), month, week_num.ordinal()), Color::Green)
 	};
 
+	let name = match week_num {
+		28 => match date.weekday() {
+			Sun => format!("{} Sunday of {} and Last after Pentecost", month_week_num.ordinal(), month),
+			_ => format!("{} in the {} Week of {} and Last after Pentecost", date.weekday().fullname(), month_week_num.ordinal(), month)
+		},
+		_ => name
+	};
+
 	let penance = match date.weekday() {
 		Wed | Fri => {
 			if month == "September" && month_week_num == 3 {
