@@ -2,8 +2,23 @@
 !*/
 !*.tex
 !*.md
+!*.lit
+!*.gabc
 !horarium.html
-!horarium/*
+!horarium/*/*
 !.gitignore
 !docs/*.pdf
 *_model.tex
+!docs/tones.txt
+horarium/test.html
+!*.py
+
+# rust support
+
+!src/*
+!src/*/*
+!Cargo.toml
+
+# Added by cargo
+
+/target
