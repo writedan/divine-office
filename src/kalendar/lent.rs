@@ -1,5 +1,5 @@
 use chrono::{NaiveDate, Datelike, Weekday};
-use crate::liturgy::{Kalendar, Celebration, Penance, Color, Season, Rank, Identifier};
+use crate::kalendar::{Kalendar, Celebration, Penance, Color, Season, Rank, Identifier};
 use crate::timehelp::{Betwixt, FullName, Ordinal, Sunday};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {

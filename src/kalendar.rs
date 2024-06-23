@@ -69,6 +69,15 @@ pub struct Celebration {
 }
 
 impl Kalendar {
+	pub fn from_date(date: NaiveDate) -> Option<Kalendar> {
+		let advent = NaiveDate::from_ymd_opt(date.year(), 11, 27)?.this_or_next_sunday()?;
+		if date < advent {
+			Kalendar::from_year(date.year() - 1)
+		} else {
+			Kalendar::from_year(date.year())
+		}
+	}
+
 	// option is returned since theoretically a user could pass in a bad year
 	// we don't want to bring the server crashing down because of it
 	pub fn from_year(year: i32) -> Option<Kalendar> {
