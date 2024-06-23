@@ -7,7 +7,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
 	let week_num = (3 - NaiveDate::weeks_since(ly. septuagesima, date)) as u8;
 
-	let identifier = vec![Identifier {
+	let identifiers = vec![Identifier {
 		season: Season::PreLent,
 		week: week_num.to_string(),
 		day: String::from(date.weekday().fullname())
@@ -35,6 +35,6 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		penance,
 		color: Color::Violet,
 		rank,
-		identifier
+		identifiers
 	}
 }

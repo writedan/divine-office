@@ -7,7 +7,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
 	let week_num = (NaiveDate::weeks_since(ly.easter, date) + 1) as u8;
 
-	let identifier = vec![Identifier {
+	let identifiers = vec![Identifier {
 		season: Season::Easter,
 		week: week_num.to_string(),
 		day: String::from(date.weekday().fullname())
@@ -39,7 +39,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 				penance: None,
 				rank: Rank::Triplex,
 				color,
-				identifier
+				identifiers
 			},
 
 			_ => Celebration {
@@ -47,30 +47,30 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 				penance: None,
 				rank: Rank::StrongFeria,
 				color,
-				identifier
+				identifiers
 			}
 		},
 
 		2 | 3 | 4 | 5 => Celebration {
-			name, penance, rank, color, identifier
+			name, penance, rank, color, identifiers
 		},
 
 		6 => match date.weekday() {
 			Sun | Mon | Tue => Celebration {
-				name, penance, rank, color, identifier
+				name, penance, rank, color, identifiers
 			},
-			_ => ascension(ly, date, week_num, identifier)
+			_ => ascension(ly, date, week_num, identifiers)
 		},
 
-		7 => ascension(ly, date, week_num, identifier),
+		7 => ascension(ly, date, week_num, identifiers),
 
-		8 => pentecost(ly, date, identifier),
+		8 => pentecost(ly, date, identifiers),
 
 		_ => panic!("Requested easter week {}; only 7 exist", week_num)
 	}
 }
 
-fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Vec<Identifier>) -> Celebration {
+fn pentecost(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
 	use Weekday::*;
 	let color = Color::Red;
 	match date.weekday() {
@@ -79,7 +79,7 @@ fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Vec<Identifier>) -> Cel
 			color,
 			rank: Rank::Triplex,
 			penance: None,
-			identifier
+			identifiers
 		},
 
 		Mon | Tue | Thu => Celebration {
@@ -87,7 +87,7 @@ fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Vec<Identifier>) -> Cel
 			color,
 			rank: Rank::Feria,
 			penance: None,
-			identifier
+			identifiers
 		},
 
 		Wed | Fri => Celebration {
@@ -95,7 +95,7 @@ fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Vec<Identifier>) -> Cel
 			color,
 			rank: Rank::Feria,
 			penance: Some(Penance::Fasting),
-			identifier
+			identifiers
 		},
 
 		Sat => Celebration {
@@ -103,12 +103,12 @@ fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Vec<Identifier>) -> Cel
 			color,
 			rank: Rank::Feria,
 			penance: Some(Penance::Vigil),
-			identifier
+			identifiers
 		}
 	}
 }
 
-fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Identifier>) -> Celebration {
+fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifiers: Vec<Identifier>) -> Celebration {
 	use Weekday::*;
 	match week_num {
 		6 => {
@@ -118,7 +118,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					penance: Some(Penance::Vigil),
 					color: Color::Violet,
 					rank: Rank::Feria,
-					identifier
+					identifiers
 				},
 
 				Thu => Celebration {
@@ -126,7 +126,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					penance: None,
 					color: Color::White,
 					rank: Rank::Triplex,
-					identifier
+					identifiers
 				},
 
 				Fri | Sat => Celebration {
@@ -134,7 +134,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					penance: None,
 					rank: Rank::Feria,
 					color: Color::White,
-					identifier
+					identifiers
 				},
 
 				_ => panic!("Requested ascension octave for {} in first week", date.weekday())
@@ -148,7 +148,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					color: Color::White,
 					penance: None,
 					rank: Rank::StrongSunday,
-					identifier
+					identifiers
 				},
 
 				Mon | Tue | Wed => Celebration {
@@ -156,7 +156,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					color: Color::White,
 					penance: None,
 					rank: Rank::Feria,
-					identifier
+					identifiers
 				},
 
 				Thu => Celebration {
@@ -164,7 +164,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					color: Color::White,
 					penance: None,
 					rank: Rank::Duplex,
-					identifier
+					identifiers
 				},
 
 				Fri => Celebration {
@@ -172,7 +172,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					color: Color::White,
 					penance: Some(Penance::Abstinence),
 					rank: Rank::Feria,
-					identifier
+					identifiers
 				},
 
 				Sat => Celebration {
@@ -180,7 +180,7 @@ fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Ident
 					color: Color::White,
 					penance: Some(Penance::Vigil),
 					rank: Rank::Feria,
-					identifier
+					identifiers
 				}
 			}
 		},

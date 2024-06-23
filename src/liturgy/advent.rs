@@ -56,15 +56,28 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		)
 	};
 
+	let mut identifiers = Vec::<Identifier>::new();
+	identifiers.push(Identifier {
+		season: Season::Advent,
+		week: week_num.to_string(),
+		day: date.weekday().to_string()
+	});
+
+	let o_wisdom = NaiveDate::from_ymd_opt(date.year(), 12, 17).unwrap();
+
+	if date >= o_wisdom {
+		identifiers.push(Identifier {
+			season: Season::Advent,
+			week: String::from("o-antiphons"),
+			day: (NaiveDate::days_since(o_wisdom, date) + 1).to_string()
+		});
+	}
+
 	Celebration {
 		name,
 		color,
 		penance,
 		rank,
-		identifier: vec![Identifier {
-			season: Season::Advent,
-			week: week_num.to_string(),
-			day: date.weekday().to_string()
-		}]
+		identifiers
 	}
 }

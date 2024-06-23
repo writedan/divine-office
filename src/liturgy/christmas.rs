@@ -4,7 +4,7 @@ use crate::timehelp::{Betwixt, FullName};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	let distance = NaiveDate::days_since(ly.christmas, date);
-	let identifier = vec![Identifier {
+	let identifiers = vec![Identifier {
 		season: Season::Christmas,
 		week: String::from("0"),
 		day: distance.to_string()
@@ -16,7 +16,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: if date.weekday() == Weekday::Sun {None} else {Some(Penance::Vigil)},
 			color: Color::Violet,
 			rank: Rank::StrongFeria,
-			identifier
+			identifiers
 		},
 
 		1 => return Celebration {
@@ -24,7 +24,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::White,
 			rank: Rank::Triplex,
-			identifier
+			identifiers
 		},
 
 		2 => return Celebration {
@@ -32,7 +32,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::Red,
 			rank: Rank::Duplex,
-			identifier
+			identifiers
 		},
 
 		3 => return Celebration {
@@ -40,7 +40,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::White,
 			rank: Rank::Duplex,
-			identifier
+			identifiers
 		},
 
 		4 => return Celebration {
@@ -48,7 +48,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::Violet,
 			rank: Rank::Duplex,
-			identifier
+			identifiers
 		},
 
 		5 => return Celebration {
@@ -56,7 +56,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::Red,
 			rank: Rank::Duplex,
-			identifier
+			identifiers
 		},
 
 		6 => return Celebration {
@@ -64,7 +64,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::White,
 			rank: Rank::StrongFeria,
-			identifier
+			identifiers
 		},
 
 		7 => return Celebration {
@@ -72,7 +72,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::White,
 			rank: Rank::StrongFeria,
-			identifier
+			identifiers
 		},
 
 		8 => return Celebration {
@@ -80,7 +80,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::White,
 			rank: Rank::Triplex,
-			identifier
+			identifiers
 		},
 
 		9 => return Celebration {
@@ -88,7 +88,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::Red,
 			rank: Rank::StrongFeria,
-			identifier
+			identifiers
 		},
 
 		10 => return Celebration {
@@ -96,7 +96,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::White,
 			rank: Rank::StrongFeria,
-			identifier
+			identifiers
 		},
 
 		11 => return Celebration {
@@ -104,7 +104,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::Red,
 			rank: Rank::StrongFeria,
-			identifier
+			identifiers
 		},
 
 		12 => return Celebration {
@@ -112,7 +112,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: if date.weekday() == Weekday::Sun { None } else { Some(Penance::Vigil) },
 			color: Color::Violet,
 			rank: Rank::StrongFeria,
-			identifier
+			identifiers
 		},
 
 		13 => return Celebration {
@@ -120,7 +120,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			penance: None,
 			color: Color::White,
 			rank: Rank::Triplex,
-			identifier
+			identifiers
 		},
 
 		_ => {}
@@ -135,6 +135,6 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		},
 		color: Color::White,
 		rank: Rank::Feria,
-		identifier
+		identifiers
 	}
 }
