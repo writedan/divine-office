@@ -48,7 +48,8 @@ enum Rank {
 
 #[derive(Eq, PartialEq, Hash, Debug)]
 enum Season {
-	Advent, Christmas, PostEpiphany, PreLent, Lent, Easter, PostPentecost
+	Advent, Christmas, PostEpiphany, PreLent, Lent, Easter, PostPentecost,
+	August, September, October, November
 }
 
 #[derive(Eq, PartialEq, Hash, Debug)]
@@ -113,7 +114,8 @@ impl Kalendar {
     		Season::PreLent => prelent::get_celebration(self, date),
     		Season::Lent => lent::get_celebration(self, date),
     		Season::Easter => easter::get_celebration(self, date),
-    		Season::PostPentecost => postpentecost::get_celebration(self, date)
+    		Season::PostPentecost => postpentecost::get_celebration(self, date),
+    		_ => panic!("{:?} should not be returned from Kalendar.get_season.", self.get_season(date))
     	}
     }
 }
