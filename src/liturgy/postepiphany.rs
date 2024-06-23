@@ -7,11 +7,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
 	let week_num = (NaiveDate::weeks_since(ly.epiphany_sunday, date) + 1) as u8;
 
-	let identifier = Identifier {
+	let identifier = vec![Identifier {
 		season: Season::PostEpiphany,
 		week: week_num.to_string(),
 		day: String::from(date.weekday().fullname())
-	};
+	}];
 
 	let (name, rank) = match date.weekday() {
 		Sun => (

@@ -61,10 +61,10 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		color,
 		penance,
 		rank,
-		identifier: Identifier {
+		identifier: vec![Identifier {
 			season: Season::Advent,
 			week: week_num.to_string(),
 			day: date.weekday().to_string()
-		}
+		}]
 	}
 }

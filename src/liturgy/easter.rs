@@ -7,11 +7,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
 	let week_num = (NaiveDate::weeks_since(ly.easter, date) + 1) as u8;
 
-	let identifier = Identifier {
+	let identifier = vec![Identifier {
 		season: Season::Easter,
 		week: week_num.to_string(),
 		day: String::from(date.weekday().fullname())
-	};
+	}];
 
 	let (name, rank) = match date.weekday() {
 		Sun => (
@@ -70,7 +70,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	}
 }
 
-fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Identifier) -> Celebration {
+fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Vec<Identifier>) -> Celebration {
 	use Weekday::*;
 	let color = Color::Red;
 	match date.weekday() {
@@ -108,7 +108,7 @@ fn pentecost(ly: &Kalendar, date: NaiveDate, identifier: Identifier) -> Celebrat
 	}
 }
 
-fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Identifier) -> Celebration {
+fn ascension(ly: &Kalendar, date: NaiveDate, week_num: u8, identifier: Vec<Identifier>) -> Celebration {
 	use Weekday::*;
 	match week_num {
 		6 => {

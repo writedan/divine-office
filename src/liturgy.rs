@@ -64,7 +64,7 @@ pub struct Celebration {
 	penance: Option<Penance>,
 	color: Color,
 	rank: Rank,
-	identifier: Identifier,
+	identifier: Vec<Identifier>,
 }
 
 impl Kalendar {

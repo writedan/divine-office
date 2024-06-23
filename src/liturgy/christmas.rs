@@ -4,11 +4,11 @@ use crate::timehelp::{Betwixt, FullName};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	let distance = NaiveDate::days_since(ly.christmas, date);
-	let identifier = Identifier {
+	let identifier = vec![Identifier {
 		season: Season::Christmas,
 		week: String::from("0"),
 		day: distance.to_string()
-	};
+	}];
 
 	match distance {
 		0 => return Celebration {
