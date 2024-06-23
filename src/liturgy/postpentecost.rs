@@ -6,11 +6,8 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	use Weekday::*;
 
 	let sundays_after_pentecost = NaiveDate::weeks_since(ly.pentecost.next_sunday().unwrap(), ly.next_advent);
-	let sundays_after_epiphany = NaiveDate::weeks_since(ly.epiphany_sunday, ly.septuagesima);
-
-	let diff = sundays_after_pentecost - 24;
-
-	let sunday_num = (NaiveDate::weeks_since(ly.pentecost, date));
+	
+	let sunday_num = NaiveDate::weeks_since(ly.pentecost, date);
 
 	let week_num = if sunday_num == sundays_after_pentecost {
 		28
@@ -66,10 +63,10 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		};
 	}
 
-	let aug_weeks = NaiveDate::weeks_since(aug_sunday, sep_sunday);
+	let _aug_weeks = NaiveDate::weeks_since(aug_sunday, sep_sunday);
 	let sep_weeks = NaiveDate::weeks_since(sep_sunday, oct_sunday);
-	let oct_weeks = NaiveDate::weeks_since(oct_sunday, nov_sunday);
-	let nov_weeks = NaiveDate::weeks_since(nov_sunday, ly.next_advent);
+	let _oct_weeks = NaiveDate::weeks_since(oct_sunday, nov_sunday);
+	let _nov_weeks = NaiveDate::weeks_since(nov_sunday, ly.next_advent);
 
 	let (month_week_num, month) = if date.is_between(aug_sunday, sep_sunday) {
 		(NaiveDate::weeks_since(aug_sunday, date) + 1, "August")

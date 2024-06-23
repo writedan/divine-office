@@ -3,7 +3,7 @@ use crate::liturgy::{Kalendar, Celebration, Penance, Color, Season, Rank, Identi
 use crate::timehelp::{Betwixt, FullName, Ordinal, Sunday};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
-	use Weekday::*;
+	
 
 	let week_num = (NaiveDate::weeks_since(ly.ash_wednesday.prev_sunday().unwrap(), date)) as u8;
 
@@ -14,16 +14,16 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	}];
 
 	match week_num {
-		0 => quinquagesima(ly, date, identifiers),
-		1 => lent1(ly, date, identifiers, week_num),
-		2..=4 => lent(ly, date, identifiers, week_num),
-		5 => passion(ly, date, identifiers),
-		6 => holyweek(ly, date, identifiers),
+		0 => quinquagesima(date, identifiers),
+		1 => lent1(date, identifiers, week_num),
+		2..=4 => lent(date, identifiers, week_num),
+		5 => passion(date, identifiers),
+		6 => holyweek(date, identifiers),
 		_ => panic!("There are only 6 weeks of Lent, requested week {}", week_num)
 	}
 }
 
-fn holyweek(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
+fn holyweek(date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
 	use Weekday::*;
 	let (color, penance, rank) = (Color::Violet, Some(Penance::Fasting), Rank::StrongFeria);
 	match date.weekday() {
@@ -69,7 +69,7 @@ fn holyweek(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>) -> Cel
 	}
 }
 
-fn passion(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
+fn passion(date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
 	use Weekday::*;
 	let (color, penance, rank) = (Color::Violet, Some(Penance::Fasting), Rank::Feria);
 	match date.weekday() {
@@ -91,7 +91,7 @@ fn passion(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>) -> Cele
 	}
 }
 
-fn lent(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>, week_num: u8) -> Celebration {
+fn lent(date: NaiveDate, identifiers: Vec<Identifier>, week_num: u8) -> Celebration {
 	use Weekday::*;
 	let (color, penance, rank) = (Color::Violet, Some(Penance::Fasting), Rank::Feria);
 	match date.weekday() {
@@ -113,7 +113,7 @@ fn lent(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>, week_num: 
 	}
 }
 
-fn lent1(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>, week_num: u8) -> Celebration {
+fn lent1(date: NaiveDate, identifiers: Vec<Identifier>, week_num: u8) -> Celebration {
 	use Weekday::*;
 	let color = Color::Violet;
 	let penance = Some(Penance::Fasting);
@@ -161,7 +161,7 @@ fn lent1(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>, week_num:
 	}
 }
 
-fn quinquagesima(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
+fn quinquagesima(date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
 	use Weekday::*;
 	let (name, penance, color, rank) = (format!("{} after the Ashes", date.weekday().fullname()), Some(Penance::Fasting), Color::Violet, Rank::Feria);
 
