@@ -38,3 +38,17 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		identifiers
 	}
 }
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	#[test]
+	fn test_epiphany_sundays() {
+		for x in 1600..=3000 {
+			let ly = Kalendar::from_year(x).unwrap();
+			let num_sundays = NaiveDate::weeks_since(ly.epiphany_sunday, ly.septuagesima);
+			assert!(num_sundays <= 6, "there are {} sundays after epiphany in year {}", num_sundays, x);
+		}
+	}
+}
