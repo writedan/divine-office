@@ -6,6 +6,11 @@ mod compiler;
 
 use clap::Parser;
 
+use serde::{Serialize};
+
+use chrono::NaiveDate;
+
+
 #[derive(Parser, Debug)]
 struct Args {
     // IP address and port to bind server to, e.g. localhost:80
@@ -19,8 +24,6 @@ fn main() {
     use rouille::router;
 
     use std::fs::File;
-
-    use chrono::NaiveDate;
 
     let args = Args::parse();
 
@@ -37,18 +40,18 @@ fn main() {
             },
 
             // api endpoints
-            (GET) ["/{y}/{m}/{d}", y: i32, m: u32, d: u32] => {
+            (GET) ["/api/{y}/{m}/{d}", y: i32, m: u32, d: u32] => {
                 let date = match NaiveDate::from_ymd_opt(y, m, d) {
                     Some(date) => date,
-                    None => return Response::text("{\"error\": \"An invalid date was supplied.\"}")
+                    None => return Response::json(&LiturgyError {
+                        error: format!("An invalid date y={} m={} d={} was supplied.", y, m, d)
+                    })
                 };
 
-                let kal = match crate::kalendar::Kalendar::from_date(date) {
-                    Some(kal) => kal,
-                    None => return Response::text("{\"error\": \"The supplied date is beyond the bounds of the Gregorian calendar.\"}")
-                };
-
-                Response::text(format!("{:#?}", kal))
+                match liturgy_info(date) {
+                    Ok(info) => Response::json(&info),
+                    Err(err) => Response::json(&err)
+                }
             },
 
             // static pages
@@ -73,4 +76,37 @@ fn main() {
             }
         )
     });
+}
+
+fn liturgy_info(date: NaiveDate) -> Result<LiturgyInfo, LiturgyError> {
+    let kal = match crate::kalendar::Kalendar::from_date(date) {
+        Some(kal) => kal,
+        None => return Err(LiturgyError {
+            error: format!("The supplied date {} is beyond the bounds of the Gregorian calendar.", date)
+        })
+    };
+
+    let today = kal.get_celebrations(date);
+    let tomorrow = kal.get_celebrations(date + chrono::Days::new(1));
+
+    let today = &today[0];
+    let tomorrow = &tomorrow[0];
+
+    let liturgy = crate::liturgy::resolve_hours(today, tomorrow);
+
+    Ok(LiturgyInfo {
+        vigils: today.clone(),
+        vespers: if liturgy.today_vespers.unwrap() { None } else { Some(tomorrow.clone()) }
+    })
+}
+
+#[derive(Serialize)]
+struct LiturgyError {
+    error: String
+}
+
+#[derive(Serialize)]
+struct LiturgyInfo {
+    vigils: crate::kalendar::Celebration,
+    vespers: Option<crate::kalendar::Celebration>
 }

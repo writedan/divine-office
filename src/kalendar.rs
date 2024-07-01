@@ -27,17 +27,17 @@ pub struct Kalendar {
 	next_advent: NaiveDate // for validation purposes only
 }
 
-#[derive(Eq, PartialEq, Hash, Debug)]
+#[derive(Eq, PartialEq, Hash, Debug, serde::Serialize, Clone)]
 pub enum Penance {
 	Abstinence, Fasting, Vigil
 }
 
-#[derive(Eq, PartialEq, Hash, Debug)]
+#[derive(Eq, PartialEq, Hash, Debug, serde::Serialize, Clone)]
 pub enum Color {
 	White, Blue, Green, Red, Black, Violet, Rose
 }
 
-#[derive(Eq, PartialEq, Hash, Debug, PartialOrd)]
+#[derive(Eq, PartialEq, Hash, Debug, PartialOrd, serde::Serialize, Clone)]
 pub enum Rank {
 	Feria,
 	StrongFeria, // cannot be superseded by anything
@@ -49,7 +49,7 @@ pub enum Rank {
 	Triplex
 }
 
-#[derive(Eq, PartialEq, Hash, Debug)]
+#[derive(Eq, PartialEq, Hash, Debug, serde::Serialize, Clone)]
 pub enum Season {
 	Advent, 
 	Christmas, 
@@ -79,14 +79,14 @@ impl ToString for Season {
 	}
 }
 
-#[derive(Eq, PartialEq, Hash, Debug)]
+#[derive(Eq, PartialEq, Hash, Debug, serde::Serialize, Clone)]
 pub struct Identifier {
 	pub season: Season,
 	pub week: String,
 	pub day: String
 }
 
-#[derive(Eq, PartialEq, Hash, Debug)]
+#[derive(Eq, PartialEq, Hash, Debug, serde::Serialize, Clone)]
 pub struct Celebration {
 	pub name: String,
 	pub penance: Option<Penance>,
