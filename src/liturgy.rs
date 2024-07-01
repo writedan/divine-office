@@ -17,14 +17,24 @@ impl Identifier {
 			_ => todo!("resolution of {}", self.season.to_string())
 		};
 
-		Self::verify_map(&mut lit.vigils);
-		Self::verify_map(&mut lit.matins);
-		Self::verify_map(&mut lit.prime);
-		Self::verify_map(&mut lit.terce);
-		Self::verify_map(&mut lit.sext);
-		Self::verify_map(&mut lit.none);
-		Self::verify_map(&mut lit.vespers);
-		Self::verify_map(&mut lit.compline);
+		if let August | September | October | November = self.season {
+			lit.vigils.remove("collect");
+			lit.vigils.remove("gospel");
+			lit.vigils.remove("lesson-7");
+			lit.vigils.remove("lesson-8");
+			lit.vigils.remove("lesson-9");
+			lit.matins.remove("collect");
+			lit.prime.remove("collect");
+			lit.terce.remove("collect");
+			lit.sext.remove("collect");
+			lit.none.remove("collect");
+			lit.vespers.remove("collect");
+			lit.compline.remove("collect");
+			let day = self.day.parse::<Weekday>().ok().unwrap();
+			if day == Sun {
+				lit.vespers.remove("canticle");
+			}
+		}
 
 		lit
 	}
@@ -59,7 +69,9 @@ pub struct Liturgy {
 impl Liturgy {
 	fn extend_helper(map1: &mut HashMap<&'static str,PathBuf>, map2: &HashMap<&'static str,PathBuf>) {
 		for (key, value) in map2 {
-			map1.insert(key.clone(), value.clone());
+			if !map1.contains_key(key) {
+				map1.insert(key.clone(), value.clone());
+			}
 		}
 	}
 
@@ -77,7 +89,7 @@ impl Liturgy {
 
 pub fn resolve_hours(today: &Celebration, tomorrow: &Celebration) -> Liturgy  {
 	let first_vespers = tomorrow.rank > today.rank && today.rank != StrongFeria;
-	let idens: Vec<_> = today.identifiers(); // we reverse the vector since we will give precedence to what comes first
+	let idens: Vec<_> = today.identifiers();
 	let mut lit = idens[0].resolve();
 	let idens: Vec<_> = idens.iter().map(|iden| iden.resolve()).collect();
 
