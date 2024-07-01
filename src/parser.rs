@@ -1,4 +1,4 @@
-mod ast;
+pub mod ast;
 
 use crate::liturgy::Liturgy;
 use crate::kalendar::Identifier;
@@ -30,7 +30,7 @@ pub enum Directive {
 	Text(String),
 	Heading(String),
 	Instruction(String),
-	Gabc(String, bool, String), // whether english (true) or latin (false) -- default to english
+	Gabc(String, bool, String), // musicm whether english (true) or latin (false) -- default to english, initial style
 	RawGabc(String),
 	Import(PathBuf),
 	Title(String),
