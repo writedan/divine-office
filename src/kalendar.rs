@@ -9,6 +9,8 @@ mod postpentecost;
 use chrono::{NaiveDate, Datelike, Days};
 use crate::timehelp::{Sunday, Betwixt};
 
+use std::cmp::Ordering;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 pub struct Kalendar {
@@ -16,6 +18,7 @@ pub struct Kalendar {
 	advent: NaiveDate,
 	christmas: NaiveDate,
 	epiphany_sunday: NaiveDate, // the sunday after epiphany
+	purification: NaiveDate,
 	septuagesima: NaiveDate,
 	ash_wednesday: NaiveDate,
 	easter: NaiveDate,
@@ -25,17 +28,17 @@ pub struct Kalendar {
 }
 
 #[derive(Eq, PartialEq, Hash, Debug)]
-enum Penance {
+pub enum Penance {
 	Abstinence, Fasting, Vigil
 }
 
 #[derive(Eq, PartialEq, Hash, Debug)]
-enum Color {
+pub enum Color {
 	White, Blue, Green, Red, Black, Violet, Rose
 }
 
-#[derive(Eq, PartialEq, Hash, Debug)]
-enum Rank {
+#[derive(Eq, PartialEq, Hash, Debug, PartialOrd)]
+pub enum Rank {
 	Feria,
 	StrongFeria, // cannot be superseded by anything
 	Simplex,
@@ -47,25 +50,70 @@ enum Rank {
 }
 
 #[derive(Eq, PartialEq, Hash, Debug)]
-enum Season {
-	Advent, Christmas, PostEpiphany, PreLent, Lent, Easter, PostPentecost,
+pub enum Season {
+	Advent, 
+	Christmas, 
+	PostEpiphany(bool), // whether we are before (true) or after (false) the Purification
+	PreLent, 
+	Lent, 
+	Easter, 
+	PostPentecost,
 	August, September, October, November
 }
 
+impl ToString for Season {
+	fn to_string(&self) -> String {
+		match self {
+			crate::kalendar::Season::Advent => String::from("advent"),
+			crate::kalendar::Season::Christmas => String::from("christmas"),
+			crate::kalendar::Season::PostEpiphany(_) => String::from("post-epiphany"),
+			crate::kalendar::Season::PreLent => String::from("pre-lent"),
+			crate::kalendar::Season::Lent => String::from("lent"),
+			crate::kalendar::Season::Easter => String::from("easter"),
+			crate::kalendar::Season::PostPentecost => String::from("post-pentecost"),
+			crate::kalendar::Season::August => String::from("august"),
+			crate::kalendar::Season::September => String::from("september"),
+			crate::kalendar::Season::October => String::from("october"),
+			crate::kalendar::Season::November => String::from("november")
+		}
+	}
+}
+
 #[derive(Eq, PartialEq, Hash, Debug)]
-struct Identifier {
-	season: Season,
-	week: String,
-	day: String
+pub struct Identifier {
+	pub season: Season,
+	pub week: String,
+	pub day: String
 }
 
 #[derive(Eq, PartialEq, Hash, Debug)]
 pub struct Celebration {
-	name: String,
-	penance: Option<Penance>,
-	color: Color,
-	rank: Rank,
+	pub name: String,
+	pub penance: Option<Penance>,
+	pub color: Color,
+	pub rank: Rank,
 	identifiers: Vec<Identifier>,
+}
+
+impl Ord for Celebration {
+	fn cmp(&self, other: &Self) -> Ordering {
+		let r1 = &self.rank;
+		let r2 = &other.rank;
+
+		if *r1 > *r2 {
+			Ordering::Greater
+		} else if *r2 > *r1 {
+			Ordering::Less
+		} else {
+			Ordering::Equal
+		}
+	}
+}
+
+impl PartialOrd for Celebration {
+	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		self.rank.partial_cmp(&other.rank)
+	}
 }
 
 impl Kalendar {
@@ -86,6 +134,7 @@ impl Kalendar {
             advent: NaiveDate::from_ymd_opt(year, 11, 27)?.this_or_next_sunday()?,
             christmas: NaiveDate::from_ymd_opt(year, 12, 24)?,
             epiphany_sunday: NaiveDate::from_ymd_opt(year + 1, 1, 6)?.this_or_next_sunday()?,
+            purification: NaiveDate::from_ymd_opt(year + 1, 2, 2)?,
             septuagesima: easter.checked_sub_days(Days::new(63))?,
             ash_wednesday: easter.checked_sub_days(Days::new(46))?,
             easter,
@@ -99,7 +148,8 @@ impl Kalendar {
     	let seasons = [
     		(Season::Advent, self.advent, self.christmas),
     		(Season::Christmas, self.christmas, self.epiphany_sunday),
-    		(Season::PostEpiphany, self.epiphany_sunday, self.septuagesima),
+    		(Season::PostEpiphany(false), self.epiphany_sunday, self.purification),
+    		(Season::PostEpiphany(true), self.purification, self.septuagesima),
     		(Season::PreLent, self.septuagesima, self.ash_wednesday),
     		(Season::Lent, self.ash_wednesday, self.easter),
     		(Season::Easter, self.easter, self.pentecost.next_sunday().unwrap()), // this case can be safely unwrapped since we have a valid kalendar
@@ -115,11 +165,11 @@ impl Kalendar {
     	panic!("Requested season of a date beyond the bounds of liturgical year {}.", self.advent.year());
     }
 
-    pub fn get_temporal(&self, date: NaiveDate) -> Celebration {
+    fn get_temporal(&self, date: NaiveDate) -> Celebration {
     	match self.get_season(date) {
     		Season::Advent => advent::get_celebration(self, date),
     		Season::Christmas =>christmas::get_celebration(self, date),
-    		Season::PostEpiphany => postepiphany::get_celebration(self, date),
+    		Season::PostEpiphany(_) => postepiphany::get_celebration(self, date),
     		Season::PreLent => prelent::get_celebration(self, date),
     		Season::Lent => lent::get_celebration(self, date),
     		Season::Easter => easter::get_celebration(self, date),
@@ -127,6 +177,18 @@ impl Kalendar {
     		_ => panic!("{:?} should not be returned from Kalendar.get_season.", self.get_season(date))
     	}
     }
+
+    pub fn get_celebrations(&self, date: NaiveDate) -> Vec<Celebration> {
+    	let mut vec = vec![self.get_temporal(date)];
+    	vec.sort();
+    	vec
+    }
+}
+
+impl Celebration {
+	pub fn identifiers(&self) -> Vec<&Identifier> {
+		self.identifiers.iter().rev().collect()
+	}
 }
 
 

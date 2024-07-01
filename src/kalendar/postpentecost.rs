@@ -19,7 +19,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
 	if week_num >= 24 && week_num < 28 {
 		identifiers.push(Identifier {
-			season: Season::PostEpiphany,
+			season: Season::PostEpiphany(date <= ly.purification),
 			week: ((week_num - 24) + 1).to_string(),
 			day: String::from(date.weekday().fullname())
 		})
