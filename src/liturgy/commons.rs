@@ -26,6 +26,15 @@ pub fn resolve(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
 		}
 	].iter().collect());
 
+	map.insert("benedicamus", [
+		"commons",
+		"benedicamus",
+		match iden.season {
+			PostPentecost | PostEpiphany(_) | August | September | October | November => if day == Sun { "xi.gabc" } else { "xvi.gabc" },
+			_ => todo!("benedicamus for {:?}", iden.season)
+		}
+	].iter().collect());
+
 	map.insert("doxology", [
 		"hymn",
 		"doxology",
