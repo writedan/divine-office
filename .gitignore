@@ -12,6 +12,7 @@
 !docs/tones.txt
 horarium/test.html
 !*.py
+!public/*
 
 # rust support
 

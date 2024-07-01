@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<title>Divine Office Horarium</title>
+		
+		<script src='./suncalc.js'></script>
+        <script src ='./lit-time.js'></script>
+        <link rel='stylesheet' type='text/css' href='./liturgy.css'/>
+
+        <script>
+        	function boxChanged(latBox, lonBox, datBox) {
+        		var lat = latBox.value;
+        		var lon = lonBox.value;
+        		var dat = datBox.value.replace(/-/g, '\/').split('/');
+        		dat = new Date(dat[0], dat[1] - 1, dat[2]);
+
+        		console.log("================= NEW DATE =================");
+        		console.log(`Today is ${dat}`);
+        	}
+
+        	function initBoxes(lat, lon) {
+        		var latBox = document.getElementById("lat");
+        		var lonBox = document.getElementById("lon");
+        		var datBox = document.getElementById("dat");
+
+        		var today = new Date();
+        		latBox.value = lat;
+        		lonBox.value = lon;
+        		datBox.valueAsDate = today;
+
+        		latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+        		lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+        		datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
+        		boxChanged(latBox, lonBox, datBox);
+        	}
+
+        	window.addEventListener('load', function onPageLoad(){
+        		if (navigator.geolocation) {
+        			navigator.geolocation.getCurrentPosition(function onGeolocation(pos){
+        				initBoxes(pos.coords.latitude, pos.coords.longitude);
+        			}, function onGeolocationFailure(){
+        				alert("Geolocation failed. Manual entry is required.");
+        				initBoxes(0, 0);
+        			});
+        		} else {
+        			alert("Geolocation is not supported on this device. Manual entry is required.");
+        			initBoxes(0, 0);
+        		}
+        	});
+        </script>
+    </head>
+    <body>
+       <div id="container">
+            <div id="form-container">
+                <form>
+                    <label for="lat">Latitude</label>
+                    <input type="number" id="lat"/>
+                    <label for="lon">Longitude</label>
+                    <input type="number" id="lon" />
+                    <label for="dat">Date</label>
+                    <input type="date" id="dat" />
+                </form>
+            </div>
+            <div id="content-container">
+                <div id="content">
+                    <p>Waiting for geolocation.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
