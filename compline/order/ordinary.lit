@@ -18,7 +18,7 @@
 
 	#instruction "The whole congregation continues together, making a profound bow and crossing at the invocation of the names of the Holy Trinity."
 
-	#gabc "(c3) <sp>a</sp> Glo(h)ry(h) be(h) to(h) the(h) Fa(h)ther,(h) and(h) to(h) the(h) Son:(h,) and(h) to(h) the(h) Ho(h)ly(h) Spir(g)it:(h) as(h) it(h) was(h) in(h) the(h) be(h)gin(h)ning,(h) is(h) both(h) now(h) and(h) ev(g)er,(h,) and(h) un(h)to(h) the(h) a(h)ges(h) of(h) a(h)ges.(h) A(g)men.(h::) A(h)le(i)lu(g)ia.(h)"
+	#gabc "(c3) <sp>a</sp> Glo(h)ry(h) be(h) to(h) the(h) Fa(h)ther,(h) and(h) to(h) the(h) Son:(h,) and(h) to(h) the(h) Ho(h)ly(h) Spir(g)it:(h) as(h) he(h) was(h) in(h) the(h) be(h)gin(h)ning,(h) is(h) both(h) now(h) and(h) ev(g)er,(h,) and(h) un(h)to(h) the(h) a(h)ges(h) of(h) a(h)ges.(h) A(g)men.(h::) A(h)le(i)lu(g)ia.(h)"
 
 #heading "Psalmody"
 
@@ -30,7 +30,7 @@
 
 	#include "chapter"
 
-	#instruction "From the same place, he immediatelly proceeds with the intonation of the responsory."
+	#instruction "From the same place, he proceeds with the intonation of the responsory."
 
 	#include "responsory"
 
@@ -74,13 +74,9 @@
 
 	#include "anthem"
 
-	#instruction "The congregation again responds."
-
-	#gabc "(c3) A(gh)men.(h)"
-
 	#gabc "(c3) <sp>v</sp> O(f) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) Thee.(f) <sp>v</sp>(::) Let(h) us(h) bless(h) the(h) Fa(h)ther,(h) and(h) the(h) Son,(h) with(h) the(h) Ho(h)ly(h) Spir(h)it.(f) <sp>r</sp>(::) Let(h) us(h) praise(h) him(h) and(h) mag(h)ni(h)fy(h) him(h) a(h)bove(h) all(h) for(h)ev(h)er.(f) <sp>v</sp>(::) May(h) the(h) souls(h) of(h) the(h) faith(h)ful,(h) through(h) the(h) mer(h)cy(h) of(h) God,(h) rest(h) in(f) peace.(f) <sp>r</sp>(::) A(gh)men.(h)"
 
-	#include "benedicamus-domino"
+	#include "benedicamus"
 
 	#instruction "These prayers are then made quietly to conclude the service."
 
