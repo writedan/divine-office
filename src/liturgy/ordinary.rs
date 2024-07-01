@@ -181,6 +181,13 @@ fn prime(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	].iter().collect());
 
 	map.extend(commons);
+
+	map.insert("collect", [
+		"commons",
+		"prime",
+		"collect.gabc"
+	].iter().collect());
+
 	map
 }
 
@@ -421,5 +428,12 @@ fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	].iter().collect());
 
 	map.extend(commons);
+
+	map.insert("collect", [
+		"commons",
+		"compline",
+		"collect.gabc"
+	].iter().collect());
+
 	map
 }
