@@ -10,6 +10,12 @@ use serde::{Serialize};
 
 use chrono::NaiveDate;
 
+use std::collections::HashMap;
+
+use std::path::PathBuf;
+
+use crate::kalendar::Celebration;
+
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -36,7 +42,29 @@ fn main() {
             },
 
             (GET) ["/{y}/{m}/{d}/{h}", y: i32, m: u32, d: u32, h: String] => {
-                Response::text("{\"error\": \"An invalid date was supplied.\"}")
+                let date = match NaiveDate::from_ymd_opt(y, m, d) {
+                    Some(date) => date,
+                    None => return Response::json(&LiturgyError {
+                        error: format!("An invalid date y={} m={} d={} was supplied.", y, m, d)
+                    })
+                };
+
+                let (today, tomorrow) = match get_liturgies(date) {
+                    Ok(lit) => lit,
+                    Err(why) => return Response::json(&why)
+                };
+
+                let lit = crate::liturgy::resolve_hours(&today, &tomorrow);
+
+                println!("{:#?}", lit);
+
+                let h = h.as_str();
+                match h {
+                    "vigils" => compile_hour(lit.vigils),
+                    _ => return Response::json(&LiturgyError {
+                        error: format!("An invalid hour \"{}\" was supplied.", h)
+                    })
+                }
             },
 
             // api endpoints
@@ -78,7 +106,13 @@ fn main() {
     });
 }
 
-fn liturgy_info(date: NaiveDate) -> Result<LiturgyInfo, LiturgyError> {
+fn compile_hour(propers: HashMap<&'static str, PathBuf>) ->rouille::Response {
+    let elements = crate::compiler::compile_ast(crate::parser::parse_hour(propers));
+    println!("{:#?}", elements);
+    todo!()
+}
+
+fn get_liturgies(date: NaiveDate) -> Result<(Celebration, Celebration), LiturgyError> {
     let kal = match crate::kalendar::Kalendar::from_date(date) {
         Some(kal) => kal,
         None => return Err(LiturgyError {
@@ -92,11 +126,16 @@ fn liturgy_info(date: NaiveDate) -> Result<LiturgyInfo, LiturgyError> {
     let today = &today[0];
     let tomorrow = &tomorrow[0];
 
-    let liturgy = crate::liturgy::resolve_hours(today, tomorrow);
+    Ok((today.clone(), tomorrow.clone()))
+}
+
+fn liturgy_info(date: NaiveDate) -> Result<LiturgyInfo, LiturgyError> {
+    let (today, tomorrow) = get_liturgies(date)?;
+    let liturgy = crate::liturgy::resolve_hours(&today, &tomorrow);
 
     Ok(LiturgyInfo {
-        vigils: today.clone(),
-        vespers: if liturgy.today_vespers.unwrap() { None } else { Some(tomorrow.clone()) }
+        today: today.clone(),
+        tomorrow: if liturgy.today_vespers.unwrap() { None } else { Some(tomorrow.clone()) },
     })
 }
 
@@ -107,6 +146,6 @@ struct LiturgyError {
 
 #[derive(Serialize)]
 struct LiturgyInfo {
-    vigils: crate::kalendar::Celebration,
-    vespers: Option<crate::kalendar::Celebration>
+    today: crate::kalendar::Celebration,
+    tomorrow: Option<crate::kalendar::Celebration>
 }
