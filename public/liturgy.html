@@ -6,6 +6,7 @@
 		<title><%= title %></title>
 		
 		<script src='/exsurge.min.js'></script>
+        <script src='/lit-time.js'></script>
         <link rel='stylesheet' type='text/css' href='/liturgy.css'/>
 
         <style>
@@ -107,15 +108,6 @@
                 }
 
                 return headerObject;
-            }
-
-            function colorHeading(element, color) {
-                element.style.color = color.toLowerCase();
-                if (element.style.color == "white") {
-                    element.style['-webkit-text-stroke'] = '0.75px black';
-                } else if (element.style.color == "blue") {
-                    element.style.color = "#2B4593";
-                }
             }
 
             window.addEventListener('load', function onPageLoad(){

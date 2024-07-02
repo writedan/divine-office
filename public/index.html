@@ -131,15 +131,6 @@
                 return table;
             }
 
-            function colorHeading(element, color) {
-                element.style.color = color.toLowerCase();
-                if (element.style.color == "white") {
-                    element.style['-webkit-text-stroke'] = '0.75px black';
-                } else if (element.style.color == "blue") {
-                    element.style.color = "#2B4593";
-                }
-            }
-
             function drawTable(json, dat, lat, lon, sum) {
                 var content = document.getElementById("content");
                 content.innerHTML = "";

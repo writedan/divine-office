@@ -12,6 +12,17 @@ function w_sunset(lat, lon, dat) {
     return dateToSuntime(SunCalc.getTimes(dat, lat, lon).sunset);
 }
 
+function colorHeading(element, color) {
+    element.style.color = color.toLowerCase();
+    if (element.style.color == "white") {
+        element.style['-webkit-text-stroke'] = '0.75px black';
+    } else if (element.style.color == "blue") {
+        element.style.color = "#2B4593";
+    } else if (element.style.color == "violet") {
+        element.style.color = "rgb(76, 0, 153)";
+    }
+}
+
 const roundNearest = (value, nearest) => Math.ceil(value * (1 / nearest)) / (1 / nearest);
 
 function roundTime(time) {
