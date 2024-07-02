@@ -13,13 +13,16 @@ function w_sunset(lat, lon, dat) {
 }
 
 function colorHeading(element, color) {
-    element.style.color = color.toLowerCase();
-    if (element.style.color == "white") {
+    color = color.toLowerCase();
+    element.style.color = color;
+    if (color == "white") {
         element.style['-webkit-text-stroke'] = '0.75px black';
-    } else if (element.style.color == "blue") {
+    } else if (color == "blue") {
         element.style.color = "#2B4593";
-    } else if (element.style.color == "violet") {
+    } else if (color == "violet") {
         element.style.color = "rgb(76, 0, 153)";
+    } else if (color == "rose") {
+        element.style.color = "rgb(250, 72, 173)";
     }
 }
 
