@@ -30,6 +30,10 @@
 
 	#include "chapter"
 
+	#include "The congregation responds."
+
+	#gabc "(c3) Thanks(h) be(h) to(h) God.(h)"
+
 	#instruction "From the same place, he proceeds with the intonation of the responsory."
 
 	#include "responsory"
