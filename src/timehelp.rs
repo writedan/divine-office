@@ -119,7 +119,7 @@ impl Betwixt for NaiveDate {
     }
 
     fn weeks_since(d1: NaiveDate, d2: NaiveDate) -> i64 {
-        ((d2 - d1).num_days() / 7) as i64
+        (d2 - d1).num_days() / 7
     }
 
     fn days_since(d1: NaiveDate, d2: NaiveDate) -> i64 {

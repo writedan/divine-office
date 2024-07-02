@@ -47,9 +47,9 @@ struct Preprocessor {
 }
 
 fn resolve_tone(tone: &String) -> String {
-	let parts = tone.split("/").collect::<Vec<&str>>();
-	let parts = parts[1].split(".").collect::<Vec<&str>>();
-	let parts = parts[0].split("-").collect::<Vec<&str>>();
+	let parts = tone.split('/').collect::<Vec<&str>>();
+	let parts = parts[1].split('.').collect::<Vec<&str>>();
+	let parts = parts[0].split('-').collect::<Vec<&str>>();
 	let median = parts[0];
 	let ending = parts.get(1);
 
@@ -146,13 +146,13 @@ impl Parser {
 				"repeat-antiphon" => {
 					match self.propers.get("internal:previous-antiphon") {
 						Some(path) => Ok(vec![Directive::Import(path.to_path_buf())]),
-						None => Err(format!("No antiphon was previously declared"))
+						None => Err("No antiphon was previously declared".to_string())
 					}
 				},
 				"repeat-tone" => {
 					match self.propers.get("internal:previous-tone") {
 						Some(path) => Ok(vec![Directive::Import(path.to_path_buf())]),
-						None => Err(format!("No tone was previously declared"))
+						None => Err("No tone was previously declared".to_string())
 					}
 				},
 				"tone" => {
@@ -170,7 +170,7 @@ impl Parser {
 				"text" => Ok(vec![Directive::Text(arg1)]),
 				"heading" => Ok(vec![Directive::Heading(arg1)]),
 				"instruction" => Ok(vec![Directive::Instruction(arg1)]),
-				"gabc" => Ok(vec![Directive::Gabc(arg1, arg2 == "english" || arg2 == "", if arg3 == "" { "0".to_string() } else { arg3 })]),
+				"gabc" => Ok(vec![Directive::Gabc(arg1, arg2 == "english" || arg2.is_empty(), if arg3.is_empty() { "0".to_string() } else { arg3 })]),
 				"include" => Ok(vec![Directive::Import(self.resolve_field(arg1)?)]),
 				"import" => Ok(vec![Directive::Import(arg1.into())]),
 				"title" => Ok(vec![Directive::Title(arg1)]),
@@ -190,10 +190,9 @@ impl Parser {
 
 	fn parse_file(&mut self, path: PathBuf) -> Result<ASTree<Directive>, String> {
 		let path = path.as_path();
-		let _file = match File::open(&path) {
-			Err(why) => return Err(format!("Failed to open \"{}\": {}", path.display(), why)),
-			Ok(file) => file
-		};
+		if !path.exists() {
+			return Err(format!("\"{}\" does not exist.", path.display()));
+		}
 
 		let mut base = ASTree::<Directive>::new();
 		let lines = match Parser::read_lines(path) {
@@ -204,7 +203,7 @@ impl Parser {
 		let mut command_lines = Vec::new();
 
 		for line in lines {
-			if !line.starts_with("#") {
+			if !line.starts_with('#') {
 				command_lines.push(format!("#text \"{}\"", line));
 			} else {
 				command_lines.push(line);
@@ -234,7 +233,7 @@ impl Parser {
 	    let mut res = Vec::new();
 	    for line in lines.flatten() {
 	    	let line = line.trim();
-	    	if line == "" { continue }
+	    	if line.is_empty() { continue }
 	    	res.push(line.to_string());
 	    }
 

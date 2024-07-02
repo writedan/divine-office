@@ -51,7 +51,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 			}
 		},
 
-		2 | 3 | 4 | 5 => Celebration {
+		2..=5 => Celebration {
 			name, penance, rank, color, identifiers
 		},
 

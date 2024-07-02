@@ -17,7 +17,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
 	let mut identifiers = Vec::<Identifier>::new();
 
-	if week_num >= 24 && week_num < 28 {
+	if (24..28).contains(&week_num) {
 		identifiers.push(Identifier {
 			season: Season::PostEpiphany(date <= ly.purification),
 			week: ((week_num - 24) + 1).to_string(),
