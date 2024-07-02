@@ -37,7 +37,7 @@ function printClocktime(clocktime) {
     if (clocktime[0] == 0) {
         clocktime[0] = 12;
     }
-    return (clocktime[0] < 10 ? "" : "") + clocktime[0] + ":" + (clocktime[1] < 10 ? "0" + clocktime[1] : clocktime[1]) + (clocktime[0] < 10 ? " " : " ") + (am ? "AM" : "PM");
+    return clocktime[0] + ":" + (clocktime[1] < 10 ? "0" + clocktime[1] : clocktime[1]) + (clocktime[0] < 10 ? " " : " ") + (am ? "AM" : "PM");
 }
 
 function getFormattedDate(date) {
@@ -54,6 +54,7 @@ function getFormattedDate(date) {
 
 function printDuration(suntime) {
     var n = suntimeToClocktime(suntime);
+    if (n[0] == 0 && n[1] == 0) return "0min";
     return (n[0] > 0 ? n[0] + "hr" : "") + (n[1] > 0 ? n[1] + "min" : "");
 }
 

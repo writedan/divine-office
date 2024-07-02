@@ -111,13 +111,13 @@
                     let mtr = document.createElement("tr");
                     mtr.appendChild(document.createElement("td")); // skip time column
                     let mtd = document.createElement("td");
-                    mtd.innerHTML = "Mass";
+                    mtd.innerHTML = "Mass <span class='info'>Pr. • Th.</span>";
                     mtr.appendChild(mtd);
 
                     switch (json.today.penance) {
                     case "Vigil": // vigil and fasting the same
                     case "Fasting": if (hour == "Vespers") { hourtd.innerHTML += `<span class="info">Dinner</span>` }; break;
-                    default: if (hour == "Terce") { hourtd.innerHTML += `<span class="info">Dinner</span>`} else if (hour == "Vespers") { hourtd.innerHTML += `<span class="info">Supper</span>` }
+                    default: if (hour == "Sext") { hourtd.innerHTML += `<span class="info">Dinner</span>`} else if (hour == "Vespers") { hourtd.innerHTML += `<span class="info">Supper</span>` }
                     }
 
                     switch (json.today.penance) {
@@ -140,7 +140,7 @@
                 }
             }
 
-            function drawTable(json, dat, lat, lon) {
+            function drawTable(json, dat, lat, lon, sum) {
                 var content = document.getElementById("content");
                 content.innerHTML = "";
                 if (json.error) {
@@ -173,24 +173,26 @@
                 colorHeading(heading, json.today.color);
                 heading.innerHTML = json.today.name;
 
-                hours.Vigils.time = roundTime(suntimes.nadir);
-                hours.Matins.time = roundTime(suntimes.dawn - hours.Matins.duration);
-                hours.Prime.time = roundTime(suntimes.sunrise + dayhours * 1);
-                hours.Terce.time = roundTime(suntimes.sunrise + dayhours * 3);
-                hours.Sext.time = roundTime(suntimes.sunrise + dayhours * 6);
-                hours.None.time = roundTime(suntimes.sunrise + dayhours * 9);
-                hours.Vespers.time = roundTime(suntimes.sunset);
-                hours.Compline.time = roundTime(suntimes.night);
-
-                // // summer
-                // hours.Matins.time = roundTime(sunrise + dayhours * 1);
-                // hours.Vigils.time = roundTime(hours.Lauds.time - hours.Vigils.duration);
-                // hours.Prime.time = roundTime(sunrise + dayhours * 2.5);
-                // hours.Terce.time = roundTime(sunrise + dayhours * 4);
-                // hours.Sext.time = roundTime(sunrise + dayhours * 6);
-                // hours.None.time = roundTime(sunrise + dayhours * 8);
-                // hours.Vespers.time = roundTime(sunrise + dayhours * 10);
-                // hours.Compline.time = roundTime(sunset);
+                if (!sum) {
+                    hours.Vigils.time = roundTime(suntimes.nadir);
+                    hours.Matins.time = roundTime(suntimes.dawn - hours.Matins.duration);
+                    hours.Prime.time = roundTime(suntimes.sunrise + dayhours * 1);
+                    hours.Terce.time = roundTime(suntimes.sunrise + dayhours * 3);
+                    hours.Sext.time = roundTime(suntimes.sunrise + dayhours * 6);
+                    hours.None.time = roundTime(suntimes.sunrise + dayhours * 9);
+                    hours.Vespers.time = roundTime(suntimes.sunset);
+                    hours.Compline.time = roundTime(suntimes.night);
+                } else {
+                    // summer
+                    hours.Matins.time = roundTime(suntimes.sunrise + dayhours * 1);
+                    hours.Vigils.time = roundTime(hours.Matins.time - hours.Vigils.duration);
+                    hours.Prime.time = roundTime(suntimes.sunrise + dayhours * 2.5);
+                    hours.Terce.time = roundTime(suntimes.sunrise + dayhours * 4);
+                    hours.Sext.time = roundTime(suntimes.sunrise + dayhours * 6);
+                    hours.None.time = roundTime(suntimes.sunrise + dayhours * 8);
+                    hours.Vespers.time = roundTime(suntimes.sunrise + dayhours * 10);
+                    hours.Compline.time = roundTime(suntimes.sunset);
+                }
 
                 let fasting = document.createElement("p");
                 switch (json.today.penance) {
@@ -213,34 +215,37 @@
                 }
             }
 
-        	function boxChanged(latBox, lonBox, datBox) {
+        	function boxChanged(latBox, lonBox, datBox, sumBox) {
         		var lat = latBox.value;
         		var lon = lonBox.value;
         		var dat = datBox.value.replace(/-/g, '\/').split('/');
         		dat = new Date(dat[0], dat[1] - 1, dat[2]);
+                var sum = sumBox.checked;
 
         		console.log("================= NEW DATE =================");
         		console.log(`Today is ${dat}`);
 
                 fetch(`/api/${dat.getFullYear()}/${dat.getMonth() + 1}/${dat.getDate()}`)
                     .then(resp => resp.json())
-                    .then(json => drawTable(json, dat, lat, lon));
+                    .then(json => drawTable(json, dat, lat, lon, sum));
         	}
 
         	function initBoxes(lat, lon) {
         		var latBox = document.getElementById("lat");
         		var lonBox = document.getElementById("lon");
         		var datBox = document.getElementById("dat");
+                var sumBox = document.getElementById("sum");
 
         		var today = new Date();
         		latBox.value = lat;
         		lonBox.value = lon;
         		datBox.valueAsDate = today;
 
-        		latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-        		lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-        		datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox);
-        		boxChanged(latBox, lonBox, datBox);
+        		latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox, sumBox);
+        		lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox, sumBox);
+        		datBox.onchange = (event) => boxChanged(latBox, lonBox, datBox, sumBox);
+                sumBox.onchange = (event) => boxChanged(latBox, lonBox, datBox, sumBox);
+        		boxChanged(latBox, lonBox, datBox, sumBox);
         	}
 
         	window.addEventListener('load', function onPageLoad(){
@@ -268,6 +273,8 @@
                     <input type="number" id="lon" />
                     <label for="dat">Date</label>
                     <input type="date" id="dat" />
+                    <label for="sum">Summer Hours?</label>
+                    <input type="checkbox" id="sum"/> Move the hours earlier and compress the time between each for the summer season.
                 </form>
             </div>
 
