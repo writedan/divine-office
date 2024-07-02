@@ -10,6 +10,211 @@
         <link rel='stylesheet' type='text/css' href='./liturgy.css'/>
 
         <script>
+            let hours = {
+                Vigils: {
+                    duration: 1.5,
+                },
+
+                Matins: {
+                    duration: 0.75
+                },
+
+                Prime: {
+                    duration: 0.25
+                },
+
+                Terce: {
+                    duration: 0.25
+                },
+
+                Sext: {
+                    duration: 0.25
+                },
+
+                None: {
+                    duration: 0.25
+                },
+
+                Vespers: {
+                    duration: 0.5
+                },
+
+                Compline: {
+                    duration: 0.5
+                }
+            }
+
+            function getHorariumTable(hours, date, json, vespersOnly=false, separateVespers=false) {
+                let table = document.createElement("table");
+                table.style.width = "75%";
+                let tr = document.createElement("tr");
+                tr.style.width = "100%";
+
+                table.style.fontSize = "medium";
+
+                let timeth = document.createElement("th");
+                timeth.style.width = "33%";
+                timeth.innerHTML = "Time";
+                timeth.align = "left";
+                tr.appendChild(timeth);
+
+                let hourth = document.createElement("th");
+                hourth.style.width = "66%";
+                hourth.innerHTML = "Hour";
+                hourth.align = "left";
+                tr.appendChild(hourth);
+
+                table.appendChild(tr);
+                {
+                    let elapses = {};
+                    for (let i = 0; i < Object.keys(hours).length; i += 1) {
+                        name = Object.keys(hours)[i];
+                        if (name == "Vespers" && i == 0) break;
+                        hour = hours[name];
+                        nextHour = i + 1;
+                        if (nextHour == Object.keys(hours).length) {
+                            nextHour = 0;
+                        }
+
+                        let elapse = hours[Object.keys(hours)[nextHour]].time - hour.time;
+                        elapse -= hour.duration;
+                        if (elapse < 0) elapse += 24;
+                        console.log(`Time elapse from ${name} to ${Object.keys(hours)[nextHour]}: ${printDuration(elapse)}`);
+                        elapses[name] = elapse;
+                    }
+
+                    console.log(`Total sleep = ${printDuration(elapses.Vigils + elapses.Compline)}`);
+                }
+
+                for (let hour in hours) {
+                    if (hour == "Vespers" || hour == "Compline") {
+                        if (separateVespers) continue;
+                    } else {
+                        if (vespersOnly) continue;
+                    }
+
+                    let time = suntimeToClocktime(hours[hour].time);
+                    let tr = document.createElement("tr");
+                    let timetd = document.createElement("td");
+                    timetd.innerHTML = printClocktime(time);
+                    tr.appendChild(timetd);
+                    let hourtd = document.createElement("td");
+                    hourtd.innerHTML = `<a target="_blank" href="/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/${hour.toLowerCase()}">${hour}</a>`
+                    tr.appendChild(hourtd);
+                    tr.style.width = "100%";
+                    timetd.style.width = "10%";
+                    hourtd.style.width = "10%";
+                    hourtd.style.verticalAlign = "top";
+                    timetd.style.verticalAlign = "top";
+                    table.append(tr);
+
+                    let mtr = document.createElement("tr");
+                    mtr.appendChild(document.createElement("td")); // skip time column
+                    let mtd = document.createElement("td");
+                    mtd.innerHTML = "Mass";
+                    mtr.appendChild(mtd);
+
+                    switch (json.vigils.penance) {
+                    case "Vigil": // vigil and fasting the same
+                    case "Fasting": if (hour == "Vespers") { hourtd.innerHTML += `<span class="info">Dinner</span>` }; break;
+                    default: if (hour == "Terce") { hourtd.innerHTML += `<span class="info">Dinner</span>`} else if (hour == "Vespers") { hourtd.innerHTML += `<span class="info">Supper</span>` }
+                    }
+
+                    switch (json.vigils.penance) {
+                    case "Abstinence": // fall through
+                    case null: if (hour == "Terce") table.append(mtr); break;
+                    case "Fasting": if (hour == "Sext") table.append(mtr); break;
+                    case "Vigil": if (hour == "None") table.append(mtr); break;
+                     }
+                }
+
+                return table;
+            }
+
+            function colorHeading(element, color) {
+                element.style.color = color.toLowerCase();
+                if (element.style.color == "white") {
+                    element.style['-webkit-text-stroke'] = '0.75px black';
+                } else if (element.style.color == "blue") {
+                    element.style.color = "#2B4593";
+                }
+            }
+
+            function drawTable(json, dat, lat, lon) {
+                var content = document.getElementById("content");
+                content.innerHTML = "";
+                if (json.error) {
+                    var div = document.createElement("div");
+                    div.className = "error";
+                    div.innerHTML = json.error;
+                    content.appendChild(div);
+                    return;
+                }
+
+                let title = document.createElement("h2");
+                title.innerHTML = `Horarium for ${dat.toDateString()}`
+                content.append(title);
+
+                var suntimes = SunCalc.getTimes(dat, lat, lon);
+                for (let x in suntimes) {
+                    suntimes[x] = dateToSuntime(suntimes[x]);
+                }
+
+                var dayhours = (suntimes.sunset - suntimes.sunrise) / 12;
+                var nighthours = (suntimes.sunrise - suntimes.sunset + 24) / 12;
+
+                console.log(`Sunrise is at ${printClocktime(suntimeToClocktime(suntimes.sunrise))}`);
+                console.log(`Sunset is at ${printClocktime(suntimeToClocktime(suntimes.sunset))}`);
+                console.log(`Day hours are ${printDuration(dayhours)} (day is ${printDuration(dayhours * 12)})`);
+                console.log(`Night hours are ${printDuration(nighthours)} (night is ${printDuration(nighthours * 12)})`);
+
+                let separateVespers = json.vespers;
+                let heading = document.createElement("h3");
+                colorHeading(heading, json.vigils.color);
+                heading.innerHTML = json.vigils.name;
+
+                hours.Vigils.time = roundTime(suntimes.nadir);
+                hours.Matins.time = roundTime(suntimes.dawn - hours.Matins.duration);
+                hours.Prime.time = roundTime(suntimes.sunrise + dayhours * 1);
+                hours.Terce.time = roundTime(suntimes.sunrise + dayhours * 3);
+                hours.Sext.time = roundTime(suntimes.sunrise + dayhours * 6);
+                hours.None.time = roundTime(suntimes.sunrise + dayhours * 9);
+                hours.Vespers.time = roundTime(suntimes.sunset);
+                hours.Compline.time = roundTime(suntimes.night);
+
+                // // summer
+                // hours.Matins.time = roundTime(sunrise + dayhours * 1);
+                // hours.Vigils.time = roundTime(hours.Lauds.time - hours.Vigils.duration);
+                // hours.Prime.time = roundTime(sunrise + dayhours * 2.5);
+                // hours.Terce.time = roundTime(sunrise + dayhours * 4);
+                // hours.Sext.time = roundTime(sunrise + dayhours * 6);
+                // hours.None.time = roundTime(sunrise + dayhours * 8);
+                // hours.Vespers.time = roundTime(sunrise + dayhours * 10);
+                // hours.Compline.time = roundTime(sunset);
+
+                let fasting = document.createElement("p");
+                switch (json.vigils.penance) {
+                case null: fasting.innerHTML = "<b>No penance.</b> Meat and fish may be taken at dinner."; break;
+                case "Abstinence": fasting.innerHTML = "<b>Abstinence.</b> Refrain from meat, dairy, and eggs."; break;
+                case "Fasting": fasting.innerHTML = "<b>Fasting.</b> Refrain from meat, fish, dairy, and eggs."; break;
+                case "Vigil": fasting.innerHTML = "<b>Fasting.</b> Refrain from meat, fish, oil, wine, dairy, and eggs."; break;
+                }
+
+                content.appendChild(fasting);
+                content.appendChild(heading);
+                content.appendChild(getHorariumTable(hours, dat, json, false, separateVespers));
+
+                if (separateVespers) {
+                    heading = document.createElement("h3");
+                    heading.innerHTML = json.vespers.name;
+                    colorHeading(heading, json.vespers.color);
+                    content.append(heading);
+                    content.appendChild(getHorariumTable(hours, dat, json, true, false))
+                }
+
+                document.getElementById("content-container").append(content);
+            }
+
         	function boxChanged(latBox, lonBox, datBox) {
         		var lat = latBox.value;
         		var lon = lonBox.value;
@@ -18,6 +223,10 @@
 
         		console.log("================= NEW DATE =================");
         		console.log(`Today is ${dat}`);
+
+                fetch(`/api/${dat.getFullYear()}/${dat.getMonth() + 1}/${dat.getDate()}`)
+                    .then(resp => resp.json())
+                    .then(json => drawTable(json, dat, lat, lon));
         	}
 
         	function initBoxes(lat, lon) {
@@ -63,10 +272,9 @@
                     <input type="date" id="dat" />
                 </form>
             </div>
-            <div id="content-container">
-                <div id="content">
-                    <p>Waiting for geolocation.</p>
-                </div>
+
+            <div id="content">
+                <p>Waiting for Geolocation.</p>
             </div>
         </div>
     </body>
