@@ -1,5 +1,5 @@
-use crate::kalendar::{Kalendar, Celebration, Rank::*, Identifier, Season::*};
-use chrono::{NaiveDate, Weekday, Weekday::*};
+use crate::kalendar::{Identifier, Season::*};
+use chrono::{Weekday, Weekday::*};
 use std::path::PathBuf;
 use std::collections::HashMap;
 

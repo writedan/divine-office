@@ -1,17 +1,17 @@
 pub mod ast;
 
-use crate::liturgy::Liturgy;
-use crate::kalendar::Identifier;
-use crate::kalendar::Kalendar;
+
+
+
 
 use std::path::PathBuf;
 use std::collections::HashMap;
 
 use std::fs::File;
 use std::io::{self, BufRead};
-use std::io::prelude::*;
+
 use std::path::Path;
-use std::fs::read_to_string;
+
 
 use regex::Regex;
 
@@ -121,7 +121,7 @@ impl Preprocessor {
 		}
 	}
 
-	fn preprocess_tree(&self, tree: ASTree<Directive>) -> ASTNode<Directive> {
+	fn preprocess_tree(&self, _tree: ASTree<Directive>) -> ASTNode<Directive> {
 		todo!()
 	}
 }
@@ -190,7 +190,7 @@ impl Parser {
 
 	fn parse_file(&mut self, path: PathBuf) -> Result<ASTree<Directive>, String> {
 		let path = path.as_path();
-		let mut file = match File::open(&path) {
+		let _file = match File::open(&path) {
 			Err(why) => return Err(format!("Failed to open \"{}\": {}", path.display(), why)),
 			Ok(file) => file
 		};

@@ -25,7 +25,7 @@ struct Args {
 }
 
 fn main() {
-    use rouille::Request;
+    
     use rouille::Response;
     use rouille::router;
 

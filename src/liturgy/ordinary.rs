@@ -381,7 +381,6 @@ fn vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 }
 
 fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
-	let day = iden.day.parse::<Weekday>().unwrap();
 	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
