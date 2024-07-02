@@ -139,29 +139,30 @@ fn compile_hour(propers: HashMap<&'static str, PathBuf>) ->rouille::Response {
 }
 
 fn get_liturgies(date: NaiveDate) -> Result<(Celebration, Celebration), LiturgyError> {
-    let kal = match crate::kalendar::Kalendar::from_date(date) {
+    let today = match crate::kalendar::get_celebration(date) {
         Some(kal) => kal,
         None => return Err(LiturgyError {
             error: format!("The supplied date {} is beyond the bounds of the Gregorian calendar.", date)
         })
     };
 
-    let today = kal.get_celebrations(date);
-    let tomorrow = kal.get_celebrations(date + chrono::Days::new(1));
+    let tomorrow = match crate::kalendar::get_celebration(date + chrono::Days::new(1)) {
+        Some(kal) => kal,
+        None => return Err(LiturgyError {
+            error: format!("The supplied date {} is beyond the bounds of the Gregorian calendar.", date + chrono::Days::new(1))
+        })
+    };
 
-    let today = &today[0];
-    let tomorrow = &tomorrow[0];
-
-    Ok((today.clone(), tomorrow.clone()))
+    Ok((today, tomorrow))
 }
 
 fn liturgy_info(date: NaiveDate) -> Result<LiturgyInfo, LiturgyError> {
     let (today, tomorrow) = get_liturgies(date)?;
-    let liturgy = crate::liturgy::resolve_hours(&today, &tomorrow);
+    let today_vespers = !crate::liturgy::first_vespers(&today, &tomorrow);
 
     Ok(LiturgyInfo {
         today: today.clone(),
-        tomorrow: if liturgy.today_vespers.unwrap() { None } else { Some(tomorrow.clone()) },
+        tomorrow: if today_vespers { None } else { Some(tomorrow.clone()) },
     })
 }
 

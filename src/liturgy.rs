@@ -87,8 +87,12 @@ impl Liturgy {
 	}
 }
 
+pub fn first_vespers(today: &Celebration, tomorrow: &Celebration) -> bool {
+	tomorrow.rank > today.rank && today.rank != StrongFeria
+}
+
 pub fn resolve_hours(today: &Celebration, tomorrow: &Celebration) -> Liturgy  {
-	let first_vespers = tomorrow.rank > today.rank && today.rank != StrongFeria;
+	let first_vespers = first_vespers(today, tomorrow);
 	let idens: Vec<_> = today.identifiers();
 
 	let mut lit = idens[0].resolve();

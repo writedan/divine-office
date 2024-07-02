@@ -185,6 +185,11 @@ impl Kalendar {
     }
 }
 
+pub fn get_celebration(date: NaiveDate) -> Option<Celebration> {
+	let ly = Kalendar::from_date(date)?;
+	Some(ly.get_celebrations(date)[0].clone())
+}
+
 impl Celebration {
 	pub fn identifiers(&self) -> Vec<&Identifier> {
 		self.identifiers.iter().rev().collect()
