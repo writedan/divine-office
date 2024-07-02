@@ -114,13 +114,13 @@
                     mtd.innerHTML = "Mass";
                     mtr.appendChild(mtd);
 
-                    switch (json.vigils.penance) {
+                    switch (json.today.penance) {
                     case "Vigil": // vigil and fasting the same
                     case "Fasting": if (hour == "Vespers") { hourtd.innerHTML += `<span class="info">Dinner</span>` }; break;
                     default: if (hour == "Terce") { hourtd.innerHTML += `<span class="info">Dinner</span>`} else if (hour == "Vespers") { hourtd.innerHTML += `<span class="info">Supper</span>` }
                     }
 
-                    switch (json.vigils.penance) {
+                    switch (json.today.penance) {
                     case "Abstinence": // fall through
                     case null: if (hour == "Terce") table.append(mtr); break;
                     case "Fasting": if (hour == "Sext") table.append(mtr); break;
@@ -168,10 +168,10 @@
                 console.log(`Day hours are ${printDuration(dayhours)} (day is ${printDuration(dayhours * 12)})`);
                 console.log(`Night hours are ${printDuration(nighthours)} (night is ${printDuration(nighthours * 12)})`);
 
-                let separateVespers = json.vespers;
+                let separateVespers = json.tomorrow;
                 let heading = document.createElement("h3");
-                colorHeading(heading, json.vigils.color);
-                heading.innerHTML = json.vigils.name;
+                colorHeading(heading, json.today.color);
+                heading.innerHTML = json.today.name;
 
                 hours.Vigils.time = roundTime(suntimes.nadir);
                 hours.Matins.time = roundTime(suntimes.dawn - hours.Matins.duration);
@@ -193,7 +193,7 @@
                 // hours.Compline.time = roundTime(sunset);
 
                 let fasting = document.createElement("p");
-                switch (json.vigils.penance) {
+                switch (json.today.penance) {
                 case null: fasting.innerHTML = "<b>No penance.</b> Meat and fish may be taken at dinner."; break;
                 case "Abstinence": fasting.innerHTML = "<b>Abstinence.</b> Refrain from meat, dairy, and eggs."; break;
                 case "Fasting": fasting.innerHTML = "<b>Fasting.</b> Refrain from meat, fish, dairy, and eggs."; break;
@@ -206,13 +206,11 @@
 
                 if (separateVespers) {
                     heading = document.createElement("h3");
-                    heading.innerHTML = json.vespers.name;
-                    colorHeading(heading, json.vespers.color);
+                    heading.innerHTML = json.tomorrow.name;
+                    colorHeading(heading, json.tomorrow.color);
                     content.append(heading);
                     content.appendChild(getHorariumTable(hours, dat, json, true, false))
                 }
-
-                document.getElementById("content-container").append(content);
             }
 
         	function boxChanged(latBox, lonBox, datBox) {
