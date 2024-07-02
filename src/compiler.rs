@@ -29,7 +29,7 @@ fn compile_node(node: Directive) -> Container {
 
 		Directive::Instruction(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "instruction")]).with_paragraph(text),
 
-		Directive::RawGabc(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "gabc")]).with_raw(text),
+		Directive::RawGabc(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "gabc-score")]).with_raw(text),
 
 		Directive::Title(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "title")]).with_paragraph(text),
 

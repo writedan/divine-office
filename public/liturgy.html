@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<title><%= title %></title>
+		
+		<script src='/exsurge.min.js'></script>
+        <link rel='stylesheet' type='text/css' href='/liturgy.css'/>
+
+        <style>
+            .error {
+                background-color: #f8d7da; /* Light red */
+                border: 1px solid #f5c6cb; /* Darker red */
+                color: #721c24; /* Dark red */
+                padding: 10px 15px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+            }
+
+            table .error {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            p {
+                text-align: justify;
+            }
+
+            .instruction {
+                color: red;
+                font-style: italic;
+            }
+
+            table.psalm {
+                border:none;
+                border-collapse: collapse;
+            }
+
+            table.psalm td {
+                border: none;
+                border-left: 1px solid #000;
+                border-right: 1px solid #000;
+            }
+
+            table.psalm td:first-child {
+                border-left: none;
+            }
+
+            table.psalm td:last-child {
+                border-right: none;
+            }
+
+            .title {
+                text-align:center;
+                font-size: 85%;
+                font-weight: bold;
+                grid-column: 1 / -1;
+                margin-top: 20px;
+            }
+
+            .title + .title, .title ~ div .title {
+                margin-top: -10;
+            }
+
+            #content {
+                width: 100%;
+            }
+
+            h1,h2,h3,h4,h5,h6 {
+                text-align: center;
+            }
+
+            .gabc-score {
+                margin-top: -15px;
+            }
+
+            .gabc-score + .gabc-score, .gabc-score ~ div .gabc-score {
+                margin-top: 20px;
+            }
+
+            .symbol {
+                color: red;
+            }
+        </style>
+
+        <script>
+            function parseHeaders(lines) {
+                const headerLines = lines.split('%%')[0].split('\n');
+                const headerObject = {};
+
+                for (let line of headerLines) {
+                    line = line.trim();
+                    if (line !== '') {
+                        let [key, value] = line.split(':').map(part => part.trim());
+                        value = value.substring(0, value.length - 1)
+                        if (headerObject.hasOwnProperty(key)) {
+                            if (Array.isArray(headerObject[key])) {
+                                headerObject[key].push(value);
+                            } else {
+                                headerObject[key] = [headerObject[key], value];
+                            }
+                        } else {
+                            headerObject[key] = value;
+                        }
+                    }
+                }
+
+                return headerObject;
+            }
+
+            function colorHeading(element, color) {
+                element.style.color = color.toLowerCase();
+                if (element.style.color == "white") {
+                    element.style['-webkit-text-stroke'] = '0.75px black';
+                } else if (element.style.color == "blue") {
+                    element.style.color = "#2B4593";
+                }
+            }
+
+            window.addEventListener('load', function onPageLoad(){
+                let patharray = window.location.pathname.split("/");
+                let hourname = patharray[4];
+                fetch(`/api/${patharray[1]}/${patharray[2]}/${patharray[3]}`)
+                    .then(resp => resp.json())
+                    .then(json => {
+                        if (json.tomorrow && (hourname == "vespers" || hourname == "compline")) {
+                            document.getElementById("liturgy-heading").innerHTML = json.tomorrow.name;
+                            colorHeading(document.getElementById("liturgy-heading"), json.tomorrow.color.toLowerCase())
+                            hourname[0] = hourname[0].toUpperCase();
+                            document.getElementById("hour-heading").innerHTML = "First " + hourname;
+                            document.getElementById("hour-heading").style.color = "black";
+                            document.title = json.tomorrow.name + " at " + hourname;
+                        } else {
+                            document.getElementById("liturgy-heading").innerHTML = json.today.name;
+                            colorHeading(document.getElementById("liturgy-heading"), json.today.color.toLowerCase())
+                            hourname[0] = hourname[0].toUpperCase();
+                            document.getElementById("hour-heading").innerHTML = hourname;
+                            document.getElementById("hour-heading").style.color = "black";
+                            document.title = json.today.name + " at " + hourname;
+                        }
+                    });
+
+                for (let chant of document.getElementsByClassName("gabc-score")) {
+                    renderChant(chant);
+                }
+            });
+
+            async function renderChant(element) {
+                const FACTOR = 1.15;
+                let ctx = new exsurge.ChantContext();
+                let fontSize = parseFloat(window.getComputedStyle(content, null).getPropertyValue('font-size').split('px')[0]);
+
+                let scaleFactor = (ctx.glyphScaling * fontSize * FACTOR) / ctx.textStyles.lyric.size;
+                ctx.setGlyphScaling(scaleFactor);
+                ctx.setFont("'Adobe Garamond Pro', 'EB Garamond', 'Crimson Text', 'Adobe Garamond Pro', 'Garamond','Georgia', serif", (fontSize * FACTOR));
+                ctx.markupSymbolDictionary['^'] = 'c'
+                ctx.textStyles.al.prefix = '<b>'
+                ctx.textStyles.annotation.size = fontSize
+                ctx.textStyles.annotation.color = 'red'
+
+                let music = element.innerHTML.split('%%');
+                let headers = parseHeaders(music[0]);
+                let gabc = music[1].replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>')
+                    .replaceAll('<sp>v</sp>', '<v>\\Vbar</v>')
+                    .replaceAll('<sp>r</sp>', '<v>\\Rbar</v>')
+                    .replaceAll('<sp>a</sp>', '<v>\\Abar</v>')
+                    .replaceAll('<sp>*</sp>', '<v>\\greheightstar</v>')
+                    .replaceAll('<sp>1</sp>', "<c>†</c>")
+                    .replaceAll('<sp>2</sp>', "<c>✢</c>")
+                    .replaceAll('<sp>+</sp>', '<v>+</v>')
+                      .replaceAll(/<v>\\([VRAvra])bar<\/v>/g,'$1/.')
+                      .replaceAll(/<sp>([VRAvra])\/<\/sp>\.?/g,'$1/.')
+                      .replaceAll(/<b><\/b>/g,'')
+                      .replaceAll(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
+                      .replaceAll(/<sp>'(?:oe|œ)<\/sp>/g,'œ́')
+                      .replaceAll(/<v>\\greheightstar<\/v>/g,'*')
+                      .replaceAll(/<\/?sc>/g,'%')
+                      .replaceAll(/<\/?b>/g,'*')
+                      .replaceAll(/<\/?i>/g,'_')
+                        .replaceAll(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
+                        .replaceAll(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
+
+                ctx.defaultLanguage = (headers['centering-scheme'] == 'english') ? new exsurge.English : new exsurge.Latin;
+
+                let mappings = exsurge.Gabc.createMappingsFromSource(ctx, gabc);
+                let score = new exsurge.ChantScore(ctx, mappings, headers['initial-style'] == '1');
+                if (headers['initial-style'] == '1') {
+                    if (headers['annotation']) {
+                        let a = [headers['annotation']].flat();
+                        score.annotation = new exsurge.Annotations(ctx, ...a);
+                    }
+                }
+
+                score.updateNotations(ctx);
+
+                element.innerHTML = '';
+
+                score.performLayoutAsync(ctx, async function(){
+                    await score.layoutChantLines(ctx, content.offsetWidth, async function(){
+                        let svg = await score.createSvgNode(ctx);
+                        for (let e of svg.getElementsByClassName('aboveLinesText')) {
+                            let offset = (((e.textContent == '~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
+                            e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset)
+                            if (e.textContent == '') {
+                                e.textContent = '^';
+                                e.style.fontWeight = 'bold';
+                            }
+                        }
+
+                        element.innerHTML = '';
+                        element.appendChild(svg);
+                    })
+                })
+            }
+        </script>
+    </head>
+    <body>
+       <div id="container">
+            <div id="content-container">
+            </div>
+
+            <div id="content">
+                <h1 style = "text-transform: uppercase; letter-spacing: 1vw; color: white;" id = "liturgy-heading">placeholder</h1>
+                <h2 style = "letter-spacing: 2vw; text-transform: uppercase; color: white;" id = "hour-heading">placeholder</h2>
+                <hr/>
+                <%= content %>
+            </div>
+        </div>
+    </body>
+</html>

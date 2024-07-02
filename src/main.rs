@@ -56,11 +56,16 @@ fn main() {
 
                 let lit = crate::liturgy::resolve_hours(&today, &tomorrow);
 
-                println!("{:#?}", lit);
-
                 let h = h.as_str();
                 match h {
                     "vigils" => compile_hour(lit.vigils),
+                    "matins" => compile_hour(lit.matins),
+                    "prime" => compile_hour(lit.prime),
+                    "terce" => compile_hour(lit.terce),
+                    "sext" => compile_hour(lit.sext),
+                    "none" => compile_hour(lit.none),
+                    "vespers" => compile_hour(lit.vespers),
+                    "compline" => compile_hour(lit.compline),
                     _ => return Response::json(&LiturgyError {
                         error: format!("An invalid hour \"{}\" was supplied.", h)
                     })
@@ -98,6 +103,16 @@ fn main() {
                 Response::from_file("application/javascript", file)
             },
 
+            (GET) ["/exsurge.min.js"] => {
+                let file = File::open("public/exsurge.min.js").unwrap();
+                Response::from_file("application/javascript", file)
+            },
+
+            (GET) ["/exsurge.min.js.map"] => {
+                let file = File::open("public/exsurge.min.js.map").unwrap();
+                Response::from_file("application/javascript", file)
+            },
+
             // 404 anything else
             _ => {
                 Response::empty_404()
@@ -107,9 +122,20 @@ fn main() {
 }
 
 fn compile_hour(propers: HashMap<&'static str, PathBuf>) ->rouille::Response {
+    use build_html::Html;
+    use std::fs;
+
     let elements = crate::compiler::compile_ast(crate::parser::parse_hour(propers));
-    println!("{:#?}", elements);
-    todo!()
+    let mut buf = String::new();
+    for ele in elements {
+        buf.push_str(&ele.to_html_string());
+    }
+
+    let mut base: String = fs::read_to_string("public/liturgy.html").unwrap();
+
+    base = base.replace("<%= content %>", &buf);
+    
+    rouille::Response::html(base)
 }
 
 fn get_liturgies(date: NaiveDate) -> Result<(Celebration, Celebration), LiturgyError> {
