@@ -113,6 +113,7 @@
             window.addEventListener('load', function onPageLoad(){
                 let patharray = window.location.pathname.split("/");
                 let hourname = patharray[4];
+                hourname = hourname.charAt(0).toUpperCase() + hourname.slice(1);
                 fetch(`/api/${patharray[1]}/${patharray[2]}/${patharray[3]}`)
                     .then(resp => resp.json())
                     .then(json => {
@@ -126,7 +127,6 @@
                         } else {
                             document.getElementById("liturgy-heading").innerHTML = json.today.name;
                             colorHeading(document.getElementById("liturgy-heading"), json.today.color.toLowerCase())
-                            hourname[0] = hourname[0].toUpperCase();
                             document.getElementById("hour-heading").innerHTML = hourname;
                             document.getElementById("hour-heading").style.color = "black";
                             document.title = json.today.name + " at " + hourname;
