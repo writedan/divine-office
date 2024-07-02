@@ -113,9 +113,24 @@ impl Preprocessor {
 				ASTNode::Node(Directive::RawGabc(format!("initial-style: {};\ncentering-scheme: {};\n%%\n{}", style, lang, music)))
 			},
 
-			Directive::Import(path) => match self.parser.parse_file(path) {
-				Ok(tree) => ASTNode::Tree(tree),
-				Err(why) => ASTNode::Node(Directive::Error(why))
+			Directive::Import(path) => {
+				let ext = match path.as_path().extension() {
+					Some(ext) => ext,
+					None => return ASTNode::Node(Directive::Error(format!("Unable to resolve \"{}\" because of the missing extension.", path.display())))
+				};
+
+				if ext == "gabc" {
+					let music = Parser::read_lines(path.clone());
+					match music {
+						Ok(music) => ASTNode::Node(Directive::RawGabc(music.join("\n"))),
+						Err(why) => ASTNode::Node(Directive::Error(format!("Unable to load score \"{}\": {}", path.display(), why)))
+					}
+				} else {
+					match self.parser.parse_file(path) {
+						Ok(tree) => ASTNode::Tree(tree),
+						Err(why) => ASTNode::Node(Directive::Error(why))
+					}
+				}
 			},
 			_ => ASTNode::Node(dir)
 		}
