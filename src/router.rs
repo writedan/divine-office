@@ -21,8 +21,8 @@ pub fn static_file(path: &str, mime: &str) -> Response {
 pub fn dynamic(req: &Request) -> Response {
 	match handle_dynamic(req) {
 		Ok(resp) => resp,
-		Err(why) => Response::json(&LiturgyError {
-			error: format!("Failed to serve dynamic: {}", why)
+		Err(error) => Response::json(&LiturgyError {
+			error
 		})
 	}
 }
