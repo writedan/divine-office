@@ -184,7 +184,7 @@
 
 	#instruction "To which the congregation responds."
 
-	#gabc "(c3) A(gh)men.(h)"
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
 	#import "commons/shared/conclusion.lit"
 

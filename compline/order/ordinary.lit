@@ -14,19 +14,15 @@
 
 #heading "Chapter"
 
-	#instruction "The lector proceeds to stand on the gradual before the sanctuary before the holy doors and proclaims the chapter."
-
 	#include "chapter"
 
 	#instruction "The congregation responds."
 
-	#gabc "(c3) Thanks(h) be(h) to(h) God.(h)"
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-	#instruction "From the same place, he proceeds with the intonation of the responsory."
+	#instruction "The lector intones the responsory."
 
 	#include "responsory"
-
-	#instruction "He then returns to his place within the sanctuary."
 
 #heading "Hymn"
 
@@ -56,7 +52,7 @@
 
 	#instruction "To which the congregation responds."
 
-	#gabc "(c3) A(gh)men.(h)"
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
 	#include "anthem"
 
