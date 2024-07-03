@@ -28,7 +28,7 @@ lazy_static! {
 #[derive(Debug, Clone)]
 pub enum Directive {
 	Text(String),
-	Heading(String),
+	Heading(String, u8),
 	Instruction(String),
 	Gabc(String, bool, String), // musicm whether english (true) or latin (false) -- default to english, initial style
 	RawGabc(String),
@@ -216,7 +216,8 @@ impl Parser {
 					Ok(vec)
 				},
 				"text" => Ok(vec![Directive::Text(arg1)]),
-				"heading" => Ok(vec![Directive::Heading(arg1)]),
+				"heading" => Ok(vec![Directive::Heading(arg1, 2)]),
+				"subheading" => Ok(vec![Directive::Heading(arg1, 3)]),
 				"instruction" => Ok(vec![Directive::Instruction(arg1)]),
 				"gabc" => Ok(vec![Directive::Gabc(arg1, arg2 == "english" || arg2.is_empty(), if arg3.is_empty() { "0".to_string() } else { arg3 })]),
 				"include" => Ok(vec![Directive::Import(self.resolve_field(arg1)?)]),

@@ -27,7 +27,7 @@ fn compile_node(node: Directive) -> Container {
 			Container::new(ContainerType::Div).with_paragraph(text)
 		},
 
-		Directive::Heading(text) => Container::new(ContainerType::Div).with_header(2, text),
+		Directive::Heading(text, level) => Container::new(ContainerType::Div).with_header(level, text),
 
 		Directive::Instruction(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "instruction")]).with_paragraph(text),
 
