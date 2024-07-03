@@ -21,7 +21,9 @@ pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Container> {
 fn compile_node(node: Directive) -> Container {
 	match node {
 		Directive::Text(text) => {
-			let text = text.replace('*', "<span class='symbol'>*</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;").replace("+++", "<span class='symbol'>✠</span>").replace('+', "<span class='symbol'>+</span><br/>");
+			let text = text.replace('*', "<span class='symbol'>*</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;")
+			.replace("+++", "<span class='symbol'>✠</span>")
+			.replace('+', "<span class='symbol'>+</span><br/>");
 			Container::new(ContainerType::Div).with_paragraph(text)
 		},
 
