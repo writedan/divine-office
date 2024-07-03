@@ -1,10 +1,16 @@
-#instruction "If the officiant is a priest or deacon, he says alone."
+#begin-box
+	#instruction "If the officiant is a priest or deacon, he says alone."
 
-I confess to almighty God, to all the Saints, and to {facing the people} you, brethren, that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. {facing the altar} Therefore I beseech blessed Mary ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul abd all the Saints {facing the people} with you, brethen, to pray for me {facing the altar} to the Lord our God.
+	I confess to almighty God, to all the Saints, and to {facing the people} you, brethren, that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. {facing the altar} Therefore I beseech blessed Mary ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul and all the Saints {facing the people} with you, brethen, to pray for me {facing the altar} to the Lord our God.
 
-#instruction "The congregation responds."
+	#instruction "The congregation responds."
 
-May almighty God be merciful to thee, and forgiving thy sins, bring thee to everlasting life. {He responds, "Amen."}
+	May almighty God have mercy upon thee and forgive thee all thy sins, deliver thee from every evil, and bring thee into everlasting life.
+
+	#instruction "He responds."
+
+	Amen.
+#end-box
 
 #instruction "Regardless, the congregation says together the Confiteor."
 
@@ -12,4 +18,8 @@ I confess to almighty God and to all the Saints {and to thee, father} that I hav
 
 #instruction "The officiant continues alone."
 
-May almighty God +++ have mercy upon us and forgive us all our sins, deliver us from all evil, and bring us into everlasting life. Amen.
+May almighty God +++ have mercy upon us and forgive us all our sins, deliver us from every evil, and bring us into everlasting life.
+
+#instruction "The congregation responds."
+
+Amen.
