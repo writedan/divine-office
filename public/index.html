@@ -99,7 +99,7 @@
                     timetd.innerHTML = printClocktime(time);
                     tr.appendChild(timetd);
                     let hourtd = document.createElement("td");
-                    hourtd.innerHTML = `<a target="_blank" href="/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/${hour.toLowerCase()}">${hour}</a>`
+                    hourtd.innerHTML = `<a target="_blank" href="/${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}/${hour.toLowerCase()}">${hour}</a>`
                     tr.appendChild(hourtd);
                     tr.style.width = "100%";
                     timetd.style.width = "10%";
@@ -216,7 +216,7 @@
         		console.log("================= NEW DATE =================");
         		console.log(`Today is ${dat}`);
 
-                fetch(`/api/${dat.getFullYear()}/${dat.getMonth() + 1}/${dat.getDate()}`)
+                fetch(`/api/${dat.getFullYear()}-${dat.getMonth() + 1}-${dat.getDate()}/`)
                     .then(resp => resp.json())
                     .then(json => drawTable(json, dat, lat, lon, sum));
         	}

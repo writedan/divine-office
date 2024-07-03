@@ -112,9 +112,9 @@
 
             window.addEventListener('load', function onPageLoad(){
                 let patharray = window.location.pathname.split("/");
-                let hourname = patharray[4];
+                let hourname = patharray[2];
                 hourname = hourname.charAt(0).toUpperCase() + hourname.slice(1);
-                fetch(`/api/${patharray[1]}/${patharray[2]}/${patharray[3]}`)
+                fetch(`/api/${patharray[1]}/`)
                     .then(resp => resp.json())
                     .then(json => {
                         if (json.tomorrow && (hourname == "vespers" || hourname == "compline")) {
