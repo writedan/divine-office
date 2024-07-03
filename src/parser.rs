@@ -239,9 +239,6 @@ impl Parser {
 
 	fn parse_file(&mut self, path: PathBuf) -> Result<ASTree<Directive>, String> {
 		let path = path.as_path();
-		if !path.exists() {
-			return Err(format!("\"{}\" does not exist.", path.display()));
-		}
 
 		let mut base = ASTree::<Directive>::new();
 		let lines = match Parser::read_lines(path) {
