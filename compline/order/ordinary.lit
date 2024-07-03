@@ -1,24 +1,12 @@
 #heading "Introduction"
 
-	#instruction "Before the service begins, these prayers are made quietly in a spirit of reverence."
+	#import "commons/shared/usual-beginning.lit"
 
-	In the name +++ of the Father, and of the Son, and of the Holy Spirit. Amen.
-
-	Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
-
-	Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
-
-	#instruction "The officiant begins in a low tone."
+	#instruction "Then with hearable voice, the officiant begins."
 
 	#gabc "(f3) <sp>v</sp> Turn(f) us(h) back,(h) O(h) God(h) of(h) our(h) sal(h)va(g)tion.(h) <sp>r</sp>(::) And(h) turn(h) a(h)way(h) thine(h) an(h)ger(h) from(g) us.(h)"
 
-	#instruction "Then in a higher tone the usual beginning."
-
-	#gabc "(c3) <sp>v</sp> O(f) God,(h) <sp>+</sp>() be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
-
-	#instruction "The whole congregation continues together, making a profound bow and crossing at the invocation of the names of the Holy Trinity."
-
-	#gabc "(c3) <sp>a</sp> Glo(h)ry(h) be(h) to(h) the(h) Fa(h)ther,(h) and(h) to(h) the(h) Son:(h,) and(h) to(h) the(h) Ho(h)ly(h) Spir(g)it:(h;) as(h) he(h) was(h) in(h) the(h) be(h)gin(h)ning,(h) is(h) both(h) now(h) and(h) ev(g)er,(h,) and(h) un(h)to(h) the(h) a(h)ges(h) of(h) a(h)ges.(h) A(g)men.(h::) A(h)le(i)lu(g)ia.(h)"
+	#import "commons/shared/ordinary-opening.lit"
 
 #heading "Psalmody"
 
@@ -30,7 +18,7 @@
 
 	#include "chapter"
 
-	#include "The congregation responds."
+	#instruction "The congregation responds."
 
 	#gabc "(c3) Thanks(h) be(h) to(h) God.(h)"
 
@@ -56,19 +44,13 @@
 
 	#instruction "This prayer is made quietly."
 
-	Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#import "commons/shared/pater-noster.lit"
 
-	#instruction "The congregation says together the Confiteor."
-
-	I confess to almighty God and to all the saints that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. Therefore I beseech blessed Mary, ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul, and all the saints to pray for me to the Lord our God.
-
-	#instruction "The officiant alone says the doxology."
-
-	May almighty God +++ have mercy upon us and forgive us all our sins, deliver us from all evil, and bring us into everlasting life. Amen.
+	#import "commons/shared/confiteor.lit"
 
 #heading "Conclusion"
 
-	#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) Thee.(f)"
+	#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) Thee.(f) (::) <alt><c>Deacon:</c></alt>Let(h) us(g) pray.(h)"
 
 	#include "collect"
 
@@ -84,8 +66,8 @@
 
 	#instruction "These prayers are then made quietly to conclude the service."
 
-	Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#import "commons/shared/pater-noster.lit"
 
-	Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+	#import "commons/shared/ave-maria.lit"
 
-	I believe in God the Father almighty, Creator of heaven and earth. And in Jesus Christ his only Son our Lord: who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and buried. He descended into hell. The third day he rose again from the dead; he ascended into heaven, and sitteth on the right hand of God the Father almighty. From whence he shall come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of the Saints, the remission of sins, the resurrection of the body, and the +++ life everlasting. Amen.
+	#import "commons/shared/apostles-creed.lit"
