@@ -171,7 +171,7 @@ impl Parser {
 						&arg1
 					};
 
-					Ok(vec![Directive::Import(PathBuf::from(format!("commons/gloria/{}.lit", tone)))])
+					Ok(vec![Directive::Import(PathBuf::from(format!("commons/gloria/{}.lit", resolve_tone(tone))))])
 				},
 				"antiphon" => {
 					let mut antiphon_path: PathBuf = ["antiphon", &arg1].iter().collect();
