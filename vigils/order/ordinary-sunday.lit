@@ -1,86 +1,70 @@
-#heading "Introduction"
+#heading "Preparation"
 
-	#instruction "Before the service begins, these prayers are made quietly in a spirit of reverence."
+	#import "commons/shared/usual-beginning.lit"
 
-	In the name +++ of the Father, and of the Son, and of the Holy Spirit. Amen.
+	#import "commons/shared/apostles-creed.lit"
 
-	Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#instruction "Then with hearable voice the officiant begins from the doors of the nave."
 
-	Hail Mary, full of grace, the Lord is with thee. Blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners now and at the hour of our death. Amen.
+	#gabc "(f3) <sp>v</sp> O(f) Lord,(h) Thou(h) shalt(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Thy(g) praise.(h)"
 
-	I believe in God the Father almighty, Creator of heaven and earth. And in Jesus Christ his only Son our Lord: who was conceived by the Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate, was crucified, died, and buried. He descended into hell. The third day he rose again from the dead; he ascended into heaven, and sitteth on the right hand of God the Father almighty. From whence he shall come to judge the living and the dead. I believe in the Holy Spirit, the holy catholic Church, the communion of the Saints, the remission of sins, the resurrection of the body, and the +++ life everlasting. Amen.
+#heading "Invitatory"
 
-	#instruction "The officiant begins in a low tone."
-
-	#gabc "(f3) <sp>v</sp> O(f) Lord,(h) thou(h) shall(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) thy(g) praise.(h)"
+	#instruction "The ministers process in while singing the verses and making a station of prayer at the repetition of the antiphon."
 
 	#include "invitatory"
 
-	#instruction "Then in a higher tone the usual beginning."
+#heading "Introduction"
 
-	#gabc "(c3) <sp>v</sp> O(f) God,(h) <sp>+</sp>() be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
-
-	#instruction "The whole congregation continues together, making a profound bow and crossing at the invocation of the names of the Holy Trinity."
-
-	#gabc "(c3) <sp>a</sp> Glo(h)ry(h) be(h) to(h) the(h) Fa(h)ther,(h) and(h) to(h) the(h) Son:(h,) and(h) to(h) the(h) Ho(h)ly(h) Spir(g)it:(h;) as(h) he(h) was(h) in(h) the(h) be(h)gin(h)ning,(h) is(h) both(h) now(h) and(h) ev(g)er,(h,) and(h) un(h)to(h) the(h) a(h)ges(h) of(h) a(h)ges.(h) A(g)men.(h::) A(h)le(i)lu(g)ia.(h)"
+	#import "commons/shared/ordinary-opening.lit"
 
 #heading "First Nocturn"
 
-	#subheading "Psalmody"
+	#subheading "Psalter"
 
 		#include "psalter"
 
 	#subheading "Lessons"
 
 		#instruction "This prayer is made quietly."
-		
-		Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
-		#instruction "Then the officiant proclaims the absolution."
+		#import "commons/shared/pater-noster.lit"
+
+		#instruction "Then the officiant grants the absolution."
 
 		#include "absolution-1"
 
-		#instruction "To which the congregation responds."
+		#instruction "The congregation responds."
 
-		#gabc "(c3) A(gh)men.(h)"
-
-		#instruction "Before each lesson, the officiant gives a blessing."
-
-		#include "blessing-1"
-
-		#instruction "To which the congregation responds."
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
-
-		#instruction "The lector proceeds to stand on the gradual before the sanctuary before the holy doors and proclaims each lesson in turn."
+		#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
 		#include "lesson-1"
+
+		#instruction "The officiant grants a blessing."
+
+		#include "blessing-1"
 
 		#instruction "The congregation responds."
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-		#instruction "From the same place, he proceeds with the intonation of the responsory."
+		#instruction "The lector intones the responsory."
 
 		#include "responsory-1"
 
-		#instruction "Likewise for the following lessons."
-
-		#include "blessing-2"
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
 
 		#include "lesson-2"
+
+		#include "blessing-2"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 		#include "responsory-2"
 
-		#include "blessing-3"
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
 
 		#include "lesson-3"
+
+		#include "blessing-3"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
@@ -88,61 +72,45 @@
 
 #heading "Second Nocturn"
 
-	#subheading "Psalmody"
+	#subheading "Psalter"
 
 		#resume "psalter"
 
 	#subheading "Lessons"
 
 		#instruction "This prayer is made quietly."
-		
-		Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
-		#instruction "Then the officiant proclaims the absolution."
+		#import "commons/shared/pater-noster.lit"
+
+		#instruction "Then the officiant grants the absolution."
 
 		#include "absolution-2"
 
-		#instruction "To which the congregation responds."
+		#instruction "The congregation responds."
 
-		#gabc "(c3) A(gh)men.(h)"
-
-		#instruction "Before each lesson, the officiant gives a blessing."
-
-		#include "blessing-4"
-
-		#instruction "To which the congregation responds."
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
-
-		#instruction "The lector proceeds to stand on the gradual before the sanctuary before the holy doors and proclaims each lesson in turn."
+		#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
 		#include "lesson-4"
 
-		#instruction "The congregation responds."
+		#include "blessing-4"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-		#instruction "From the same place, he proceeds with the intonation of the responsory."
-
 		#include "responsory-4"
 
-		#instruction "Likewise for the following lessons."
-
-		#include "blessing-5"
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
 
 		#include "lesson-5"
+
+		#include "blessing-5"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 		#include "responsory-5"
 
-		#include "blessing-6"
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
 
 		#include "lesson-6"
+
+		#include "blessing-6"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
@@ -150,87 +118,67 @@
 
 #heading "Third Nocturn"
 
-	#subheading "Psalmody"
+	#subheading "Psalter"
 
 		#resume "psalter"
 
 	#subheading "Lessons"
 
 		#instruction "This prayer is made quietly."
-		
-		Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
 
-		#instruction "Then the officiant proclaims the absolution."
+		#import "commons/shared/pater-noster.lit"
+
+		#instruction "Then the officiant grants the absolution."
 
 		#include "absolution-3"
 
-		#instruction "To which the congregation responds."
+		#instruction "The congregation responds."
 
-		#gabc "(c3) A(gh)men.(h)"
-
-		#instruction "Before each lesson, the officiant gives a blessing."
-
-		#include "blessing-7"
-
-		#instruction "To which the congregation responds."
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
-
-		#instruction "The lector proceeds to stand on the gradual before the sanctuary before the holy doors and proclaims each lesson in turn."
+		#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
 		#include "lesson-7"
 
-		#instruction "The congregation responds."
+		#include "blessing-7"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-		#instruction "From the same place, he proceeds with the intonation of the responsory."
-
 		#include "responsory-7"
 
-		#instruction "Likewise for the following lessons."
-
-		#include "blessing-8"
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
 
 		#include "lesson-8"
+
+		#include "blessing-8"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 		#include "responsory-8"
 
-		#include "blessing-9"
-
-		#gabc "(c3) <sp>r</sp> A(h)men.(h)"
 
 		#include "lesson-9"
+
+		#include "blessing-9"
 
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 		#include "responsory-9"
 
-#heading "Evangeliary"
+#heading "Gospel Proclamation"
 
 	#import "commons/vigils/te-deum.gabc"
 
-	#instruction "A lay reader may not chant the Gospel."
+	#instruction "The ritual singing of the Gospel is reserved to clergy. Therefore let it be merely recited in a plain voice."
 
 	#include "gospel"
 
-	#instruction "The officiant proclaims a blessing of the evangeliary."
-
-	#include "gospel-blessing"
-
 	#instruction "The congregation responds."
 
-	#gabc "(c3) Praise(h) be(h) to(h) Thee,(h) O(h) Christ(h) our(f) God.(f)"
+	#gabc "(c3) <sp>r</sp> Praise(h) be(h) to(h) Thee,(h) O(h) Christ(h) our(f) God.(f)"
 
 	#import "commons/vigils/te-decet-laus.gabc"
 
 #heading "Conclusion"
 
-	#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) Thee.(f)"
+	#import "commons/shared/invocation.lit"
 
 	#include "collect"
 
@@ -238,10 +186,8 @@
 
 	#gabc "(c3) A(gh)men.(h)"
 
-	#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) Thee.(f) <sp>v</sp>(::) Let(h) us(h) bless(h) the(h) Fa(h)ther,(h) and(h) the(h) Son,(h) with(h) the(h) Ho(h)ly(h) Spir(h)it.(f) <sp>r</sp>(::) Let(h) us(h) praise(h) Him(h) and(h) mag(h)ni(h)fy(h) Him(h) a(h)bove(h) all(h) for(h)ev(h)er.(f) <sp>v</sp>(::) May(h) the(h) souls(h) of(h) the(h) faith(h)ful,(h) through(h) the(h) mer(h)cy(h) of(h) God,(h) rest(h) in(f) peace.(f) <sp>r</sp>(::) A(gh)men.(h)"
+	#import "commons/shared/conclusion.lit"
 
-	#include "benedicamus"
+	#instruction "This prayer is made quietly to conclude the service."
 
-	#instruction "This prayer is then made quietly to conclude the service."
-
-	Our Father, Who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread: and forgive us our trespasses as we forgive those who trespass against us. And lead us not into temptation but deliver us from evil.
+	#import "commons/shared/pater-noster.lit"
