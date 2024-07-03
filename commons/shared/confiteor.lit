@@ -1,6 +1,14 @@
-#instruction "The congregation says together the Confiteor."
+#instruction "If the officiant is a priest or deacon, he says alone."
 
-I confess to almighty God and to all the saints that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. Therefore I beseech blessed Mary, ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul, and all the saints to pray for me to the Lord our God.
+I confess to almighty God, to all the Saints, and to {facing the people} you, brethren, that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. {facing the altar} Therefore I beseech blessed Mary ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul abd all the Saints {facing the people} with you, brethen, to pray for me {facing the altar} to the Lord our God.
+
+#instruction "The congregation responds."
+
+May almighty God be merciful to thee, and forgiving thy sins, bring thee to everlasting life. {He responds, "Amen."}
+
+#instruction "Regardless, the congregation says together the Confiteor."
+
+I confess to almighty God and to all the Saints {and to thee, father} that I have sinned exceedingly in thought, word, and deed: through my fault, through my fault, through my own fault. Therefore I beseech blessed Mary, ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul, and all the Saints {with thee, father} to pray for me to the Lord our God.
 
 #instruction "The officiant continues alone."
 
