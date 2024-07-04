@@ -230,7 +230,7 @@
         		var today = new Date();
         		latBox.value = lat;
         		lonBox.value = lon;
-        		datBox.valueAsDate = today;
+        		datBox.valueAsDate = new Date(today.toDateString());
 
         		latBox.onchange = (event) => boxChanged(latBox, lonBox, datBox, sumBox);
         		lonBox.onchange = (event) => boxChanged(latBox, lonBox, datBox, sumBox);
