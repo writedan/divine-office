@@ -205,27 +205,33 @@
                     await score.layoutChantLines(ctx, content.offsetWidth, async function(){
                         let svg = await score.createSvgNode(ctx);
                         let extraMargin = false;
+                        let toChange = [];
                         for (let e of svg.getElementsByClassName('aboveLinesText')) {
+                            toChange.push(e);
                             if (e.textContent.startsWith("$")) {
-                                let offset = (((e.textContent == '$~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
+                                extraMargin = true;
+                                element.classList.add("extra-margin");
+                            }
+                        }
+
+                        for (let e of toChange) {
+                            let offset = (((e.textContent == '$~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
+
+                            if (e.textContent.startsWith("$")) {
                                 e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset)
                                 if (e.textContent == '$') {
                                     e.textContent = '^';
                                     e.style.fontWeight = 'bold';
                                 }
                                 e.textContent = e.textContent.replace("$","");
-                                extraMargin = true;
                             } else {
                                 e.children[0].style.fontWeight = "normal";
                                 e.children[0].style.fontSize = "75%";
-                                if (extraMargin) {
-                                    console.log(element);
-                                    element.classList.add("extra-margin");
-                                } else {
-                                    let offset = (((e.textContent == '$~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
-                                    e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset)
+                                if (!extraMargin) {
+                                    e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset);
                                     element.classList.add("reduce-margin");
                                 }
+
                             }
                         }
 
