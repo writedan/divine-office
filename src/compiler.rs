@@ -34,7 +34,6 @@ pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Container> {
 	for child in tree.children() {
 		match child {
 			ASTNode::Node(dir) => res.push(compile_node(dir)),
-
 			ASTNode::Tree(tree) => res.append(&mut compile_ast(tree))
 		};
 	}
@@ -48,19 +47,25 @@ fn compile_node(node: Directive) -> Container {
 			let text = text.replace('*', "<span class='symbol'>*</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;")
 			.replace("+++", "<span class='symbol'>✠</span>")
 			.replace('+', "<span class='symbol'>+</span><br/>");
+
 			let text = SmallPrint.replace_all(&text, "<span class='instr'>$1</span>");
+
 			let text = Intone.replace_all(&text, |caps: &regex::Captures| {
 				style_first_vowel(&caps[1], "\u{030A}", "span")
 			});
+
 			let text = Flex.replace_all(&text, |caps: &regex::Captures| {
 				style_first_vowel(&caps[1], "\u{0302}", "i")
 			});
+
 			let text = Mediant.replace_all(&text, |caps: &regex::Captures| {
 				style_first_vowel(&caps[1], "\u{0303}", "u")
 			});
+			
 			let text = Accent.replace_all(&text, |caps: &regex::Captures| {
 				style_first_vowel(&caps[1], "\u{0301}", "b")
 			});
+
 			Container::new(ContainerType::Div).with_paragraph(text)
 		},
 

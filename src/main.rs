@@ -7,17 +7,6 @@ mod router;
 
 use clap::Parser;
 
-use serde::{Serialize};
-
-use chrono::NaiveDate;
-
-use std::collections::HashMap;
-
-use std::path::PathBuf;
-
-use crate::kalendar::Celebration;
-
-
 #[derive(Parser, Debug)]
 struct Args {
     // IP address and port to bind server to, e.g. localhost:80
@@ -26,11 +15,7 @@ struct Args {
 }
 
 fn main() {
-    
-    use rouille::Response;
     use crate::router;
-
-    use std::fs::File;
 
     let args = Args::parse();
 
