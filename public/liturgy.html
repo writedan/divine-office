@@ -80,6 +80,14 @@
                 margin-top: 0px;
             }
 
+            .gabc-score + .extra-margin, .extra-margin {
+                margin-top: 15px;
+            }
+
+            .reduce-margin {
+                margin-top: -25px;
+            }
+
             .symbol {
                 color: red;
             }
@@ -196,12 +204,28 @@
                 score.performLayoutAsync(ctx, async function(){
                     await score.layoutChantLines(ctx, content.offsetWidth, async function(){
                         let svg = await score.createSvgNode(ctx);
+                        let extraMargin = false;
                         for (let e of svg.getElementsByClassName('aboveLinesText')) {
-                            let offset = (((e.textContent == '~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
-                            e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset)
-                            if (e.textContent == '') {
-                                e.textContent = '^';
-                                e.style.fontWeight = 'bold';
+                            if (e.textContent.startsWith("$")) {
+                                let offset = (((e.textContent == '$~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
+                                e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset)
+                                if (e.textContent == '$') {
+                                    e.textContent = '^';
+                                    e.style.fontWeight = 'bold';
+                                }
+                                e.textContent = e.textContent.replace("$","");
+                                extraMargin = true;
+                            } else {
+                                e.children[0].style.fontWeight = "normal";
+                                e.children[0].style.fontSize = "75%";
+                                if (extraMargin) {
+                                    console.log(element);
+                                    element.classList.add("extra-margin");
+                                } else {
+                                    let offset = (((e.textContent == '$~') ? 15 : 20) / (16 * 1.25)) * (fontSize * FACTOR);
+                                    e.setAttribute('y', parseFloat(e.getAttribute('y')) + offset)
+                                    element.classList.add("reduce-margin");
+                                }
                             }
                         }
 
