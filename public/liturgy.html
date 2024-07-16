@@ -126,22 +126,24 @@
             window.addEventListener('load', function onPageLoad(){
                 let patharray = window.location.pathname.split("/");
                 let hourname = patharray[2];
-                hourname = hourname.charAt(0).toUpperCase() + hourname.slice(1);
                 fetch(`/api/${patharray[1]}/`)
                     .then(resp => resp.json())
                     .then(json => {
+                        console.log(json);
+                        console.log(hourname)
                         if (json.tomorrow && (hourname == "vespers" || hourname == "compline")) {
                             document.getElementById("liturgy-heading").innerHTML = json.tomorrow.name;
                             colorHeading(document.getElementById("liturgy-heading"), json.tomorrow.color.toLowerCase())
-                            hourname[0] = hourname[0].toUpperCase();
+                            hourname = hourname.charAt(0).toUpperCase() + hourname.slice(1);
                             document.getElementById("hour-heading").innerHTML = "First " + hourname;
                             document.getElementById("hour-heading").style.color = "black";
-                            document.title = json.tomorrow.name + " at " + hourname;
+                            document.title = json.tomorrow.name + " at First " + hourname;
                         } else {
                             document.getElementById("liturgy-heading").innerHTML = json.today.name;
                             colorHeading(document.getElementById("liturgy-heading"), json.today.color.toLowerCase())
                             document.getElementById("hour-heading").innerHTML = hourname;
                             document.getElementById("hour-heading").style.color = "black";
+                            hourname = hourname.charAt(0).toUpperCase() + hourname.slice(1);
                             document.title = json.today.name + " at " + hourname;
                         }
                     });
