@@ -175,8 +175,8 @@
                     hours.Compline.time = roundTime(suntimes.night);
                 } else {
                     // summer
+                    hours.Vigils.time = roundTime(suntimes.nadir);
                     hours.Matins.time = roundTime(suntimes.sunrise + dayhours * 1);
-                    hours.Vigils.time = roundTime(hours.Matins.time - hours.Vigils.duration);
                     hours.Prime.time = roundTime(suntimes.sunrise + dayhours * 2.5);
                     hours.Terce.time = roundTime(suntimes.sunrise + dayhours * 4);
                     hours.Sext.time = roundTime(suntimes.sunrise + dayhours * 6);
