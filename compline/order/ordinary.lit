@@ -56,7 +56,7 @@
 
 	#include "anthem"
 
-	#import "commons/shared/conclusion.lit"
+	#import "commons/compline/conclusion.lit"
 
 	#instruction "These prayers are then made quietly to conclude the service."
 
