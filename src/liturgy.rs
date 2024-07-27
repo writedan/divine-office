@@ -88,7 +88,7 @@ impl Liturgy {
 }
 
 pub fn first_vespers(today: &Celebration, tomorrow: &Celebration) -> bool {
-	tomorrow.rank > today.rank && today.rank != StrongFeria
+	tomorrow.rank > today.rank && today.rank != StrongFeria && tomorrow.rank != StrongFeria
 }
 
 pub fn resolve_hours(today: &Celebration, tomorrow: &Celebration) -> Liturgy  {
