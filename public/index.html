@@ -44,7 +44,7 @@
                 }
             }
 
-            function getHorariumTable(hours, date, json, vespersOnly=false, separateVespers=false) {
+            function getHorariumTable(hours, date, json, summer, vespersOnly=false, separateVespers=false) {
                 let table = document.createElement("table");
                 table.style.width = "75%";
                 let tr = document.createElement("tr");
@@ -83,7 +83,11 @@
                         elapses[name] = elapse;
                     }
 
-                    console.log(`Total sleep = ${printDuration(elapses.Vigils + elapses.Compline)}`);
+                    if (!summer) { 
+                        console.log(`Total sleep = ${printDuration(elapses.Vigils + elapses.Compline)}`);
+                    } else {
+                        console.log(`Total sleep = ${printDuration(elapses.Matins + elapses.Compline)}`);
+                    }
                 }
 
                 for (let hour in hours) {
@@ -100,6 +104,12 @@
                     tr.appendChild(timetd);
                     let hourtd = document.createElement("td");
                     hourtd.innerHTML = `<a target="_blank" href="/${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}/${hour.toLowerCase()}">${hour}</a>`
+                    if (summer && hour == "Matins") {
+                        hourtd.innerHTML = "Matins";
+                    }
+                    if (summer && hour == "Vigils") {
+                        hourtd.innerHTML = `<a target="_blank" href="/${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}/vigils+matins}">Vigils + Matins</a>`
+                    }
                     tr.appendChild(hourtd);
                     tr.style.width = "100%";
                     timetd.style.width = "10%";
@@ -175,14 +185,14 @@
                     hours.Compline.time = roundTime(suntimes.night);
                 } else {
                     // summer
-                    hours.Vigils.time = roundTime(suntimes.nadir);
-                    hours.Matins.time = roundTime(suntimes.sunrise + dayhours * 1);
-                    hours.Prime.time = roundTime(suntimes.sunrise + dayhours * 2.5);
+                    hours.Vigils.time = roundTime(suntimes.nadir + nighthours * 2);
+                    hours.Matins.time = roundTime(hours.Vigils.time + hours.Vigils.duration);
+                    hours.Prime.time = roundTime(suntimes.sunrise + dayhours * 2);
                     hours.Terce.time = roundTime(suntimes.sunrise + dayhours * 4);
                     hours.Sext.time = roundTime(suntimes.sunrise + dayhours * 6);
-                    hours.None.time = roundTime(suntimes.sunrise + dayhours * 8);
-                    hours.Vespers.time = roundTime(suntimes.sunrise + dayhours * 10);
-                    hours.Compline.time = roundTime(suntimes.sunset);
+                    hours.None.time = roundTime(suntimes.sunrise + dayhours * 9);
+                    hours.Vespers.time = roundTime(suntimes.sunset);
+                    hours.Compline.time = roundTime(suntimes.night);
                 }
 
                 let fasting = document.createElement("p");
@@ -195,14 +205,14 @@
 
                 content.appendChild(fasting);
                 content.appendChild(heading);
-                content.appendChild(getHorariumTable(hours, dat, json, false, separateVespers));
+                content.appendChild(getHorariumTable(hours, dat, json, sum, false, separateVespers));
 
                 if (separateVespers) {
                     heading = document.createElement("h3");
                     heading.innerHTML = json.tomorrow.name;
                     colorHeading(heading, json.tomorrow.color);
                     content.append(heading);
-                    content.appendChild(getHorariumTable(hours, dat, json, true, false))
+                    content.appendChild(getHorariumTable(hours, dat, json, sum, true, false))
                 }
             }
 
