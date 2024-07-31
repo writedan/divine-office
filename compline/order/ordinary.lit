@@ -16,6 +16,10 @@
 
 	#include "chapter"
 
+	#instruction "Them the officiant grants a blessing."
+
+	#import "commons/shared/chapter-benediction.gabc"
+
 	#instruction "The congregation responds."
 
 	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
