@@ -58,9 +58,17 @@
 
 	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
+	#import "commons/shared/conclusion.lit"
+
 	#include "anthem"
 
-	#import "commons/shared/conclusion.lit"
+	#instruction "The minister gives a final blessing."
+
+	#gabc "(c3) The(h) al(h)migh(h)ty(h) and(h) mer(h)ci(h)ful(h) Lord,(h) <sp>+</sp>() the(h) Fa(h)ther,(h) and(h) the(h) Son,(h) and(h) the(h) Ho(h)ly(h) Spir(h)it,(h) bless(h) us(h) and(h) keep(h) us.(d)"
+
+	#instruction "The congregation responds."
+
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 	#instruction "These prayers are then made quietly to conclude the service."
 
