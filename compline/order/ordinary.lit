@@ -18,7 +18,7 @@
 
 	#instruction "Them the officiant grants a blessing."
 
-	#import "commons/shared/chapter-benediction.gabc"
+	#import "commons/compline/benediction.gabc"
 
 	#instruction "The congregation responds."
 
@@ -60,7 +60,7 @@
 
 	#include "anthem"
 
-	#import "commons/compline/conclusion.lit"
+	#import "commons/shared/conclusion.lit"
 
 	#instruction "These prayers are then made quietly to conclude the service."
 
