@@ -6,7 +6,7 @@
 
 	#instruction "Then with hearable voice the officiant begins from the doors of the nave."
 
-	#gabc "(f3) <sp>v</sp> O(f) Lord,(h) Thou(h) shalt(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Thy(g) praise.(h)"
+	#gabc "(f3) <sp>v</sp> O(f) Lord,(h) You(h) shall(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Your(g) praise.(h)"
 
 #heading "Invitatory"
 
@@ -172,7 +172,7 @@
 
 	#instruction "The congregation responds."
 
-	#gabc "(c3) <sp>r</sp> Praise(h) be(h) to(h) Thee,(h) O(h) Christ(h) our(f) God.(f)"
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 	#import "commons/vigils/te-decet-laus.gabc"
 
