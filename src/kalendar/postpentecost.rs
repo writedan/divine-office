@@ -89,21 +89,21 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	};
 
 	let (name, color) = match date.weekday() {
-		Sun => (format!("{} Sunday of {} and {} after Pentecost", month_week_num.ordinal(), month, week_num.ordinal()), Color::Green),
+		Sun => (format!("{} Sunday after Pentecost and {} in {}", week_num.ordinal(), month_week_num.ordinal(), month), Color::Green),
 		Wed | Fri | Sat => {
 			if month == "September" && month_week_num == 3 {
 				(format!("Ember {} of September", date.weekday().fullname()), Color::Violet)
 			} else {
-				(format!("{} in the {} Week of {} and {} after Pentecost", date.weekday().fullname(), month_week_num.ordinal(), month, week_num.ordinal()), Color::Green)
+				(format!("{} in the {} Week after Pentecost and {} in {}", date.weekday().fullname(), week_num.ordinal(), month_week_num.ordinal(), month), Color::Green)
 			}
 		},
-		_ => (format!("{} in the {} Week of {} and {} after Pentecost", date.weekday().fullname(), month_week_num.ordinal(), month, week_num.ordinal()), Color::Green)
+		_ => (format!("{} in the {} Week after Pentecost and {} in {}", date.weekday().fullname(), week_num.ordinal(), month_week_num.ordinal(), month), Color::Green)
 	};
 
 	let name = match week_num {
 		28 => match date.weekday() {
-			Sun => format!("{} Sunday of {} and Last after Pentecost", month_week_num.ordinal(), month),
-			_ => format!("{} in the {} Week of {} and Last after Pentecost", date.weekday().fullname(), month_week_num.ordinal(), month)
+			Sun => format!("Last Sunday after Pentecost and {} in {}", month_week_num.ordinal(), month),
+			_ => format!("{} in the Last Week after Pentecost and {} in {}", date.weekday().fullname(), month_week_num.ordinal(), month)
 		},
 		_ => name
 	};
