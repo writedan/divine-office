@@ -246,28 +246,22 @@ impl Parser {
 			Err(why) => return Err(format!("Could not read \"{}\": {}", path.display(), why))
 		};
 
-		let mut command_lines = Vec::new();
-
 		for line in lines {
-			if !line.starts_with('#') {
-				command_lines.push(format!("#text \"{}\"", line));
+			if (!line.starts_with('#')) {
+				base.add_node(ASTNode::Node(Directive::Text(line)));
 			} else {
-				command_lines.push(line);
+				base.add_node( match self.parse_line(line) {
+					Ok(dirs) => {
+						let mut base = ASTree::<Directive>::new();
+						for d in dirs {
+							base.add_child(d);
+						}
+
+						ASTNode::Tree(base)
+					},
+					Err(why) => ASTNode::Node(Directive::Error(why))
+				});
 			}
-		}
-
-		for line in command_lines {
-			base.add_node( match self.parse_line(line) {
-				Ok(dirs) => {
-					let mut base = ASTree::<Directive>::new();
-					for d in dirs {
-						base.add_child(d);
-					}
-
-					ASTNode::Tree(base)
-				},
-				Err(why) => ASTNode::Node(Directive::Error(why))
-			});
 		}
 
 		Ok(base)
