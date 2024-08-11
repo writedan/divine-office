@@ -1,12 +1,10 @@
-#heading "Preparation"
+#import "commons/shared/usual-beginning.lit"
 
-	#import "commons/shared/usual-beginning.lit"
+#import "commons/shared/apostles-creed.lit"
 
-	#import "commons/shared/apostles-creed.lit"
+#instruction "Then with hearable voice the officiant begins from the doors of the nave."
 
-	#instruction "Then with hearable voice the officiant begins from the doors of the nave."
-
-	#gabc "(f3) <sp>v</sp> O(f) Lord,(h) You(h) shall(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Your(g) praise.(h)"
+#gabc "(f3) <sp>v</sp> O(f) Lord,(h) You(h) shall(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Your(g) praise.(h)"
 
 #heading "Invitatory"
 

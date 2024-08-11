@@ -1,12 +1,10 @@
-#heading "Introduction"
+#import "commons/shared/usual-beginning.lit"
 
-	#import "commons/shared/usual-beginning.lit"
+#instruction "Then with hearable voice the officiant begins."
 
-	#instruction "Then with hearable voice the officiant begins."
+#gabc "(f3) <sp>v</sp> Turn(f) us(h) back,(h) O(h) God(h) of(h) our(h) sal(h)va(g)tion.(h) <sp>r</sp>(::) And(h) turn(h) a(h)way(h) Your(h) an(h)ger(h) from(g) us.(h)"
 
-	#gabc "(f3) <sp>v</sp> Turn(f) us(h) back,(h) O(h) God(h) of(h) our(h) sal(h)va(g)tion.(h) <sp>r</sp>(::) And(h) turn(h) a(h)way(h) Your(h) an(h)ger(h) from(g) us.(h)"
-
-	#import "commons/shared/ordinary-opening.lit"
+#import "commons/shared/ordinary-opening.lit"
 
 #heading "Psalmody"
 
