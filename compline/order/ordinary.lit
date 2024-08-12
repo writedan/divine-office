@@ -6,72 +6,68 @@
 
 #import "commons/shared/ordinary-opening.lit"
 
-#heading "Psalmody"
 
-	#include "psalter"
+#include "psalter"
 
-#heading "Chapter"
 
-	#include "chapter"
 
-	#instruction "Them the officiant grants a blessing."
+#include "chapter"
 
-	#import "commons/compline/benediction.gabc"
+#instruction "Them the officiant grants a blessing."
 
-	#instruction "The congregation responds."
+#import "commons/compline/benediction.gabc"
 
-	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+#instruction "The congregation responds."
 
-	#instruction "The lector intones the responsory."
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-	#include "responsory"
+#instruction "The lector intones the responsory."
 
-#heading "Hymn"
+#include "responsory"
 
-	#include "hymn"
 
-	#include "versicle"
 
-#heading "Canticle"
+#include "hymn"
 
-	#include "canticle"
+#include "versicle"
 
-#heading "Preces"
 
-	#include "kyrie"
+#include "canticle"
 
-	#instruction "This prayer is made quietly."
 
-	#import "commons/shared/pater-noster.lit"
+#include "kyrie"
 
-	#import "commons/shared/confiteor.lit"
+#instruction "This prayer is made quietly."
 
-#heading "Conclusion"
+#import "commons/shared/pater-noster.lit"
 
-	#import "commons/shared/invocation.lit"
+#import "commons/shared/confiteor.lit"
 
-	#include "collect"
 
-	#instruction "To which the congregation responds."
+#import "commons/shared/invocation.lit"
 
-	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+#include "collect"
 
-	#import "commons/shared/conclusion.lit"
+#instruction "To which the congregation responds."
 
-	#include "anthem"
+#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 
-	#instruction "The minister gives a final blessing."
+#import "commons/shared/conclusion.lit"
 
-	#gabc "(c3) The(h) al(h)migh(h)ty(h) and(h) mer(h)ci(h)ful(h) Lord,(h) <sp>+</sp>() the(h) Fa(h)ther,(h) and(h) the(h) Son,(h) and(h) the(h) Ho(h)ly(h) Spir(h)it,(h) bless(h) us(h) and(h) keep(h) us.(d)"
+#include "anthem"
 
-	#instruction "The congregation responds."
+#instruction "The minister gives a final blessing."
 
-	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+#gabc "(c3) The(h) al(h)migh(h)ty(h) and(h) mer(h)ci(h)ful(h) Lord,(h) <sp>+</sp>() the(h) Fa(h)ther,(h) and(h) the(h) Son,(h) and(h) the(h) Ho(h)ly(h) Spir(h)it,(h) bless(h) us(h) and(h) keep(h) us.(d)"
 
-	#instruction "These prayers are then made quietly to conclude the service."
+#instruction "The congregation responds."
 
-	#import "commons/shared/pater-noster.lit"
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
-	#import "commons/shared/ave-maria.lit"
+#instruction "These prayers are then made quietly to conclude the service."
 
-	#import "commons/shared/apostles-creed.lit"
+#import "commons/shared/pater-noster.lit"
+
+#import "commons/shared/ave-maria.lit"
+
+#import "commons/shared/apostles-creed.lit"
