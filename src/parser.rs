@@ -39,11 +39,18 @@ pub enum Directive {
 	Title(String),
 	Error(String),
 	Box,
-	Hymn,
+
+
+	Hymn, // hymn directives
+	Clef(String),
+	Melody(Vec<String>),
+	Verse(Vec<String>),
+	Amen(String, String),
+	Make,
 
 	EndHymn, // parser internal use only
 	EndBox,
-	Empty // parser internal use only
+	Empty
 }
 
 struct Parser {
@@ -193,6 +200,12 @@ impl Parser {
 				},
 
 				"end-hymn" => Ok(ASTNode::Node(Directive::EndHymn)),
+
+				"clef" => Ok(ASTNode::Node(Directive::Clef(args[0].clone()))),
+				"melody" => Ok(ASTNode::Node(Directive::Melody(args.clone()))),
+				"verse" => Ok(ASTNode::Node(Directive::Verse(args.clone()))),
+				"amen" => Ok(ASTNode::Node(Directive::Amen(args[0].clone(), args[1].clone()))),
+				"make" => Ok(ASTNode::Node(Directive::Make)),
 
 				"begin-box" => {
 					let mut boxbase = ASTree::<Directive>::from_root(Directive::Box);
