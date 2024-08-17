@@ -23,9 +23,11 @@ use lazy_static::lazy_static;
 use crate::parser::ast::*;
 
 lazy_static! {
-    static ref RE: Regex = Regex::new(
+    static ref WHOLE_RE: Regex = Regex::new(
         r#"#([\w-]+)(?:\s+"([^"]*)")*"#
     ).unwrap();
+
+    static ref COMMAND_RE: Regex = Regex::new(r#""([^"]*)""#).unwrap();
 }
 
 trait ErrGet<T> {
@@ -185,16 +187,15 @@ impl Parser {
 		self.reserve.insert("preprocess", "true".into());
 
 		let mut args = Vec::new();
-		if let Some(captures) = RE.captures(&line) {
+		if let Some(captures) = WHOLE_RE.captures(&line) {
 
 	        // Find all arguments
-	        let args_re = Regex::new(r#""([^"]*)""#).unwrap();
-	        for arg in args_re.find_iter(&line) {
+	        for arg in COMMAND_RE.find_iter(&line) {
 	            args.push((line[arg.start() + 1..arg.end() - 1]).to_string().clone());
 	        }
 	    }
 
-		if let Some(captures) = RE.captures(&line) {
+		if let Some(captures) = WHOLE_RE.captures(&line) {
 			let command = captures.get(1).map_or("", |m| m.as_str());
 
 			match command {
