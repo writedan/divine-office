@@ -1,0 +1,31 @@
+#title "Te lucis ante terminum"
+
+#begin-hymn
+	#clef "c3"
+
+	#melody "f" "hv" "hv" "hv" "hv" "i" "h" "g"
+	#verse "To" "you" "at" "the" "end" "of" "the" "light,"
+	#verse "May" "far" "a-" "way" "go" "dark-" "ened" "dreams;"
+	#verse "Grant," "Fa-" "ther," "we" "what" "ask" "be" "done:"
+	#make
+
+	#melody "f" "f" "f" "f" "gv" "gv" "f" "e"
+	#verse "Who" "made" "all" "things," "we" "pray," "to-" "night;"
+	#verse "Be" "ban-" "ished," "nigh's" "dis-" "turb-" "ing" "schemes;"
+	#verse "Through" "Je-" "sus" "Christ," "our" "Lord," "Your Son,"
+	#make
+
+	#melody "gv" gv" "f" "e" "c" "ev" "fv" "fv"
+	#verse "That" "with" "your" "stead-" "fast" "cle-" "men-" "cy,"
+	#verse "Our" "foe" "be" "kept" "in" "close" "re-" "straint,"
+	#verse "Who" "with" "You" "reigns" "e-" "ter-" "nal-" "ly:"
+	#make
+
+	#melody "hv" "hv" "hv" "hv" "f" "gv" "f" "e"
+	#verse "For" "us" "a" "guard-" "dian" "may" "you" "be?"
+	#verse "So" "that" "he" "not" "our" "bo-" "dies" "taint."
+	#verse "God" "in" "the" "Spir-" "it's" "u-" "ni-" "ty."
+	#make
+
+	#amen "efe" "e"
+#end-hymn

@@ -386,7 +386,8 @@ fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("hymn", [
 		"hymn",
-		"te-lucis-ante-terminum.lit"
+		"te-lucis-ante-terminum",
+		"ordinary.lit"
 	].iter().collect());
 
 	map.insert("order", [
