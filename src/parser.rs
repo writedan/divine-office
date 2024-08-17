@@ -38,6 +38,8 @@ pub enum Directive {
 	Import(PathBuf),
 	Title(String),
 	Error(String),
+	Box,
+	Empty
 }
 
 struct Parser {
@@ -146,7 +148,7 @@ impl Preprocessor {
 
 impl Parser {
 
-	fn parse_line(&mut self, line: String) -> Result<Vec<Directive>, String> {
+	fn parse_line(&mut self, line: String) -> Result<ASTNode<Directive>, String> {
 		self.reserve.insert("preprocess", "true".into());
 
 		if let Some(captures) = RE.captures(&line) {
@@ -156,14 +158,18 @@ impl Parser {
 			let arg3 = captures.get(4).map_or("", |m| m.as_str()).to_string();
 
 			match command {
+				"begin-box" => {
+					let mut boxbase = ASTree::<Directive>::from_root(Directive::Box);
+					Ok(ASTNode::Tree(boxbase))
+				},
 				"no-gloria" => {
 					self.reserve.insert("no-gloria", "enabled".to_string());
-					Ok(Vec::new())
+					Ok(ASTNode::Node(Directive::Empty))
 				},
 				"gloria" => {
 					if self.reserve.contains_key("no-gloria") {
 						self.reserve.remove("no-gloria");
-						return Ok(Vec::new());
+						return Ok(ASTNode::Node(Directive::Empty));
 					}
 
 					let tone = if arg1.is_empty() {
@@ -175,17 +181,21 @@ impl Parser {
 						&arg1
 					};
 
-					Ok(vec![Directive::Import(PathBuf::from(format!("commons/gloria/{}.lit", resolve_tone(tone))))])
+					Ok(ASTNode::Node(Directive::Import(PathBuf::from(format!("commons/gloria/{}.lit", resolve_tone(tone))))))
 				},
 				"antiphon" => {
 					let mut antiphon_path: PathBuf = ["antiphon", &arg1].iter().collect();
 					antiphon_path.set_extension("gabc");
 					self.reserve.insert("previous-antiphon", antiphon_path.display().to_string());
-					Ok(vec![Directive::Title("Antiphon".to_string()), Directive::Import(antiphon_path)])
+
+					let mut base = ASTree::<Directive>::new();
+					base.add_node(ASTNode::Node(Directive::Title("Antiphon".to_string())));
+					base.add_node(ASTNode::Node(Directive::Import(antiphon_path)));
+					Ok(ASTNode::Tree(base))
 				},
 				"repeat-antiphon" => {
 					match self.reserve.get("previous-antiphon") {
-						Some(path) => Ok(vec![Directive::Import(path.into())]),
+						Some(path) => Ok(ASTNode::Node(Directive::Import(path.into()))),
 						None => Err("No antiphon was previously declared".to_string())
 					}
 				},
@@ -194,7 +204,7 @@ impl Parser {
 						Some(tone) => {
 							let mut tone_path: PathBuf = ["tone", &tone].iter().collect();
 							tone_path.set_extension("gabc");
-							Ok(vec![Directive::Import(tone_path)])
+							Ok(ASTNode::Node(Directive::Import(tone_path)))
 						},
 						None => Err("No tone was previously declared".to_string())
 					}
@@ -203,7 +213,7 @@ impl Parser {
 					let mut tone_path: PathBuf = ["tone", &arg1].iter().collect();
 					tone_path.set_extension("gabc");
 					self.reserve.insert("previous-tone", arg1);
-					Ok(vec![Directive::Import(tone_path)])
+					Ok(ASTNode::Node(Directive::Import(tone_path)))
 				},
 				"psalm" => {
 					let tone = match self.reserve.get("previous-tone") {
@@ -217,16 +227,22 @@ impl Parser {
 						vec.push(Directive::Title(format!("Psalm {}", arg1)));
 					}
 					vec.push(Directive::Import(psalm_path));
-					Ok(vec)
+					
+					let mut base = ASTree::<Directive>::new();
+					for i in vec {
+						base.add_node(ASTNode::Node(i));
+					}
+
+					Ok(ASTNode::Tree(base))
 				},
-				"text" => Ok(vec![Directive::Text(arg1)]),
-				"heading" => Ok(vec![Directive::Heading(arg1, 2)]),
-				"subheading" => Ok(vec![Directive::Heading(arg1, 3)]),
-				"instruction" => Ok(vec![Directive::Instruction(arg1)]),
-				"gabc" => Ok(vec![Directive::Gabc(arg1, arg2 == "english" || arg2.is_empty(), if arg3.is_empty() { "0".to_string() } else { arg3 })]),
-				"include" => Ok(vec![Directive::Import(self.resolve_field(arg1)?)]),
-				"import" => Ok(vec![Directive::Import(arg1.into())]),
-				"title" => Ok(vec![Directive::Title(arg1)]),
+				"text" => Ok(ASTNode::Node(Directive::Text(arg1))),
+				"heading" => Ok(ASTNode::Node(Directive::Heading(arg1, 2))),
+				"subheading" => Ok(ASTNode::Node(Directive::Heading(arg1, 3))),
+				"instruction" => Ok(ASTNode::Node(Directive::Instruction(arg1))),
+				"gabc" => Ok(ASTNode::Node(Directive::Gabc(arg1, arg2 == "english" || arg2.is_empty(), if arg3.is_empty() { "0".to_string() } else { arg3 }))),
+				"include" => Ok(ASTNode::Node(Directive::Import(self.resolve_field(arg1)?))),
+				"import" => Ok(ASTNode::Node(Directive::Import(arg1.into()))),
+				"title" => Ok(ASTNode::Node(Directive::Title(arg1))),
 				_ => Err(format!("Unknown command \"{}\"", command))
 			}
 		} else {
@@ -254,12 +270,7 @@ impl Parser {
 		if !line.starts_with('#') {
 			Ok(ASTNode::Node(Directive::Text(line)))
 		} else {
-			let mut base = ASTree::<Directive>::new();
-			for directive in self.parse_line(line)? {
-				base.add_node(ASTNode::Node(directive));
-			}
-
-			Ok(ASTNode::Tree(base))
+			self.parse_line(line)
 		}
 	}
 
@@ -274,24 +285,6 @@ impl Parser {
 
 		let iter = lines.clone().into_iter(); // Create an iterator over the lines
 		self.lines = Some(Rc::new(RefCell::new(iter)));
-
-		/*for line in lines {
-			if (!line.starts_with('#')) {
-				base.add_node(ASTNode::Node(Directive::Text(line)));
-			} else {
-				base.add_node( match self.parse_line(line) {
-					Ok(dirs) => {
-						let mut base = ASTree::<Directive>::new();
-						for d in dirs {
-							base.add_child(d);
-						}
-
-						ASTNode::Tree(base)
-					},
-					Err(why) => ASTNode::Node(Directive::Error(why))
-				});
-			}
-		}*/
 
 		loop {
 			let (cont, tree) = match self.parse_next_line() {
