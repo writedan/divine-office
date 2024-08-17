@@ -48,19 +48,21 @@ pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Container> {
 	res
 }
 
+fn compile_dispatch(node: ASTNode<Directive>) -> Vec<Container> {
+	match node {
+		ASTNode::Node(directive) => vec![compile_node(directive)],
+		ASTNode::Tree(tree) => compile_ast(tree)
+	}
+}
+
 fn compile_tree(tree: ASTree<Directive>) -> Container {
 	match tree.root.clone().unwrap() {
 		Directive::Box => {
 			let mut cont = Container::new(ContainerType::Div).with_attributes(vec![("class", "boxed")]);
 			for node in tree.children() {
-				match node {
-					ASTNode::Node(directive) => cont.add_container(compile_node(directive)),
-					ASTNode::Tree(tree) => {
-						let conts = compile_ast(tree);
-						for c in conts {
-							cont.add_container(c);
-						}
-					}
+				let conts = compile_dispatch(node);
+				for c in conts {
+					cont.add_container(c);
 				}
 			}
 
