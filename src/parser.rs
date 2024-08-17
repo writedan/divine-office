@@ -28,6 +28,19 @@ lazy_static! {
     ).unwrap();
 }
 
+trait ErrGet<T> {
+	fn get_err(&self, idx: usize) -> Result<&T, String>;
+}
+
+impl<T> ErrGet<T> for Vec<T> {
+	fn get_err(&self, idx: usize) -> Result<&T, String> {
+		match self.get(idx) {
+			Some(r) => Ok(&r),
+			None => Err(format!("attempted to get vec[{}] but len={}", idx, self.len()))
+		}
+	}
+}
+
 #[derive(Debug, Clone)]
 pub enum Directive {
 	Text(String),
@@ -201,10 +214,10 @@ impl Parser {
 
 				"end-hymn" => Ok(ASTNode::Node(Directive::EndHymn)),
 
-				"clef" => Ok(ASTNode::Node(Directive::Clef(args[0].clone()))),
+				"clef" => Ok(ASTNode::Node(Directive::Clef(args.get_err(0)?.clone()))),
 				"melody" => Ok(ASTNode::Node(Directive::Melody(args.clone()))),
 				"verse" => Ok(ASTNode::Node(Directive::Verse(args.clone()))),
-				"amen" => Ok(ASTNode::Node(Directive::Amen(args[0].clone(), args[1].clone()))),
+				"amen" => Ok(ASTNode::Node(Directive::Amen(args.get_err(0)?.clone(), args.get_err(1)?.clone()))),
 				"make" => Ok(ASTNode::Node(Directive::Make)),
 
 				"begin-box" => {
@@ -246,7 +259,7 @@ impl Parser {
 					Ok(ASTNode::Node(Directive::Import(PathBuf::from(format!("commons/gloria/{}.lit", resolve_tone(tone))))))
 				},
 				"antiphon" => {
-					let mut antiphon_path: PathBuf = ["antiphon", &args[0]].iter().collect();
+					let mut antiphon_path: PathBuf = ["antiphon", &args.get_err(0)?.clone()].iter().collect();
 					antiphon_path.set_extension("gabc");
 					self.reserve.insert("previous-antiphon", antiphon_path.display().to_string());
 
@@ -272,9 +285,9 @@ impl Parser {
 					}
 				},
 				"tone" => {
-					let mut tone_path: PathBuf = ["tone", &args[0]].iter().collect();
+					let mut tone_path: PathBuf = ["tone", &args.get_err(0)?.clone()].iter().collect();
 					tone_path.set_extension("gabc");
-					self.reserve.insert("previous-tone", args[0].clone());
+					self.reserve.insert("previous-tone", args.get_err(0)?.clone());
 					Ok(ASTNode::Node(Directive::Import(tone_path)))
 				},
 				"psalm" => {
@@ -282,11 +295,11 @@ impl Parser {
 						Some(tone) => resolve_tone(tone),
 						None => return Err(format!("No tone was previously declared."))
 					};
-					let mut psalm_path: PathBuf = ["psalter", &args[0], &tone].iter().collect();
+					let mut psalm_path: PathBuf = ["psalter", &args.get_err(0)?.clone(), &tone].iter().collect();
 					psalm_path.set_extension("lit");
 					let mut vec: Vec<Directive> = Vec::new();
 					if args[0].parse::<u8>().is_ok() {
-						vec.push(Directive::Title(format!("Psalm {}", args[0])));
+						vec.push(Directive::Title(format!("Psalm {}", args.get_err(0)?.clone())));
 					}
 					vec.push(Directive::Import(psalm_path));
 					
@@ -297,14 +310,14 @@ impl Parser {
 
 					Ok(ASTNode::Tree(base))
 				},
-				"text" => Ok(ASTNode::Node(Directive::Text(args[0].clone()))),
-				"heading" => Ok(ASTNode::Node(Directive::Heading(args[0].clone(), 2))),
-				"subheading" => Ok(ASTNode::Node(Directive::Heading(args[0].clone(), 3))),
-				"instruction" => Ok(ASTNode::Node(Directive::Instruction(args[0].clone()))),
-				"gabc" => Ok(ASTNode::Node(Directive::Gabc(args[0].clone(), args.len() < 2 || args[1] == "english", if args.len() < 3 { "0".to_string() } else { args[2].clone() }))),
-				"include" => Ok(ASTNode::Node(Directive::Import(self.resolve_field(args[0].clone())?))),
-				"import" => Ok(ASTNode::Node(Directive::Import(args[0].clone().into()))),
-				"title" => Ok(ASTNode::Node(Directive::Title(args[0].clone()))),
+				"text" => Ok(ASTNode::Node(Directive::Text(args.get_err(0)?.clone()))),
+				"heading" => Ok(ASTNode::Node(Directive::Heading(args.get_err(0)?.clone(), 2))),
+				"subheading" => Ok(ASTNode::Node(Directive::Heading(args.get_err(0)?.clone(), 3))),
+				"instruction" => Ok(ASTNode::Node(Directive::Instruction(args.get_err(0)?.clone()))),
+				"gabc" => Ok(ASTNode::Node(Directive::Gabc(args.get_err(0)?.clone(), args.len() < 2 || args[1] == "english", if args.len() < 3 { "0".to_string() } else { args[2].clone() }))),
+				"include" => Ok(ASTNode::Node(Directive::Import(self.resolve_field(args.get_err(0)?.clone())?))),
+				"import" => Ok(ASTNode::Node(Directive::Import(args.get_err(0)?.clone().into()))),
+				"title" => Ok(ASTNode::Node(Directive::Title(args.get_err(0)?.clone()))),
 				_ => Err(format!("Unknown command \"{}\"", command))
 			}
 		} else {
