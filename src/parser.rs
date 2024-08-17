@@ -12,6 +12,9 @@ use std::io::{self, BufRead};
 
 use std::path::Path;
 
+use std::rc::Rc;
+use std::cell::RefCell;
+
 
 use regex::Regex;
 
@@ -39,7 +42,8 @@ pub enum Directive {
 
 struct Parser {
 	propers: HashMap<&'static str, PathBuf>,
-	reserve: HashMap<&'static str, String>
+	reserve: HashMap<&'static str, String>,
+	lines: Option<Rc<RefCell<dyn ExactSizeIterator<Item = String>>>>
 }
 
 struct Preprocessor {
@@ -237,6 +241,28 @@ impl Parser {
 		}
 	}
 
+	fn parse_next_line(&mut self) -> Result<ASTNode<Directive>, String> {
+		let line = match &self.lines {
+			Some(lines) => {
+				Rc::clone(&lines).borrow_mut().next()
+			},
+
+			None => panic!("Parser.lines must be set by now")
+		}.unwrap();
+
+		let line = line.to_owned();
+		if !line.starts_with('#') {
+			Ok(ASTNode::Node(Directive::Text(line)))
+		} else {
+			let mut base = ASTree::<Directive>::new();
+			for directive in self.parse_line(line)? {
+				base.add_node(ASTNode::Node(directive));
+			}
+
+			Ok(ASTNode::Tree(base))
+		}
+	}
+
 	fn parse_file(&mut self, path: PathBuf) -> Result<ASTree<Directive>, String> {
 		let path = path.as_path();
 
@@ -246,7 +272,10 @@ impl Parser {
 			Err(why) => return Err(format!("Could not read \"{}\": {}", path.display(), why))
 		};
 
-		for line in lines {
+		let iter = lines.clone().into_iter(); // Create an iterator over the lines
+		self.lines = Some(Rc::new(RefCell::new(iter)));
+
+		/*for line in lines {
 			if (!line.starts_with('#')) {
 				base.add_node(ASTNode::Node(Directive::Text(line)));
 			} else {
@@ -262,6 +291,26 @@ impl Parser {
 					Err(why) => ASTNode::Node(Directive::Error(why))
 				});
 			}
+		}*/
+
+		loop {
+			let (cont, tree) = match self.parse_next_line() {
+				Ok(tree) => {
+					match &self.lines {
+						Some(lines) => {
+							let rc = Rc::clone(&lines);
+							let lines = rc.borrow();
+							(lines.len() > 0, tree)
+						},
+						None => panic!("Parser.lines must be set by now.")
+					}
+				},
+				Err(why) => (false, ASTNode::Node(Directive::Error(why)))
+			};
+
+			base.add_node(tree);
+
+			if !cont { break; }
 		}
 
 		Ok(base)
@@ -298,7 +347,8 @@ pub fn parse_hour(propers: HashMap<&'static str, PathBuf>) -> ASTree<Directive> 
 
 	let mut parser = Parser {
 		propers,
-		reserve: HashMap::new()
+		reserve: HashMap::new(),
+		lines: None
 	};
 
 	base.add_node(match parser.parse_field("order") {
@@ -308,7 +358,7 @@ pub fn parse_hour(propers: HashMap<&'static str, PathBuf>) -> ASTree<Directive> 
 
 	let mut preprocess = Preprocessor {
 		parser,
-		tree: base
+		tree: base,
 	};
 
 	preprocess.preprocess()

@@ -49,4 +49,11 @@ impl<T: Clone> ASTree<T> {
 			children: Vec::new()
 		}
 	}
+
+	pub fn from_root(node: T) -> ASTree<T> {
+		ASTree {
+			root: Some(node),
+			children: Vec::new()
+		}
+	}
 }
