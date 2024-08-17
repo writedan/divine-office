@@ -39,8 +39,11 @@ pub enum Directive {
 	Title(String),
 	Error(String),
 	Box,
-	EndBox, // parser internal use only
-	Empty
+	Hymn,
+
+	EndHymn, // parser internal use only
+	EndBox,
+	Empty // parser internal use only
 }
 
 struct Parser {
@@ -175,6 +178,22 @@ impl Parser {
 			let command = captures.get(1).map_or("", |m| m.as_str());
 
 			match command {
+				"begin-hymn" => {
+					let mut hymnbox = ASTree::<Directive>::from_root(Directive::Hymn);
+					loop {
+						let next = self.parse_next_line()?;
+						if let ASTNode::Node(Directive::EndHymn) = next {
+							break;
+						} else {
+							hymnbox.add_node(next);
+						}
+					}
+
+					Ok(ASTNode::Tree(hymnbox))
+				},
+
+				"end-hymn" => Ok(ASTNode::Node(Directive::EndHymn)),
+
 				"begin-box" => {
 					let mut boxbase = ASTree::<Directive>::from_root(Directive::Box);
 
