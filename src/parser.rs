@@ -24,7 +24,7 @@ use crate::parser::ast::*;
 
 lazy_static! {
     static ref RE: Regex = Regex::new(
-        r#"^#([\w-]+)(?:\s+"((?:[^"\\]|\\.)*)"(?:\s+"((?:[^"\\]|\\.)*)")?(?:\s+"((?:[^"\\]|\\.)*)")?)?"#
+        r#"#([\w-]+)(?:\s+"([^"]*)")*"#
     ).unwrap();
 }
 
@@ -161,11 +161,18 @@ impl Parser {
 	fn parse_line(&mut self, line: String) -> Result<ASTNode<Directive>, String> {
 		self.reserve.insert("preprocess", "true".into());
 
+		let mut args = Vec::new();
+		if let Some(captures) = RE.captures(&line) {
+
+	        // Find all arguments
+	        let args_re = Regex::new(r#""([^"]*)""#).unwrap();
+	        for arg in args_re.find_iter(&line) {
+	            args.push((line[arg.start() + 1..arg.end() - 1]).to_string().clone());
+	        }
+	    }
+
 		if let Some(captures) = RE.captures(&line) {
 			let command = captures.get(1).map_or("", |m| m.as_str());
-			let arg1 = captures.get(2).map_or("", |m| m.as_str()).to_string();
-			let arg2 = captures.get(3).map_or("", |m| m.as_str()).to_string();
-			let arg3 = captures.get(4).map_or("", |m| m.as_str()).to_string();
 
 			match command {
 				"begin-box" => {
@@ -195,19 +202,19 @@ impl Parser {
 						return Ok(ASTNode::Node(Directive::Empty));
 					}
 
-					let tone = if arg1.is_empty() {
+					let tone = if args.len() == 0 {
 						match self.reserve.get("previous-tone") {
 							Some(path) => path,
 							None => return Err(format!("No tone was previously declared."))
 						}
 					} else {
-						&arg1
+						&args[0]
 					};
 
 					Ok(ASTNode::Node(Directive::Import(PathBuf::from(format!("commons/gloria/{}.lit", resolve_tone(tone))))))
 				},
 				"antiphon" => {
-					let mut antiphon_path: PathBuf = ["antiphon", &arg1].iter().collect();
+					let mut antiphon_path: PathBuf = ["antiphon", &args[0]].iter().collect();
 					antiphon_path.set_extension("gabc");
 					self.reserve.insert("previous-antiphon", antiphon_path.display().to_string());
 
@@ -233,9 +240,9 @@ impl Parser {
 					}
 				},
 				"tone" => {
-					let mut tone_path: PathBuf = ["tone", &arg1].iter().collect();
+					let mut tone_path: PathBuf = ["tone", &args[0]].iter().collect();
 					tone_path.set_extension("gabc");
-					self.reserve.insert("previous-tone", arg1);
+					self.reserve.insert("previous-tone", args[0].clone());
 					Ok(ASTNode::Node(Directive::Import(tone_path)))
 				},
 				"psalm" => {
@@ -243,11 +250,11 @@ impl Parser {
 						Some(tone) => resolve_tone(tone),
 						None => return Err(format!("No tone was previously declared."))
 					};
-					let mut psalm_path: PathBuf = ["psalter", &arg1, &tone].iter().collect();
+					let mut psalm_path: PathBuf = ["psalter", &args[0], &tone].iter().collect();
 					psalm_path.set_extension("lit");
 					let mut vec: Vec<Directive> = Vec::new();
-					if arg1.parse::<u8>().is_ok() {
-						vec.push(Directive::Title(format!("Psalm {}", arg1)));
+					if args[0].parse::<u8>().is_ok() {
+						vec.push(Directive::Title(format!("Psalm {}", args[0])));
 					}
 					vec.push(Directive::Import(psalm_path));
 					
@@ -258,14 +265,14 @@ impl Parser {
 
 					Ok(ASTNode::Tree(base))
 				},
-				"text" => Ok(ASTNode::Node(Directive::Text(arg1))),
-				"heading" => Ok(ASTNode::Node(Directive::Heading(arg1, 2))),
-				"subheading" => Ok(ASTNode::Node(Directive::Heading(arg1, 3))),
-				"instruction" => Ok(ASTNode::Node(Directive::Instruction(arg1))),
-				"gabc" => Ok(ASTNode::Node(Directive::Gabc(arg1, arg2 == "english" || arg2.is_empty(), if arg3.is_empty() { "0".to_string() } else { arg3 }))),
-				"include" => Ok(ASTNode::Node(Directive::Import(self.resolve_field(arg1)?))),
-				"import" => Ok(ASTNode::Node(Directive::Import(arg1.into()))),
-				"title" => Ok(ASTNode::Node(Directive::Title(arg1))),
+				"text" => Ok(ASTNode::Node(Directive::Text(args[0].clone()))),
+				"heading" => Ok(ASTNode::Node(Directive::Heading(args[0].clone(), 2))),
+				"subheading" => Ok(ASTNode::Node(Directive::Heading(args[0].clone(), 3))),
+				"instruction" => Ok(ASTNode::Node(Directive::Instruction(args[0].clone()))),
+				"gabc" => Ok(ASTNode::Node(Directive::Gabc(args[0].clone(), args.len() < 2 || args[1] == "english", if args.len() < 3 { "0".to_string() } else { args[2].clone() }))),
+				"include" => Ok(ASTNode::Node(Directive::Import(self.resolve_field(args[0].clone())?))),
+				"import" => Ok(ASTNode::Node(Directive::Import(args[0].clone().into()))),
+				"title" => Ok(ASTNode::Node(Directive::Title(args[0].clone()))),
 				_ => Err(format!("Unknown command \"{}\"", command))
 			}
 		} else {
