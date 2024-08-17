@@ -177,7 +177,7 @@ impl Parser {
 					let mut antiphon_path: PathBuf = ["antiphon", &arg1].iter().collect();
 					antiphon_path.set_extension("gabc");
 					self.reserve.insert("previous-antiphon", antiphon_path.display().to_string());
-					Ok(vec![Directive::Import(antiphon_path)])
+					Ok(vec![Directive::Title("Antiphon".to_string()), Directive::Import(antiphon_path)])
 				},
 				"repeat-antiphon" => {
 					match self.reserve.get("previous-antiphon") {
