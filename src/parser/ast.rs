@@ -25,10 +25,7 @@ impl<T: Clone> Tree<T> for ASTree<T> {
 	}
 
 	fn add_node(&mut self, child: ASTNode<T>) {
-		match child {
-			ASTNode::Tree(tree) => self.add_subtree(tree),
-			ASTNode::Node(node) => self.add_child(node)
-		};
+		self.children.push(child);
 	}
 
 	fn add_subtree(&mut self, child: ASTree<T>) {

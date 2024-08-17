@@ -39,6 +39,7 @@ pub enum Directive {
 	Title(String),
 	Error(String),
 	Box,
+	EndBox, // parser internal use only
 	Empty
 }
 
@@ -141,8 +142,17 @@ impl Preprocessor {
 		}
 	}
 
-	fn preprocess_tree(&self, _tree: ASTree<Directive>) -> ASTNode<Directive> {
-		todo!()
+	fn preprocess_tree(&mut self, tree: ASTree<Directive>) -> ASTNode<Directive> {
+		let mut newtree = ASTree::<Directive>::new();
+		for node in tree.children() {
+			newtree.add_node(match node {
+				ASTNode::Node(directive) => self.preprocess_directive(directive),
+				ASTNode::Tree(tree) => self.preprocess_tree(tree)
+			});
+		}
+		
+		newtree.root = tree.root;
+		ASTNode::Tree(newtree)
 	}
 }
 
@@ -160,7 +170,20 @@ impl Parser {
 			match command {
 				"begin-box" => {
 					let mut boxbase = ASTree::<Directive>::from_root(Directive::Box);
+
+					loop {
+						let next = self.parse_next_line()?;
+						if let ASTNode::Node(Directive::EndBox) = next {
+							break;
+						} else {
+							boxbase.add_node(next);
+						}
+					}
+
 					Ok(ASTNode::Tree(boxbase))
+				},
+				"end-box" => {
+					Ok(ASTNode::Node(Directive::EndBox))
 				},
 				"no-gloria" => {
 					self.reserve.insert("no-gloria", "enabled".to_string());
@@ -287,21 +310,21 @@ impl Parser {
 		self.lines = Some(Rc::new(RefCell::new(iter)));
 
 		loop {
-			let (cont, tree) = match self.parse_next_line() {
-				Ok(tree) => {
-					match &self.lines {
-						Some(lines) => {
-							let rc = Rc::clone(&lines);
-							let lines = rc.borrow();
-							(lines.len() > 0, tree)
-						},
-						None => panic!("Parser.lines must be set by now.")
-					}
-				},
-				Err(why) => (false, ASTNode::Node(Directive::Error(why)))
+			let tree = match self.parse_next_line() {
+				Ok(tree) => tree,
+				Err(why) => ASTNode::Node(Directive::Error(why))
 			};
 
 			base.add_node(tree);
+
+			let cont = match &self.lines {
+				Some(lines) => {
+					let rc = Rc::clone(&lines);
+					let iter = rc.borrow();
+					iter.len() > 0
+				},
+				None => panic!("Parser.lines must be set by now.")
+			};
 
 			if !cont { break; }
 		}

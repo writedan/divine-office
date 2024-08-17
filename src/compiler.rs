@@ -34,11 +34,41 @@ pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Container> {
 	for child in tree.children() {
 		match child {
 			ASTNode::Node(dir) => res.push(compile_node(dir)),
-			ASTNode::Tree(tree) => res.append(&mut compile_ast(tree))
-		};
+			ASTNode::Tree(tree) => {
+				let mut tree = match tree.root {
+					Some(ref root) => compile_tree(tree),
+					None => compile_ast(tree)
+				};
+
+				res.append(&mut tree);
+			}
+		}
 	}
 
 	res
+}
+
+fn compile_tree(tree: ASTree<Directive>) -> Vec<Container> {
+	match tree.root.clone().unwrap() {
+		Directive::Box => {
+			let mut cont = Container::new(ContainerType::Div).with_attributes(vec![("class", "boxed")]);
+			for node in tree.children() {
+				match node {
+					ASTNode::Node(directive) => cont.add_container(compile_node(directive)),
+					ASTNode::Tree(tree) => {
+						let conts = compile_ast(tree);
+						for c in conts {
+							cont.add_container(c);
+						}
+					}
+				}
+			}
+
+			vec![cont]
+		},
+
+		_ => vec![compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root.unwrap())))]
+	}
 }
 
 fn compile_node(node: Directive) -> Container {
