@@ -107,7 +107,7 @@ fn compile_node(node: Directive) -> Container {
 
 		Directive::RawGabc(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "gabc-score")]).with_raw(text),
 
-		Directive::Title(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "title")]).with_paragraph(text),
+		Directive::Title(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "title")]).with_paragraph(if text.ends_with('.') { text } else { format!("{}.", text) }),
 
 		Directive::Error(why) =>
 			Container::new(ContainerType::Div).with_attributes(vec![("class", "error")]).with_paragraph(format!("Error: {}", why)),
