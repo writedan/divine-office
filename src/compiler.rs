@@ -70,7 +70,7 @@ fn compile_tree(tree: ASTree<Directive>) -> Container {
 		},
 
 		Directive::MakeHymn(clef, amen, melody) => {
-			let mut buffer = format!("initial-style: 1;\nannotation: Hymn.;\n%%\n({})", clef);
+			let mut buffer = format!("initial-style: 1;\nannotation: Hymn.;\ncentering-scheme: english;\n%%\n({})", clef);
 			for (stanza, node) in tree.children().into_iter().enumerate() {
 				if let ASTNode::Node(Directive::MakeVerse(verses)) = node {
 					for (vidx, verse) in verses.iter().enumerate() {
