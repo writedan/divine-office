@@ -66,8 +66,7 @@ pub enum Directive {
 	Verse(Vec<String>),
 	Amen(String, String),
 
-	EndHymn,
-	EndBox,
+	End,
 	Empty
 }
 
@@ -287,7 +286,7 @@ impl Parser {
 					let mut hymnbox = ASTree::<Directive>::from_root(Directive::Hymn);
 					loop {
 						let next = self.parse_next_line()?;
-						if let ASTNode::Node(Directive::EndHymn) = next {
+						if let ASTNode::Node(Directive::End) = next {
 							break;
 						} else {
 							hymnbox.add_node(next);
@@ -297,7 +296,7 @@ impl Parser {
 					Ok(ASTNode::Tree(hymnbox))
 				},
 
-				"end-hymn" => Ok(ASTNode::Node(Directive::EndHymn)),
+				"end-hymn" | "end-box" | "end" => Ok(ASTNode::Node(Directive::End)),
 
 				"clef" => Ok(ASTNode::Node(Directive::Clef(args.get_err(0)?.clone()))),
 				"melody" => Ok(ASTNode::Node(Directive::Melody(args.clone()))),
@@ -309,7 +308,7 @@ impl Parser {
 
 					loop {
 						let next = self.parse_next_line()?;
-						if let ASTNode::Node(Directive::EndBox) = next {
+						if let ASTNode::Node(Directive::End) = next {
 							break;
 						} else {
 							boxbase.add_node(next);
@@ -317,9 +316,6 @@ impl Parser {
 					}
 
 					Ok(ASTNode::Tree(boxbase))
-				},
-				"end-box" => {
-					Ok(ASTNode::Node(Directive::EndBox))
 				},
 				"no-gloria" => {
 					self.reserve.insert("no-gloria", "enabled".to_string());
