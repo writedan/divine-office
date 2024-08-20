@@ -73,13 +73,25 @@ fn compile_tree(tree: ASTree<Directive>) -> Container {
 			let mut buffer = format!("initial-style: 0;\n%%\n({})", clef);
 			for (stanza, node) in tree.children().into_iter().enumerate() {
 				if let ASTNode::Node(Directive::MakeVerse(verses)) = node {
-					for (vidx, verse) in verses.into_iter().enumerate() {
-						for (idx, syllable) in verse.into_iter().enumerate() {
-							//buffer = format!("{} {}({})", buffer, syllable, melody[vidx][idx]);
+					for (vidx, verse) in verses.iter().enumerate() {
+						if vidx == 0 && stanza > 0 {
+							buffer = format!("{} (::) {}. ", buffer, stanza + 1);
 						}
+
+						for (idx, syllable) in verse.into_iter().enumerate() {
+							let continuous = syllable.ends_with('-');
+							let syllable = if continuous {syllable[0..syllable.len() - 1].to_string()} else {format!("{} ", syllable)};
+							buffer = format!("{}{}({})", buffer, syllable, melody[vidx][idx]);
+						}
+
+						if vidx == verses.len() - 1 { continue; }
+
+						buffer = format!("{} ({})", buffer, if vidx % 2 == 0 { "," } else { ";" });
 					}
 				}
 			}
+
+			buffer = format!("{} (::) A({})men.({})", buffer, amen.0, amen.1);
 
 			compile_node(Directive::RawGabc(buffer))
 		},

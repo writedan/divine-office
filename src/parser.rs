@@ -224,8 +224,6 @@ impl Preprocessor {
 					return ASTNode::Node(Directive::Error(format!("Hymn has no melody or verses.")));
 				}
 
-				println!("{:#?}", hymn);
-
 				let mut base = ASTree::<Directive>::from_root(Directive::MakeHymn(hymn.clef, hymn.amen, hymn.melody.clone()));
 
 				let standard_len = hymn.verses[0].len();
@@ -247,9 +245,6 @@ impl Preprocessor {
 
 				let stanza_num = hymn.verses[0].len();
 				let verse_num = hymn.melody.len();
-
-				println!("stanza_num: {}", stanza_num);
-				println!("verse_num: {}", verse_num);
 
 				let mut collection = Vec::new();
 
