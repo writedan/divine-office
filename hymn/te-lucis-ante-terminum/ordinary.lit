@@ -3,14 +3,14 @@
 #begin-hymn
 	#clef "c3"
 
-	#melody "f" "hv" "hv" "hv" "hv" "i" "h" "g"
+	#melody "f" "hv" "hv" "hv" "hv" "iv" "h" "g"
 	#verse "To" "you" "at" "the" "end" "of" "the" "light,"
 	#verse "May" "far" "a-" "way" "go" "dark-" "ened" "dreams;"
 	#verse "Grant," "Fa-" "ther," "we" "what" "ask" "be" "done:"
 
 	#melody "f" "f" "f" "f" "gv" "gv" "f" "e"
 	#verse "Who" "made" "all" "things," "we" "pray," "to-" "night;"
-	#verse "Be" "ban-" "ished," "nigh's" "dis-" "turb-" "ing" "schemes;"
+	#verse "Be" "ban-" "ished," "night's" "dis-" "turb-" "ing" "schemes;"
 	#verse "Through" "Je-" "sus" "Christ," "our" "Lord," "Your" "Son,"
 
 	#melody "gv" "gv" "f" "e" "c" "ev" "fv" "fv"
@@ -19,7 +19,7 @@
 	#verse "Who" "with" "You" "reigns" "e-" "ter-" "nal-" "ly:"
 
 	#melody "hv" "hv" "hv" "hv" "f" "gv" "f" "e"
-	#verse "For" "us" "a" "guard-" "dian" "may" "you" "be?"
+	#verse "For" "us" "a" "guar-" "dian" "may" "you" "be?"
 	#verse "So" "that" "he" "not" "our" "bo-" "dies" "taint."
 	#verse "God" "in" "the" "Spir-" "it's" "u-" "ni-" "ty."
 
