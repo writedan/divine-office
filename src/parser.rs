@@ -61,7 +61,6 @@ pub enum Directive {
 	Melody(Vec<String>),
 	Verse(Vec<String>),
 	Amen(String, String),
-	Make,
 
 	EndHymn, // parser internal use only
 	EndBox,
@@ -219,7 +218,6 @@ impl Parser {
 				"melody" => Ok(ASTNode::Node(Directive::Melody(args.clone()))),
 				"verse" => Ok(ASTNode::Node(Directive::Verse(args.clone()))),
 				"amen" => Ok(ASTNode::Node(Directive::Amen(args.get_err(0)?.clone(), args.get_err(1)?.clone()))),
-				"make" => Ok(ASTNode::Node(Directive::Make)),
 
 				"begin-box" => {
 					let mut boxbase = ASTree::<Directive>::from_root(Directive::Box);
