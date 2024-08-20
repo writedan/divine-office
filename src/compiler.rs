@@ -86,7 +86,7 @@ fn compile_tree(tree: ASTree<Directive>) -> Container {
 
 						if vidx == verses.len() - 1 { continue; }
 
-						buffer = format!("{} ({})", buffer, if vidx % 2 == 0 { "," } else { ";" });
+						buffer = format!("{} {}({})", buffer, if stanza == 0 && vidx == 0 {"<sp>*</sp>"} else {""}, if vidx % 2 == 0 { "," } else { ";" });
 					}
 				}
 			}
