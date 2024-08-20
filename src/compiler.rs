@@ -69,6 +69,21 @@ fn compile_tree(tree: ASTree<Directive>) -> Container {
 			cont
 		},
 
+		Directive::MakeHymn(clef, amen, melody) => {
+			let mut buffer = format!("initial-style: 0;\n%%\n({})", clef);
+			for (stanza, node) in tree.children().into_iter().enumerate() {
+				if let ASTNode::Node(Directive::MakeVerse(verses)) = node {
+					for (vidx, verse) in verses.into_iter().enumerate() {
+						for (idx, syllable) in verse.into_iter().enumerate() {
+							//buffer = format!("{} {}({})", buffer, syllable, melody[vidx][idx]);
+						}
+					}
+				}
+			}
+
+			compile_node(Directive::RawGabc(buffer))
+		},
+
 		_ => compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root.unwrap())))
 	}
 }

@@ -55,16 +55,16 @@ pub enum Directive {
 	Error(String),
 	Box,
 
-	MakeHymn(String, (String, String)), // clef, (a, men)
-	MakeVerse(Vec<String>, Vec<Vec<String>>), // melody, vec<verse>
+	MakeHymn(String, (String, String), Vec<Vec<String>>), // clef, (a, men), vec<melody>
+	MakeVerse(Vec<Vec<String>>), // vec<verse>
 
 	// parser internal use only
 
 	Hymn,
 	Clef(String),
-	Melody(Vec<String>),
 	Verse(Vec<String>),
 	Amen(String, String),
+	Melody(Vec<String>),
 
 	End,
 	Empty
@@ -224,10 +224,12 @@ impl Preprocessor {
 					return ASTNode::Node(Directive::Error(format!("Hymn has no melody or verses.")));
 				}
 
-				let mut base = ASTree::<Directive>::from_root(Directive::MakeHymn(hymn.clef, hymn.amen));
+				println!("{:#?}", hymn);
+
+				let mut base = ASTree::<Directive>::from_root(Directive::MakeHymn(hymn.clef, hymn.amen, hymn.melody.clone()));
 
 				let standard_len = hymn.verses[0].len();
-				for (idx, melody) in hymn.melody.into_iter().enumerate() {
+				for (idx, melody) in hymn.melody.iter().enumerate() {
 					if hymn.verses[idx].len() == 0 {
 						return ASTNode::Node(Directive::Error(format!("Melody has no corresponding verses for stanza {}", idx + 1)))
 					}
@@ -241,8 +243,25 @@ impl Preprocessor {
 					if hymn.verses[idx].len() != standard_len {
 						return ASTNode::Node(Directive::Error(format!("Stanza {} has differing number of verses from first stanza.", idx + 1)));
 					}
+				}
 
-					base.add_node(ASTNode::Node(Directive::MakeVerse(melody, hymn.verses[idx].clone())));
+				let stanza_num = hymn.verses[0].len();
+				let verse_num = hymn.melody.len();
+
+				println!("stanza_num: {}", stanza_num);
+				println!("verse_num: {}", verse_num);
+
+				let mut collection = Vec::new();
+
+				for stanza_idx in 0..stanza_num {
+					for verse_idx in 0..verse_num {
+						let v = &hymn.verses[verse_idx];
+						let w = &v[stanza_idx];
+						collection.push(w.clone());
+					}
+
+					base.add_node(ASTNode::Node(Directive::MakeVerse(collection)));
+					collection = Vec::new();
 				}
 
 				ASTNode::Tree(base)
