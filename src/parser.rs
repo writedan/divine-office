@@ -55,14 +55,18 @@ pub enum Directive {
 	Error(String),
 	Box,
 
+	MakeHymn(String, (String, String)), // clef, (a, men)
+	MakeVerse(Vec<String>, Vec<Vec<String>>), // melody, vec<verse>
 
-	Hymn, // hymn directives
+	// parser internal use only
+
+	Hymn,
 	Clef(String),
 	Melody(Vec<String>),
 	Verse(Vec<String>),
 	Amen(String, String),
 
-	EndHymn, // parser internal use only
+	EndHymn,
 	EndBox,
 	Empty
 }
@@ -167,16 +171,97 @@ impl Preprocessor {
 	}
 
 	fn preprocess_tree(&mut self, tree: ASTree<Directive>) -> ASTNode<Directive> {
-		let mut newtree = ASTree::<Directive>::new();
-		for node in tree.children() {
-			newtree.add_node(match node {
-				ASTNode::Node(directive) => self.preprocess_directive(directive),
-				ASTNode::Tree(tree) => self.preprocess_tree(tree)
-			});
+		match tree.root {
+			Some(Directive::Hymn) => {
+				#[derive(Debug)]
+				struct Hymn {
+					clef: String,
+					melody: Vec<Vec<String>>, // Vec<Melody>
+					verses: Vec<Vec<Vec<String>>>, // Vec<Vec<Verse>> (Vec<Vec> corresponds to Melody)
+					amen: (String, String)
+				}
+
+				let mut hymn = Hymn {
+					clef: "".to_string(),
+					verses: Vec::new(),
+					melody: Vec::new(),
+					amen: ("".to_string(), "".to_string())
+				};
+
+				let mut iter = tree.children().into_iter();
+
+				while let Some(node) = iter.next() {
+					if let ASTNode::Node(directive) = node {
+						use Directive::*;
+						match directive {
+							Clef(clef) => hymn.clef = clef,
+
+							Melody(notes) => {
+								hymn.melody.push(notes);
+								hymn.verses.push(Vec::new());
+							},
+
+							Verse(syllables) => {
+								match hymn.verses.last_mut() {
+									Some(verses) => {
+										verses.push(syllables);
+									},
+									None => return ASTNode::Node(Directive::Error(format!("No melody was declared but tried to provide verse.")))
+								}
+							},
+
+							Amen(n1, n2) => {
+								hymn.amen = (n1, n2);
+							}
+
+							_ => return ASTNode::Node(Directive::Error(format!("Unsupported directive {:?} in hymn compilation", directive)))
+						}
+					} else {
+						return ASTNode::Node(Directive::Error(format!("Unsupported node {:?} in hymn compilation", node)))
+					}
+				}
+
+				if hymn.melody.len() == 0 || hymn.verses.len() == 0 {
+					return ASTNode::Node(Directive::Error(format!("Hymn has no melody or verses.")));
+				}
+
+				let mut base = ASTree::<Directive>::from_root(Directive::MakeHymn(hymn.clef, hymn.amen));
+
+				let standard_len = hymn.verses[0].len();
+				for (idx, melody) in hymn.melody.into_iter().enumerate() {
+					if hymn.verses[idx].len() == 0 {
+						return ASTNode::Node(Directive::Error(format!("Melody has no corresponding verses for stanza {}", idx + 1)))
+					}
+
+					for verse in hymn.verses[idx].iter() {
+						if verse.len() != melody.len() {
+							return ASTNode::Node(Directive::Error(format!("Melody and verse have differing syllable counts for stanza {} on verse {:?}", idx + 1, verse)));
+						}
+					}
+
+					if hymn.verses[idx].len() != standard_len {
+						return ASTNode::Node(Directive::Error(format!("Stanza {} has differing number of verses from first stanza.", idx + 1)));
+					}
+
+					base.add_node(ASTNode::Node(Directive::MakeVerse(melody, hymn.verses[idx].clone())));
+				}
+
+				ASTNode::Tree(base)
+			},
+
+			_ => {
+				let mut newtree = ASTree::<Directive>::new();
+				for node in tree.children() {
+					newtree.add_node(match node {
+						ASTNode::Node(directive) => self.preprocess_directive(directive),
+						ASTNode::Tree(tree) => self.preprocess_tree(tree)
+					});
+				}
+				
+				newtree.root = tree.root;
+				ASTNode::Tree(newtree)
+			}
 		}
-		
-		newtree.root = tree.root;
-		ASTNode::Tree(newtree)
 	}
 }
 
