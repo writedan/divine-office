@@ -54,7 +54,7 @@ pub enum Season {
 	Advent, 
 	Christmas, 
 	PostEpiphany(bool), // whether we are before (true) or after (false) the Purification
-	PreLent, 
+	PreLent(bool), // see note above 
 	Lent, 
 	Easter, 
 	PostPentecost,
@@ -67,7 +67,7 @@ impl ToString for Season {
 			crate::kalendar::Season::Advent => String::from("advent"),
 			crate::kalendar::Season::Christmas => String::from("christmas"),
 			crate::kalendar::Season::PostEpiphany(_) => String::from("post-epiphany"),
-			crate::kalendar::Season::PreLent => String::from("pre-lent"),
+			crate::kalendar::Season::PreLent(_) => String::from("pre-lent"),
 			crate::kalendar::Season::Lent => String::from("lent"),
 			crate::kalendar::Season::Easter => String::from("easter"),
 			crate::kalendar::Season::PostPentecost => String::from("post-pentecost"),
@@ -145,26 +145,24 @@ impl Kalendar {
     }
 
     fn get_season(&self, date: NaiveDate) -> Season {
+    	println!("{:#?}", self);
+    	let first_of = if self.purification < self.septuagesima { self.purification } else { self.septuagesima };
+
     	let seasons = [
     		(Season::Advent, self.advent, self.christmas),
     		(Season::Christmas, self.christmas, self.epiphany_sunday),
-    		(Season::PostEpiphany(true), self.epiphany_sunday, self.septuagesima),
-    		(Season::PreLent, self.septuagesima, self.ash_wednesday),
+    		(Season::PostEpiphany(true), self.epiphany_sunday, first_of),
+    		(Season::PreLent(true), self.septuagesima, self.purification),
+    		(Season::PreLent(false), self.septuagesima, self.ash_wednesday),
+    		(Season::PostEpiphany(false), self.purification, self.septuagesima),
     		(Season::Lent, self.ash_wednesday, self.easter),
     		(Season::Easter, self.easter, self.pentecost.next_sunday().unwrap()), // this case can be safely unwrapped since we have a valid kalendar
     		(Season::PostPentecost, self.pentecost.next_sunday().unwrap(), self.next_advent)
     	];
 
     	for (season, start, end) in seasons {
+    		println!("{:?} between {} and {}", season, start, end);
     		if date.is_between(start, end) {
-    			if let Season::PostEpiphany(true) = season {
-    				if date.is_between(self.purification, self.septuagesima) {
-    					return Season::PostEpiphany(false);
-    				} else {
-    					return Season::PostEpiphany(true);
-    				}
-    			}
-
     			return season;
     		}
     	}
@@ -177,7 +175,7 @@ impl Kalendar {
     		Season::Advent => advent::get_celebration(self, date),
     		Season::Christmas =>christmas::get_celebration(self, date),
     		Season::PostEpiphany(_) => postepiphany::get_celebration(self, date),
-    		Season::PreLent => prelent::get_celebration(self, date),
+    		Season::PreLent(_) => prelent::get_celebration(self, date),
     		Season::Lent => lent::get_celebration(self, date),
     		Season::Easter => easter::get_celebration(self, date),
     		Season::PostPentecost => postpentecost::get_celebration(self, date),
