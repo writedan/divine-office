@@ -148,8 +148,7 @@ impl Kalendar {
     	let seasons = [
     		(Season::Advent, self.advent, self.christmas),
     		(Season::Christmas, self.christmas, self.epiphany_sunday),
-    		(Season::PostEpiphany(false), self.epiphany_sunday, self.purification),
-    		(Season::PostEpiphany(true), self.purification, self.septuagesima),
+    		(Season::PostEpiphany(true), self.epiphany_sunday, self.septuagesima),
     		(Season::PreLent, self.septuagesima, self.ash_wednesday),
     		(Season::Lent, self.ash_wednesday, self.easter),
     		(Season::Easter, self.easter, self.pentecost.next_sunday().unwrap()), // this case can be safely unwrapped since we have a valid kalendar
@@ -158,6 +157,14 @@ impl Kalendar {
 
     	for (season, start, end) in seasons {
     		if date.is_between(start, end) {
+    			if let Season::PostEpiphany(true) = season {
+    				if date.is_between(self.purification, self.septuagesima) {
+    					return Season::PostEpiphany(false);
+    				} else {
+    					return Season::PostEpiphany(true);
+    				}
+    			}
+
     			return season;
     		}
     	}
@@ -225,6 +232,20 @@ mod tests {
 		assert_eq!(ly.septuagesima, NaiveDate::from_ymd(2005, 1, 23));
 		assert_eq!(ly.easter, NaiveDate::from_ymd(2005, 3, 27));
 		assert_eq!(ly.pentecost, NaiveDate::from_ymd(2005, 5, 15));
+
+		let ly = Kalendar::from_year(2024).unwrap();
+		assert_eq!(ly.advent, NaiveDate::from_ymd(2024, 12, 1));
+		assert_eq!(ly.epiphany_sunday, NaiveDate::from_ymd(2025, 1, 12));
+		assert_eq!(ly.septuagesima, NaiveDate::from_ymd(2025, 2, 16));
+		assert_eq!(ly.easter, NaiveDate::from_ymd(2025, 4, 20));
+		assert_eq!(ly.pentecost, NaiveDate::from_ymd(2025, 6, 8));
+
+		let ly = Kalendar::from_year(2025).unwrap();
+		assert_eq!(ly.advent, NaiveDate::from_ymd(2025, 11, 30));
+		assert_eq!(ly.epiphany_sunday, NaiveDate::from_ymd(2026, 1, 11));
+		assert_eq!(ly.septuagesima, NaiveDate::from_ymd(2026, 2, 1));
+		assert_eq!(ly.easter, NaiveDate::from_ymd(2026, 4, 5));
+		assert_eq!(ly.pentecost, NaiveDate::from_ymd(2026, 5, 24));
 	}
 
 	#[test]
