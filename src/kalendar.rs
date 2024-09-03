@@ -145,7 +145,6 @@ impl Kalendar {
     }
 
     fn get_season(&self, date: NaiveDate) -> Season {
-    	println!("{:#?}", self);
     	let first_of = if self.purification < self.septuagesima { self.purification } else { self.septuagesima };
 
     	let seasons = [
@@ -161,7 +160,6 @@ impl Kalendar {
     	];
 
     	for (season, start, end) in seasons {
-    		println!("{:?} between {} and {}", season, start, end);
     		if date.is_between(start, end) {
     			return season;
     		}
