@@ -420,6 +420,13 @@ fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 		"in-manus-tuas.gabc"
 	].iter().collect());
 
+	map.insert("canticle", [
+		"commons",
+		"compline",
+		"canticle",
+		"ordinary.lit"
+	].iter().collect());
+
 	map.insert("anthem", [
 		"commons",
 		"compline",
