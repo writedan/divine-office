@@ -60,17 +60,18 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 		"hymn",
 		match day {
 			Sun => match iden.season {
-				PostEpiphany(_) => "primo-dierum-omnium.lit",
-				PostPentecost | August | September | October | November => "nocte-surgentes.lit",
+				PostEpiphany(_) => "primo-dierum-omnium",
+				PostPentecost | August | September | October | November => "nocte-surgentes",
 				_ => panic!("illegal season {:?}", iden.season)
 			},
-			Mon => "somno-refectis-artubus.lit",
-			Tue => "consors-paterni-luminis.lit",
-			Wed => "rerum-creator-optime.lit",
-			Thu => "nox-atra-rerum-contigit.lit",
-			Fri => "tu-trinitatis-unitas.lit",
-			Sat => "summe-deus-clementie.lit"
-		}
+			Mon => "somno-refectis-artubus",
+			Tue => "consors-paterni-luminis",
+			Wed => "rerum-creator-optime",
+			Thu => "nox-atra-rerum-contigit",
+			Fri => "tu-trinitatis-unitas",
+			Sat => "summe-deus-clementie"
+		},
+		"ordinary.lit"
 	].iter().collect());
 
 	map.insert("psalter", [
