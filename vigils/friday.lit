@@ -1,0 +1,49 @@
+#antiphon "exultate-deo"
+	#tone "1-iv" "c4"
+	#psalm "80"
+
+	#repeat-tone
+	#psalm "81"
+#repeat-antiphon
+
+#antiphon "tu-solus-altissimus"
+	#tone "1-iii" "c4"
+	#psalm "82"
+
+	#repeat-tone
+	#psalm "83"
+#repeat-antiphon
+
+#antiphon "benedixisti-domine"
+	#tone "6" "c4"
+	#psalm "84"
+
+	#repeat-tone
+	#psalm "85"
+#repeat-antiphon
+
+#antiphon "fundamenta-ejus"
+	#tone "1-iii" "c4"
+	#psalm "86"
+
+	#repeat-tone
+	#psalm "87"
+#repeat-antiphon
+
+#antiphon "benedictus-dominus"
+	#tone "6" "c4"
+	#psalm "88"
+
+	#repeat-tone
+	#psalm "93"
+#repeat-antiphon
+
+#antiphon "cantate-domino"
+	#tone "2-i" "f3"
+	#psalm "95"
+
+	#repeat-tone
+	#psalm "96"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> Let(h) my(h) prayer(h) come(h) be(h)fore(h) You.(f) <sp>r</sp>(::) Bow(h) down(h) Your(h) ear(h) un(h)to(h) my(h) supp(h)li(h)ca(h)tion.(f)"

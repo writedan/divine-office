@@ -1,0 +1,88 @@
+#import "commons/shared/usual-beginning.lit"
+
+#import "commons/shared/apostles-creed.lit"
+
+#instruction "Then with hearable voice the officiant begins from the doors of the nave."
+
+#gabc "(f3) <sp>v</sp> O(f) Lord,(h) You(h) shall(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Your(g) praise.(h)"
+
+
+#instruction "The ministers process in while singing the verses and making a station of prayer at the repetition of the antiphon."
+
+#include "invitatory"
+
+#import "commons/shared/ordinary-opening.lit"
+
+#include "hymn"
+
+
+
+
+	#include "psalter"
+
+
+	#instruction "This prayer is made quietly."
+
+	#import "commons/shared/pater-noster.lit"
+
+	#instruction "Then the officiant grants the absolution."
+
+	#include "absolution-1"
+
+	#instruction "The congregation responds."
+
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+	#include "lesson-1"
+
+	#instruction "The officiant grants a blessing."
+
+	#include "blessing-1"
+
+	#instruction "The congregation responds."
+
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+	#instruction "The lector intones the responsory."
+
+	#include "responsory-1"
+
+
+	#include "lesson-2"
+
+	#include "blessing-2"
+
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+	#include "responsory-2"
+
+
+	#include "lesson-3"
+
+	#include "blessing-3"
+
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+	#include "responsory-3"
+
+#import "commons/shared/invocation.lit"
+
+#include "collect"
+
+#instruction "To which the congregation responds."
+
+#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+#include "kyrie"
+
+#instruction "This prayer is made quietly."
+
+#import "commons/shared/pater-noster.lit"
+
+#import "commons/shared/confiteor.lit"
+
+#import "commons/shared/conclusion.lit"
+
+#instruction "This prayer is made quietly to conclude the service."
+
+#import "commons/shared/pater-noster.lit"
