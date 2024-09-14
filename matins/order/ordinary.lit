@@ -1,0 +1,35 @@
+#import "commons/shared/usual-beginning.lit"
+
+#instruction "Then with hearable voice the officiant begins."
+
+#import "commons/shared/ordinary-opening.lit"
+
+#include "psalter"
+
+#include "chapter"
+
+#include "hymn"
+
+#include "versicle"
+
+#include "canticle"
+
+#include "kyrie"
+
+#instruction "This prayer is made quietly."
+
+#import "commons/shared/pater-noster.lit"
+
+#import "commons/shared/invocation.lit"
+
+#include "collect"
+
+#instruction "To which the congregation responds."
+
+#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+#import "commons/shared/conclusion.lit"
+
+#instruction "This prayer is made quietly to conclude the service."
+
+#import "commons/shared/pater-noster.lit"

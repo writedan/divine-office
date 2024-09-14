@@ -153,7 +153,7 @@ impl Preprocessor {
 				ASTNode::Node(Directive::RawGabc(format!("initial-style: {};\ncentering-scheme: {};\n%%\n{}", style, lang, music)))
 			},
 
-			Directive::Import(path, mut parser) => {
+			/*Directive::Import(path, mut parser) => {
 				let ext = match path.as_path().extension() {
 					Some(ext) => ext,
 					None => return ASTNode::Node(Directive::Error(format!("Unable to resolve \"{}\" because of the missing extension.", path.display())))
@@ -171,7 +171,7 @@ impl Preprocessor {
 						Err(why) => ASTNode::Node(Directive::Error(why))
 					}
 				}
-			},
+			},*/
 			_ => ASTNode::Node(dir)
 		}
 	}
@@ -416,8 +416,11 @@ impl Parser {
 				"subheading" => Ok(ASTNode::Node(Directive::Heading(args.get_err(0)?.clone(), 3))),
 				"instruction" => Ok(ASTNode::Node(Directive::Instruction(args.get_err(0)?.clone()))),
 				"gabc" => Ok(ASTNode::Node(Directive::Gabc(args.get_err(0)?.clone(), args.len() < 2 || args[1] == "english", if args.len() < 3 { "0".to_string() } else { args[2].clone() }))),
+				
 				"include" => Ok(ASTNode::Node(Directive::Import(self.resolve_field(args.get_err(0)?.clone())?, self.clone()))),
+
 				"import" => Ok(ASTNode::Node(Directive::Import(args.get_err(0)?.clone().into(), self.clone()))),
+
 				"title" => Ok(ASTNode::Node(Directive::Title(args.get_err(0)?.clone()))),
 				_ => Err(format!("Unknown command \"{}\"", command))
 			}
