@@ -13,6 +13,8 @@
 
 #import "commons/shared/ordinary-opening.lit"
 
+#include "hymn"
+
 
 
 	#include "psalter"

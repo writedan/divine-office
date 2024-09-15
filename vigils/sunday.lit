@@ -1,0 +1,27 @@
+#antiphon "servite-domino"
+	#tone "3-iv" "c3"
+	#psalm "1"
+
+	#repeat-tone
+	#psalm "2"
+
+	#repeat-tone
+	#psalm "3"
+
+	#repeat-tone
+	#psalm "6"
+#repeat-antiphon
+
+#antiphon "domine-deus-meus"
+	#tone "2-i" "f3"
+	#psalm "7"
+
+	#repeat-tone
+	#psalm "8"
+
+	#repeat-tone
+	#psalm "9"
+
+	#repeat-tone
+	#psalm "10"
+#repeat-antiphon
