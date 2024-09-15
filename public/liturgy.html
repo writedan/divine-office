@@ -101,8 +101,16 @@
             .boxed {
                 padding: 15px;
                 padding-top: 0;
-                padding-bottom: 0;
+                padding-bottom: 15px;
                 border: 1px solid black;
+            }
+
+            .boxed + .boxed {
+                margin-top: 15px;
+            }
+
+            div + .boxed {
+                margin-top: 15px;
             }
         </style>
 
@@ -212,7 +220,7 @@
                 element.innerHTML = '';
 
                 score.performLayoutAsync(ctx, async function(){
-                    await score.layoutChantLines(ctx, content.offsetWidth, async function(){
+                    await score.layoutChantLines(ctx, element.offsetWidth, async function(){
                         let svg = await score.createSvgNode(ctx);
                         let extraMargin = false;
                         let toChange = [];
@@ -260,7 +268,6 @@
             <div id="content">
                 <h1 style = "text-transform: none; letter-spacing: 0.1vw; color: white; font-size: 115%;" id = "liturgy-heading">placeholder</h1>
                 <h2 style = "letter-spacing: 2vw; text-transform: uppercase; color: white; font-size: 100%" id = "hour-heading">placeholder</h2>
-                <hr/>
                 <%= content %>
             </div>
         </div>
