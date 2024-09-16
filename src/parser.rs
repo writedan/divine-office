@@ -1,93 +1,180 @@
 pub mod ast;
 
-
-
-
-
-use std::path::PathBuf;
+use crate::lexer::{Lexer, Token};
 use std::collections::HashMap;
-
-use std::fs::File;
-use std::io::{self, BufRead};
-
-use std::path::Path;
-
-use std::rc::Rc;
-use std::cell::RefCell;
-
-
-use regex::Regex;
-
-use lazy_static::lazy_static;
-
 use crate::parser::ast::*;
 
-lazy_static! {
-    static ref WHOLE_RE: Regex = Regex::new(
-        r#"#([\w-]+)(?:\s+"([^"]*)")*"#
-    ).unwrap();
-
-    static ref COMMAND_RE: Regex = Regex::new(r#""([^"]*)""#).unwrap();
+/// Hymns are expressed as a struct since they contain more information than a typical directive.
+#[derive(Debug, Clone)]
+pub struct Hymn {
+	pub clef: String,
+	/// Corresponds to a `Vec<Melody>` since melodies are expressed as vector of individual neumes.
+	pub melody: Vec<Vec<String>>,
+	/// Corresponds to a `Vec<Verse>` since verses are expressed as a vector of individual syllables.
+	/// The number of stanzas is equal to the number of verses divided by the number of melodies.
+	/// 
+	/// For example, given 4 melodies and 8 verses, there are two stanzas of 4 verses each.
+	// verses[0] would be the first verse of the first stanza, verses[1] the second verse of the first stanza, ... verses[4] the first verse of the second stanza.
+	pub verses: Vec<Vec<String>>,
+	/// The two nuemes of the final "Amen."
+	pub amen: (String, String)
 }
 
-trait ErrGet<T> {
-	fn get_err(&self, idx: usize) -> Result<&T, String>;
-}
-
-impl<T> ErrGet<T> for Vec<T> {
-	fn get_err(&self, idx: usize) -> Result<&T, String> {
-		match self.get(idx) {
-			Some(r) => Ok(&r),
-			None => Err(format!("attempted to get vec[{}] but len={}", idx, self.len()))
-		}
+impl Hymn {
+	/// Returns the absolute index out of `verses` given the requested stanza and verse indices.
+	pub fn verse_idx(&self, stanza: usize, verse: usize) -> usize {
+		stanza + verse * (self.verses.len() / self.melody.len())
 	}
 }
 
+/// A directive, unlike a token, can be compiled directly into HTML or other targets.
+/// Refer to the `Token` enum for information on these enums.
 #[derive(Debug, Clone)]
 pub enum Directive {
-	Text(String),
-	Heading(String, u8),
-	Instruction(String),
-	Gabc(String, bool, String), // musicm whether english (true) or latin (false) -- default to english, initial style
-	RawGabc(String),
-	Import(PathBuf, Parser),
-	Title(String),
-	Error(String),
+	/// Indicates a tree which compiles into a `div.boxed` element. This directive occurs legally only as the root of a tree.
 	Box,
-
-	MakeHymn(String, (String, String), Vec<Vec<String>>), // clef, (a, men), vec<melody>
-	MakeVerse(Vec<Vec<String>>), // vec<verse>
-
-	// parser internal use only
-
-	Hymn,
-	Clef(String),
-	Verse(Vec<String>),
-	Amen(String, String),
-	Melody(Vec<String>),
-
-	End,
-	Empty
+	Error(String),
+	Empty,
+	Heading(String, u8),
+	/// Indicates a hymn environment. See the `Hymn` struct for more information.
+	Hymn(Hymn),
+	RawGabc(String),
+	Instruction(String),
+	Text(String),
+	Title(String),
 }
 
-#[derive(Clone)]
-struct Parser {
-	propers: HashMap<&'static str, PathBuf>,
-	reserve: HashMap<&'static str, String>,
-	lines: Option<Rc<RefCell<dyn ExactSizeIterator<Item = String>>>>
+pub fn from_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> ASTree<Directive> {
+	let mut base = ASTree::<Directive>::new();
+
+	let mut store: HashMap<String, String> = HashMap::new();
+	for (key, val) in propers.iter() {
+		store.insert(key.to_string(), val.display().to_string());
+	}
+
+	let mut preprocessor = Preprocessor::from_path(match propers.get("order") {
+		Some(path) => path,
+		None => {
+			base.add_node(ASTNode::Node(Directive::Error(format!("Cannot parse from hour: field \"order\" was not set."))));
+			return base;
+		}
+	}, store);
+
+	if let Ok(mut preprocessor) = preprocessor {
+		base.add_node(ASTNode::Tree(parse_tokens(preprocessor)));
+	} else if let Err(why) = preprocessor {
+		base.add_node(ASTNode::Node(Directive::Error(format!("Failed to initialize preprocessor: {}", why))));
+	}
+
+	base
 }
 
-impl std::fmt::Debug for Parser {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> { 
-		f.debug_struct("Parser").field("propers", &self.propers).field("reserve", &self.reserve).finish()
+fn parse_token(token: Token, iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive> {
+	use Token::*;
+	match token {
+		BeginBox => read_box(iter),
+		BeginHymn => read_hymn(iter),
+		Define(_, _) => ASTNode::Node(Directive::Empty), // definitions are left in the preprocessor to enable dynamic resolutions
+		Error(why) => ASTNode::Node(Directive::Error(why)),
+		Heading(text, level) => ASTNode::Node(Directive::Heading(text, level)),
+		IfInclude(key) => ASTNode::Node(Directive::Empty), // if-includes transform to nothing if their key is missing
+		Include(key) => ASTNode::Node(Directive::Error(format!("Field not set: {}", key))), // includes transform to an error if they key is missing
+		Instruction(text) => ASTNode::Node(Directive::Instruction(text)),
+		Text(text) => ASTNode::Node(Directive::Text(text)),
+		Title(text) => ASTNode::Node(Directive::Title(text)),
+		RawGabc(gabc) => ASTNode::Node(Directive::RawGabc(gabc)),
+		_ => ASTNode::Node(Directive::Error(format!("Unexpected token while parsing: {:?}", token)))
 	}
 }
 
-struct Preprocessor {
-	parser: Parser,
-	tree: ASTree<Directive>
+fn parse_tokens(mut preprocessor: Preprocessor) -> ASTree<Directive> {
+	preprocessor.preprocess();
+
+	let mut base = ASTree::<Directive>::new();
+	let mut iter: &mut dyn ExactSizeIterator<Item = Token> = &mut preprocessor.iter();
+	while iter.len() > 0 {
+		let token = iter.next().unwrap();
+		base.add_node(parse_token(token, iter));
+	}
+
+	base
 }
 
+fn read_box(iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive> {
+	use Token::*;
+
+	let mut base = ASTree::<Directive>::from_root(Directive::Box);
+	while iter.len() > 0 {
+		let token = iter.next().unwrap();
+		match token {
+			BeginBox => base.add_node(read_box(iter)),
+			End => break,
+			_ => base.add_node(parse_token(token, iter))
+		}
+	}
+
+	ASTNode::Tree(base)
+}
+
+fn read_hymn(iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive> {
+	let mut melody: Vec<Vec<String>> = Vec::new();
+	let mut verses: Vec<Vec<Vec<String>>> = Vec::new();
+	let mut clef = String::new();
+	let mut amen = (String::new(), String::new());
+
+	while iter.len() > 0 {
+		use Token::*;
+		let token = iter.next().unwrap();
+		match token {
+			Amen(s1, s2) => amen = (s1, s2),
+
+			Clef(val) => clef = val,
+
+			End => break,
+
+			Melody(syllales) => {
+				melody.push(syllales);
+				verses.push(Vec::new())
+			},
+
+			Verse(syllales) => {
+				match verses.last_mut() {
+					Some(vec) => vec.push(syllales),
+					None => return ASTNode::Node(Directive::Error(format!("No melody was declared but tried to provide verse.")))
+				}
+			},
+
+			_ => return ASTNode::Node(Directive::Error(format!("Illegal token while parsing hymn: {:?}", token)))
+		}
+	}
+
+	// verify the hymn is well-formed
+	if melody.len() == 0 || verses.len() == 0 {
+		return ASTNode::Node(Directive::Error(format!("Hymn has no melody or verses")))
+	}
+
+	let standard_len = verses[0].len();
+	for (idx, melody) in melody.iter().enumerate() {
+		if verses[idx].len() == 0 {
+			return ASTNode::Node(Directive::Error(format!("Melody has no corresponding verses for stanza {}", idx + 1)))
+		}
+
+		for verse in verses[idx].iter() {
+			if verse.len() != melody.len() {
+				return ASTNode::Node(Directive::Error(format!("Melody and verse have differing syllable counts for stanza {} on verse {:?}", idx + 1, verse)));
+			}
+		}
+
+		if verses[idx].len() != standard_len {
+			return ASTNode::Node(Directive::Error(format!("Stanza {} has differing number of verses from first stanza.", idx + 1)));
+		}
+	}
+
+	// verses are flattened one layer since they are initially grouped by stanza
+	ASTNode::Node(Directive::Hymn(Hymn { melody, verses: verses.into_iter().flatten().collect::<Vec<_>>(), clef, amen }))
+}
+
+/// A helper method to transform tones to their stress-patterns.
 fn resolve_tone(tone: &String) -> String {
 	let parts = tone.split('-').collect::<Vec<&str>>();
 	let median = parts[0];
@@ -127,411 +214,199 @@ fn resolve_tone(tone: &String) -> String {
 	}
 }
 
+/// The processor expands certain tokens so as to ease the work of the parser.
+#[derive(Debug)]
+struct Preprocessor {
+	tokens: Vec<Token>,
+	/// A dynamic map of fields and paths which can update during parsing.
+	store: HashMap<String, String>
+}
+
 impl Preprocessor {
-	fn preprocess(&mut self) -> ASTree<Directive> {
-		self.parser.reserve.remove("preprocess");
-		let mut base = ASTree::<Directive>::new();
-		for node in self.tree.children() {
-			base.add_node(match node {
-				ASTNode::Node(node) => self.preprocess_directive(node),
-				ASTNode::Tree(tree) => self.preprocess_tree(tree)
-			});
-		}
-
-		if self.parser.reserve.contains_key("preprocess") {
-			self.tree = base;
-			return self.preprocess();
-		}
-
-		base
+	/// Creates a preprocessor out of a path and given store of values.
+	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> std::io::Result<Preprocessor> where P: AsRef<std::path::Path> {
+		Ok(Preprocessor {
+			tokens: Lexer::from_path(path)?.tokenize(),
+			store
+		})
 	}
 
-	fn preprocess_directive(&mut self, dir: Directive) -> ASTNode<Directive> {
-		match dir {
-			Directive::Gabc(music, is_english, style) => {
-				let lang = if is_english { "english" } else { "latin" };
-				ASTNode::Node(Directive::RawGabc(format!("initial-style: {};\ncentering-scheme: {};\n%%\n{}", style, lang, music)))
-			},
-
-			/*Directive::Import(path, mut parser) => {
-				let ext = match path.as_path().extension() {
-					Some(ext) => ext,
-					None => return ASTNode::Node(Directive::Error(format!("Unable to resolve \"{}\" because of the missing extension.", path.display())))
-				};
-
-				if ext == "gabc" {
-					let music = Parser::read_lines(path.clone());
-					match music {
-						Ok(music) => ASTNode::Node(Directive::RawGabc(music.join("\n"))),
-						Err(why) => ASTNode::Node(Directive::Error(format!("Unable to load score \"{}\": {}", path.display(), why)))
-					}
-				} else {
-					match parser.parse_file(path) {
-						Ok(tree) => self.preprocess_tree(tree),
-						Err(why) => ASTNode::Node(Directive::Error(why))
-					}
-				}
-			},*/
-			_ => ASTNode::Node(dir)
-		}
+	/// Provides an iterator on the tokens in the preprocessor.
+	pub fn iter(&self) -> Box<dyn ExactSizeIterator<Item = Token>> {
+		Box::new(self.tokens.clone().into_iter())
 	}
 
-	fn preprocess_tree(&mut self, tree: ASTree<Directive>) -> ASTNode<Directive> {
-		match tree.root {
-			Some(Directive::Hymn) => {
-				#[derive(Debug)]
-				struct Hymn {
-					clef: String,
-					melody: Vec<Vec<String>>, // Vec<Melody>
-					verses: Vec<Vec<Vec<String>>>, // Vec<Vec<Verse>> (Vec<Vec> corresponds to Melody)
-					amen: (String, String)
-				}
+	/// Helper method to get an integer representation of `tokens` to check when the Vec has been modified.
+	fn calculate_hash(&self) -> u64 {
+		use std::hash::{Hash, Hasher, DefaultHasher};
 
-				let mut hymn = Hymn {
-					clef: "".to_string(),
-					verses: Vec::new(),
-					melody: Vec::new(),
-					amen: ("".to_string(), "".to_string())
-				};
-
-				let mut iter = tree.children().into_iter();
-
-				while let Some(node) = iter.next() {
-					if let ASTNode::Node(directive) = node {
-						use Directive::*;
-						match directive {
-							Clef(clef) => hymn.clef = clef,
-
-							Melody(notes) => {
-								hymn.melody.push(notes);
-								hymn.verses.push(Vec::new());
-							},
-
-							Verse(syllables) => {
-								match hymn.verses.last_mut() {
-									Some(verses) => {
-										verses.push(syllables);
-									},
-									None => return ASTNode::Node(Directive::Error(format!("No melody was declared but tried to provide verse.")))
-								}
-							},
-
-							Amen(n1, n2) => {
-								hymn.amen = (n1, n2);
-							}
-
-							_ => return ASTNode::Node(Directive::Error(format!("Unsupported directive {:?} in hymn compilation", directive)))
-						}
-					} else {
-						return ASTNode::Node(Directive::Error(format!("Unsupported node {:?} in hymn compilation", node)))
-					}
-				}
-
-				if hymn.melody.len() == 0 || hymn.verses.len() == 0 {
-					return ASTNode::Node(Directive::Error(format!("Hymn has no melody or verses.")));
-				}
-
-				let mut base = ASTree::<Directive>::from_root(Directive::MakeHymn(hymn.clef, hymn.amen, hymn.melody.clone()));
-
-				let standard_len = hymn.verses[0].len();
-				for (idx, melody) in hymn.melody.iter().enumerate() {
-					if hymn.verses[idx].len() == 0 {
-						return ASTNode::Node(Directive::Error(format!("Melody has no corresponding verses for stanza {}", idx + 1)))
-					}
-
-					for verse in hymn.verses[idx].iter() {
-						if verse.len() != melody.len() {
-							return ASTNode::Node(Directive::Error(format!("Melody and verse have differing syllable counts for stanza {} on verse {:?}", idx + 1, verse)));
-						}
-					}
-
-					if hymn.verses[idx].len() != standard_len {
-						return ASTNode::Node(Directive::Error(format!("Stanza {} has differing number of verses from first stanza.", idx + 1)));
-					}
-				}
-
-				let stanza_num = hymn.verses[0].len();
-				let verse_num = hymn.melody.len();
-
-				let mut collection = Vec::new();
-
-				for stanza_idx in 0..stanza_num {
-					for verse_idx in 0..verse_num {
-						let v = &hymn.verses[verse_idx];
-						let w = &v[stanza_idx];
-						collection.push(w.clone());
-					}
-
-					base.add_node(ASTNode::Node(Directive::MakeVerse(collection)));
-					collection = Vec::new();
-				}
-
-				ASTNode::Tree(base)
-			},
-
-			_ => {
-				let mut newtree = ASTree::<Directive>::new();
-				for node in tree.children() {
-					newtree.add_node(match node {
-						ASTNode::Node(directive) => self.preprocess_directive(directive),
-						ASTNode::Tree(tree) => self.preprocess_tree(tree)
-					});
-				}
-				
-				newtree.root = tree.root;
-				ASTNode::Tree(newtree)
-			}
-		}
-	}
-}
-
-impl Parser {
-
-	fn parse_line(&mut self, line: String) -> Result<ASTNode<Directive>, String> {
-		self.reserve.insert("preprocess", "true".into());
-
-		let mut args = Vec::new();
-		if let Some(captures) = WHOLE_RE.captures(&line) {
-
-	        // Find all arguments
-	        for arg in COMMAND_RE.find_iter(&line) {
-	            args.push((line[arg.start() + 1..arg.end() - 1]).to_string().clone());
-	        }
-	    }
-
-		if let Some(captures) = WHOLE_RE.captures(&line) {
-			let command = captures.get(1).map_or("", |m| m.as_str());
-
-			match command {
-				"begin-hymn" => {
-					let mut hymnbox = ASTree::<Directive>::from_root(Directive::Hymn);
-					loop {
-						let next = self.parse_next_line()?;
-						if let ASTNode::Node(Directive::End) = next {
-							break;
-						} else {
-							hymnbox.add_node(next);
-						}
-					}
-
-					Ok(ASTNode::Tree(hymnbox))
-				},
-
-				"end-hymn" | "end-box" | "end" => Ok(ASTNode::Node(Directive::End)),
-
-				"clef" => Ok(ASTNode::Node(Directive::Clef(args.get_err(0)?.clone()))),
-				"melody" => Ok(ASTNode::Node(Directive::Melody(args.clone()))),
-				"verse" => Ok(ASTNode::Node(Directive::Verse(args.clone()))),
-				"amen" => Ok(ASTNode::Node(Directive::Amen(args.get_err(0)?.clone(), args.get_err(1)?.clone()))),
-
-				"begin-box" => {
-					let mut boxbase = ASTree::<Directive>::from_root(Directive::Box);
-
-					loop {
-						let next = self.parse_next_line()?;
-						if let ASTNode::Node(Directive::End) = next {
-							break;
-						} else {
-							boxbase.add_node(next);
-						}
-					}
-
-					Ok(ASTNode::Tree(boxbase))
-				},
-				"no-gloria" => {
-					self.reserve.insert("no-gloria", "enabled".to_string());
-					Ok(ASTNode::Node(Directive::Empty))
-				},
-				"gloria" => {
-					if self.reserve.contains_key("no-gloria") {
-						self.reserve.remove("no-gloria");
-						return Ok(ASTNode::Node(Directive::Empty));
-					}
-
-					let tone = if args.len() == 0 {
-						match self.reserve.get("previous-tone") {
-							Some(path) => path,
-							None => return Err(format!("No tone was previously declared."))
-						}
-					} else {
-						&args[0]
-					};
-
-					Ok(ASTNode::Node(Directive::Import(PathBuf::from(format!("commons/gloria/{}.lit", resolve_tone(tone))), self.clone())))
-				},
-				"antiphon" => {
-					let mut antiphon_path: PathBuf = ["antiphon", &args.get_err(0)?.clone()].iter().collect();
-					antiphon_path.set_extension("gabc");
-					self.reserve.insert("previous-antiphon", antiphon_path.display().to_string());
-
-					let mut base = ASTree::<Directive>::new();
-					base.add_node(ASTNode::Node(Directive::Title("Antiphon".to_string())));
-					base.add_node(ASTNode::Node(Directive::Import(antiphon_path, self.clone())));
-					Ok(ASTNode::Tree(base))
-				},
-				"repeat-antiphon" => {
-					match self.reserve.get("previous-antiphon") {
-						Some(path) => Ok(ASTNode::Node(Directive::Import(path.into(), self.clone()))),
-						None => Err("No antiphon was previously declared".to_string())
-					}
-				},
-				"repeat-tone" => {
-					match self.reserve.get("previous-tone") {
-						Some(tone) => {
-							let mut tone_path: PathBuf = ["tone", &tone].iter().collect();
-							tone_path.set_extension("gabc");
-							Ok(ASTNode::Node(Directive::Import(tone_path, self.clone())))
-						},
-						None => Err("No tone was previously declared".to_string())
-					}
-				},
-				"tone" => {
-					let mut tone_path: PathBuf = ["tone", &args.get_err(0)?.clone()].iter().collect();
-					tone_path.set_extension("gabc");
-					self.reserve.insert("previous-tone", args.get_err(0)?.clone());
-					Ok(ASTNode::Node(Directive::Import(tone_path, self.clone())))
-				},
-				"psalm" => {
-					let tone = match self.reserve.get("previous-tone") {
-						Some(tone) => resolve_tone(tone),
-						None => return Err(format!("No tone was previously declared."))
-					};
-					let mut psalm_path: PathBuf = ["psalter", &args.get_err(0)?.clone(), &tone].iter().collect();
-					psalm_path.set_extension("lit");
-					let mut vec: Vec<Directive> = Vec::new();
-					if args[0].parse::<u8>().is_ok() {
-						vec.push(Directive::Title(format!("Psalm {}", args.get_err(0)?.clone())));
-					}
-					vec.push(Directive::Import(psalm_path, self.clone()));
-					
-					let mut base = ASTree::<Directive>::new();
-					for i in vec {
-						base.add_node(ASTNode::Node(i));
-					}
-
-					Ok(ASTNode::Tree(base))
-				},
-				"text" => Ok(ASTNode::Node(Directive::Text(args.get_err(0)?.clone()))),
-				"heading" => Ok(ASTNode::Node(Directive::Heading(args.get_err(0)?.clone(), 2))),
-				"subheading" => Ok(ASTNode::Node(Directive::Heading(args.get_err(0)?.clone(), 3))),
-				"instruction" => Ok(ASTNode::Node(Directive::Instruction(args.get_err(0)?.clone()))),
-				"gabc" => Ok(ASTNode::Node(Directive::Gabc(args.get_err(0)?.clone(), args.len() < 2 || args[1] == "english", if args.len() < 3 { "0".to_string() } else { args[2].clone() }))),
-				
-				"include" => Ok(ASTNode::Node(Directive::Import(self.resolve_field(args.get_err(0)?.clone())?, self.clone()))),
-
-				"import" => Ok(ASTNode::Node(Directive::Import(args.get_err(0)?.clone().into(), self.clone()))),
-
-				"title" => Ok(ASTNode::Node(Directive::Title(args.get_err(0)?.clone()))),
-				_ => Err(format!("Unknown command \"{}\"", command))
-			}
-		} else {
-			Err(format!("Malformed command: {}", line))
-		}
+	    let mut hasher = DefaultHasher::new();
+	    self.tokens.hash(&mut hasher);
+	    hasher.finish()
 	}
 
-	fn resolve_field(&self, field: String) -> Result<PathBuf, String> {
-		match self.propers.get(field.as_str()) {
-			Some(path) => Ok(path.to_path_buf()),
-			None => Err(format!("Field \"{}\" was not set.", field))
-		}
-	}
-
-	fn parse_next_line(&mut self) -> Result<ASTNode<Directive>, String> {
-		let line = match &self.lines {
-			Some(lines) => {
-				Rc::clone(&lines).borrow_mut().next()
-			},
-
-			None => panic!("Parser.lines must be set by now")
-		}.unwrap();
-
-		let line = line.to_owned();
-		if !line.starts_with('#') {
-			Ok(ASTNode::Node(Directive::Text(line)))
-		} else {
-			self.parse_line(line)
-		}
-	}
-
-	fn parse_file(&mut self, path: PathBuf) -> Result<ASTree<Directive>, String> {
-		let path = path.as_path();
-
-		let mut base = ASTree::<Directive>::new();
-		let lines = match Parser::read_lines(path) {
-			Ok(lines) => lines,
-			Err(why) => return Err(format!("Could not read \"{}\": {}", path.display(), why))
-		};
-
-		let iter = lines.clone().into_iter(); // Create an iterator over the lines
-		self.lines = Some(Rc::new(RefCell::new(iter)));
-
+	/// Executes passes until no more changes have occured.
+	pub fn preprocess(&mut self) {
+		let mut hash = self.calculate_hash();
 		loop {
-			let tree = match self.parse_next_line() {
-				Ok(tree) => tree,
-				Err(why) => ASTNode::Node(Directive::Error(why))
-			};
+			self.pass();
 
-			base.add_node(tree);
+			let new_hash = self.calculate_hash();
+			if new_hash == hash {
+				break;
+			} else {
+				hash = new_hash;
+			}
+		}
+	}
 
-			let cont = match &self.lines {
-				Some(lines) => {
-					let rc = Rc::clone(&lines);
-					let iter = rc.borrow();
-					iter.len() > 0
+	/// Execute one pass of the preprocessor.
+	fn pass(&mut self) {
+		let mut insertions: Vec<(usize, Vec<Token>)> = Vec::new();
+
+		self.tokens = self.tokens.clone().into_iter().enumerate().map(|(idx, token)| {
+			use Token::*;
+			use std::path::PathBuf;
+
+			match token {
+				Antiphon(name) => {
+					self.store.insert("internal:last-antiphon".into(), name.to_owned());
+					let mut new_tokens = Vec::<Token>::new();
+					new_tokens.push(Token::Title("Antiphon".into()));
+					new_tokens.push(Token::Import(format!("antiphon/{}.gabc", name)));
+					new_tokens.push(Token::Define("internal:last-antiphon".into(), name.to_owned()));
+					insertions.push((idx, new_tokens));
+					Token::Empty
 				},
-				None => panic!("Parser.lines must be set by now.")
-			};
 
-			if !cont { break; }
+				Define(key, value) => {
+					self.store.insert(key.clone(), value.clone());
+					Token::Define(key.clone(), value.clone())
+				},
+
+				Gabc(gabc) => Token::RawGabc(format!("initial-style: 0;\ncentering-scheme: english;\n%%\n{}", gabc)),
+
+				 // if the tone is set, will resolve to Gloria(Some(_)), but if not will remain Gloria(None)
+				Gloria(None) => Token::Gloria(self.store.get("internal:last-tone").cloned()),
+
+				Gloria(Some(tone)) => Token::Import(format!("commons/gloria/{}.lit", resolve_tone(&tone))),
+
+				Import(path) => {
+					let path = PathBuf::from(path);
+
+					let ext = match path.extension() {
+						Some(ext) => ext,
+						None => return Token::Error(format!("Failed to resolve import {:?}: missing extension", path))
+					};
+
+					if ext == "lit" {
+						// we cannot directly add new tokens from within this mapping, so we add the new tokens to an insertations table
+						let new_tokens = match Lexer::from_path(&path) {
+							Ok(mut lexer) => lexer.tokenize(),
+							Err(why) => return Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
+						};
+
+						insertions.push((idx, new_tokens));
+						return Token::Empty;
+					} else if ext == "gabc" {
+						use std::io::{BufReader, Read};
+						use std::fs::File;
+
+						let file = match File::open(path.clone()) {
+							Ok(file) => file,
+							Err(why) => return Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
+						};
+
+					    let mut reader = BufReader::new(file);
+					    let mut gabc = String::new();
+					    match reader.read_to_string(&mut gabc) {
+					    	Ok(_) => {},
+					    	Err(why) => return Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
+					    }
+
+						return Token::RawGabc(gabc);
+					} else {
+						return Token::Error(format!("Failed to resolve import {:?}: unknown extension {:?}", path, ext));
+					}
+				},
+
+				IfInclude(ref key) | Include(ref key) => {
+			        match self.store.get(key) {
+			            Some(val) => Token::Import(val.to_owned()),
+			            None => match token {
+			            	// we will only reserve to Empty or Error at the parsing stage (once all tokens have been expanded)
+			                Token::IfInclude(_) => Token::IfInclude(key.to_owned()),
+			                Token::Include(_) => Token::Include(key.to_owned()),
+			                _ => unreachable!(),
+			            }
+			        }
+			    },
+
+			    Tone(tone) => {
+			    	self.store.insert("internal:last-tone".into(), tone.to_owned());
+			    	insertions.push((idx, vec![Token::Define("internal:last-tone".into(), tone.to_owned()), Token::Import(format!("tone/{}.gabc", tone))]));
+			    	Token::Empty
+			    },
+
+			    Psalm(iden) => {
+			    	let mut new_tokens: Vec<Token> = Vec::new();
+
+			    	if let Some(tone) = self.store.get("internal:last-tone") {
+				    	if iden.parse::<u8>().is_ok() {
+							new_tokens.push(Token::Title(format!("Psalm {}", iden.clone())));
+						}
+
+						let pattern = resolve_tone(tone);
+						new_tokens.push(Token::Import(format!("psalter/{}/{}.lit", iden, pattern)));
+
+						insertions.push((idx, new_tokens));
+						Token::Empty
+					} else {
+						Token::Psalm(iden)
+					}
+			    },
+
+			    RepeatAntiphon => {
+			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
+			    		use std::io::{BufReader, Read};
+						use std::fs::File;
+
+						let file = match File::open(format!("antiphon/{}.gabc", antiphon)) {
+							Ok(file) => file,
+							Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
+						};
+
+					    let mut reader = BufReader::new(file);
+					    let mut gabc = String::new();
+					    match reader.read_to_string(&mut gabc) {
+					    	Ok(_) => {},
+					    	Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
+					    }
+
+					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
+
+						return Token::Gabc(gabc[1].to_string().replace("<sp>*</sp>()", ""));
+			    	} else {
+			    		Token::RepeatAntiphon
+			    	}
+			    }
+
+			    RepeatTone => {
+			    	if let Some(tone) = self.store.get("internal:last-tone") {
+			    		Token::Tone(tone.to_owned())
+			    	} else {
+			    		Token::RepeatTone
+			    	}
+			    }
+
+				_ => token
+			}
+		}).collect::<Vec<_>>();
+
+		// we can now add any new tokens which occurred
+		// we go in reverse so as not to disturb the indices
+		for (idx, new_tokens) in insertions.into_iter().rev() {
+		    self.tokens.splice(idx..idx+1, new_tokens);
 		}
-
-		Ok(base)
 	}
-
-	fn read_lines<P>(filename: P) -> io::Result<Vec<String>> where P: AsRef<Path>, {
-	    let file = File::open(filename)?;
-	    let lines = io::BufReader::new(file).lines();
-	    let mut res = Vec::new();
-	    for line in lines.flatten() {
-	    	let line = line.trim();
-	    	if line.is_empty() { continue }
-	    	res.push(line.to_string());
-	    }
-
-	    Ok(res)
-	}
-
-	fn parse_field(&mut self, query: &'static str) -> Result<ASTree<Directive>, String> {
-		let field = match self.propers.get(query) {
-			Some(val) => val,
-			None => return Err(format!("Field \"{}\" was not set.", query))
-		};
-
-		match self.parse_file(field.to_path_buf()) {
-			Ok(tree) => Ok(tree),
-			Err(why) => Err(format!("Could not parse field \"{}\": {}", query, why))
-		}
-	}
-}
-
-pub fn parse_hour(propers: HashMap<&'static str, PathBuf>) -> ASTree<Directive> {
-	let mut base = ASTree::<Directive>::new();
-
-	let mut parser = Parser {
-		propers,
-		reserve: HashMap::new(),
-		lines: None
-	};
-
-	base.add_node(match parser.parse_field("order") {
-		Ok(tree) => ASTNode::Tree(tree),
-		Err(why) => ASTNode::Node(Directive::Error(why))
-	});
-
-	let mut preprocess = Preprocessor {
-		parser,
-		tree: base,
-	};
-
-	preprocess.preprocess()
 }

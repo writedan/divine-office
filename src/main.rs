@@ -4,6 +4,7 @@ mod liturgy;
 mod parser;
 mod compiler;
 mod router;
+mod lexer;
 
 use clap::Parser;
 
@@ -11,7 +12,7 @@ use clap::Parser;
 struct Args {
     // IP address and port to bind server to, e.g. localhost:80
     #[arg(short, long)]
-    ip_port: String,
+    bind_to: String,
 }
 
 fn main() {
@@ -19,7 +20,7 @@ fn main() {
 
     let args = Args::parse();
 
-    rouille::start_server(args.ip_port, move |request| {
+    rouille::start_server(args.bind_to, move |request| {
         match request.url().as_str() {
             "/liturgy.css" => router::static_file("public/liturgy.css", "text/css"),
             "/suncalc.js" => router::static_file("public/suncalc.js", "application/javascript"),

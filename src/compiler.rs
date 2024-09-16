@@ -69,33 +69,6 @@ fn compile_tree(tree: ASTree<Directive>) -> Container {
 			cont
 		},
 
-		Directive::MakeHymn(clef, amen, melody) => {
-			let mut buffer = format!("initial-style: 1;\nannotation: Hymn.;\ncentering-scheme: english;\n%%\n({})", clef);
-			for (stanza, node) in tree.children().into_iter().enumerate() {
-				if let ASTNode::Node(Directive::MakeVerse(verses)) = node {
-					for (vidx, verse) in verses.iter().enumerate() {
-						if vidx == 0 && stanza > 0 {
-							buffer = format!("{} (::) {}. ", buffer, stanza + 1);
-						}
-
-						for (idx, syllable) in verse.into_iter().enumerate() {
-							let continuous = syllable.ends_with('-');
-							let syllable = if continuous {syllable[0..syllable.len() - 1].to_string()} else {format!("{} ", syllable)};
-							buffer = format!("{}{}({})", buffer, syllable, melody[vidx][idx]);
-						}
-
-						if vidx == verses.len() - 1 { continue; }
-
-						buffer = format!("{} {}({})", buffer, if stanza == 0 && vidx == 0 {"<sp>*</sp>"} else {""}, if vidx % 2 == 0 { "," } else { ";" });
-					}
-				}
-			}
-
-			buffer = format!("{} (::) A({})men.({})", buffer, amen.0, amen.1);
-
-			compile_node(Directive::RawGabc(buffer))
-		},
-
 		_ => compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root.unwrap())))
 	}
 }
@@ -130,6 +103,33 @@ fn compile_node(node: Directive) -> Container {
 
 		Directive::Heading(text, level) => Container::new(ContainerType::Div).with_header(level, text),
 
+		Directive::Hymn(hymn) => {
+			let mut buffer = format!("initial-style: 1;\nannotation: Hymn.;\ncentering-scheme: english;\n%%\n({})", hymn.clef);
+			for stanza_idx in 0..(hymn.verses.len() / hymn.melody.len()) {
+				for verse_idx in 0..hymn.melody.len() {
+					let verse = &hymn.verses[hymn.verse_idx(stanza_idx, verse_idx)];
+
+					if verse_idx == 0 && stanza_idx > 0 {
+						buffer = format!("{} (::) {}. ", buffer, stanza_idx + 1);
+					}
+
+					for (idx, syllable) in verse.into_iter().enumerate() {
+						let continuous = syllable.ends_with('-');
+						let syllable = if continuous {syllable[0..syllable.len() - 1].to_string()} else {format!("{} ", syllable)};
+						buffer = format!("{}{}({})", buffer, syllable, hymn.melody[verse_idx][idx]);
+					}
+
+					if verse_idx == hymn.melody.len() - 1 { continue; }
+
+					buffer = format!("{} {}({})", buffer, if stanza_idx == 0 && verse_idx == 0 {"<sp>*</sp>"} else {""}, if verse_idx % 2  == 0 { "," } else { ";" }); 
+				}
+			}
+
+			buffer = format!("{} (::) A({})men.({})", buffer, hymn.amen.0, hymn.amen.1);
+
+			compile_node(Directive::RawGabc(buffer))
+		},
+
 		Directive::Instruction(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "instruction")]).with_paragraph(text),
 
 		Directive::RawGabc(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "gabc-score")]).with_raw(text),
@@ -138,6 +138,8 @@ fn compile_node(node: Directive) -> Container {
 
 		Directive::Error(why) =>
 			Container::new(ContainerType::Div).with_attributes(vec![("class", "error")]).with_paragraph(format!("Error: {}", why)),
+
+		Directive::Empty => Container::new(ContainerType::Div).with_attributes(vec![("class", "empty")]),
 
 		_ => compile_node(Directive::Error(format!("Unsupported node {:?}", node)))
 	}

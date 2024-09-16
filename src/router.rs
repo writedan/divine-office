@@ -125,7 +125,7 @@ fn compile_hour(propers: HashMap<&'static str, PathBuf>) ->Response {
     use build_html::Html;
     use std::fs;
 
-    let elements = compiler::compile_ast(parser::parse_hour(propers));
+    let elements = compiler::compile_ast(parser::from_hour(propers));
     let mut buf = String::new();
     for ele in elements {
         buf.push_str(&ele.to_html_string());
