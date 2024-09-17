@@ -201,11 +201,15 @@ impl Lexer {
 	}
 
 	/// Initializes a `Lexer` from a provided path to a file.
-	pub fn from_path<P>(path: P) -> std::io::Result<Lexer> where P: AsRef<Path> {
+	pub fn from_path<P>(path: P) -> std::io::Result<Lexer> where P: AsRef<Path> + std::fmt::Debug + Copy {
 		use std::io::{BufReader, BufRead};
 		use std::fs::File;
 
-		let file = File::open(path)?;
+		let file = match File::open(path) {
+			Ok(file) => file,
+			Err(why) => return Err(std::io::Error::new(std::io::ErrorKind::Other, format!("Failed to open {:?}: {}", path, why)))
+		};
+
 	    let lines = BufReader::new(file).lines();
 	    let mut res = Vec::new();
 	    for line in lines.flatten() {

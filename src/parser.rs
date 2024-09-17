@@ -224,7 +224,7 @@ struct Preprocessor {
 
 impl Preprocessor {
 	/// Creates a preprocessor out of a path and given store of values.
-	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> std::io::Result<Preprocessor> where P: AsRef<std::path::Path> {
+	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> std::io::Result<Preprocessor> where P: AsRef<std::path::Path> + std::fmt::Debug + Copy {
 		Ok(Preprocessor {
 			tokens: Lexer::from_path(path)?.tokenize(),
 			store
