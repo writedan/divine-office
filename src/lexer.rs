@@ -113,21 +113,6 @@ pub struct Lexer {
 /// newtype used for ease of writing
 type LR<T> = Result<T, String>;
 
-trait ErrGet<T> {
-	//! A help trait for vectors such that we can easily convert missing values into error tokens
-	/// Gets a value from a vector with error checking, and if not present, returns Err value
-	fn get_err(&self, idx: usize) -> Result<&T, String>;
-}
-
-impl<T> ErrGet<T> for Vec<T> {
-	fn get_err(&self, idx: usize) -> Result<&T, String> {
-		match self.get(idx) {
-			Some(r) => Ok(r),
-			None => Err(format!("attempted to get vec[{}] but len={}", idx, self.len()))
-		}
-	}
-}
-
 impl Lexer {
 	/// Consumes the next line and transforms it into a Token. We can guarantee the result will be a Token since any errors which occur at this point should be exposed to the user.
 	fn next_token(&mut self) -> Token {
@@ -156,62 +141,57 @@ impl Lexer {
 	            args.push((line[arg.start() + 1..arg.end() - 1]).to_string().clone());
 	        }
 
-			match command {
-				"amen" => Ok(Token::Amen(args.get_err(0)?.clone(), args.get_err(1)?.clone())),
+			match (command, args.len()) {
+				("amen", 2) => Ok(Token::Amen(args[0].to_owned(), args[1].to_owned())),
 
-				"antiphon" => Ok(Token::Antiphon(args.get_err(0)?.clone())),
+				("antiphon", 1) => Ok(Token::Antiphon(args[0].to_owned())),
 
-				"begin-box" => Ok(Token::BeginBox),
+				("begin-box", 0) => Ok(Token::BeginBox),
 
-				"begin-hymn" => Ok(Token::BeginHymn),
+				("begin-hymn", 0) => Ok(Token::BeginHymn),
 
-				"begin-resumable" => Ok(Token::BeginResumable(args.get_err(0)?.clone())),
+				("begin-resumable", 1) => Ok(Token::BeginResumable(args[0].to_owned())),
 
-				"clef" => Ok(Token::Clef(args.get_err(0)?.clone())),
+				("clef", 1) => Ok(Token::Clef(args[0].to_owned())),
 
-				"define" => Ok(Token::Define(args.get_err(0)?.clone(), args.get_err(1)?.clone())),
+				("define", 2) => Ok(Token::Define(args[0].to_owned(), args[1].to_owned())),
 
-				"end" | "end-box" | "end-hymn" => Ok(Token::End),
+				("end" | "end-box" | "end-hymn", 0) => Ok(Token::End),
 
-				"gabc" => Ok(Token::Gabc(args.get_err(0)?.clone())),
+				("gabc", 1) => Ok(Token::Gabc(args[0].to_owned())),
 
-				"gloria" => {
-					if args.len() == 0 {
-						Ok(Token::Gloria(None))
-					} else {
-						Ok(Token::Gloria(Some(args[0].clone())))
-					}
-				},
+				("gloria", 0) => Ok(Token::Gloria(None)),
+				("gloria", 1) => Ok(Token::Gloria(Some(args[0].to_owned()))),
 
-				"heading" => Ok(Token::Heading(args.get_err(0)?.clone(), 1)),
-				"subheading" => Ok(Token::Heading(args.get_err(0)?.clone(), 2)), // included here for ease of access
+				("heading", 1) => Ok(Token::Heading(args[0].to_owned(), 1)),
+				("subheading", 1) => Ok(Token::Heading(args[0].to_owned(), 2)), // included here for ease of access
 				// other headings could theoretically exist but do not at this time
 
-				"import" => Ok(Token::Import(args.get_err(0)?.clone())),
+				("import", 1) => Ok(Token::Import(args[0].to_owned())),
 
-				"include" => Ok(Token::Include(args.get_err(0)?.clone())),
+				("include", 1) => Ok(Token::Include(args[0].to_owned())),
 
-				"instruction" => Ok(Token::Instruction(args.get_err(0)?.clone())),
+				("instruction", 1) => Ok(Token::Instruction(args[0].to_owned())),
 
 				// text is not included here since it is the default
 
-				"title" => Ok(Token::Title(args.get_err(0)?.clone())),
+				("title", 1) => Ok(Token::Title(args[0].to_owned())),
 
-				"tone" => Ok(Token::Tone(args.get_err(0)?.clone())),
+				("tone", 2) => Ok(Token::Tone(args[0].to_owned())),
 
-				"melody" => Ok(Token::Melody(args.clone())),
+				("melody", _) => Ok(Token::Melody(args.clone())),
 
-				"no-gloria" => Ok(Token::NoGloria),
+				("no-gloria", 0) => Ok(Token::NoGloria),
 
-				"psalm" => Ok(Token::Psalm(args.get_err(0)?.clone())),
+				("psalm", 1) => Ok(Token::Psalm(args[0].to_owned())),
 
-				"resume" => Ok(Token::Resume(args.get_err(0)?.clone())),
+				("resume", 1) => Ok(Token::Resume(args[0].to_owned())),
 
-				"repeat-antiphon" => Ok(Token::RepeatAntiphon),
+				("repeat-antiphon", 0) => Ok(Token::RepeatAntiphon),
 
-				"repeat-tone" => Ok(Token::RepeatTone),
+				("repeat-tone", 0) => Ok(Token::RepeatTone),
 
-				"verse" => Ok(Token::Verse(args.clone())),
+				("verse", _) => Ok(Token::Verse(args.clone())),
 
 				_ => Err(format!("Unknown command \"{}\"", command))
 			}
