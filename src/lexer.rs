@@ -169,6 +169,8 @@ impl Lexer {
 
 				("import", 1) => Ok(Token::Import(args[0].to_owned())),
 
+				("if-include", 1) => Ok(Token::IfInclude(args[0].to_owned())),
+
 				("include", 1) => Ok(Token::Include(args[0].to_owned())),
 
 				("instruction", 1) => Ok(Token::Instruction(args[0].to_owned())),
