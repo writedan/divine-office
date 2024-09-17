@@ -44,134 +44,177 @@ pub enum Directive {
 	Title(String),
 }
 
-pub fn from_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> ASTree<Directive> {
-	let mut base = ASTree::<Directive>::new();
+pub struct Parser {
+	resumables: HashMap<String, ASTNode<Directive>>,
+	iter: Box<dyn ExactSizeIterator<Item = Token>>
+}
 
-	let mut store: HashMap<String, String> = HashMap::new();
-	for (key, val) in propers.iter() {
-		store.insert(key.to_string(), val.display().to_string());
-	}
+impl Parser {
+	pub fn from_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> ASTree<Directive> {
+		let mut base = ASTree::<Directive>::new();
 
-	let mut preprocessor = Preprocessor::from_path(match propers.get("order") {
-		Some(path) => path,
-		None => {
-			base.add_node(ASTNode::Node(Directive::Error(format!("Cannot parse from hour: field \"order\" was not set."))));
-			return base;
+		let mut store: HashMap<String, String> = HashMap::new();
+		for (key, val) in propers.iter() {
+			store.insert(key.to_string(), val.display().to_string());
 		}
-	}, store);
 
-	if let Ok(mut preprocessor) = preprocessor {
-		base.add_node(ASTNode::Tree(parse_tokens(preprocessor)));
-	} else if let Err(why) = preprocessor {
-		base.add_node(ASTNode::Node(Directive::Error(format!("Failed to initialize preprocessor: {}", why))));
-	}
+		let mut preprocessor = Preprocessor::from_path(match propers.get("order") {
+			Some(path) => path,
+			None => {
+				base.add_node(ASTNode::Node(Directive::Error(format!("Cannot parse from hour: field \"order\" was not set."))));
+				return base;
+			}
+		}, store);
 
-	base
-}
-
-fn parse_token(token: Token, iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive> {
-	use Token::*;
-	match token {
-		BeginBox => read_box(iter),
-		BeginHymn => read_hymn(iter),
-		Define(_, _) => ASTNode::Node(Directive::Empty), // definitions are left in the preprocessor to enable dynamic resolutions
-		Error(why) => ASTNode::Node(Directive::Error(why)),
-		Heading(text, level) => ASTNode::Node(Directive::Heading(text, level)),
-		IfInclude(key) => ASTNode::Node(Directive::Empty), // if-includes transform to nothing if their key is missing
-		Include(key) => ASTNode::Node(Directive::Error(format!("Field not set: {}", key))), // includes transform to an error if they key is missing
-		Instruction(text) => ASTNode::Node(Directive::Instruction(text)),
-		Text(text) => ASTNode::Node(Directive::Text(text)),
-		Title(text) => ASTNode::Node(Directive::Title(text)),
-		RawGabc(gabc) => ASTNode::Node(Directive::RawGabc(gabc)),
-		_ => ASTNode::Node(Directive::Error(format!("Unexpected token while parsing: {:?}", token)))
-	}
-}
-
-fn parse_tokens(mut preprocessor: Preprocessor) -> ASTree<Directive> {
-	preprocessor.preprocess();
-
-	let mut base = ASTree::<Directive>::new();
-	let mut iter: &mut dyn ExactSizeIterator<Item = Token> = &mut preprocessor.iter();
-	while iter.len() > 0 {
-		let token = iter.next().unwrap();
-		base.add_node(parse_token(token, iter));
-	}
-
-	base
-}
-
-fn read_box(iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive> {
-	use Token::*;
-
-	let mut base = ASTree::<Directive>::from_root(Directive::Box);
-	while iter.len() > 0 {
-		let token = iter.next().unwrap();
-		match token {
-			BeginBox => base.add_node(read_box(iter)),
-			End => return ASTNode::Tree(base),
-			_ => base.add_node(parse_token(token, iter))
+		if let Ok(mut preprocessor) = preprocessor {
+			preprocessor.preprocess();
+			let mut parser = Parser { resumables: HashMap::new(), iter: preprocessor.iter() };
+			base.add_node(ASTNode::Tree(parser.parse_tokens()));
+		} else if let Err(why) = preprocessor {
+			base.add_node(ASTNode::Node(Directive::Error(format!("Failed to initialize preprocessor: {}", why))));
 		}
+
+		base
 	}
 
-	ASTNode::Node(Directive::Error(format!("Box began without termination")))
-}
-
-fn read_hymn(iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive> {
-	let mut melody: Vec<Vec<String>> = Vec::new();
-	let mut verses: Vec<Vec<Vec<String>>> = Vec::new();
-	let mut clef = String::new();
-	let mut amen = (String::new(), String::new());
-
-	while iter.len() > 0 {
+	fn parse_token(&mut self, token: Token) -> ASTNode<Directive> {
 		use Token::*;
-		let token = iter.next().unwrap();
 		match token {
-			Amen(s1, s2) => amen = (s1, s2),
+			BeginBox => self.read_box(),
 
-			Clef(val) => clef = val,
+			BeginHymn => self.read_hymn(),
 
-			End => break,
-
-			Melody(syllales) => {
-				melody.push(syllales);
-				verses.push(Vec::new())
+			BeginResumable(key) => {
+				let tree = self.read_resumable();
+				self.resumables.insert(key, tree);
+				ASTNode::Node(Directive::Empty)
 			},
 
-			Verse(syllales) => {
-				match verses.last_mut() {
-					Some(vec) => vec.push(syllales),
-					None => return ASTNode::Node(Directive::Error(format!("No melody was declared but tried to provide verse.")))
-				}
-			},
+			Define(_, _) => ASTNode::Node(Directive::Empty), // definitions are left in the preprocessor to enable dynamic resolutions
 
-			_ => return ASTNode::Node(Directive::Error(format!("Illegal token while parsing hymn: {:?}", token)))
+			Error(why) => ASTNode::Node(Directive::Error(why)),
+
+			Heading(text, level) => ASTNode::Node(Directive::Heading(text, level)),
+
+			IfInclude(key) => ASTNode::Node(Directive::Empty), // if-includes transform to nothing if their key is missing
+
+			Include(key) => ASTNode::Node(Directive::Error(format!("Field not set: {}", key))), // includes transform to an error if they key is missing
+
+			Instruction(text) => ASTNode::Node(Directive::Instruction(text)),
+
+			Text(text) => ASTNode::Node(Directive::Text(text)),
+
+			Title(text) => ASTNode::Node(Directive::Title(text)),
+
+			RawGabc(gabc) => ASTNode::Node(Directive::RawGabc(gabc)),
+
+			Resume(key) => match self.resumables.remove(&key) {
+				Some(tree) => tree,
+				None => ASTNode::Node(Directive::Error(format!("No resumable defined with name \"{}\"", key)))
+			}
+
+			_ => ASTNode::Node(Directive::Error(format!("Unexpected token while parsing: {:?}", token)))
 		}
 	}
 
-	// verify the hymn is well-formed
-	if melody.len() == 0 || verses.len() == 0 {
-		return ASTNode::Node(Directive::Error(format!("Hymn has no melody or verses")))
-	}
-
-	let standard_len = verses[0].len();
-	for (idx, melody) in melody.iter().enumerate() {
-		if verses[idx].len() == 0 {
-			return ASTNode::Node(Directive::Error(format!("Melody has no corresponding verses for stanza {}", idx + 1)))
+	fn parse_tokens(&mut self) -> ASTree<Directive> {
+		let mut base = ASTree::<Directive>::new();
+		while self.iter.len() > 0 {
+			let token = self.iter.next().unwrap();
+			base.add_node(self.parse_token(token));
 		}
 
-		for verse in verses[idx].iter() {
-			if verse.len() != melody.len() {
-				return ASTNode::Node(Directive::Error(format!("Melody and verse have differing syllable counts for stanza {} on verse {:?}", idx + 1, verse)));
+		base
+	}
+
+	fn read_box(&mut self) -> ASTNode<Directive> {
+		use Token::*;
+
+		let mut base = ASTree::<Directive>::from_root(Directive::Box);
+		while self.iter.len() > 0 {
+			let token = self.iter.next().unwrap();
+			match token {
+				BeginBox => base.add_node(self.read_box()),
+				End => return ASTNode::Tree(base),
+				_ => base.add_node(self.parse_token(token))
 			}
 		}
 
-		if verses[idx].len() != standard_len {
-			return ASTNode::Node(Directive::Error(format!("Stanza {} has differing number of verses from first stanza.", idx + 1)));
-		}
+		ASTNode::Node(Directive::Error(format!("Box began without termination")))
 	}
 
-	// verses are flattened one layer since they are initially grouped by stanza
-	ASTNode::Node(Directive::Hymn(Hymn { melody, verses: verses.into_iter().flatten().collect::<Vec<_>>(), clef, amen }))
+	fn read_resumable(&mut self) -> ASTNode<Directive> {
+		use Token::*;
+
+		let mut base = ASTree::<Directive>::new();
+		while self.iter.len() > 0 {
+			let token = self.iter.next().unwrap();
+			match token {
+				End => return ASTNode::Tree(base),
+				_ => base.add_node(self.parse_token(token))
+			}
+		}
+
+		ASTNode::Node(Directive::Error(format!("Box began without termination")))
+	}
+
+	fn read_hymn(&mut self) -> ASTNode<Directive> {
+		let mut melody: Vec<Vec<String>> = Vec::new();
+		let mut verses: Vec<Vec<Vec<String>>> = Vec::new();
+		let mut clef = String::new();
+		let mut amen = (String::new(), String::new());
+
+		while self.iter.len() > 0 {
+			use Token::*;
+			let token = self.iter.next().unwrap();
+			match token {
+				Amen(s1, s2) => amen = (s1, s2),
+
+				Clef(val) => clef = val,
+
+				End => break,
+
+				Melody(syllales) => {
+					melody.push(syllales);
+					verses.push(Vec::new())
+				},
+
+				Verse(syllales) => {
+					match verses.last_mut() {
+						Some(vec) => vec.push(syllales),
+						None => return ASTNode::Node(Directive::Error(format!("No melody was declared but tried to provide verse.")))
+					}
+				},
+
+				_ => return ASTNode::Node(Directive::Error(format!("Illegal token while parsing hymn: {:?}", token)))
+			}
+		}
+
+		// verify the hymn is well-formed
+		if melody.len() == 0 || verses.len() == 0 {
+			return ASTNode::Node(Directive::Error(format!("Hymn has no melody or verses")))
+		}
+
+		let standard_len = verses[0].len();
+		for (idx, melody) in melody.iter().enumerate() {
+			if verses[idx].len() == 0 {
+				return ASTNode::Node(Directive::Error(format!("Melody has no corresponding verses for stanza {}", idx + 1)))
+			}
+
+			for verse in verses[idx].iter() {
+				if verse.len() != melody.len() {
+					return ASTNode::Node(Directive::Error(format!("Melody and verse have differing syllable counts for stanza {} on verse {:?}", idx + 1, verse)));
+				}
+			}
+
+			if verses[idx].len() != standard_len {
+				return ASTNode::Node(Directive::Error(format!("Stanza {} has differing number of verses from first stanza.", idx + 1)));
+			}
+		}
+
+		// verses are flattened one layer since they are initially grouped by stanza
+		ASTNode::Node(Directive::Hymn(Hymn { melody, verses: verses.into_iter().flatten().collect::<Vec<_>>(), clef, amen }))
+	}
 }
 
 /// A helper method to transform tones to their stress-patterns.

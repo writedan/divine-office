@@ -66,6 +66,15 @@ fn compile_tree(tree: ASTree<Directive>) -> Container {
 			cont
 		},
 
+		None => {
+			let mut cont = Container::new(ContainerType::Div);
+			for node in tree.children() {
+				cont.add_container(compile_dispatch(node));
+			}
+
+			cont
+		},
+
 		_ => compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root)))
 	}
 }
