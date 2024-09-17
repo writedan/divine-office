@@ -1,6 +1,6 @@
 use std::clone::Clone;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct ASTree<T: Clone> {
 	pub root: Option<T>,
 	pub children: Vec<ASTNode<T>>
@@ -53,4 +53,26 @@ impl<T: Clone> ASTree<T> {
 			children: Vec::new()
 		}
 	}
+}
+
+impl<T: std::fmt::Debug + Clone> std::fmt::Debug for ASTree<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        fn fmt_tree<T: std::fmt::Debug + Clone>(tree: &ASTree<T>, f: &mut std::fmt::Formatter<'_>, depth: usize) -> std::fmt::Result {
+            let indent = "  ".repeat(depth * 2);
+
+            for child in &tree.children {
+                match child {
+                    ASTNode::Node(value) => writeln!(f, "{}{:?}", indent, value)?,
+                    ASTNode::Tree(subtree) => {
+                    	writeln!(f, "{}{:?}", indent, subtree.root)?;
+                        fmt_tree(subtree, f, depth + 1)?;
+                    }
+                }
+            }
+
+            Ok(())
+        }
+
+        fmt_tree(self, f, 0)
+    }
 }
