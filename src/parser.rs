@@ -108,12 +108,12 @@ fn read_box(iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive
 		let token = iter.next().unwrap();
 		match token {
 			BeginBox => base.add_node(read_box(iter)),
-			End => break,
+			End => return ASTNode::Tree(base),
 			_ => base.add_node(parse_token(token, iter))
 		}
 	}
 
-	ASTNode::Tree(base)
+	ASTNode::Node(Directive::Error(format!("Box began without termination")))
 }
 
 fn read_hymn(iter: &mut dyn ExactSizeIterator<Item = Token>) -> ASTNode<Directive> {

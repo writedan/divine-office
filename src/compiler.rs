@@ -48,28 +48,25 @@ pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Container> {
 	res
 }
 
-fn compile_dispatch(node: ASTNode<Directive>) -> Vec<Container> {
+fn compile_dispatch(node: ASTNode<Directive>) -> Container {
 	match node {
-		ASTNode::Node(directive) => vec![compile_node(directive)],
-		ASTNode::Tree(tree) => compile_ast(tree)
+		ASTNode::Node(directive) => compile_node(directive),
+		ASTNode::Tree(tree) => compile_tree(tree)
 	}
 }
 
 fn compile_tree(tree: ASTree<Directive>) -> Container {
-	match tree.root.clone().unwrap() {
-		Directive::Box => {
+	match tree.root {
+		Some(Directive::Box) => {
 			let mut cont = Container::new(ContainerType::Div).with_attributes(vec![("class", "boxed")]);
 			for node in tree.children() {
-				let conts = compile_dispatch(node);
-				for c in conts {
-					cont.add_container(c);
-				}
+				cont.add_container(compile_dispatch(node));
 			}
 
 			cont
 		},
 
-		_ => compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root.unwrap())))
+		_ => compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root)))
 	}
 }
 
@@ -139,7 +136,7 @@ fn compile_node(node: Directive) -> Container {
 		Directive::Error(why) =>
 			Container::new(ContainerType::Div).with_attributes(vec![("class", "error")]).with_paragraph(format!("Error: {}", why)),
 
-		Directive::Empty => Container::new(ContainerType::Div).with_attributes(vec![("class", "empty")]),
+		Directive::Empty => Container::new(ContainerType::Div).with_attributes(vec![("class", "empty")]).with_paragraph("empty"),
 
 		_ => compile_node(Directive::Error(format!("Unsupported node {:?}", node)))
 	}
