@@ -124,15 +124,12 @@ impl Lexer {
 		if !line.starts_with('#') {
 			Token::Text(line)
 		} else {
-			match self.parse_token(&line) {
-				Ok(token) => token,
-				Err(why) => Token::Error(format!("Failed to parse line \"{}\": {}", line, why))
-			}
+			self.parse_token(&line)
 		}
 	}
 
 	/// if a line was not plaintext, parse the passed command.
-	fn parse_token(&self, line: &String) -> LR<Token> {
+	fn parse_token(&self, line: &String) -> Token {
 	    if let Some(captures) = WHOLE_RE.captures(&line) {
 			let command = captures.get(1).map_or("", |m| m.as_str());
 
@@ -142,63 +139,63 @@ impl Lexer {
 	        }
 
 			match (command, args.len()) {
-				("amen", 2) => Ok(Token::Amen(args[0].to_owned(), args[1].to_owned())),
+				("amen", 2) => Token::Amen(args[0].to_owned(), args[1].to_owned()),
 
-				("antiphon", 1) => Ok(Token::Antiphon(args[0].to_owned())),
+				("antiphon", 1) => Token::Antiphon(args[0].to_owned()),
 
-				("begin-box", 0) => Ok(Token::BeginBox),
+				("begin-box", 0) => Token::BeginBox,
 
-				("begin-hymn", 0) => Ok(Token::BeginHymn),
+				("begin-hymn", 0) => Token::BeginHymn,
 
-				("begin-resumable", 1) => Ok(Token::BeginResumable(args[0].to_owned())),
+				("begin-resumable", 1) => Token::BeginResumable(args[0].to_owned()),
 
-				("clef", 1) => Ok(Token::Clef(args[0].to_owned())),
+				("clef", 1) => Token::Clef(args[0].to_owned()),
 
-				("define", 2) => Ok(Token::Define(args[0].to_owned(), args[1].to_owned())),
+				("define", 2) => Token::Define(args[0].to_owned(), args[1].to_owned()),
 
-				("end" | "end-box" | "end-hymn", 0) => Ok(Token::End),
+				("end" | "end-box" | "end-hymn", 0) => Token::End,
 
-				("gabc", 1) => Ok(Token::Gabc(args[0].to_owned())),
+				("gabc", 1) => Token::Gabc(args[0].to_owned()),
 
-				("gloria", 0) => Ok(Token::Gloria(None)),
-				("gloria", 1) => Ok(Token::Gloria(Some(args[0].to_owned()))),
+				("gloria", 0) => Token::Gloria(None),
+				("gloria", 1) => Token::Gloria(Some(args[0].to_owned())),
 
-				("heading", 1) => Ok(Token::Heading(args[0].to_owned(), 1)),
-				("subheading", 1) => Ok(Token::Heading(args[0].to_owned(), 2)), // included here for ease of access
+				("heading", 1) => Token::Heading(args[0].to_owned(), 1),
+				("subheading", 1) => Token::Heading(args[0].to_owned(), 2), // included here for ease of access
 				// other headings could theoretically exist but do not at this time
 
-				("import", 1) => Ok(Token::Import(args[0].to_owned())),
+				("import", 1) => Token::Import(args[0].to_owned()),
 
-				("if-include", 1) => Ok(Token::IfInclude(args[0].to_owned())),
+				("if-include", 1) => Token::IfInclude(args[0].to_owned()),
 
-				("include", 1) => Ok(Token::Include(args[0].to_owned())),
+				("include", 1) => Token::Include(args[0].to_owned()),
 
-				("instruction", 1) => Ok(Token::Instruction(args[0].to_owned())),
+				("instruction", 1) => Token::Instruction(args[0].to_owned()),
 
 				// text is not included here since it is the default
 
-				("title", 1) => Ok(Token::Title(args[0].to_owned())),
+				("title", 1) => Token::Title(args[0].to_owned()),
 
-				("tone", 2) => Ok(Token::Tone(args[0].to_owned())),
+				("tone", 2) => Token::Tone(args[0].to_owned()),
 
-				("melody", _) => Ok(Token::Melody(args.clone())),
+				("melody", _) => Token::Melody(args.clone()),
 
-				("no-gloria", 0) => Ok(Token::NoGloria),
+				("no-gloria", 0) => Token::NoGloria,
 
-				("psalm", 1) => Ok(Token::Psalm(args[0].to_owned())),
+				("psalm", 1) => Token::Psalm(args[0].to_owned()),
 
-				("resume", 1) => Ok(Token::Resume(args[0].to_owned())),
+				("resume", 1) => Token::Resume(args[0].to_owned()),
 
-				("repeat-antiphon", 0) => Ok(Token::RepeatAntiphon),
+				("repeat-antiphon", 0) => Token::RepeatAntiphon,
 
-				("repeat-tone", 0) => Ok(Token::RepeatTone),
+				("repeat-tone", 0) => Token::RepeatTone,
 
-				("verse", _) => Ok(Token::Verse(args.clone())),
+				("verse", _) => Token::Verse(args.clone()),
 
-				_ => Err(format!("Unknown command \"{}\"", command))
+				_ => Token::Error(format!("Failed to parse line \"{}\": Unknown command \"{}\"", line, command))
 			}
 		} else {
-			Err(format!("Malformed line: {}", line))
+			Token::Error(format!("Failed to parse line \"{}\": malformed", line))
 		}
 	}
 
