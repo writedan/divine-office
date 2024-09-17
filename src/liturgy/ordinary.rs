@@ -332,7 +332,7 @@ fn vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
-	map.insert("order", ["vespers", "order", "ordinary.lit"].iter().collect());
+	map.insert("order", ["matins", "order", "ordinary.lit"].iter().collect());
 
 	map.insert("psalter", ["vespers", &(iden.day.to_lowercase() + ".lit")].iter().collect());
 
