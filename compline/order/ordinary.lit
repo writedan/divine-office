@@ -25,11 +25,7 @@
 
 	#import "commons/compline/benediction.gabc"
 
-	#instruction "The congregation responds."
-
 	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-	#instruction "The lector intones the responsory."
 
 	#include "responsory"
 #end-box
@@ -65,8 +61,6 @@
 
 	#include "collect"
 
-	#instruction "To which the congregation responds."
-
 	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
 #end
 
@@ -81,11 +75,9 @@
 
 	#include "anthem"
 
-	#instruction "The minister gives a final blessing."
+	#instruction "The officiant gives a final blessing."
 
 	#gabc "(c3) The(h) al(h)migh(h)ty(h) and(h) mer(h)ci(h)ful(h) Lord,(h) <sp>+</sp>() the(h) Fa(h)ther,(h) and(h) the(h) Son,(h) and(h) the(h) Ho(h)ly(h) Spir(h)it,(h) bless(h) us(h) and(h) keep(h) us.(d)"
-
-	#instruction "The congregation responds."
 
 	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
