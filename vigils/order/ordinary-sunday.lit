@@ -284,21 +284,7 @@
 	#end-box
 #end-box
 
-#begin-box
-	#heading "Gospel Proclamation"
-
-	#import "commons/vigils/te-deum.gabc"
-
-	#instruction "The ritual singing of the Gospel is reserved to clergy. Therefore let it be merely recited in a plain voice."
-
-	#include "gospel"
-
-	#instruction "The congregation responds."
-
-	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
-	#import "commons/vigils/te-decet-laus.gabc"
-#end-box
+#import "commons/vigils/gospel.lit"
 
 #begin-box
 	#heading "Conclusion"
