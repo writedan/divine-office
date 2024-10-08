@@ -5,9 +5,7 @@
 
 	#import "commons/shared/apostles-creed.lit"
 
-	#instruction "Then with hearable voice the officiant begins from the doors of the nave."
-
-	#gabc "(f3) <sp>v</sp> O(h)pen(h) my(h) lips,(h) O(g) Lord.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Your(g) praise.(h)"
+	#import "commons/vigils/aperi.lit"
 
 	#include "invitatory"
 #end-box

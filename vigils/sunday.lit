@@ -13,7 +13,7 @@
 #repeat-antiphon
 
 #antiphon "domine-deus-meus"
-	#tone "2-i" "f3"
+	#tone "1-iii" "c4"
 	#psalm "7"
 
 	#repeat-tone
@@ -25,3 +25,57 @@
 	#repeat-tone
 	#psalm "10"
 #repeat-antiphon
+
+#antiphon "respice-et-exaudi"
+	#tone "8-i" "c4"
+	#psalm "11"
+
+	#repeat-tone
+	#psalm "12"
+
+	#repeat-tone
+	#psalm "13"
+
+	#repeat-tone
+	#psalm "14"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> I(h) re(h)mem(h)bered(h) Your(h) name(h) in(h) the(f) night.(g) <sp>r</sp>(::) And(h) I(h) kept(h) Your(h) law,(h) O(f) Lord.(f)"
+
+#begin-resumable "2nd-nocturn"
+	#antiphon "bonorum-meorum"
+		#tone "3-iv" "c3"
+		#psalm "15"
+	#repeat-antiphon
+
+	#antiphon "inclina-domine"
+		#tone "7-ii" "c3"
+		#psalm "16"
+	#repeat-antiphon
+
+	#antiphon "dominus-firmamentum"
+		#tone "8-i" "c3"
+		#psalm "17"
+	#repeat-antiphon
+
+	#gabc "(c3) <sp>v</sp> At(h) mid(h)night(h) I(h) a(h)rose(h) to(h) give(h) thanks(h) un(h)to(f) You.(g) <sp>r</sp>(::) For(h) the(h) judg(h)ments(h) of(h) Your(h) right(h)eous(f)ness.(f)"
+#end
+
+#begin-resumable "3rd-nocturn"
+	#antiphon "preceptum-domini"
+		#tone "4-i" "c4"
+		#psalm "18"
+	#repeat-antiphon
+
+	#antiphon "impleat-dominus"
+		#tone "4-viii" "c4"
+		#psalm "19"
+	#repeat-antiphon
+
+	#antiphon "domine-in-virtute"
+		#tone "8-i" "c4"
+		#psalm "20"
+	#repeat-antiphon
+
+	#gabc "(c3) <sp>v</sp> Be(h) ex(h)alt(h)ed,(h) O(h) Lord,(h) in(h) Your(f) strength.(g) <sp>r</sp>(::) We(h) will(h) sing(h) and(h) praise(h) Your(h) migh(h)ty(f) acts.(f)"
+#end
