@@ -332,7 +332,14 @@ impl Preprocessor {
 				 // if the tone is set, will resolve to Gloria(Some(_)), but if not will remain Gloria(None)
 				Gloria(None) => Token::Gloria(self.store.get("internal:last-tone").cloned()),
 
-				Gloria(Some(tone)) => Token::Import(format!("commons/gloria/{}.lit", resolve_tone(&tone))),
+				Gloria(Some(tone)) => {
+					if let Some("true") = self.store.get("internal:no-gloria").map(String::as_str) {
+						self.store.remove("internal:no-gloria");
+						Token::Empty
+					} else {
+						Token::Import(format!("commons/gloria/{}.lit", resolve_tone(&tone)))
+					}
+				},				
 
 				Import(path) => {
 					let path = PathBuf::from(path);
@@ -384,6 +391,11 @@ impl Preprocessor {
 			            }
 			        }
 			    },
+
+			    NoGloria => {
+			    	self.store.insert("internal:no-gloria".into(), "true".into());
+			    	Token::Empty
+			    }
 
 			    Tone(tone) => {
 			    	self.store.insert("internal:last-tone".into(), tone.to_owned());
