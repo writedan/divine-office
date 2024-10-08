@@ -111,6 +111,11 @@
             .empty {
                 display: none;
             }
+
+            .instr {
+                color: red;
+                font-size: 50%;
+            }
         </style>
 
         <script>
@@ -175,7 +180,7 @@
 
                 let scaleFactor = (ctx.glyphScaling * fontSize * FACTOR) / ctx.textStyles.lyric.size;
                 ctx.setGlyphScaling(scaleFactor);
-                ctx.setFont("'Adobe Garamond Pro', 'EB Garamond', 'Crimson Text', 'Adobe Garamond Pro', 'Garamond','Georgia', serif", (fontSize * FACTOR));
+                ctx.setFont("'Baskerville', 'Adobe Garamond Pro', 'EB Garamond', 'Crimson Text', 'Adobe Garamond Pro', 'Garamond','Georgia', serif", (fontSize * FACTOR));
                 ctx.markupSymbolDictionary['^'] = 'c'
                 ctx.textStyles.al.prefix = '<b>'
                 ctx.textStyles.annotation.size = fontSize
