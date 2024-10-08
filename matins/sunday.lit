@@ -1,0 +1,32 @@
+#antiphon "alleluia-alleluia(sunday-matins)"
+	#tone "6" "c4"
+	#psalm "92"
+
+	#repeat-tone
+	#psalm "99"
+
+	#repeat-tone
+	#no-gloria
+	#psalm "62"
+
+	#repeat-tone
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "tres-pueri"
+	#tone "8-i" "c4"
+	#psalm "daniel-3"
+#repeat-antiphon
+
+#antiphon "alleluia-alleluia-alleluia(sunday-matins)"
+	#tone "8-i" "c4"
+	#no-gloria
+	#psalm "148"
+
+	#repeat-tone
+	#no-gloria
+	#psalm "149"
+
+	#repeat-tone
+	#psalm "150"
+#repeat-antiphon
