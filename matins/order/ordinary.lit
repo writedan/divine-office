@@ -21,6 +21,10 @@
 
 	#include "chapter"
 
+	#gabc "(c3) May(h) the(h) al(h)migh(h)ty(h) God(h) strength(h)en(h) us(h) in(h) per(h)fect(h) char(h)i(d)ty.(d)"
+
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
 	#if-include "responsory"
 #end
 
