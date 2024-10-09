@@ -102,6 +102,8 @@ impl Parser {
 
 			Instruction(text) => ASTNode::Node(Directive::Instruction(text)),
 
+			NoGloria => ASTNode::Node(Directive::Empty),
+
 			Text(text) => ASTNode::Node(Directive::Text(text)),
 
 			Title(text) => ASTNode::Node(Directive::Title(text)),
@@ -306,6 +308,7 @@ impl Preprocessor {
 	/// Execute one pass of the preprocessor.
 	fn pass(&mut self) {
 		let mut insertions: Vec<(usize, Vec<Token>)> = Vec::new();
+		let mut temp_store: HashMap<String, String> = HashMap::new();
 
 		self.tokens = self.tokens.clone().into_iter().enumerate().map(|(idx, token)| {
 			use Token::*;
@@ -333,13 +336,19 @@ impl Preprocessor {
 				Gloria(None) => Token::Gloria(self.store.get("internal:last-tone").cloned()),
 
 				Gloria(Some(tone)) => {
-					if let Some("true") = self.store.get("internal:no-gloria").map(String::as_str) {
-						self.store.remove("internal:no-gloria");
+					if let Some("true") = temp_store.get("no-gloria".into()).map(String::as_str) {
+						temp_store.remove("no-gloria".into());
+						insertions.push((idx, Vec::new()));
 						Token::Empty
 					} else {
 						Token::Import(format!("commons/gloria/{}.lit", resolve_tone(&tone)))
 					}
-				},				
+				},  
+
+				NoGloria => {
+					temp_store.insert("no-gloria".into(), "true".into());
+					Token::NoGloria
+				},			
 
 				Import(path) => {
 					let path = PathBuf::from(path);
@@ -391,11 +400,6 @@ impl Preprocessor {
 			            }
 			        }
 			    },
-
-			    NoGloria => {
-			    	self.store.insert("internal:no-gloria".into(), "true".into());
-			    	Token::Empty
-			    }
 
 			    Tone(tone) => {
 			    	self.store.insert("internal:last-tone".into(), tone.to_owned());
