@@ -32,6 +32,8 @@
 	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
 
 	#include "responsory"
+
+	#include "versicle"
 #end
 
 #begin-box
