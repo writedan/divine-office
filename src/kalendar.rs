@@ -133,7 +133,7 @@ impl Kalendar {
         Some(Kalendar {
             advent: NaiveDate::from_ymd_opt(year, 11, 27)?.this_or_next_sunday()?,
             christmas: NaiveDate::from_ymd_opt(year, 12, 24)?,
-            epiphany_sunday: NaiveDate::from_ymd_opt(year + 1, 1, 6)?.this_or_next_sunday()?,
+            epiphany_sunday: NaiveDate::from_ymd_opt(year + 1, 1, 6)?.next_sunday()?,
             purification: NaiveDate::from_ymd_opt(year + 1, 2, 2)?,
             septuagesima: easter.checked_sub_days(Days::new(63))?,
             ash_wednesday: easter.checked_sub_days(Days::new(46))?,
