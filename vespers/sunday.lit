@@ -1,0 +1,24 @@
+#antiphon "sede-a-dextris"
+	#tone "1-v" "f3"
+	#psalm "109"
+#repeat-antiphon
+
+#antiphon "fidelia-omnia"
+	#tone "4-vi" "f3"
+	#psalm "110"
+#repeat-antiphon
+
+#antiphon "in-mandatis-ejus"
+	#tone "4-vi" "f3"
+	#psalm "111"
+#repeat-antiphon
+
+#antiphon "sit-nomen-domini"
+	#tone "7-ii" "c3"
+	#psalm "112"
+#repeat-antiphon
+
+#antiphon "nos-qui-vivimus"
+	#tone "peregrine" "peregrine"
+	#psalm "113"
+#repeat-antiphon
