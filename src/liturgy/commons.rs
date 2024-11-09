@@ -22,6 +22,7 @@ pub fn resolve(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
 		"kyrie",
 		match iden.season {
 			PostPentecost | PostEpiphany(_) | August | September | October | November => if day == Sun { "xi.gabc" } else { "xvi.gabc" },
+			Advent => if day == Sun { "xvii.gabc" } else { "xviii.gabc" },
 			_ => todo!("kyrie for {:?}", iden.season)
 		}
 	].iter().collect());
@@ -31,16 +32,8 @@ pub fn resolve(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
 		"benedicamus",
 		match iden.season {
 			PostPentecost | PostEpiphany(_) | August | September | October | November => if day == Sun { "xi.gabc" } else { "xvi.gabc" },
+			Advent => if day == Sun { "xvii.gabc" } else { "xviii.gabc" },
 			_ => todo!("benedicamus for {:?}", iden.season)
-		}
-	].iter().collect());
-
-	map.insert("doxology", [
-		"hymn",
-		"doxology",
-		match iden.season {
-			PostPentecost | August | September | October | November | PostEpiphany(false) => "post-purification.lit",
-			_ => todo!("doxology for {:?}", iden.season)
 		}
 	].iter().collect());
 

@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use std::collections::HashMap;
 
 mod ordinary;
+mod advent;
 mod commons;
 
 impl Identifier {
@@ -14,6 +15,7 @@ impl Identifier {
 	pub fn resolve(&self) -> Liturgy {
 		let mut lit = match self.season {
 			PostPentecost | PostEpiphany(_) | August | September | October | November => ordinary::resolve(self),
+			Advent => advent::resolve(self),
 			_ => todo!("resolution of {}", self.season.to_string())
 		};
 
