@@ -37,7 +37,7 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	].iter().collect());
 
 	map.insert("invitatory", match day {
-		Sun => iden.to_path().join("invitatory.lit"),
+		Sun => iden.to_path().join("vigils").join("invitatory.lit"),
 		_ => ["invitatory", "regem-venturum.lit"].iter().collect()
 	});
 

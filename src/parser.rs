@@ -448,7 +448,32 @@ impl Preprocessor {
 			    	} else {
 			    		Token::RepeatAntiphon
 			    	}
-			    }
+			    },
+
+			    RepeatHalfAntiphon => {
+			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
+			    		use std::io::{BufReader, Read};
+						use std::fs::File;
+
+						let file = match File::open(format!("antiphon/{}.gabc", antiphon)) {
+							Ok(file) => file,
+							Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
+						};
+
+					    let mut reader = BufReader::new(file);
+					    let mut gabc = String::new();
+					    match reader.read_to_string(&mut gabc) {
+					    	Ok(_) => {},
+					    	Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
+					    }
+
+					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
+
+						return Token::Gabc(gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string());
+			    	} else {
+			    		Token::RepeatAntiphon
+			    	}
+			    },
 
 			    RepeatTone => {
 			    	if let Some(tone) = self.store.get("internal:last-tone") {

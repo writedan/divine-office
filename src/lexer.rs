@@ -93,6 +93,9 @@ pub enum Token {
 	/// The `repeat-antiphon` command indicates that the last used antiphon is now repeated but without its decorations.
 	RepeatAntiphon,
 
+	// The `repeat antiphon "half"` command is used in invitatories to repeat only the latter half of the previous antiphon from a "+(;)" sequence.
+	RepeatHalfAntiphon,
+
 	/// The `repeat-tone` command is added for convenience when many psalms occur under the same tone.
 	RepeatTone,
 
@@ -187,6 +190,8 @@ impl Lexer {
 				("resume", 1) => Token::Resume(args[0].to_owned()),
 
 				("repeat-antiphon", 0) => Token::RepeatAntiphon,
+
+				("repeat-antiphon", 1) => Token::RepeatHalfAntiphon,
 
 				("repeat-tone", 0) => Token::RepeatTone,
 

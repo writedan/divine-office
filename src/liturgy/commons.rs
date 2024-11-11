@@ -105,5 +105,7 @@ pub fn vigils(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
 		map.insert(code, lesson_path);
 	}
 
+	map.insert("gospel", path.join("gospel.lit"));
+
 	Some(map)
 }

@@ -1,0 +1,81 @@
+#antiphon "non-auferetur-sceptrum"
+	#tone "1-v" "cb4"
+	#psalm "1"
+
+	#repeat-tone
+	#psalm "2"
+
+	#repeat-tone
+	#psalm "3"
+
+	#repeat-tone
+	#psalm "6"
+#repeat-antiphon
+
+#antiphon "erit-ipse-expectatio"
+	#tone "2-i" "f3"
+	#psalm "7"
+
+	#repeat-tone
+	#psalm "8"
+
+	#repeat-tone
+	#psalm "9"
+
+	#repeat-tone
+	#psalm "10"
+#repeat-antiphon
+
+#antiphon "pulchiores-sunt-oculi"
+	#tone "3-v" "c4"
+	#psalm "11"
+
+	#repeat-tone
+	#psalm "12"
+
+	#repeat-tone
+	#psalm "13"
+
+	#repeat-tone
+	#psalm "14"
+#repeat-antiphon
+
+#gabc "(c3) <sp>v</sp> Out(h) of(h) Zi(h)on(h) is(h) the(h) mag(h)ni(h)fi(h)cence(h) of(h) His(h) beau(h)ty.(f) <sp>r</sp>(::) God(h) shall(h) come(h) vi(h)si(h)bly,(h) yea,(h) our(h) God,(h) and(h) shall(h) not(h) keep(h) si(h)lence.(f)"
+
+#begin-resumable "2nd-nocturn"
+	#antiphon "bethlehem-non-es-minima"
+		#tone "4-i" "c4"
+		#psalm "15"
+	#repeat-antiphon
+
+	#antiphon "ecce-virgo-concipiet"
+		#tone "5-i" "c3"
+		#psalm "16"
+	#repeat-antiphon
+
+	#antiphon "orietur-in-diebus"
+		#tone "6" "f3"
+		#psalm "17"
+	#repeat-antiphon
+
+	#gabc "(c3) <sp>v</sp> There(h) shall(h) come(h) forth(h) a(h) rod(h) out(h) of(h) the(h) stem(h) of(h) Jes(h)se.(f) <sp>r</sp>(::) And(h) a(h) branch(h) shall(h) grow(h) out(h) of(h) his(f) roots.(f)"
+#end
+
+#begin-resumable "3rd-nocturn"
+	#antiphon "nox-precessit"
+		#tone "7-i" "c2"
+		#psalm "18"
+	#repeat-antiphon
+
+	#antiphon "hora-est-jam-nos"
+		#tone "8-i" "c4"
+		#psalm "19"
+	#repeat-antiphon
+
+	#antiphon "gaudete-in-domino"
+		#tone "4-i" "c4"
+		#psalm "20"
+	#repeat-antiphon
+
+	#gabc "(c3) <sp>v</sp> The(h) Lord(h) shall(h) come(h) forth(h) out(h) of(h) his(h) ho(h)ly(f) place.(g) <sp>r</sp>(::) He(h) comes(h) to(h) save(h) his(h) peo(h)ple(h) from(h) their(f) sins.(f)"
+#end
