@@ -1,6 +1,6 @@
 use chrono::{NaiveDate, Datelike, Weekday};
 use crate::kalendar::{Kalendar, Celebration, Penance, Color, Season, Rank, Identifier};
-use crate::timehelp::{Betwixt, Ordinal};
+use crate::timehelp::{Betwixt, FullName, Ordinal};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	let week_num = (NaiveDate::weeks_since(ly.advent, date) + 1) as u8;
@@ -60,7 +60,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 	identifiers.push(Identifier {
 		season: Season::Advent,
 		week: week_num.to_string(),
-		day: date.weekday().to_string()
+		day: String::from(date.weekday().fullname())
 	});
 
 	let o_wisdom = NaiveDate::from_ymd_opt(date.year(), 12, 17).unwrap();
