@@ -31,7 +31,7 @@ fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
 	map.insert("order", ["matins", "order", "ordinary.lit"].iter().collect());
-	map.insert("psalter", ["vespers", &(iden.day.to_lowercase() + ".lit")].iter().collect());
+	map.insert("psalter", ["vespers", "saturday.lit"].iter().collect());
 	map.insert("chapter", iden.to_path().join("vespers").join("chapter.lit"));
 	map.insert("hymn", ["hymn", "conditor-alme-syderum", "advent.lit"].iter().collect());
 	map.insert("versicle", ["commons", "vespers", "versicles", "advent.lit"].iter().collect());
