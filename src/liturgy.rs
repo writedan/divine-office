@@ -57,7 +57,8 @@ impl Identifier {
 
 #[derive(Debug)]
 pub struct Liturgy {
-	pub today_vespers: Option<bool>, // whether vespers+compline are of today (true) or tomorrow (false). If false, we must display it until tomorrow's liturgy
+	pub first_vespers: Option<HashMap<&'static str, PathBuf>>,
+	pub first_compline: Option<HashMap<&'static str, PathBuf>>,
 	pub vigils: HashMap<&'static str, PathBuf>,
 	pub matins: HashMap<&'static str, PathBuf>,
 	pub prime: HashMap<&'static str, PathBuf>,
@@ -78,6 +79,8 @@ impl Liturgy {
 	}
 
 	pub fn extend(&mut self, other: &Liturgy) {
+		// TODO extend first_vespers and first_compline
+
 		Self::extend_helper(&mut self.vigils, &other.vigils);
 		Self::extend_helper(&mut self.matins, &other.matins);
 		Self::extend_helper(&mut self.prime, &other.prime);
@@ -96,15 +99,26 @@ pub fn first_vespers(today: &Celebration, tomorrow: &Celebration) -> bool {
 pub fn resolve_hours(today: &Celebration, tomorrow: &Celebration) -> Liturgy  {
 	let first_vespers = first_vespers(today, tomorrow);
 	let idens: Vec<_> = today.identifiers();
+	let tomorrow_idens: Vec<_> = tomorrow.identifiers();
 
 	let mut lit = idens[0].resolve();
+	let mut tomorrow_lit = tomorrow_idens[0].resolve();
 	
 	let idens: Vec<_> = idens.iter().map(|iden| iden.resolve()).collect();
+	let tomorrow_idens: Vec<_> = tomorrow_idens.iter().map(|iden| iden.resolve()).collect();
 
 	for x in idens.iter() {
 		lit.extend(x);
 	}
 
-	lit.today_vespers = Some(!first_vespers);
+	for x in tomorrow_idens.iter() {
+		tomorrow_lit.extend(x);
+	}
+
+	if (first_vespers) {
+		lit.vespers = tomorrow_lit.first_vespers.expect(format!("expected to find first_vespers for tomorrow={:?}", tomorrow).as_str());
+		lit.compline = tomorrow_lit.first_compline.expect(format!("expected to find first_compline for tomorrow={:?}", tomorrow).as_str());
+	}
+
 	lit
 }

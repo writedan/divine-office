@@ -10,7 +10,8 @@ use chrono::{Weekday, Weekday::*};
 
 pub fn resolve(iden: &Identifier) -> Liturgy {
 	Liturgy {
-		today_vespers: None,
+		first_vespers: if "Sunday" == iden.day { Some(first_vespers(iden)) } else { None} ,
+		first_compline: if "Sunday" == iden.day { Some(compline(iden)) } else { None },
 		vigils: vigils(iden),
 		matins: matins(iden),
 		prime: prime(iden),
@@ -20,6 +21,24 @@ pub fn resolve(iden: &Identifier) -> Liturgy {
 		vespers: vespers(iden),
 		compline: compline(iden)
 	}
+}
+
+fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
+	let day = iden.day.parse::<Weekday>().unwrap();
+
+	let commons = crate::liturgy::commons::resolve(iden).unwrap();
+
+	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
+
+	map.insert("order", ["matins", "order", "ordinary.lit"].iter().collect());
+	map.insert("psalter", ["vespers", &(iden.day.to_lowercase() + ".lit")].iter().collect());
+	map.insert("chapter", iden.to_path().join("vespers").join("chapter.lit"));
+	map.insert("hymn", ["hymn", "conditor-alme-syderum", "advent.lit"].iter().collect());
+	map.insert("versicle", ["commons", "vespers", "versicles", "advent.lit"].iter().collect());
+	map.insert("canticle", iden.to_path().join("vespers").join("magnificat.lit"));
+
+	map.extend(crate::liturgy::commons::resolve(iden).unwrap());
+	map
 }
 
 fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {

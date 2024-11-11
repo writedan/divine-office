@@ -10,7 +10,8 @@ use chrono::{Weekday, Weekday::*};
 
 pub fn resolve(iden: &Identifier) -> Liturgy {
 	Liturgy {
-		today_vespers: None,
+		first_vespers: None,
+		first_compline: if "Sunday" == iden.day { Some(compline(iden)) } else { None },
 		vigils: vigils(iden),
 		matins: matins(iden),
 		prime: prime(iden),
