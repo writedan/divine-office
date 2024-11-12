@@ -22,7 +22,9 @@ pub enum Token {
 	Amen(String, String),
 
 	/// The `antiphon` command requires the name of the antiphon be provided, which must correspond to a `antiphon/<name>.gabc` file.
-	Antiphon(String),
+	///
+	/// It optionally accepts a second argument which will be used in place of the first antiphon on repeat.
+	Antiphon(String, Option<String>),
 
 	/// Indicates the beginning of a `div.boxed` element.
 	BeginBox,
@@ -144,7 +146,9 @@ impl Lexer {
 			match (command, args.len()) {
 				("amen", 2) => Token::Amen(args[0].to_owned(), args[1].to_owned()),
 
-				("antiphon", 1) => Token::Antiphon(args[0].to_owned()),
+				("antiphon", 1) => Token::Antiphon(args[0].to_owned(), None),
+
+				("antiphon", 2) => Token::Antiphon(args[0].to_owned(), Some(args[1].to_owned())),
 
 				("begin-box", 0) => Token::BeginBox,
 

@@ -315,12 +315,14 @@ impl Preprocessor {
 			use std::path::PathBuf;
 
 			match token {
-				Antiphon(name) => {
-					self.store.insert("internal:last-antiphon".into(), name.to_owned());
+				Antiphon(name, repeat) => {
+					let repeat = repeat.unwrap_or(name.to_owned());
+					
+					self.store.insert("internal:last-antiphon".into(), repeat.to_owned());
 					let mut new_tokens = Vec::<Token>::new();
 					new_tokens.push(Token::Title("Antiphon".into()));
 					new_tokens.push(Token::Import(format!("antiphon/{}.gabc", name)));
-					new_tokens.push(Token::Define("internal:last-antiphon".into(), name.to_owned()));
+					new_tokens.push(Token::Define("internal:last-antiphon".into(), repeat.to_owned()));
 					insertions.push((idx, new_tokens));
 					Token::Empty
 				},
