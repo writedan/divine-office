@@ -161,7 +161,17 @@ fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
+	map.insert("order", ["compline", "order", "ordinary.lit"].iter().collect());
+	map.insert("psalter", ["compline", "ordinary.lit"].iter().collect());
+	map.insert("chapter", ["commons", "compline", "chapters", "ordinary.lit"].iter().collect());
+	map.insert("hymn", ["hymn", "te-lucis-ante-terminum", "ordinary.lit"].iter().collect());
+	map.insert("versicle", ["commons", "compline", "versicles", "ordinary.lit"].iter().collect());
+	map.insert("canticle", ["commons", "compline", "canticle", "advent.lit"].iter().collect());
+	map.insert("anthem", ["commons", "compline", "anthems", "alma-redemptoris/advent.lit"].iter().collect());
+
 	map.extend(commons);
+
+	map.insert("collect", ["commons", "compline", "collect.lit"].iter().collect());
 
 	return map;
 }
