@@ -1,0 +1,35 @@
+#title "Verbum supernum prodiens"
+
+#begin-hymn
+	#clef "c4"
+
+	#melody "ev" "c" "ev" "gv" "hv" "iv" "h" "h"
+	#verse "O" "Word" "pro-" "ceed-" "ing" "from" "on" "high,"
+	#verse "Now" "come" "and" "fill" "our" "hearts" "with" "light,"
+	#verse "And" "when" "at" "length" "you" "come" "as" "Judge"
+	#verse "Let" "not" "the" "na-" "ture" "of" "our" "sins"
+	#verse "To" "you," "O" "Christ," "most" "lov-" "ing" "King,"
+
+	#melody "g" "hv" "jv" "jv" "ig" "hv" "iv" "h"
+	#verse "light" "com-" "ing" "from" "the" "Fa-" "ther's" "light,"
+	#verse "con-" "sume" "them" "in" "your" "love's" "bright" "heart,"
+	#verse "to" "probe" "our" "hearts" "in" "thought" "and" "deed,"
+	#verse "de-" "tain" "us" "in" "the" "e-" "vil" "throng,"
+	#verse "and" "to" "the" "Fa-" "ther," "glo-" "ry" "be,"
+
+	#melody "h" "h" "iv" "g" "eg" "f" "e" "d"
+	#verse "by" "birth" "you" "came" "to" "save" "the" "world"
+	#verse "and" "through" "the" "her-" "ald's" "cry" "at" "last,"
+	#verse "to" "weigh" "the" "guilt" "for" "hid-" "den" "sin"
+	#verse "but" "let" "us" "with" "the" "bles-" "sed" "share"
+	#verse "one" "with" "the" "Spir-" "it" "Pa-" "ra-" "clete"
+
+	#melody "ev" "c" "ev" "gv" "hv" "iv" "h" "h"
+	#verse "when" "time's" "ap-" "point-" "ed" "course" "had" "run."
+	#verse "may" "sin" "and" "per-" "il" "be" "cast" "out."
+	#verse "and" "crown" "the" "just" "for" "deeds" "well" "done."
+	#verse "the" "life" "of" "hea-" "ven" "ev-" "er-" "more."
+	#verse "for" "end-" "less" "ag-" "es" "ev-" "er-" "more."
+
+	#amen "hi" "hgh"
+#end
