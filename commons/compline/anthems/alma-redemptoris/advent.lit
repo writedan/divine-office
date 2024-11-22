@@ -2,7 +2,7 @@
 
 #import "commons/compline/anthems/alma-redemptoris.gabc"
 
-#gabc "<sp>v</sp> The(h) an(h)gel(h) of(h) the(h) Lord(h) de(h)clared(h) un(h)to(h) Ma(h)ry.(f) <sp>r</sp>(::) And(h) she(h) con(h)ceived(h) by(h) the(h) Ho(h)ly(h) Spir(h)it.(h) <alt><c>[Priest or Deacon:]</c></alt> (::) Let(h) us(g) pray.(h)"
+#gabc "(c3) <sp>v</sp> The(h) an(h)gel(h) of(h) the(h) Lord(h) de(h)clared(h) un(h)to(h) Ma(h)ry.(f) <sp>r</sp>(::) And(h) she(h) con(h)ceived(h) by(h) the(h) Ho(h)ly(h) Spir(h)it.(fz) (c3) <alt><c>[Priest or Deacon:]</c></alt> Let(h) us(g) pray.(h)"
 
 #title "Collect"
 
