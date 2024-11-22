@@ -1,0 +1,39 @@
+#title "Conditor alme syderum"
+
+#begin-hymn
+	#clef "f3"
+
+	#melody "gv" "e" "gv" "iv" "jv" "jv" "h" "iv"
+	#verse "O" "lov-" "ing" "Ma-" "ker" "of" "the" "stars,"
+	#verse "With," "pi-" "ty," "you" "be-" "held" "the" "fate,"
+	#verse "As" "even-" "ing" "fell" "u-" "pon" "the" "earth,"
+	#verse "Be-" "fore" "your" "strong" "and" "stead-" "fast" "might,"
+	#verse "With" "faith" "we" "beg" "you," "Ho-" "ly" "Lord,"
+	#verse "To" "you," "O" "Christ," "most" "lov-" "ing" "King,"
+
+	#melody "iv" "jv" "h" "iv" "h" "g" "f" "gv"
+	#verse "be-" "liev-" "er's" "ev-" "er-" "last-" "ing" "light,"
+	#verse "that" "death" "im-" "posed" "on" "ag-" "es" "past;"
+	#verse "as" "bride-" "groom" "from" "the" "bri-" "dal" "room,"
+	#verse "on" "earth" "and" "in" "the" "heav'ns" "a-" "bove"
+	#verse "the" "Judge" "of" "ag-" "es," "still" "to" "come,"
+	#verse "and" "to" "the" "Fa-" "ther," "glo-" "ry" "be,"
+
+	#melody "iv" "h" "f" "gv" "hv" "g" "f" "e"
+	#verse "O" "Christ," "Re-" "deem-" "er" "of" "us" "all,"
+	#verse "you" "gave" "the" "guil-" "ty" "heal-" "ing" "grace"
+	#verse "from" "ho-" "nored" "cham-" "ber" "forth" "you" "came,"
+	#verse "all" "knees" "bend" "low," "all" "hearts" "con-" "fess"
+	#verse "that" "in" "our" "time" "you" "keep" "us" "safe"
+	#verse "one" "with" "the" "Spir-" "it" "Pa-" "ra-" "clete"
+
+	#melody "e" "gv" "hv" "iv" "h" "g" "f" "gv"
+	#verse "with" "kind-" "ness" "hear" "our" "hum-" "ble" "prayer."
+	#verse "and" "saved" "a" "weak" "and" "fal-" "len" "race."
+	#verse "born" "from" "the" "Vir-" "gin" "Mo-" "ther" "pure."
+	#verse "sub-" "mis-" "sion" "to" "the" "One" "they" "bless."
+	#verse "from" "snares" "of" "our" "de-" "ceit-" "ful" "foe."
+	#verse "for" "end-" "less" "ag-" "es" "ev-" "er-" "more."
+
+	#amen "fg/hg" "gfg"
+#end

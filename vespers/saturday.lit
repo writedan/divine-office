@@ -1,0 +1,24 @@
+#antiphon "benedictus-dominus-deus"
+	#tone "6" "f3"
+	#psalm "143"
+#repeat-antiphon
+
+#antiphon "in-eternum"
+	#tone "8-iii" "c4"
+	#psalm "144"
+#repeat-antiphon
+
+#antiphon "laudabo"
+	#tone "4-i" "c4"
+	#psalm "145"
+#repeat-antiphon
+
+#antiphon "deo-nostro"
+	#tone "8-iii" "c3"
+	#psalm "146"
+#repeat-antiphon
+
+#antiphon "lauda-hierusalem/start" "lauda-hierusalem/end"
+	#tone "4-vii" "c4"
+	#psalm "147"
+#repeat-antiphon
