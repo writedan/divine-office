@@ -446,7 +446,7 @@ impl Preprocessor {
 
 					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
 
-						return Token::Gabc(gabc[1].to_string().replace("<sp>*</sp>()", ""));
+						return Token::Gabc(gabc[1].to_string().replace("<sp>*</sp>", ""));
 			    	} else {
 			    		Token::RepeatAntiphon
 			    	}
