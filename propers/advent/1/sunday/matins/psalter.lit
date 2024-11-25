@@ -1,0 +1,37 @@
+#antiphon "in-illa-die"
+	#tone "8-i" "c4"
+	#psalm "92"
+#repeat-antiphon
+
+#antiphon "jocundare-filia-syon"
+	#tone "8-i" "c4"
+	#psalm "99"
+#repeat-antiphon
+
+#antiphon "ecce-dominus-veniet"
+	#tone "5-i" "c3"
+	#no-gloria
+	#psalm "62"
+
+	#repeat-tone
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "omnes-sitientes"
+	#tone "7-ii" "c3"
+	#no-gloria
+	#psalm "daniel-3"
+#repeat-antiphon
+
+#antiphon "ecce-veniet-propheta"
+	#tone "4-v" "c3"
+	#no-gloria
+	#psalm "148"
+
+	#repeat-tone
+	#no-gloria
+	#psalm "149"
+
+	#repeat-tone
+	#psalm "150"
+#repeat-antiphon

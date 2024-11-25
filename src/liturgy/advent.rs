@@ -83,7 +83,7 @@ fn matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	map.insert("order", ["matins", "order", "ordinary.lit"].iter().collect());
 
 	map.insert("psalter", match day {
-		Sun => iden.to_path().join("psalter.lit"),
+		Sun => iden.to_path().join("matins").join("psalter.lit"),
 		_ => ["matins", &(iden.day.to_lowercase() + ".lit")].iter().collect()
 	});
 
