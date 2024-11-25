@@ -87,7 +87,16 @@ fn matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 		_ => ["matins", &(iden.day.to_lowercase() + ".lit")].iter().collect()
 	});
 
-	
+	map.insert("chapter", match day {
+		Sun => iden.to_path().join("matins").join("chapter.lit"),
+		_ => ["commons", "matins", "chapters", "advent-feria.lit"].iter().collect()
+	});
+
+	map.insert("hymn", ["hymn", "vox-clara-ecce-intonat", "advent.lit"].iter().collect());
+
+	map.insert("versicle", ["commons", "matins", "versicles", "advent.lit"].iter().collect());
+
+	map.insert("canticle", iden.to_path().join("matins").join("benedictus.lit"));
 
 	map.extend(commons);
 

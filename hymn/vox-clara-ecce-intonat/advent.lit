@@ -1,0 +1,35 @@
+#title "Verbum supernum prodiens"
+
+#begin-hymn
+	#clef "c4"
+
+	#melody "ev" "c" "ev" "gv" "hv" "iv" "h" "h"
+	#verse "Be-" "hold!" "a" "voice" "re-" "sound-" "ing," "clear,"
+	#verse "Now" "let" "the" "wea-" "ry" "soul" "a-" "rise,"
+	#verse "The" "Lamb" "is" "sent" "from" "realms" "on" "high"
+	#verse "That" "when" "he" "comes" "like" "lightn-" "ing" "flash"
+	#verse "To" "most" "high" "Fa-" "ther," "glo-" "ry" "be,"
+
+	#melody "g" "hv" "jv" "jv" "ig" "hv" "iv" "h"
+	#verse "re-" "buk-" "ing" "hid-" "den" "fears" "and" "deeds:"
+	#verse "in-" "firm" "and" "wound-"  "ed" "by" "her" "sin;"
+	#verse "to" "free" "us" "from" "our" "mor-" "tal" "debt."
+	#verse "and" "ter-" "or" "grips" "the" "world" "in" "dread,"
+	#verse "and" "to" "his" "Son," "all" "vic-" "to-" "ry,"
+
+	#melody "h" "h" "iv" "g" "eg" "f" "e" "d"
+	#verse "Let" "dreams" "be" "dri-" "ven" "far" "a-" "way,"
+	#verse "a" "new" "star" "now" "sends" "forth" "its" "light"
+	#verse "Let" "ev-" "ery" "voice" "give" "thank-" "ful" "praise"
+	#verse "he" "need" "not" "pun-" "ish" "us" "for" "guilt"
+	#verse "to" "Spir-" "it" "blest," "all" "praise" "is" "due"
+
+	#melody "ev" "c" "ev" "gv" "hv" "iv" "h" "h"
+	#verse "for" "Christ" "shines" "forth" "from" "hea-" "ven's" "height."
+	#verse "to" "rid" "the" "world" "of" "ev-" "ery" "harm."
+	#verse "and" "weep" "for" "ten-" "der" "mer-" "cy" "shown:"
+	#verse "but" "with" "com-" "pas-" "sion" "shield" "us" "then."
+	#verse "through" "end-" "less" "a-" "ges" "ev-" "er-" "more."
+
+	#amen "hi" "hgh"
+#end
