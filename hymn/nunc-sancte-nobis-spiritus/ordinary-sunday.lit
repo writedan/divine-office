@@ -1,0 +1,27 @@
+#title "Nunc Sancte nobis Spiritus"
+
+#begin-hymn
+	#clef "f3"
+
+	#melody "hih" "g" "iv" "ij" "ji" "h" "f" "gv"
+	#verse "Now," "Ho-" "ly" "Spir-" "it," "come," "des-" "cend"
+	#verse "In" "mind" "and" "mouth," "with" "heart" "and" "tongue,"
+	#verse "Most" "lov-" "ing" "Fa-" "ther," "hear" "our" "prayer,"
+
+	#melody "hv" "f" "hg" "hi" "hg" "f" "e" "fv"
+	#verse "one" "with" "the" "Fa-" "ther" "and" "the" "Son;"
+	#verse "with" "strength" "and" "sense," "may" "praise" "re-" "sound."
+	#verse "and" "you," "O" "Christ," "co--" "e-" "qual" "Son,"
+
+	#melody "hv" "f" "e" "gv" "fh" "f" "e" "gv"
+	#verse "come" "swift-" "ly" "in" "and" "fill" "our" "hearts"
+	#verse "May" "cha-" "ri-" "ty" "with" "ar-" "dor" "blaze,"
+	#verse "who" "with" "the" "Spir-" "it" "Pa-" "ra-" "clete"
+
+	#melody "hv" "iv" "hijv" "ji" "gf" "hv" "ih" "g"
+	#verse "with" "your" "full" "flood" "of" "ho-" "li-" "ness."
+	#verse "and" "kind-" "le" "o-" "thers" "with" "its" "flame."
+	#verse "now" "reigns" "through" "all" "e-" "ter-" "ni-" "ty."
+
+	#amen "ghg" "g"
+#end

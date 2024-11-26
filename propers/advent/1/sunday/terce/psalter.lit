@@ -1,0 +1,10 @@
+#antiphon "jocundare-filia-syon"
+	#tone "8-i" "c4"
+	#psalm "118c"
+
+	#repeat-tone
+	#psalm "118d"
+
+	#repeat-tone
+	#psalm "118e"
+#repeat-antiphon

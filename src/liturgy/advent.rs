@@ -142,6 +142,16 @@ fn terce(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
+	map.insert("order", ["terce", "order", "ordinary.lit"].iter().collect());
+
+	map.insert("hymn", ["hymn", "nunc-sancte-nobis-spiritus", "ordinary-sunday.lit"].iter().collect());
+
+	map.insert("psalter", iden.to_path().join("terce").join("psalter.lit"));
+
+	map.insert("chapter", iden.to_path().join("terce").join("chapter.lit"));
+
+	map.insert("versicle", ["commons", "terce", "versicles", "advent.lit"].iter().collect());
+
 	map.extend(commons);
 
 	return map;
