@@ -13,6 +13,7 @@
 horarium/test.html
 !*.py
 !public/*
+#!react-frontend/**/**
 
 # rust support
 
