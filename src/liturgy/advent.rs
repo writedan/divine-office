@@ -164,6 +164,16 @@ fn sext(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
+	map.insert("order", ["terce", "order", "ordinary.lit"].iter().collect());
+
+	map.insert("hymn", ["hymn", "rector-potens-verax", "ordinary-sunday.lit"].iter().collect());
+
+	map.insert("psalter", iden.to_path().join("sext").join("psalter.lit"));
+
+	map.insert("chapter", iden.to_path().join("sext").join("chapter.lit"));
+
+	map.insert("versicle", ["commons", "sext", "versicles", "advent.lit"].iter().collect());
+
 	map.extend(commons);
 
 	return map;
@@ -175,6 +185,16 @@ fn none(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
+
+	map.insert("order", ["terce", "order", "ordinary.lit"].iter().collect());
+
+	map.insert("hymn", ["hymn", "rerum-deus-tenax", "ordinary-sunday.lit"].iter().collect());
+
+	map.insert("psalter", iden.to_path().join("none").join("psalter.lit"));
+
+	map.insert("chapter", iden.to_path().join("none").join("chapter.lit"));
+
+	map.insert("versicle", ["commons", "none", "versicles", "advent.lit"].iter().collect());
 
 	map.extend(commons);
 

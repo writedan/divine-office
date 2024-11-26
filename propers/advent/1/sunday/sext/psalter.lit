@@ -1,0 +1,10 @@
+#antiphon "ecce-dominus-veniet"
+	#tone "5-i" "c3"
+	#psalm "118f"
+
+	#repeat-tone
+	#psalm "118g"
+
+	#repeat-tone
+	#psalm "118h"
+#repeat-antiphon
