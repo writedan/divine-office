@@ -110,7 +110,27 @@ fn prime(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
+	map.insert("order", ["terce", "order", "ordinary.lit"].iter().collect());
+
+	map.insert("hymn", ["hymn", "jam-lucis-orto-sidere", "advent-sunday.lit"].iter().collect());
+
+	map.insert("psalter", iden.to_path().join("prime").join("psalter.lit"));
+
+	map.insert("chapter", match day {
+		Sun => ["commons", "prime", "chapters", "sunday.lit"],
+		_ => ["commons", "prime", "chapters", "feria.lit"]
+	}.iter().collect());
+
+	map.insert("responsory", match day {
+		Sun => ["resp", "jesu-christe-fili-dei", "advent-sunday.gabc"],
+		_ => ["resp", "jesu-christe-fili-dei", "advent-feria.gabc"]
+	}.iter().collect());
+
+	map.insert("versicle", ["commons", "prime", "versicles", "ordinary.lit"].iter().collect());
+
 	map.extend(commons);
+
+	map.insert("collect", ["commons", "prime", "collect.lit"].iter().collect());
 
 	return map;
 }
