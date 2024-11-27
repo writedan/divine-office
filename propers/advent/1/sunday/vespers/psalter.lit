@@ -1,0 +1,24 @@
+#antiphon "in-illa-die"
+	#tone "8-i" "c4"
+	#psalm "109"
+#repeat-antiphon
+
+#antiphon "jocundare-filia-syon"
+	#tone "8-i" "c4"
+	#psalm "110"
+#repeat-antiphon
+
+#antiphon "ecce-dominus-veniet"
+	#tone "5-i" "c3"
+	#psalm "111"
+#repeat-antiphon
+
+#antiphon "omnes-sitientes"
+	#tone "7-ii" "c3"
+	#psalm "112"
+#repeat-antiphon
+
+#antiphon "ecce-veniet-propheta"
+	#tone "4-v" "c3"
+	#psalm "113"
+#repeat-antiphon

@@ -32,10 +32,10 @@ fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("order", ["matins", "order", "ordinary.lit"].iter().collect());
 	map.insert("psalter", ["vespers", "saturday.lit"].iter().collect());
-	map.insert("chapter", iden.to_path().join("vespers").join("chapter.lit"));
+	map.insert("chapter", iden.to_path().join("1st-vespers").join("chapter.lit"));
 	map.insert("hymn", ["hymn", "conditor-alme-syderum", "advent.lit"].iter().collect());
 	map.insert("versicle", ["commons", "vespers", "versicles", "advent.lit"].iter().collect());
-	map.insert("canticle", iden.to_path().join("vespers").join("magnificat.lit"));
+	map.insert("canticle", iden.to_path().join("1st-vespers").join("magnificat.lit"));
 
 	map.extend(crate::liturgy::commons::resolve(iden).unwrap());
 	map
@@ -207,6 +207,21 @@ fn vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
+
+	map.insert("order", ["matins", "order", "ordinary.lit"].iter().collect());
+
+	map.insert("psalter", match day {
+		Sun => iden.to_path().join("vespers").join("psalter.lit"),
+		_ => ["vespers", &(iden.day.to_lowercase() + ".lit")].iter().collect()
+	});
+
+	map.insert("chapter", iden.to_path().join("vespers").join("chapter.lit"));
+
+	map.insert("hymn", ["hymn", "conditor-alme-syderum", "advent.lit"].iter().collect());
+
+	map.insert("versicle", ["commons", "vespers", "versicles", "advent.lit"].iter().collect());
+
+	map.insert("canticle", iden.to_path().join("vespers").join("magnificat.lit"));
 
 	map.extend(commons);
 
