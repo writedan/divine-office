@@ -73,6 +73,10 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 		Wed | Sat => "3rd-nocturn"
 	}, "versicles", "advent.lit"].iter().collect());
 
+	map.insert("versicle-2", ["commons", "vigils", "2nd-nocturn", "versicles", "advent.lit"].iter().collect());
+
+	map.insert("versicle-3", ["commons", "vigils", "3rd-nocturn", "versicles", "advent.lit"].iter().collect());
+
 	map.extend(vigils);
 	map.extend(commons);
 
