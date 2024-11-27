@@ -452,7 +452,7 @@ impl Preprocessor {
 			    	}
 			    },
 
-			    RepeatHalfAntiphon => {
+			    RepeatHalfAntiphon(amount) => {
 			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
 			    		use std::io::{BufReader, Read};
 						use std::fs::File;
@@ -471,7 +471,14 @@ impl Preprocessor {
 
 					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
 
-						return Token::Gabc(gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string());
+						//return Token::Gabc(gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string());
+						if (amount == "half") {
+							return Token::Gabc(format!("<sp>r</sp> {}", gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string()));
+						} else if (amount == "full") {
+							return Token::Gabc(format!("<sp>r</sp> {}", gabc[1].to_string()));
+						} else {
+							return Token::Error(format!("Unknown repeat type {}", amount));
+						}
 			    	} else {
 			    		Token::RepeatAntiphon
 			    	}
