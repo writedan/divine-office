@@ -14,7 +14,6 @@ dist-ssr
 package-lock.json
 eslint.config.js
 tsconfig.app.json
-tsconfig.json
 tsconfig.node.json
 
 # Editor directories and files
