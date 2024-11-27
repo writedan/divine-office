@@ -40,7 +40,7 @@
 	#psalm "14"
 #repeat-antiphon
 
-#gabc "(c3) <sp>v</sp> Out(h) of(h) Zi(h)on(h) is(h) the(h) mag(h)ni(h)fi(h)cence(h) of(h) His(h) beau(h)ty.(f) <sp>r</sp>(::) God(h) shall(h) come(h) vi(h)si(h)bly,(h) yea,(h) our(h) God,(h) and(h) shall(h) not(h) keep(h) si(h)lence.(f)"
+#include "versicle-1"
 
 #begin-resumable "2nd-nocturn"
 	#antiphon "bethlehem-non-es-minima"
@@ -58,7 +58,7 @@
 		#psalm "17"
 	#repeat-antiphon
 
-	#gabc "(c3) <sp>v</sp> There(h) shall(h) come(h) forth(h) a(h) rod(h) out(h) of(h) the(h) stem(h) of(h) Jes(h)se.(f) <sp>r</sp>(::) And(h) a(h) branch(h) shall(h) grow(h) out(h) of(h) his(f) roots.(f)"
+	#include "versicle-2"
 #end
 
 #begin-resumable "3rd-nocturn"
@@ -77,5 +77,5 @@
 		#psalm "20"
 	#repeat-antiphon
 
-	#gabc "(c3) <sp>v</sp> The(h) Lord(h) shall(h) come(h) forth(h) out(h) of(h) his(h) ho(h)ly(f) place.(g) <sp>r</sp>(::) He(h) comes(h) to(h) save(h) his(h) peo(h)ple(h) from(h) their(f) sins.(f)"
+	#include "versicle-3"
 #end
