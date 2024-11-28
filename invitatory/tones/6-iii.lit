@@ -1,0 +1,26 @@
+#title "Psalm 94"
+#title "A Canticle Praise of David"
+
+#import "invitatory/tones/6-iii/v1.gabc"
+
+#repeat-antiphon "full"
+
+#import "invitatory/tones/6-iii/v2.gabc"
+
+#repeat-antiphon "half"
+
+#import "invitatory/tones/6-iii/v3.gabc"
+
+#repeat-antiphon "full"
+
+#import "invitatory/tones/6-iii/v4.gabc"
+
+#repeat-antiphon "half"
+
+#import "invitatory/tones/6-iii/v5.gabc"
+
+#repeat-antiphon "full"
+
+#import "invitatory/tones/6-iii/gloria.gabc"
+
+#repeat-antiphon "half"
