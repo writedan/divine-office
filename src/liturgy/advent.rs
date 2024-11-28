@@ -124,7 +124,10 @@ fn prime(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("hymn", ["hymn", "jam-lucis-orto-sidere", "advent-sunday.lit"].iter().collect());
 
-	map.insert("psalter", iden.to_path().join("prime").join("psalter.lit"));
+	map.insert("psalter", match day {
+		Sun => iden.to_path().join("prime").join("psalter.lit"),
+		_ => ["prime", "advent-feria.lit"].iter().collect()
+	});
 
 	map.insert("chapter", match day {
 		Sun => ["commons", "prime", "chapters", "sunday.lit"],
