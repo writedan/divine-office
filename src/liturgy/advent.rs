@@ -255,7 +255,10 @@ fn vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 		_ => ["vespers", &(iden.day.to_lowercase() + ".lit")].iter().collect()
 	});
 
-	map.insert("chapter", iden.to_path().join("vespers").join("chapter.lit"));
+	map.insert("chapter", match day {
+		Sun => iden.to_path().join("matins").join("chapter.lit"),
+		_ => ["commons", "vespers", "chapters", "advent-feria.lit"].iter().collect()
+	});
 
 	map.insert("hymn", ["hymn", "conditor-alme-syderum", "advent.lit"].iter().collect());
 
