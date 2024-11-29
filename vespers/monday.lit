@@ -1,0 +1,24 @@
+#antiphon "inclinavit"
+	#tone "1-iii" "c4"
+	#psalm "114"
+#repeat-antiphon
+
+#antiphon "credidi-propter"
+	#tone "8-ii" "c3"
+	#psalm "115"
+#repeat-antiphon
+
+#antiphon "laudate-dominum-omnes-gentes"
+	#tone "4-i" "c4"
+	#psalm "116"
+#repeat-antiphon
+
+#antiphon "clamavi"
+	#tone "4-vii" "c4"
+	#psalm "119"
+#repeat-antiphon
+
+#antiphon "auxilium"
+	#tone "8-ii" "c3"
+	#psalm "120"
+#repeat-antiphon
