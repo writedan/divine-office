@@ -157,11 +157,20 @@ fn terce(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("order", ["terce", "order", "ordinary.lit"].iter().collect());
 
-	map.insert("hymn", ["hymn", "nunc-sancte-nobis-spiritus", "ordinary-sunday.lit"].iter().collect());
+	map.insert("hymn", ["hymn", "nunc-sancte-nobis-spiritus", match day {
+			Sun => "ordinary-sunday.lit",
+			_ => "ordinary-feria.lit"
+		}].iter().collect());
 
-	map.insert("psalter", iden.to_path().join("terce").join("psalter.lit"));
+	map.insert("psalter", match day {
+		Sun => iden.to_path().join("terce").join("psalter.lit"),
+		_ => ["terce", "advent-feria.lit"].iter().collect()
+	});
 
-	map.insert("chapter", iden.to_path().join("terce").join("chapter.lit"));
+	map.insert("chapter", match day {
+		Sun => iden.to_path().join("terce").join("chapter.lit"),
+		_ => ["commons", "terce", "chapters", "advent-feria.lit"].iter().collect()
+	});
 
 	map.insert("versicle", ["commons", "terce", "versicles", "advent.lit"].iter().collect());
 
@@ -179,11 +188,20 @@ fn sext(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("order", ["terce", "order", "ordinary.lit"].iter().collect());
 
-	map.insert("hymn", ["hymn", "rector-potens-verax", "ordinary-sunday.lit"].iter().collect());
+	map.insert("hymn", ["hymn", "rector-potens-verax", match day {
+			Sun => "ordinary-sunday.lit",
+			_ => "ordinary-feria.lit"
+		}].iter().collect());
 
-	map.insert("psalter", iden.to_path().join("sext").join("psalter.lit"));
+	map.insert("psalter", match day {
+		Sun => iden.to_path().join("sext").join("psalter.lit"),
+		_ => ["sext", "advent-feria.lit"].iter().collect()
+	});
 
-	map.insert("chapter", iden.to_path().join("sext").join("chapter.lit"));
+	map.insert("chapter", match day {
+		Sun => iden.to_path().join("sext").join("chapter.lit"),
+		_ => ["commons", "sext", "chapters", "advent-feria.lit"].iter().collect()
+	});
 
 	map.insert("versicle", ["commons", "sext", "versicles", "advent.lit"].iter().collect());
 
@@ -201,11 +219,20 @@ fn none(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("order", ["terce", "order", "ordinary.lit"].iter().collect());
 
-	map.insert("hymn", ["hymn", "rerum-deus-tenax", "ordinary-sunday.lit"].iter().collect());
+	map.insert("hymn", ["hymn", "rerum-deus-tenax", match day {
+			Sun => "ordinary-sunday.lit",
+			_ => "ordinary-feria.lit"
+		}].iter().collect());
 
-	map.insert("psalter", iden.to_path().join("none").join("psalter.lit"));
+	map.insert("psalter", match day {
+		Sun => iden.to_path().join("none").join("psalter.lit"),
+		_ => ["none", "advent-feria.lit"].iter().collect()
+	});
 
-	map.insert("chapter", iden.to_path().join("none").join("chapter.lit"));
+	map.insert("chapter", match day {
+		Sun => iden.to_path().join("none").join("chapter.lit"),
+		_ => ["commons", "none", "chapters", "advent-feria.lit"].iter().collect()
+	});
 
 	map.insert("versicle", ["commons", "none", "versicles", "advent.lit"].iter().collect());
 

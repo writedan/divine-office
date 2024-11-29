@@ -1,0 +1,10 @@
+#antiphon "tuam-domini"
+	#tone "4-v" "c3"
+	#psalm "118c"
+
+	#repeat-tone
+	#psalm "118d"
+
+	#repeat-tone
+	#psalm "118e"
+#repeat-antiphon

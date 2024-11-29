@@ -1,0 +1,27 @@
+#title "Rerum Deus tenax"
+
+#begin-hymn
+	#clef "x4"
+
+	#melody "hv" "hv" "hv" "hv" "hv" "hv" "hv" "g"
+	#verse "O" "God," "our" "firm" "and" "stead-" "fast" "strength,"
+	#verse "Be-" "stow" "at" "even-" "ing-" "tide" "a" "light"
+	#verse "Most" "lov-" "ing" "Fa-" "ther," "hear" "our" "prayer,"
+
+	#melody "hv" "hv" "hv" "hv" "hv" "hv" "g" "hv"
+	#verse "re-" "main-" "ing" "in" "your-" "self" "un-" "moved,"
+	#verse "by" "which" "our" "life" "may" "ne-" "ver" "fail,"
+	#verse "and" "you," "O" "Christ," "co--" "e-" "qual" "Son,"
+
+	#melody "hv" "hv" "hv" "g" "f" "gv" "f" "e"
+	#verse "you" "rule" "the" "span" "of" "dai-" "ly" "light"
+	#verse "and" "grant" "the" "glo-" "ry" "with-" "out" "end"
+	#verse "who" "with" "the" "Spir-" "it" "Pa-" "ra-" "clete"
+
+	#melody "fv" "gv" "gv" "gv" "f" "hv" "g" "g"
+	#verse "and" "guide" "the" "course" "of" "all" "the" "hours."
+	#verse "that" "fol-" "low" "on" "a" "ho-" "ly" "death."
+	#verse "now" "reigns" "through" "all" "e-" "ter-" "ni-" "ty."
+
+	#amen "ghg" "g"
+#end
