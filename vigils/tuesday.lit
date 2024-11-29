@@ -1,0 +1,49 @@
+#antiphon "ut-non-delinquam"
+	#tone "1-iv" "c3"
+	#psalm "38"
+
+	#repeat-tone
+	#psalm "39"
+#repeat-antiphon
+
+#antiphon "sana-domine"
+	#tone "2-i" "c4"
+	#psalm "40"
+
+	#repeat-tone
+	#psalm "41"
+#repeat-antiphon
+
+#antiphon "eructavit-cor-meum"
+	#tone "6" "c4"
+	#psalm "43"
+
+	#repeat-tone
+	#psalm "44"
+#repeat-antiphon
+
+#antiphon "adjutor"
+	#tone "4-vii" "c4"
+	#psalm "45"
+
+	#repeat-tone
+	#psalm "46"
+#repeat-antiphon
+
+#antiphon "auribus-percipite"
+	#tone "8-ii" "c3"
+	#psalm "47"
+
+	#repeat-tone
+	#psalm "48"
+#repeat-antiphon
+
+#antiphon "deus-deorum"
+	#tone "8-ii" "c3"
+	#psalm "49"
+
+	#repeat-tone
+	#psalm "51"
+#repeat-antiphon
+
+#include "versicle-1"
