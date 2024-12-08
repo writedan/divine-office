@@ -6,21 +6,19 @@ mod compiler;
 mod router;
 mod lexer;
 
-use clap::Parser;
-
-#[derive(Parser, Debug)]
-struct Args {
-    // IP address and port to bind server to, e.g. localhost:80
-    #[arg(short, long)]
-    bind_to: String,
-}
+use std::net::{TcpListener, SocketAddr};
 
 fn main() {
     use crate::router;
 
-    let args = Args::parse();
+    let bind_addr = TcpListener::bind("0.0.0.0:0")
+        .expect("Failed to bind to a port")
+        .local_addr()
+        .expect("Failed to get local address");
 
-    rouille::start_server(args.bind_to, move |request| {
+    println!("http://127.0.0.1:{}", bind_addr.port());
+
+    rouille::start_server(bind_addr.to_string(), move |request| {
         match request.url().as_str() {
             "/liturgy.css" => router::static_file("public/liturgy.css", "text/css"),
             "/suncalc.js" => router::static_file("public/suncalc.js", "application/javascript"),
@@ -28,7 +26,7 @@ fn main() {
             "/exsurge.min.js" => router::static_file("public/exsurge.min.js", "application/javascript"),
             "/exsurge.min.js.map" => router::static_file("public/exsurge.min.js.map", "application/javascript"),
             "/" => router::static_file("public/index.html", "text/html"),
-            _ => router::dynamic(request)
+            _ => router::dynamic(request),
         }
     });
 }
