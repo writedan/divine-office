@@ -338,8 +338,8 @@ impl Preprocessor {
 				Gloria(None) => Token::Gloria(self.store.get("internal:last-tone").cloned()),
 
 				Gloria(Some(tone)) => {
-					if let Some("true") = temp_store.get("no-gloria".into()).map(String::as_str) {
-						temp_store.remove("no-gloria".into());
+					if let Some("true") = temp_store.get(&<&str as Into<String>>::into("no-gloria")).map(String::as_str) {
+						temp_store.remove(&<&str as Into<String>>::into("no-gloria"));
 						insertions.push((idx, Vec::new()));
 						Token::Empty
 					} else {
