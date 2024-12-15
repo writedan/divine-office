@@ -41,9 +41,6 @@ fn route(id: String, params: HashMap<String, String>) -> R<Response> {
 
                 let mut month: HashMap<u32, Celebration> = HashMap::new();
 
-                println!("there are {} days in month {}", days_in_month, m);
-                println!("next month is {:?}", next_month);
-
                 for day in 1..=days_in_month {
                     let date = NaiveDate::from_ymd(y, m, day as u32);
 
