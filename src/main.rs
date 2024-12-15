@@ -88,8 +88,8 @@ fn main() {
 
     let mut router = Router::new();
 
-    router.add_route("LiturgicalIdentifier", "/Identifiers/{year:integer}-{month:integer}-{day:integer}");
-    router.add_route("MonthlyLiturgicalIdentifiers", "/Identifiers/{year:integer}-{month:integer}");
+    router.add_route("LiturgicalIdentifier", "/Identifiers/Day/{year:integer}-{month:integer}-{day:integer}");
+    router.add_route("MonthlyLiturgicalIdentifiers", "/Identifiers/Month/{year:integer}-{month:integer}");
     router.add_route("HourCompiledElements", "/Elements/{year:integer}-{month:integer}-{day:integer}/{hour:string}");
 
     rouille::start_server(bind_addr.to_string(), move |request| {

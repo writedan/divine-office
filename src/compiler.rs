@@ -1,8 +1,6 @@
 use crate::parser::Directive;
 use crate::parser::ast::*;
 
-use build_html::{HtmlContainer, Container, ContainerType};
-
 use lazy_static::lazy_static;
 use regex::Regex;
 
