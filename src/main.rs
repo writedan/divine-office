@@ -88,15 +88,16 @@ fn main() {
 
     let mut router = Router::new();
 
-    router.add_route("LiturgicalIdentifier", "/api/{year:integer}-{month:integer}-{day:integer}/Identifiers");
-    router.add_route("MonthlyLiturgicalIdentifiers", "/api/{year:integer}-{month:integer}/Identifiers");
+    router.add_route("LiturgicalIdentifier", "/Identifiers/{year:integer}-{month:integer}-{day:integer}");
+    router.add_route("MonthlyLiturgicalIdentifiers", "/Identifiers/{year:integer}-{month:integer}");
+    router.add_route("HourCompiledElements", "/Elements/{year:integer}-{month:integer}-{day:integer}/{hour:string}");
 
     rouille::start_server(bind_addr.to_string(), move |request| {
         if request.method() == "OPTIONS" {
             return rouille::Response::text("")
                 .with_status_code(204)
                 .with_additional_header("Access-Control-Allow-Origin", "*")
-                .with_additional_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                .with_additional_header("Access-Control-Allow-Methods", "GET, OPTIONS")
                 .with_additional_header("Access-Control-Allow-Headers", "*");
         }
 
@@ -109,7 +110,7 @@ fn main() {
 
         response = response
             .with_additional_header("Access-Control-Allow-Origin", "*")
-            .with_additional_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            .with_additional_header("Access-Control-Allow-Methods", "GET, OPTIONS")
             .with_additional_header("Access-Control-Allow-Headers", "*");
 
         return response;

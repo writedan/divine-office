@@ -6,6 +6,8 @@ use build_html::{HtmlContainer, Container, ContainerType};
 use lazy_static::lazy_static;
 use regex::Regex;
 
+use serde::Serialize;
+
 lazy_static! {
 	static ref SmallPrint: Regex = Regex::new(r"\{([^{}]*)\}").unwrap();
 	static ref Vowel: Regex = Regex::new(r"([aeiouAEIOU])").unwrap();
@@ -14,6 +16,18 @@ lazy_static! {
 	static ref Flex: Regex = Regex::new(r"\^([^^]*)\^").unwrap();
 	static ref Mediant: Regex = Regex::new(r"\~([^~]*)\~").unwrap();
 	static ref Accent: Regex = Regex::new(r"\`([^`]*)\`").unwrap();
+}
+
+#[derive(Serialize, PartialEq)]
+pub enum Element {
+	Box(Vec<Element>),
+	Text(String),
+	Heading(String, u8),
+	Instruction(String),
+	RawGabc(String),
+	Title(String),
+	Error(String),
+	Empty
 }
 
 fn style_first_vowel(text: &str, sym: &str, style: &str) -> String {
@@ -28,19 +42,19 @@ fn style_first_vowel(text: &str, sym: &str, style: &str) -> String {
 	}
 }
 
-pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Container> {
+pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Element> {
 	let mut res = Vec::new();
 
 	for child in tree.children() {
 		match child {
 			ASTNode::Node(dir) => res.push(compile_node(dir)),
 			ASTNode::Tree(tree) => {
-				let mut tree = match tree.root {
-					Some(ref root) => vec![compile_tree(tree)],
+				let tree = match tree.root {
+					Some(ref root) => compile_tree(tree),
 					None => compile_ast(tree)
 				};
 
-				res.append(&mut tree);
+				res.extend(clear_empty(tree));
 			}
 		}
 	}
@@ -48,66 +62,72 @@ pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Container> {
 	res
 }
 
-fn compile_dispatch(node: ASTNode<Directive>) -> Container {
+fn clear_empty(vec: Vec<Element>) -> Vec<Element> {
+	vec.into_iter()
+        .filter(|e| e != &Element::Empty)
+        .collect()
+}
+
+fn compile_dispatch(node: ASTNode<Directive>) -> Vec<Element> {
 	match node {
-		ASTNode::Node(directive) => compile_node(directive),
-		ASTNode::Tree(tree) => compile_tree(tree)
+		ASTNode::Node(directive) => vec![compile_node(directive)],
+		ASTNode::Tree(tree) => clear_empty(compile_tree(tree))
 	}
 }
 
-fn compile_tree(tree: ASTree<Directive>) -> Container {
+fn compile_tree(tree: ASTree<Directive>) -> Vec<Element> {
 	match tree.root {
 		Some(Directive::Box) => {
-			let mut cont = Container::new(ContainerType::Div).with_attributes(vec![("class", "boxed")]);
+			let mut cont = Vec::new();
 			for node in tree.children() {
-				cont.add_container(compile_dispatch(node));
+				cont.extend(clear_empty(compile_dispatch(node)));
 			}
 
-			cont
+			vec![Element::Box(clear_empty(cont))]
 		},
 
 		None => {
-			let mut cont = Container::new(ContainerType::Div);
+			let mut cont = Vec::new();
 			for node in tree.children() {
-				cont.add_container(compile_dispatch(node));
+				cont.extend(clear_empty(compile_dispatch(node)));
 			}
 
-			cont
+			clear_empty(cont)
 		},
 
-		_ => compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root)))
+		_ => vec![compile_node(Directive::Error(format!("Unsupported tree root directive {:?}", tree.root)))]
 	}
 }
 
-fn compile_node(node: Directive) -> Container {
+fn compile_node(node: Directive) -> Element {
 	match node {
 		Directive::Text(text) => {
-			let text = text.replace('*', "<span class='symbol'>*</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;")
-			.replace("+++", "<span class='symbol'>✠</span>")
-			.replace('+', "<span class='symbol'>+</span><br/>");
+			// let text = text.replace('*', "<span class='symbol'>*</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;")
+			// .replace("+++", "<span class='symbol'>✠</span>")
+			// .replace('+', "<span class='symbol'>+</span><br/>");
 
-			let text = SmallPrint.replace_all(&text, "<span class='instr'>$1</span>");
+			// let text = SmallPrint.replace_all(&text, "<span class='instr'>$1</span>");
 
-			let text = Intone.replace_all(&text, |caps: &regex::Captures| {
-				style_first_vowel(&caps[1], "\u{030A}", "span")
-			});
+			// let text = Intone.replace_all(&text, |caps: &regex::Captures| {
+			// 	style_first_vowel(&caps[1], "\u{030A}", "span")
+			// });
 
-			let text = Flex.replace_all(&text, |caps: &regex::Captures| {
-				style_first_vowel(&caps[1], "\u{0302}", "i")
-			});
+			// let text = Flex.replace_all(&text, |caps: &regex::Captures| {
+			// 	style_first_vowel(&caps[1], "\u{0302}", "i")
+			// });
 
-			let text = Mediant.replace_all(&text, |caps: &regex::Captures| {
-				style_first_vowel(&caps[1], "\u{0303}", "u")
-			});
+			// let text = Mediant.replace_all(&text, |caps: &regex::Captures| {
+			// 	style_first_vowel(&caps[1], "\u{0303}", "u")
+			// });
 			
-			let text = Accent.replace_all(&text, |caps: &regex::Captures| {
-				style_first_vowel(&caps[1], "\u{0301}", "b")
-			});
+			// let text = Accent.replace_all(&text, |caps: &regex::Captures| {
+			// 	style_first_vowel(&caps[1], "\u{0301}", "b")
+			// });
 
-			Container::new(ContainerType::Div).with_paragraph(text)
+			Element::Text(text)
 		},
 
-		Directive::Heading(text, level) => Container::new(ContainerType::Div).with_header(level, text),
+		Directive::Heading(text, level) => Element::Heading(text, level),
 
 		Directive::Hymn(hymn) => {
 			let mut buffer = format!("initial-style: 1;\nannotation: Hymn.;\ncentering-scheme: english;\n%%\n({})", hymn.clef);
@@ -136,16 +156,15 @@ fn compile_node(node: Directive) -> Container {
 			compile_node(Directive::RawGabc(buffer))
 		},
 
-		Directive::Instruction(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "instruction")]).with_paragraph(text),
+		Directive::Instruction(text) => Element::Instruction(text),
 
-		Directive::RawGabc(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "gabc-score")]).with_raw(text),
+		Directive::RawGabc(text) => Element::RawGabc(text),
 
-		Directive::Title(text) => Container::new(ContainerType::Div).with_attributes(vec![("class", "title")]).with_paragraph(if text.ends_with('.') { text } else { format!("{}.", text) }),
+		Directive::Title(text) => Element::Title(text),
 
-		Directive::Error(why) =>
-			Container::new(ContainerType::Div).with_attributes(vec![("class", "error")]).with_paragraph(format!("Error: {}", why)),
+		Directive::Error(why) => Element::Error(why),
 
-		Directive::Empty => Container::new(ContainerType::Div).with_attributes(vec![("class", "empty")]).with_paragraph("empty"),
+		Directive::Empty => Element::Empty,
 
 		_ => compile_node(Directive::Error(format!("Unsupported node {:?}", node)))
 	}
