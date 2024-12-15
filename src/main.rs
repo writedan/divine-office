@@ -89,6 +89,7 @@ fn main() {
     let mut router = Router::new();
 
     router.add_route("LiturgicalIdentifier", "/api/{year:integer}-{month:integer}-{day:integer}/Identifiers");
+    router.add_route("MonthlyLiturgicalIdentifiers", "/api/{year:integer}-{month:integer}/Identifiers");
 
     rouille::start_server(bind_addr.to_string(), move |request| {
         if request.method() == "OPTIONS" {
