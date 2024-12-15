@@ -8,6 +8,74 @@ mod lexer;
 
 use std::net::{TcpListener, SocketAddr};
 
+use regex::Regex;
+use std::collections::HashMap;
+
+#[derive(Debug)]
+struct Route {
+    url_pattern: String,
+}
+
+struct Router {
+    routes: HashMap<String, Route>,
+}
+
+impl Router {
+    fn new() -> Self {
+        Router {
+            routes: HashMap::new(),
+        }
+    }
+
+    fn add_route(&mut self, id: &str, url_pattern: &str) {
+        let route = Route {
+            url_pattern: url_pattern.to_string(),
+        };
+        self.routes.insert(id.to_string(), route);
+    }
+
+    fn get_route_id(&self, url: &str) -> Option<(String, HashMap<String, String>)> {
+        for (id, route) in &self.routes {
+            let regex_pattern = self.create_regex_pattern(&route.url_pattern);
+
+            let regex = Regex::new(&regex_pattern).unwrap();
+
+            if let Some(captures) = regex.captures(url) {
+                let mut params = HashMap::new();
+                let param_names = self.extract_param_names(&route.url_pattern);
+
+                for (i, param_name) in param_names.iter().enumerate() {
+                    let value = captures.get(i + 1).unwrap().as_str().to_string();
+                    params.insert(param_name.clone(), value);
+                }
+
+                return Some((id.clone(), params));
+            }
+        }
+
+        None
+    }
+
+    fn create_regex_pattern(&self, url_pattern: &str) -> String {
+        let re = Regex::new(r"\{(\w+):(\w+)\}").unwrap();
+        re.replace_all(url_pattern, |caps: &regex::Captures| {
+            let param_type = &caps[2];
+            match param_type {
+                "integer" => r"(\d+)".to_string(),
+                "string" => r"([^/]+)".to_string(),
+                _ => r"([^/]+)".to_string(),
+            }
+        }).to_string()
+    }
+
+    fn extract_param_names(&self, url_pattern: &str) -> Vec<String> {
+        let re = Regex::new(r"\{(\w+):\w+\}").unwrap();
+        re.captures_iter(url_pattern)
+            .map(|caps| caps[1].to_string())
+            .collect()
+    }
+}
+
 fn main() {
     use crate::router;
 
@@ -18,6 +86,10 @@ fn main() {
 
     println!("http://127.0.0.1:{}", bind_addr.port());
 
+    let mut router = Router::new();
+
+    router.add_route("LiturgicalIdentifier", "/api/{year:integer}-{month:integer}-{day:integer}/Identifiers");
+
     rouille::start_server(bind_addr.to_string(), move |request| {
         if request.method() == "OPTIONS" {
             return rouille::Response::text("")
@@ -27,14 +99,11 @@ fn main() {
                 .with_additional_header("Access-Control-Allow-Headers", "*");
         }
 
-        let mut response = match request.url().as_str() {
-            "/liturgy.css" => router::static_file("public/liturgy.css", "text/css"),
-            "/suncalc.js" => router::static_file("public/suncalc.js", "application/javascript"),
-            "/lit-time.js" => router::static_file("public/lit-time.js", "application/javascript"),
-            "/exsurge.min.js" => router::static_file("public/exsurge.min.js", "application/javascript"),
-            "/exsurge.min.js.map" => router::static_file("public/exsurge.min.js.map", "application/javascript"),
-            "/" => router::static_file("public/index.html", "text/html"),
-            _ => router::dynamic(request),
+        let mut response = match router.get_route_id(request.url().as_str()) {
+            Some((id, params)) => {
+                match router::handle_route(id, params) 
+            },
+            None => rouille::Response::empty_404()
         };
 
         response = response
@@ -42,6 +111,6 @@ fn main() {
             .with_additional_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             .with_additional_header("Access-Control-Allow-Headers", "*");
 
-        response
+        return response;
     });
 }
