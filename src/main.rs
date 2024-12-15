@@ -101,7 +101,7 @@ fn main() {
 
         let mut response = match router.get_route_id(request.url().as_str()) {
             Some((id, params)) => {
-                match router::handle_route(id, params) 
+                router::handle_route(id, params)
             },
             None => rouille::Response::empty_404()
         };
