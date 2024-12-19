@@ -23,6 +23,28 @@ pub fn resolve(iden: &Identifier) -> Liturgy {
 	}
 }
 
+/// For O antiphons
+pub fn resolve_special(iden: &Identifier) -> Liturgy {
+	Liturgy {
+		first_vespers: Some(special_vespers(iden)),
+		first_compline: None,
+		vigils: HashMap::new(),
+		matins: HashMap::new(),
+		prime: HashMap::new(),
+		terce: HashMap::new(),
+		sext: HashMap::new(),
+		none: HashMap::new(),
+		vespers: special_vespers(iden),
+		compline: HashMap::new()
+	}
+}
+
+fn special_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
+	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
+	map.insert("canticle", iden.to_path().join("vespers").join("magnificat.lit"));
+	return map;
+}
+
 fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
 

@@ -52,6 +52,7 @@ pub enum Rank {
 #[derive(Eq, PartialEq, Hash, Debug, serde::Serialize, Clone)]
 pub enum Season {
 	Advent, 
+	AdventSpecial, // to support O Antiphons
 	Christmas, 
 	PostEpiphany(bool), // whether we are before (true) or after (false) the Purification
 	PreLent(bool), // see note above 
@@ -65,6 +66,7 @@ impl ToString for Season {
 	fn to_string(&self) -> String {
 		match self {
 			crate::kalendar::Season::Advent => String::from("advent"),
+			crate::kalendar::Season::AdventSpecial => String::from("advent"),
 			crate::kalendar::Season::Christmas => String::from("christmas"),
 			crate::kalendar::Season::PostEpiphany(_) => String::from("post-epiphany"),
 			crate::kalendar::Season::PreLent(_) => String::from("pre-lent"),
@@ -199,8 +201,6 @@ impl Celebration {
 	}
 }
 
-
-
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -255,5 +255,8 @@ mod tests {
 
 		let d = NaiveDate::from_ymd(2025, 8, 9);
 		assert_eq!(ly.get_season(d), Season::PostPentecost);
+
+		let d = NaiveDate::from_ymd(2024, 12, 23);
+		assert_eq!(ly.get_season(d), Season::Advent);
 	}
 }
