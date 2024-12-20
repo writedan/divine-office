@@ -80,8 +80,6 @@ impl Liturgy {
 	}
 
 	pub fn extend(&mut self, other: &Liturgy) {
-		// TODO extend first_vespers and first_compline
-
 		Self::extend_helper(&mut self.vigils, &other.vigils);
 		Self::extend_helper(&mut self.matins, &other.matins);
 		Self::extend_helper(&mut self.prime, &other.prime);
@@ -90,6 +88,14 @@ impl Liturgy {
 		Self::extend_helper(&mut self.none, &other.none);
 		Self::extend_helper(&mut self.vespers, &other.vespers);
 		Self::extend_helper(&mut self.compline, &other.compline);
+
+		if self.first_vespers.is_some() && other.first_vespers.is_some() {
+		    Self::extend_helper(self.first_vespers.as_mut().unwrap(), other.first_vespers.as_ref().unwrap());
+		} 
+
+		if self.first_compline.is_some() && other.first_compline.is_some() {
+			Self::extend_helper(self.first_compline.as_mut().unwrap(), other.first_compline.as_ref().unwrap());
+		}
 	}
 }
 

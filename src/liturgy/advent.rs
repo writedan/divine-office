@@ -26,8 +26,13 @@ pub fn resolve(iden: &Identifier) -> Liturgy {
 /// For O antiphons
 pub fn resolve_special(iden: &Identifier) -> Liturgy {
 	Liturgy {
-		first_vespers: Some(special_vespers(iden)),
-		first_compline: None,
+		first_vespers: Some(special_vespers(&Identifier {
+			// we have to use the previous day
+			season: AdventSpecial,
+			week: "o_antiphons".to_string(),
+			day: (iden.day.parse::<usize>().unwrap() - 1).to_string()
+		})),
+		first_compline: Some(special_vespers(iden)),
 		vigils: HashMap::new(),
 		matins: HashMap::new(),
 		prime: HashMap::new(),

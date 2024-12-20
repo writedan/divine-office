@@ -85,7 +85,7 @@ impl ToString for Season {
 pub struct Identifier {
 	pub season: Season,
 	pub week: String,
-	pub day: String
+	pub day: String,
 }
 
 #[derive(Eq, PartialEq, Hash, Debug, serde::Serialize, Clone)]
