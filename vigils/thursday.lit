@@ -1,0 +1,49 @@
+#antiphon "domine-deus"
+	#tone "2-i" "f3"
+	#psalm "68"
+
+	#repeat-tone
+	#psalm "69"
+#repeat-antiphon
+
+#antiphon "esto-michi"
+	#tone "1-iii" "c4"
+	#psalm "70"
+
+	#repeat-tone
+	#psalm "71"
+#repeat-antiphon
+
+#antiphon "liberasti-virgam"
+	#tone "8-i" "c4"
+	#psalm "72"
+
+	#repeat-tone
+	#psalm "73"
+#repeat-antiphon
+
+#antiphon "in-israel"
+	#tone "8-ii" "c3"
+	#psalm "74"
+
+	#repeat-tone
+	#psalm "75"
+#repeat-antiphon
+
+#antiphon "tu-es-deus"
+	#tone "4-i" "f3"
+	#psalm "76"
+
+	#repeat-tone
+	#psalm "77"
+#repeat-antiphon
+
+#antiphon "propitius-esto"
+	#tone "8-ii" "c4"
+	#psalm "78"
+
+	#repeat-tone
+	#psalm "79"
+#repeat-antiphon
+
+#include "versicle-1"
