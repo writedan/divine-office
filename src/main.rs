@@ -6,8 +6,8 @@ mod compiler;
 mod router;
 mod lexer;
 
+use clap::{Command, Arg};
 use std::net::{TcpListener, SocketAddr};
-
 use regex::Regex;
 use std::collections::HashMap;
 
@@ -77,14 +77,35 @@ impl Router {
 }
 
 fn main() {
-    use crate::router;
+     let matches = Command::new("Divine Office")
+        .version("1.0")
+        .author("Daniel Write <daniel@writefamily.com>")
+        .arg(
+            Arg::new("launch")
+                .short('l')
+                .long("launch")
+                .value_name("PORT")
+                .help("Optionally specify a port to launch the server on")
+        )
+        .get_matches();
 
-    let bind_addr = TcpListener::bind("0.0.0.0:0")
+    let binding = "0".to_string();
+    let port = matches.get_one::<String>("launch").unwrap_or(&binding);
+
+    let port: u16 = match port.parse() {
+        Ok(p) => p,
+        Err(_) => {
+            eprintln!("Invalid port value, falling back to default port 8080");
+            8080
+        }
+    };
+
+    let bind_addr = TcpListener::bind(format!("0.0.0.0:{}", port))
         .expect("Failed to bind to a port")
         .local_addr()
         .expect("Failed to get local address");
 
-    println!("http://127.0.0.1:{}", bind_addr.port());
+    println!("Server running at http://127.0.0.1:{}", bind_addr.port());
 
     let mut router = Router::new();
 
@@ -93,6 +114,8 @@ fn main() {
     router.add_route("HourCompiledElements", "/Elements/{year:integer}-{month:integer}-{day:integer}/{hour:string}");
 
     rouille::start_server(bind_addr.to_string(), move |request| {
+        use crate::router;
+
         if request.method() == "OPTIONS" {
             return rouille::Response::text("")
                 .with_status_code(204)
@@ -105,7 +128,7 @@ fn main() {
             Some((id, params)) => {
                 router::handle_route(id, params)
             },
-            None => rouille::Response::empty_404()
+            None => rouille::Response::empty_404(),
         };
 
         response = response
