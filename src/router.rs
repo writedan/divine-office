@@ -9,8 +9,8 @@ use std::fs::File;
 
 type R<T> = Result<T, String>;
 
-pub fn handle_route(id: String, params: HashMap<String, String>) -> Response {
-    match route(id, params) {
+pub fn handle_route(resourcesPath: &std::path::PathBuf, id: String, params: HashMap<String, String>) -> Response {
+    match route(resourcesPath, id, params) {
         Ok(resp) => resp,
         Err(error) => Response::json(&LiturgyError {
             error
@@ -18,7 +18,7 @@ pub fn handle_route(id: String, params: HashMap<String, String>) -> Response {
     }
 }
 
-fn route(id: String, params: HashMap<String, String>) -> R<Response> {
+fn route(resourcesPath: &std::path::PathBuf, id: String, params: HashMap<String, String>) -> R<Response> {
     match (id.as_str()) {
         "LiturgicalIdentifier" => {
             if let (Ok(y), Ok(m), Ok(d)) = (params["year"].parse(), params["month"].parse(), params["day"].parse()) {
@@ -65,14 +65,14 @@ fn route(id: String, params: HashMap<String, String>) -> R<Response> {
 
                         let lit = liturgy::resolve_hours(&today, &tomorrow);
                         match params["hour"].as_str() {
-                            "vigils" => Ok(compile_hour(lit.vigils)),
-                            "matins" => Ok(compile_hour(lit.matins)),
-                            "prime" => Ok(compile_hour(lit.prime)),
-                            "terce" => Ok(compile_hour(lit.terce)),
-                            "sext" => Ok(compile_hour(lit.sext)),
-                            "none" => Ok(compile_hour(lit.none)),
-                            "vespers" => Ok(compile_hour(lit.vespers)),
-                            "compline" => Ok(compile_hour(lit.compline)),
+                            "vigils" => Ok(compile_hour(resourcesPath, lit.vigils)),
+                            "matins" => Ok(compile_hour(resourcesPath, lit.matins)),
+                            "prime" => Ok(compile_hour(resourcesPath, lit.prime)),
+                            "terce" => Ok(compile_hour(resourcesPath, lit.terce)),
+                            "sext" => Ok(compile_hour(resourcesPath, lit.sext)),
+                            "none" => Ok(compile_hour(resourcesPath, lit.none)),
+                            "vespers" => Ok(compile_hour(resourcesPath, lit.vespers)),
+                            "compline" => Ok(compile_hour(resourcesPath, lit.compline)),
                             _ => Err(format!("An invalid hour \"{}\" was supplied.", params["hour"]))
                         }
                     },
@@ -87,8 +87,8 @@ fn route(id: String, params: HashMap<String, String>) -> R<Response> {
     }
 }
 
-fn compile_hour(propers: HashMap<&'static str, PathBuf>) -> Response {
-    Response::json(&compiler::compile_ast(parser::Parser::from_hour(propers)))
+fn compile_hour(resourcesPath: &std::path::PathBuf, propers: HashMap<&'static str, PathBuf>) -> Response {
+    Response::json(&compiler::compile_ast(parser::Parser::from_hour(resourcesPath, propers)))
 }
 
 fn get_identifiers(date: NaiveDate) -> R<(Celebration, Celebration)> {

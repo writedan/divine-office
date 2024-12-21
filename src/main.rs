@@ -5,11 +5,13 @@ mod parser;
 mod compiler;
 mod router;
 mod lexer;
+mod git;
 
-use clap::{Command, Arg};
+use clap::Parser;
 use std::net::{TcpListener, SocketAddr};
 use regex::Regex;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 struct Route {
@@ -76,28 +78,61 @@ impl Router {
     }
 }
 
+
+#[derive(Parser)]
+#[command(author = "Daniel Write <daniel@writefamily.com>")]
+#[command(version = "1.0")]
+#[command(about = "Divine Office CLI")]
+struct Cli {
+    /// Optionally specify a port to launch the server on
+    #[arg(short = 'l', long = "launch", value_name = "port", conflicts_with = "update")]
+    launch: Option<String>,
+
+    /// Update and save resources in the specified directory
+    #[arg(short = 'u', long = "update", value_name = "resources save path", conflicts_with = "launch")]
+    update: Option<PathBuf>,
+
+    /// Specify where the resources are stored
+    #[arg(long = "resources", value_name = "resources path", default_value = ".")]
+    resources: PathBuf,
+}
+
+fn update(path: &PathBuf) -> Result<(), String> {
+    use std::fs;
+
+    println!("Cloning repository into {:?}", path);
+    if path.exists() {
+        println!("Directory exists, deleting (THIS WILL BE CHANGED SOMEDAY)");
+        fs::remove_dir_all(path).map_err(|e| format!("Failed to delete existing directory: {}", e))?;
+    }
+
+    git::clone_repo(path)
+}
+
 fn main() {
-     let matches = Command::new("Divine Office")
-        .version("1.0")
-        .author("Daniel Write <daniel@writefamily.com>")
-        .arg(
-            Arg::new("launch")
-                .short('l')
-                .long("launch")
-                .value_name("PORT")
-                .help("Optionally specify a port to launch the server on")
-        )
-        .get_matches();
+     let cli = Cli::parse();
 
-    let binding = "0".to_string();
-    let port = matches.get_one::<String>("launch").unwrap_or(&binding);
-
-    let port: u16 = match port.parse() {
-        Ok(p) => p,
-        Err(_) => {
-            eprintln!("Invalid port value. A random port will be assigned.");
-            0
+     if (cli.update.is_some()) {
+        match update(&cli.update.unwrap()) {
+            Ok(_) => println!("Successfully updated resources!"),
+            Err(why) => {
+                eprintln!("Failed to update resources: {}", why);
+                std::process::exit(1);
+            }
         }
+
+        return; // do not start hosting
+     }
+    
+    let port: u16 = match cli.launch {
+        Some(port_str) => match port_str.parse() {
+            Ok(p) => p,
+            Err(_) => {
+                eprintln!("Invalid port value. A random port will be assigned.");
+                0
+            }
+        },
+        None => 0
     };
 
     let bind_addr = TcpListener::bind(format!("0.0.0.0:{}", port))
@@ -105,6 +140,7 @@ fn main() {
         .local_addr()
         .expect("Failed to get local address");
 
+    println!("Resources server from {:?}", cli.resources);
     println!("Server running at http://127.0.0.1:{}", bind_addr.port());
 
     let mut router = Router::new();
@@ -126,7 +162,7 @@ fn main() {
 
         let mut response = match router.get_route_id(request.url().as_str()) {
             Some((id, params)) => {
-                router::handle_route(id, params)
+                router::handle_route(&cli.resources, id, params)
             },
             None => rouille::Response::empty_404(),
         };
