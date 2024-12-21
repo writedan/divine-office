@@ -5,11 +5,13 @@ mod parser;
 mod compiler;
 mod router;
 mod lexer;
+mod asset;
 
+use clap::Parser;
 use std::net::{TcpListener, SocketAddr};
-
 use regex::Regex;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 struct Route {
@@ -76,15 +78,40 @@ impl Router {
     }
 }
 
-fn main() {
-    use crate::router;
+#[derive(Parser)]
+#[command(author = "Daniel Write <daniel@writefamily.com>")]
+#[command(version = "1.0")]
+#[command(about = "Divine Office CLI")]
+struct Cli {
+    /// Optionally specify a port to launch the server on
+    #[arg(short = 'l', long = "launch", value_name = "port")]
+    launch: Option<String>,
 
-    let bind_addr = TcpListener::bind("0.0.0.0:0")
+    /// Path to the electronApp.getAppPath for later use in updating
+    #[arg(short = 'r', long = "resources", value_name = "resources path")]
+    resources: String
+}
+
+fn main() {
+    let cli = Cli::parse();
+
+    let port: u16 = match cli.launch {
+        Some(port_str) => match port_str.parse() {
+            Ok(p) => p,
+            Err(_) => {
+                eprintln!("Invalid port value. A random port will be assigned.");
+                0
+            }
+        },
+        None => 0
+    };
+
+    let bind_addr = TcpListener::bind(format!("0.0.0.0:{}", port))
         .expect("Failed to bind to a port")
         .local_addr()
         .expect("Failed to get local address");
 
-    println!("http://127.0.0.1:{}", bind_addr.port());
+    println!("Server running at http://127.0.0.1:{}", bind_addr.port());
 
     let mut router = Router::new();
 
@@ -93,6 +120,8 @@ fn main() {
     router.add_route("HourCompiledElements", "/Elements/{year:integer}-{month:integer}-{day:integer}/{hour:string}");
 
     rouille::start_server(bind_addr.to_string(), move |request| {
+        use crate::router;
+
         if request.method() == "OPTIONS" {
             return rouille::Response::text("")
                 .with_status_code(204)
@@ -105,7 +134,7 @@ fn main() {
             Some((id, params)) => {
                 router::handle_route(id, params)
             },
-            None => rouille::Response::empty_404()
+            None => rouille::Response::empty_404(),
         };
 
         response = response

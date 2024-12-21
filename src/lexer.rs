@@ -117,6 +117,18 @@ pub struct Lexer {
 	lines: Rc<RefCell<dyn ExactSizeIterator<Item = String>>>
 }
 
+pub fn read_file<P>(path: P) -> Result<String, String> where P: AsRef<std::path::Path> + std::fmt::Debug {
+	let file = match crate::asset::Asset::get(&path.as_ref().to_string_lossy()) {
+		Some(file) => file.data,
+		None => return Err(format!("No such file exists"))
+	};
+
+	match std::str::from_utf8(file.as_ref()) {
+		Ok(string) => Ok(string.to_string()),
+		Err(why) => Err(why.to_string())
+	}
+}
+
 /// newtype used for ease of writing
 type LR<T> = Result<T, String>;
 
@@ -211,24 +223,22 @@ impl Lexer {
 	}
 
 	/// Initializes a `Lexer` from a provided path to a file.
-	pub fn from_path<P>(path: P) -> std::io::Result<Lexer> where P: AsRef<Path> + std::fmt::Debug + Copy {
-		use std::io::{BufReader, BufRead};
-		use std::fs::File;
+	pub fn from_path<P>(path: P) -> LR<Lexer> where P: AsRef<Path> + std::fmt::Debug + Copy {
+	    let content = read_file(path)?;
 
-		let file = match File::open(path) {
-			Ok(file) => file,
-			Err(why) => return Err(std::io::Error::new(std::io::ErrorKind::Other, format!("Failed to open {:?}: {}", path, why)))
-		};
+	    let lines = content.lines();
 
-	    let lines = BufReader::new(file).lines();
 	    let mut res = Vec::new();
-	    for line in lines.flatten() {
-	    	let line = line.trim();
-	    	if line.is_empty() { continue }
-	    	res.push(line.to_string());
+	    for line in lines {
+	        let line = line.trim();
+	        if !line.is_empty() {
+	            res.push(line.to_string());
+	        }
 	    }
 
-	    Ok(Lexer { lines: Rc::new(RefCell::new(res.into_iter())) })
+	    Ok(Lexer {
+	        lines: Rc::new(RefCell::new(res.into_iter())),
+	    })
 	}
 
 	/// Transforms all lines into Tokens.

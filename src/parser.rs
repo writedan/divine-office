@@ -46,7 +46,7 @@ pub enum Directive {
 
 pub struct Parser {
 	resumables: HashMap<String, ASTNode<Directive>>,
-	iter: Box<dyn ExactSizeIterator<Item = Token>>
+	iter: Box<dyn ExactSizeIterator<Item = Token>>,
 }
 
 impl Parser {
@@ -269,7 +269,7 @@ struct Preprocessor {
 
 impl Preprocessor {
 	/// Creates a preprocessor out of a path and given store of values.
-	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> std::io::Result<Preprocessor> where P: AsRef<std::path::Path> + std::fmt::Debug + Copy {
+	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> Result<Preprocessor, String> where P: AsRef<std::path::Path> + std::fmt::Debug + Copy {
 		Ok(Preprocessor {
 			tokens: Lexer::from_path(path)?.tokenize(),
 			store
@@ -370,22 +370,10 @@ impl Preprocessor {
 						insertions.push((idx, new_tokens));
 						return Token::Empty;
 					} else if ext == "gabc" {
-						use std::io::{BufReader, Read};
-						use std::fs::File;
-
-						let file = match File::open(path.clone()) {
-							Ok(file) => file,
-							Err(why) => return Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
+						return match (crate::lexer::read_file(&path)) {
+							Ok(gabc) => Token::RawGabc(gabc),
+							Err(why) => Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
 						};
-
-					    let mut reader = BufReader::new(file);
-					    let mut gabc = String::new();
-					    match reader.read_to_string(&mut gabc) {
-					    	Ok(_) => {},
-					    	Err(why) => return Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
-					    }
-
-						return Token::RawGabc(gabc);
 					} else {
 						return Token::Error(format!("Failed to resolve import {:?}: unknown extension {:?}", path, ext));
 					}
@@ -429,20 +417,10 @@ impl Preprocessor {
 
 			    RepeatAntiphon => {
 			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
-			    		use std::io::{BufReader, Read};
-						use std::fs::File;
-
-						let file = match File::open(format!("antiphon/{}.gabc", antiphon)) {
-							Ok(file) => file,
-							Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-						};
-
-					    let mut reader = BufReader::new(file);
-					    let mut gabc = String::new();
-					    match reader.read_to_string(&mut gabc) {
-					    	Ok(_) => {},
-					    	Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-					    }
+					    let gabc = match crate::lexer::read_file(format!("antiphon/{}.gabc", antiphon)) {
+					    	Ok(gabc) => gabc,
+					    	Err(why) => return Token::Error(format!("Failed to get repeat-antiphon {:?}: {}", antiphon, why))
+					    };
 
 					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
 
@@ -454,24 +432,13 @@ impl Preprocessor {
 
 			    RepeatHalfAntiphon(amount) => {
 			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
-			    		use std::io::{BufReader, Read};
-						use std::fs::File;
+					    let gabc = match crate::lexer::read_file(format!("antiphon/{}.gabc", antiphon)) {
+					    	Ok(gabc) => gabc,
+					    	Err(why) => return Token::Error(format!("Failed to get repeat-antiphon {:?}: {}", antiphon, why))
+					    };
 
-						let file = match File::open(format!("antiphon/{}.gabc", antiphon)) {
-							Ok(file) => file,
-							Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-						};
+					    let gabc = gabc.split("%%").collect::<Vec<_>>();
 
-					    let mut reader = BufReader::new(file);
-					    let mut gabc = String::new();
-					    match reader.read_to_string(&mut gabc) {
-					    	Ok(_) => {},
-					    	Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-					    }
-
-					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
-
-						//return Token::Gabc(gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string());
 						if (amount == "half") {
 							return Token::Gabc(format!("<sp>r</sp> {}", gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string()));
 						} else if (amount == "full") {
