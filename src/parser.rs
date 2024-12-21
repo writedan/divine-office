@@ -50,7 +50,7 @@ pub struct Parser {
 }
 
 impl Parser {
-	pub fn from_hour(resourcesPath: &std::path::PathBuf, propers: HashMap<&'static str, std::path::PathBuf>) -> ASTree<Directive> {
+	pub fn from_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> ASTree<Directive> {
 		let mut base = ASTree::<Directive>::new();
 
 		let mut store: HashMap<String, String> = HashMap::new();
@@ -58,7 +58,7 @@ impl Parser {
 			store.insert(key.to_string(), val.display().to_string());
 		}
 
-		let mut preprocessor = Preprocessor::from_path(resourcesPath.clone(), match propers.get("order") {
+		let mut preprocessor = Preprocessor::from_path(match propers.get("order") {
 			Some(path) => path,
 			None => {
 				base.add_node(ASTNode::Node(Directive::Error(format!("Cannot parse from hour: field \"order\" was not set."))));
@@ -259,10 +259,21 @@ fn resolve_tone(tone: &String) -> String {
 	}
 }
 
+fn read_file<P>(path: P) -> Result<String, String> where P: AsRef<std::path::Path> + std::fmt::Debug {
+	let file = match crate::asset::Asset::get(&path.as_ref().to_string_lossy()) {
+		Some(file) => file.data,
+		None => return Err(format!("No such file exists"))
+	};
+
+	match std::str::from_utf8(file.as_ref()) {
+		Ok(string) => Ok(string.to_string()),
+		Err(why) => Err(why.to_string())
+	}
+}
+
 /// The processor expands certain tokens so as to ease the work of the parser.
 #[derive(Debug)]
 struct Preprocessor {
-	resourcesPath: std::path::PathBuf,
 	tokens: Vec<Token>,
 	/// A dynamic map of fields and paths which can update during parsing.
 	store: HashMap<String, String>
@@ -270,9 +281,8 @@ struct Preprocessor {
 
 impl Preprocessor {
 	/// Creates a preprocessor out of a path and given store of values.
-	pub fn from_path<P>(resourcesPath: std::path::PathBuf, path: P, store: HashMap<String, String>) -> std::io::Result<Preprocessor> where P: AsRef<std::path::Path> + std::fmt::Debug + Copy {
+	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> std::io::Result<Preprocessor> where P: AsRef<std::path::Path> + std::fmt::Debug + Copy {
 		Ok(Preprocessor {
-			resourcesPath,
 			tokens: Lexer::from_path(path)?.tokenize(),
 			store
 		})
@@ -355,7 +365,7 @@ impl Preprocessor {
 				},			
 
 				Import(path) => {
-					let path = self.resourcesPath.join(PathBuf::from(path));
+					let path = PathBuf::from(path);
 
 					let ext = match path.extension() {
 						Some(ext) => ext,
@@ -372,22 +382,10 @@ impl Preprocessor {
 						insertions.push((idx, new_tokens));
 						return Token::Empty;
 					} else if ext == "gabc" {
-						use std::io::{BufReader, Read};
-						use std::fs::File;
-
-						let file = match File::open(path.clone()) {
-							Ok(file) => file,
-							Err(why) => return Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
+						return match (read_file(&path)) {
+							Ok(gabc) => Token::RawGabc(gabc),
+							Err(why) => Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
 						};
-
-					    let mut reader = BufReader::new(file);
-					    let mut gabc = String::new();
-					    match reader.read_to_string(&mut gabc) {
-					    	Ok(_) => {},
-					    	Err(why) => return Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
-					    }
-
-						return Token::RawGabc(gabc);
 					} else {
 						return Token::Error(format!("Failed to resolve import {:?}: unknown extension {:?}", path, ext));
 					}
@@ -431,20 +429,10 @@ impl Preprocessor {
 
 			    RepeatAntiphon => {
 			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
-			    		use std::io::{BufReader, Read};
-						use std::fs::File;
-
-						let file = match File::open(format!("antiphon/{}.gabc", antiphon)) {
-							Ok(file) => file,
-							Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-						};
-
-					    let mut reader = BufReader::new(file);
-					    let mut gabc = String::new();
-					    match reader.read_to_string(&mut gabc) {
-					    	Ok(_) => {},
-					    	Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-					    }
+					    let gabc = match read_file(format!("antiphon/{}.gabc", antiphon)) {
+					    	Ok(gabc) => gabc,
+					    	Err(why) => return Token::Error(format!("Failed to get repeat-antiphon {:?}: {}", antiphon, why))
+					    };
 
 					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
 
@@ -456,24 +444,13 @@ impl Preprocessor {
 
 			    RepeatHalfAntiphon(amount) => {
 			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
-			    		use std::io::{BufReader, Read};
-						use std::fs::File;
+					    let gabc = match read_file(format!("antiphon/{}.gabc", antiphon)) {
+					    	Ok(gabc) => gabc,
+					    	Err(why) => return Token::Error(format!("Failed to get repeat-antiphon {:?}: {}", antiphon, why))
+					    };
 
-						let file = match File::open(self.resourcesPath.join(format!("antiphon/{}.gabc", antiphon))) {
-							Ok(file) => file,
-							Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-						};
+					    let gabc = gabc.split("%%").collect::<Vec<_>>();
 
-					    let mut reader = BufReader::new(file);
-					    let mut gabc = String::new();
-					    match reader.read_to_string(&mut gabc) {
-					    	Ok(_) => {},
-					    	Err(why) => return Token::Error(format!("Failed to resolve repeat-antiphon {:?}: {}", antiphon, why))
-					    }
-
-					    let gabc = gabc.split("%%\n").collect::<Vec<_>>();
-
-						//return Token::Gabc(gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string());
 						if (amount == "half") {
 							return Token::Gabc(format!("<sp>r</sp> {}", gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1].to_string()));
 						} else if (amount == "full") {
