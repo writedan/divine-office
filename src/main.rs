@@ -95,8 +95,8 @@ fn main() {
     let port: u16 = match port.parse() {
         Ok(p) => p,
         Err(_) => {
-            eprintln!("Invalid port value, falling back to default port 8080");
-            8080
+            eprintln!("Invalid port value. A random port will be assigned.");
+            0
         }
     };
 
