@@ -259,18 +259,6 @@ fn resolve_tone(tone: &String) -> String {
 	}
 }
 
-fn read_file<P>(path: P) -> Result<String, String> where P: AsRef<std::path::Path> + std::fmt::Debug {
-	let file = match crate::asset::Asset::get(&path.as_ref().to_string_lossy()) {
-		Some(file) => file.data,
-		None => return Err(format!("No such file exists"))
-	};
-
-	match std::str::from_utf8(file.as_ref()) {
-		Ok(string) => Ok(string.to_string()),
-		Err(why) => Err(why.to_string())
-	}
-}
-
 /// The processor expands certain tokens so as to ease the work of the parser.
 #[derive(Debug)]
 struct Preprocessor {
@@ -281,7 +269,7 @@ struct Preprocessor {
 
 impl Preprocessor {
 	/// Creates a preprocessor out of a path and given store of values.
-	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> std::io::Result<Preprocessor> where P: AsRef<std::path::Path> + std::fmt::Debug + Copy {
+	pub fn from_path<P>(path: P, store: HashMap<String, String>) -> Result<Preprocessor, String> where P: AsRef<std::path::Path> + std::fmt::Debug + Copy {
 		Ok(Preprocessor {
 			tokens: Lexer::from_path(path)?.tokenize(),
 			store
@@ -382,7 +370,7 @@ impl Preprocessor {
 						insertions.push((idx, new_tokens));
 						return Token::Empty;
 					} else if ext == "gabc" {
-						return match (read_file(&path)) {
+						return match (crate::lexer::read_file(&path)) {
 							Ok(gabc) => Token::RawGabc(gabc),
 							Err(why) => Token::Error(format!("Failed to resolve import {:?}: {}", path, why))
 						};
@@ -429,7 +417,7 @@ impl Preprocessor {
 
 			    RepeatAntiphon => {
 			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
-					    let gabc = match read_file(format!("antiphon/{}.gabc", antiphon)) {
+					    let gabc = match crate::lexer::read_file(format!("antiphon/{}.gabc", antiphon)) {
 					    	Ok(gabc) => gabc,
 					    	Err(why) => return Token::Error(format!("Failed to get repeat-antiphon {:?}: {}", antiphon, why))
 					    };
@@ -444,7 +432,7 @@ impl Preprocessor {
 
 			    RepeatHalfAntiphon(amount) => {
 			    	if let Some(antiphon) = self.store.get("internal:last-antiphon") {
-					    let gabc = match read_file(format!("antiphon/{}.gabc", antiphon)) {
+					    let gabc = match crate::lexer::read_file(format!("antiphon/{}.gabc", antiphon)) {
 					    	Ok(gabc) => gabc,
 					    	Err(why) => return Token::Error(format!("Failed to get repeat-antiphon {:?}: {}", antiphon, why))
 					    };
