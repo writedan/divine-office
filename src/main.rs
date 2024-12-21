@@ -86,6 +86,10 @@ struct Cli {
     /// Optionally specify a port to launch the server on
     #[arg(short = 'l', long = "launch", value_name = "port")]
     launch: Option<String>,
+
+    /// Path to the electronApp.getAppPath for later use in updating
+    #[arg(short = 'r', long = "resources", value_name = "resources path")]
+    resources: String
 }
 
 fn main() {
