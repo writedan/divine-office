@@ -1,0 +1,24 @@
+#antiphon "et-omnis"
+	#tone "4-vii" "c4"
+	#psalm "131"
+#repeat-antiphon
+
+#antiphon "ecce-quam-bonum"
+	#tone "1-iv" "c4"
+	#psalm "132"
+#repeat-antiphon
+
+#antiphon "omnia-quecunque"
+	#tone "3-vi" "c4"
+	#psalm "134"
+#repeat-antiphon
+
+#antiphon "quoniam-in-eternum"
+	#tone "3-vi" "c4"
+	#psalm "135"
+#repeat-antiphon
+
+#antiphon "hymnum-cantate"
+	#tone "8-i" "c3"
+	#psalm "136"
+#repeat-antiphon
