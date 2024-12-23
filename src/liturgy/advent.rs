@@ -84,7 +84,7 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	let inviv = if iden.week.parse::<usize>().unwrap() < 3 {
 		match day {
-			Sun => iden.to_path().join("vigils").join("invitatory.lit"),
+			Sun => ["invitatory", "ecce-venit-rex.lit"].iter().collect(),
 			_ => ["invitatory", "regem-venturum.lit"].iter().collect()
 		}
 	} else {
