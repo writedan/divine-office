@@ -82,10 +82,16 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 		if day == Sun { "ordinary-sunday.lit" } else { "ordinary-feria.lit" }
 	].iter().collect());
 
-	map.insert("invitatory", match day {
-		Sun => iden.to_path().join("vigils").join("invitatory.lit"),
-		_ => ["invitatory", "regem-venturum.lit"].iter().collect()
-	});
+	let inviv = if iden.week.parse::<usize>().unwrap() < 3 {
+		match day {
+			Sun => iden.to_path().join("vigils").join("invitatory.lit"),
+			_ => ["invitatory", "regem-venturum.lit"].iter().collect()
+		}
+	} else {
+		["invitatory", "prope-est-jam-dominum.lit"].iter().collect()
+	};
+
+	map.insert("invitatory", inviv);
 
 	map.insert("hymn", ["hymn", "verbum-supernum-prodiens", "advent.lit"].iter().collect());
 
