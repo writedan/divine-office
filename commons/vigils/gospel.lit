@@ -1,8 +1,5 @@
-#begin-box
-	#heading "Gospel Proclamation"
-
+#heading "Gospel Proclamation"
 	#import "commons/vigils/te-deum.gabc"
-
 	#begin-box
 		#instruction "If a deacon or priest is presiding, let him begin."
 
@@ -22,4 +19,3 @@
 	#end
 
 	#import "commons/vigils/te-decet-laus.gabc"
-#end

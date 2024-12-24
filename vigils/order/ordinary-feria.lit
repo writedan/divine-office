@@ -1,129 +1,62 @@
-#begin-box
-	#heading "Invitatory"
-
+#heading "Invitatory"
 	#import "commons/shared/usual-beginning.lit"
-
 	#import "commons/shared/apostles-creed.lit"
-
 	#import "commons/vigils/aperi.lit"
-
 	#include "invitatory"
-#end-box
 
-#begin-box
-	#heading "Incipit"
-
+#heading "Incipit"
 	#import "commons/shared/ordinary-opening.lit"
-#end-box
 
-#begin-box
-	#heading "Hymn"
-
+#heading "Hymn"
 	#include "hymn"
-#end
 
-#begin-box
-	#heading "Nocturn"
-
-	#begin-box
-		#subheading "Psalmody"
-
+#heading "Nocturn"
+	#subheading "Psalmody"
 		#include "psalter"
-	#end
 
 	#instruction "This prayer is made quietly."
-
 	#import "commons/shared/pater-noster.lit"
-
 	#instruction "Then the officiant grants the absolution."
-
 	#include "absolution-1"
-
 	#instruction "The congregation responds."
-
 	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
-
-	#begin-box
-		#subheading "First Lesson"
-
+	#subheading "First Lesson"
 		#include "lesson-1"
-
 		#instruction "The officiant grants a blessing."
-
 		#include "blessing-1"
-
 		#instruction "The congregation responds."
-
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
 		#instruction "The lector intones the responsory."
-
 		#include "responsory-1"
-	#end
 
-
-	#begin-box
-		#subheading "Second Lesson"
-
+	#subheading "Second Lesson"
 		#include "lesson-2"
-
 		#instruction "The officiant grants a blessing."
-
 		#include "blessing-2"
-
 		#instruction "The congregation responds."
-
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
 		#instruction "The lector intones the responsory."
-
 		#include "responsory-2"
-	#end
 
-
-	#begin-box
-		#subheading "Third Lesson"
-
+	#subheading "Third Lesson"
 		#include "lesson-3"
-
 		#instruction "The officiant grants a blessing."
-
 		#include "blessing-3"
-
 		#instruction "The congregation responds."
-
 		#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
-
 		#instruction "The lector intones the responsory."
-
 		#include "responsory-3"
-	#end
-#end
 
-#begin-box
-	#heading "Preces"
-
+#heading "Preces"
 	#include "kyrie"
-
 	#instruction "This prayer is made quietly."
-
 	#import "commons/shared/pater-noster.lit"
-
 	#import "commons/shared/invocation.lit"
-
 	#include "collect"
-
 	#instruction "To which the congregation responds."
-
 	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
-#end-box
 
-#begin-box
-	#heading "Conclusion"
-
+#heading "Conclusion"
 	#import "commons/shared/conclusion.lit"
-
 	#instruction "This prayer is made quietly to conclude the service."
-
 	#import "commons/shared/pater-noster.lit"
-#end
