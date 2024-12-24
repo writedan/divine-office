@@ -1,0 +1,24 @@
+#antiphon "ecce-in-nubibus"
+	#tone "1-v" "f3"
+	#psalm "109"
+#repeat-antiphon
+
+#antiphon "urbs-fortitudinis"
+	#tone "7-iv" "c3"
+	#psalm "110"
+#repeat-antiphon
+
+#antiphon "ecce-apparebit-dominus"
+	#tone "7-i" "c3"
+	#psalm "111"
+#repeat-antiphon
+
+#antiphon "montes-et-colles"
+	#tone "1-i" "c4"
+	#psalm "112"
+#repeat-antiphon
+
+#antiphon "ecce-dominus-noster"
+	#tone "3-iv" "c4"
+	#psalm "113"
+#repeat-antiphon
