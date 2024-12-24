@@ -1,3 +1,7 @@
-#gabc "<alt><c>Priest or Deacon:</c></alt>() (c3) <sp>v</sp> The(h) Lord(h) be(h) with(h) you.(f) <alt><c>Congregation:</c></alt> <sp>r</sp>(::) And(h) with(h) your(h) spir(h)it.(f) <alt><c>Deacon:</c></alt> (::) Let(h) us(g) pray.(h)"
+#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) You.(f) "
 
-#gabc "<alt><c>Lay officiant:</c></alt>() (c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <alt><c>Congregation:</c></alt> <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) You.(f) "
+#begin-box
+	#instruction "If the officiant is a priest or deacon, he adds:"
+
+	#gabc "(c3) <sp>v</sp> The(h) Lord(h) be(h) with(h) you.(f) <sp>r</sp>(::) And(h) with(h) your(h) spir(h)it.(f) <c>Deacon</c>(::) Let(h) us(g) pray.(h)"
+#end
