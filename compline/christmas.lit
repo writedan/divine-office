@@ -1,0 +1,10 @@
+#antiphon "natus-est-nobis"
+	#tone "8-i" "c4"
+	#psalm "4"
+
+	#repeat-tone
+	#psalm "90"
+
+	#repeat-tone
+	#psalm "133"
+#repeat-antiphon
