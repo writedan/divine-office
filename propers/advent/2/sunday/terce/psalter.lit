@@ -1,0 +1,10 @@
+#antiphon "urbs-fortitudinis"
+	#tone "7-iv" "c3"
+	#psalm "118c"
+
+	#repeat-tone
+	#psalm "118d"
+
+	#repeat-tone
+	#psalm "118e"
+#repeat-antiphon
