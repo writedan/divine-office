@@ -16,10 +16,12 @@
 
 I confess to almighty God, to all the Saints, and to you, brothers, that I have sinned greatly in thought, word, and deed, through my faut, through my fault, through my chief fault. Therefore I beg of blessed Mary, ever-Virgin, blessed John the Baptist, blessed Michael the Archangel, the holy apostles Peter and Paul, and all the Saints with you, brothers, to pray for me to the Lord our God.
 
-#instruction "If the officiant is a priest, he says this alone; otherwise, the congregation says it together."
+#begin-box
+	#instruction "If a priest is officiating, he says this alone."
 
-The almighty and merciful Lord grant us every pardon, absolution, and remission of all our sins.
+	The almighty and merciful Lord grant us +++ every pardon, absolution, and remission of all our sins.
+#end-box
 
-#instruction "And the congregation responds."
+#instruction "And regardless the congregation concludes."
 
 Amen.
