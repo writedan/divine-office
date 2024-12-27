@@ -34,7 +34,7 @@ pub fn resolve_special(iden: &Identifier) -> Liturgy {
 		})),
 		first_compline: Some(special_vespers(iden)),
 		vigils: HashMap::new(),
-		matins: HashMap::new(),
+		matins: special_matins(iden),
 		prime: HashMap::new(),
 		terce: HashMap::new(),
 		sext: HashMap::new(),
@@ -42,6 +42,12 @@ pub fn resolve_special(iden: &Identifier) -> Liturgy {
 		vespers: special_vespers(iden),
 		compline: HashMap::new()
 	}
+}
+
+fn special_matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
+	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
+	map.insert("psalter", iden.to_path().join("matins").join("psalter.lit"));
+	return map;
 }
 
 fn special_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
@@ -88,7 +94,7 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 			_ => ["invitatory", "regem-venturum.lit"].iter().collect()
 		}
 	} else {
-		["invitatory", "prestolantes-redemptorem.lit"].iter().collect()
+		["invitatory", "prope-est-jam-dominus.lit"].iter().collect()
 	};
 
 	map.insert("invitatory", inviv);
