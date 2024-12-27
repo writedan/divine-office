@@ -30,3 +30,8 @@
 	#repeat-tone
 	#psalm "118b"
 #repeat-antiphon
+
+#antiphon "te-jure-laudant"
+	#tone "5-i" "c4"
+	#psalm "athanasian"
+#repeat-antiphon
