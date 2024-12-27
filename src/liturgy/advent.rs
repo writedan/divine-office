@@ -88,7 +88,7 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 			_ => ["invitatory", "regem-venturum.lit"].iter().collect()
 		}
 	} else {
-		["invitatory", "prope-est-jam-dominum.lit"].iter().collect()
+		["invitatory", "prestolantes-redemptorem.lit"].iter().collect()
 	};
 
 	map.insert("invitatory", inviv);
