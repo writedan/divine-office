@@ -32,7 +32,7 @@ pub fn resolve_special(iden: &Identifier) -> Liturgy {
 			week: "o_antiphons".to_string(),
 			day: (iden.day.parse::<usize>().unwrap() - 1).to_string()
 		})),
-		first_compline: Some(special_vespers(iden)),
+		first_compline: Some(HashMap::new()),
 		vigils: HashMap::new(),
 		matins: special_matins(iden),
 		prime: HashMap::new(),
