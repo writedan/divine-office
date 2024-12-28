@@ -56,10 +56,21 @@ fn special_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	return map;
 }
 
+fn commons(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
+	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
+	map.extend(crate::liturgy::commons::resolve(iden).unwrap());
+
+	if iden.week == "3" {
+		if let "Wednesday" | "Friday" | "Saturday" = iden.day.as_str() {
+			map.insert("collect", iden.to_path().join("collect.lit"));
+		}
+	}
+
+	return map;
+}
+
 fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -70,14 +81,13 @@ fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	map.insert("versicle", ["commons", "vespers", "versicles", "advent.lit"].iter().collect());
 	map.insert("canticle", iden.to_path().join("1st-vespers").join("magnificat.lit"));
 
-	map.extend(crate::liturgy::commons::resolve(iden).unwrap());
+	map.extend(commons(iden));
 	map
 }
 
 fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
 
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 	let vigils = crate::liturgy::commons::vigils(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
@@ -117,15 +127,13 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	map.insert("versicle-3", ["commons", "vigils", "3rd-nocturn", "versicles", "advent.lit"].iter().collect());
 
 	map.extend(vigils);
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	return map;
 }
 
 fn matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -147,15 +155,13 @@ fn matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("canticle", iden.to_path().join("matins").join("benedictus.lit"));
 
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	return map;
 }
 
 fn prime(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -180,7 +186,7 @@ fn prime(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("versicle", ["commons", "prime", "versicles", "ordinary.lit"].iter().collect());
 
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	map.insert("collect", ["commons", "prime", "collect.lit"].iter().collect());
 
@@ -189,8 +195,6 @@ fn prime(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 fn terce(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -213,15 +217,13 @@ fn terce(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("versicle", ["commons", "terce", "versicles", "advent.lit"].iter().collect());
 
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	return map;
 }
 
 fn sext(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -244,15 +246,13 @@ fn sext(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("versicle", ["commons", "sext", "versicles", "advent.lit"].iter().collect());
 
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	return map;
 }
 
 fn none(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -275,15 +275,13 @@ fn none(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("versicle", ["commons", "none", "versicles", "advent.lit"].iter().collect());
 
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	return map;
 }
 
 fn vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -305,15 +303,13 @@ fn vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 
 	map.insert("canticle", iden.to_path().join("vespers").join("magnificat.lit"));
 
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	return map;
 }
 
 fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let day = iden.day.parse::<Weekday>().unwrap();
-
-	let commons = crate::liturgy::commons::resolve(iden).unwrap();
 
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
@@ -325,7 +321,7 @@ fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	map.insert("canticle", ["commons", "compline", "canticle", "advent.lit"].iter().collect());
 	map.insert("anthem", ["commons", "compline", "anthems", "alma-redemptoris/advent.lit"].iter().collect());
 
-	map.extend(commons);
+	map.extend(commons(iden));
 
 	map.insert("collect", ["commons", "compline", "collect.lit"].iter().collect());
 
