@@ -45,28 +45,39 @@ pub fn resolve_special(iden: &Identifier) -> Liturgy {
 			season: AdventSpecial,
 			week: "o-antiphons".to_string(),
 			day: (vespers_iden.day.parse::<usize>().unwrap() - 1).to_string()
-		})),
+		}, &iden.day)),
 		first_compline: Some(HashMap::new()),
 		vigils: HashMap::new(),
-		matins: special_matins(&matins_iden),
+		matins: special_matins(&matins_iden, &iden.day),
 		prime: HashMap::new(),
 		terce: HashMap::new(),
 		sext: HashMap::new(),
 		none: HashMap::new(),
-		vespers: special_vespers(&vespers_iden),
+		vespers: special_vespers(&vespers_iden, &iden.day),
 		compline: HashMap::new()
 	}
 }
 
-fn special_matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
+fn special_matins(iden: &Identifier, fullid: &String) -> HashMap<&'static str, PathBuf> {
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
-	map.insert("psalter", iden.to_path().join("matins").join("psalter.lit"));
+	if fullid != "1-Sunday" {
+		// we do not override the psalter for the 3rd Sunday of advent, which is the only case this can occur
+		map.insert("psalter", iden.to_path().join("matins").join("psalter.lit"));
+	}
 	return map;
 }
 
-fn special_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
+fn special_vespers(iden: &Identifier, fullid: &String) -> HashMap<&'static str, PathBuf> {
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 	map.insert("canticle", iden.to_path().join("vespers").join("magnificat.lit"));
+	if fullid != "1-Sunday" {
+		let day = fullid.split('-').nth(1).unwrap().to_lowercase();
+		// see note above for special_matins
+		if fullid.ends_with("Sunday") {
+			println!("{:?}", iden);
+			map.insert("psalter", ["propers", "advent", "o-antiphons", &day, "vespers", "psalter.lit"].iter().collect());
+		}
+	}
 	return map;
 }
 
