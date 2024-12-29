@@ -69,7 +69,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 		identifiers.push(Identifier {
 			season: Season::AdventSpecial,
 			week: String::from("o-antiphons"),
-			day: (NaiveDate::days_since(o_wisdom, date) + 1).to_string()
+			day: format!("{}-{}", (NaiveDate::days_since(o_wisdom, date) + 1), date.weekday().fullname())
 		});
 	}
 

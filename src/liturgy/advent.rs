@@ -25,21 +25,35 @@ pub fn resolve(iden: &Identifier) -> Liturgy {
 
 /// For O antiphons
 pub fn resolve_special(iden: &Identifier) -> Liturgy {
+	// AdventSpecial identifiers have day in the form of e.g. "1-Saturday", "1" here indicating December 17 (and so one, until the 23 being "7" and "Saturday" indicating the day of the week)
+	// the former is used for vespers, the latter for matin
+	let vespers_iden = Identifier {
+		season: AdventSpecial,
+		week: "o-antiphons".to_string(),
+		day: iden.day.split('-').nth(0).unwrap().to_string()
+	};
+
+	let matins_iden = Identifier {
+		season: AdventSpecial,
+		week: "o-antiphons".to_string(),
+		day: iden.day.split('-').nth(1).unwrap().to_string()
+	};
+
 	Liturgy {
 		first_vespers: Some(special_vespers(&Identifier {
 			// we have to use the previous day
 			season: AdventSpecial,
-			week: "o_antiphons".to_string(),
-			day: (iden.day.parse::<usize>().unwrap() - 1).to_string()
+			week: "o-antiphons".to_string(),
+			day: (vespers_iden.day.parse::<usize>().unwrap() - 1).to_string()
 		})),
 		first_compline: Some(HashMap::new()),
 		vigils: HashMap::new(),
-		matins: special_matins(iden),
+		matins: special_matins(&matins_iden),
 		prime: HashMap::new(),
 		terce: HashMap::new(),
 		sext: HashMap::new(),
 		none: HashMap::new(),
-		vespers: special_vespers(iden),
+		vespers: special_vespers(&vespers_iden),
 		compline: HashMap::new()
 	}
 }
