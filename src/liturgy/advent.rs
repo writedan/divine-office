@@ -23,64 +23,6 @@ pub fn resolve(iden: &Identifier) -> Liturgy {
 	}
 }
 
-/// For O antiphons
-pub fn resolve_special(iden: &Identifier) -> Liturgy {
-	// AdventSpecial identifiers have day in the form of e.g. "1-Saturday", "1" here indicating December 17 (and so one, until the 23 being "7" and "Saturday" indicating the day of the week)
-	// the former is used for vespers, the latter for matin
-	let vespers_iden = Identifier {
-		season: AdventSpecial,
-		week: "o-antiphons".to_string(),
-		day: iden.day.split('-').nth(0).unwrap().to_string()
-	};
-
-	let matins_iden = Identifier {
-		season: AdventSpecial,
-		week: "o-antiphons".to_string(),
-		day: iden.day.split('-').nth(1).unwrap().to_string()
-	};
-
-	Liturgy {
-		first_vespers: Some(special_vespers(&Identifier {
-			// we have to use the previous day
-			season: AdventSpecial,
-			week: "o-antiphons".to_string(),
-			day: (vespers_iden.day.parse::<usize>().unwrap() - 1).to_string()
-		}, &iden.day)),
-		first_compline: Some(HashMap::new()),
-		vigils: HashMap::new(),
-		matins: special_matins(&matins_iden, &iden.day),
-		prime: HashMap::new(),
-		terce: HashMap::new(),
-		sext: HashMap::new(),
-		none: HashMap::new(),
-		vespers: special_vespers(&vespers_iden, &iden.day),
-		compline: HashMap::new()
-	}
-}
-
-fn special_matins(iden: &Identifier, fullid: &String) -> HashMap<&'static str, PathBuf> {
-	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
-	if fullid != "1-Sunday" {
-		// we do not override the psalter for the 3rd Sunday of advent, which is the only case this can occur
-		map.insert("psalter", iden.to_path().join("matins").join("psalter.lit"));
-	}
-	return map;
-}
-
-fn special_vespers(iden: &Identifier, fullid: &String) -> HashMap<&'static str, PathBuf> {
-	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
-	map.insert("canticle", iden.to_path().join("vespers").join("magnificat.lit"));
-	if fullid != "1-Sunday" {
-		let day = fullid.split('-').nth(1).unwrap().to_lowercase();
-		// see note above for special_matins
-		if fullid.ends_with("Sunday") {
-			println!("{:?}", iden);
-			map.insert("psalter", ["propers", "advent", "o-antiphons", &day, "vespers", "psalter.lit"].iter().collect());
-		}
-	}
-	return map;
-}
-
 fn commons(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 	let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 	map.extend(crate::liturgy::commons::resolve(iden).unwrap());

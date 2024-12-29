@@ -5,6 +5,8 @@ use std::collections::HashMap;
 
 mod ordinary;
 mod advent;
+/// O antiphons
+mod advent_special;
 mod christmas;
 mod commons;
 
@@ -17,7 +19,7 @@ impl Identifier {
 		let mut lit = match self.season {
 			PostPentecost | PostEpiphany(_) | August | September | October | November => ordinary::resolve(self),
 			Advent => advent::resolve(self),
-			AdventSpecial => advent::resolve_special(self),
+			AdventSpecial => advent_special::resolve(self),
 			Christmas => christmas::resolve(self),
 			_ => todo!("resolution of {} for {:?}", self.season.to_string(), self)
 		};
