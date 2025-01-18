@@ -1,0 +1,10 @@
+#antiphon "veniet-iterum-angelus"
+	#tone "4-iv" "c3"
+	#psalm "118f"
+
+	#repeat-tone
+	#psalm "118g"
+
+	#repeat-tone
+	#psalm "118h"
+#repeat-antiphon
