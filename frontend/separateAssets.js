@@ -15,6 +15,7 @@ const fontsDir = path.join(
   'Fonts'
 );
 const entryJsDir = path.join(__dirname, 'web-build', '_expo', 'static', 'js', 'web');
+const indexHtmlPath = path.join(__dirname, 'web-build', 'index.html');
 
 function clearDirectory(directory) {
   if (fs.existsSync(directory)) {
@@ -38,13 +39,10 @@ function moveTtfFiles(source, destination) {
     console.error(`Source directory "${source}" does not exist.`);
     return;
   }
-
   const ttfFiles = fs.readdirSync(source).filter(file => path.extname(file) === '.ttf');
-
   ttfFiles.forEach(file => {
     const sourceFile = path.join(source, file);
     const destFile = path.join(destination, file);
-
     fs.copyFileSync(sourceFile, destFile);
     console.log(`Moved "${file}" to "${destination}".`);
   });
@@ -52,25 +50,39 @@ function moveTtfFiles(source, destination) {
 
 function editEntryJsFile(directory, assetsDestination) {
   const entryJsFile = fs.readdirSync(directory).find(file => file.startsWith('entry-') && file.endsWith('.js'));
-
   if (!entryJsFile) {
     console.error('No "entry-{hash}.js" file found.');
     return;
   }
-
   const entryJsPath = path.join(directory, entryJsFile);
   let content = fs.readFileSync(entryJsPath, 'utf8');
-
   content = content.replace(
     /\/assets\/node_modules\/\@expo\/vector-icons\/build\/vendor\/react-native-vector-icons\/Fonts\/(.*?\.ttf)/g,
     (_, fileName) => `/assets/${fileName}`
   );
-
   fs.writeFileSync(entryJsPath, content, 'utf8');
   console.log(`Updated references in "${entryJsFile}".`);
+  return entryJsFile;
 }
 
-// Execute the operations
+function updateIndexHtml() {
+  if (!fs.existsSync(indexHtmlPath)) {
+    console.error('index.html not found in web-build directory');
+    return;
+  }
+
+  let content = fs.readFileSync(indexHtmlPath, 'utf8');
+  
+  content = content.replace(
+    /<script src="\/_expo\/(.*?)"/g,
+    '<script src="_expo/$1"'
+  );
+
+  fs.writeFileSync(indexHtmlPath, content, 'utf8');
+  console.log('Updated script paths in index.html');
+}
+
 clearDirectory(assetsDir);
 moveTtfFiles(fontsDir, assetsDir);
 editEntryJsFile(entryJsDir, assetsDir);
+updateIndexHtml();
