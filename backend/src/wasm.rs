@@ -10,6 +10,13 @@ impl From<String> for LiturgyError {
     }
 }
 
+fn from_ymd(y: i32, m: u32, d: u32) -> R<NaiveDate> {
+    match NaiveDate::from_ymd_opt(y, m, d) {
+        Some(date) => Ok(date),
+        None => Err(format!("Invalid date: {}-{}-{}.", y, m, d).into())
+    }
+}
+
 fn get_identifiers(date: NaiveDate) -> R<(kalendar::Celebration, kalendar::Celebration)> {
     let today = match kalendar::get_celebration(date) {
         Some(kal) => kal,
@@ -31,7 +38,7 @@ fn compile_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> Vec<compi
 }
 
 pub fn get_identifier(y: i32, m: u32, d: u32) ->R<LiturgyInfo> {
-    let date = NaiveDate::from_ymd(y, m, d);
+    let date = from_ymd(y, m, d)?;
 
     let (today, tomorrow) = get_identifiers(date)?;
     let today_vespers = !liturgy::first_vespers(&today, &tomorrow);
@@ -43,7 +50,7 @@ pub fn get_identifier(y: i32, m: u32, d: u32) ->R<LiturgyInfo> {
 }
 
 pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celebration>> {
-    let first_day_of_month = NaiveDate::from_ymd(y, m, 1);
+    let first_day_of_month = from_ymd(y, m, 1)?;
     let next_month = first_day_of_month
         .with_month((m + 1))
         .unwrap_or_else(|| NaiveDate::from_ymd(y + 1, 1, 1));
@@ -52,7 +59,7 @@ pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celeb
     let mut month: HashMap<u32, kalendar::Celebration> = HashMap::new();
 
     for day in 1..=days_in_month {
-        let date = NaiveDate::from_ymd(y, m, day as u32);
+        let date = from_ymd(y, m, day as u32)?;
 
         let identifier = get_identifiers(date)?.0;
         month.insert(day as u32, identifier);
@@ -62,7 +69,7 @@ pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celeb
 }
 
 pub fn get_hour(y: i32, m: u32, d: u32, hour: &str) -> R<Vec<compiler::Element>> {
-    let (today, tomorrow) = match get_identifiers(NaiveDate::from_ymd(y, m, d)) {
+    let (today, tomorrow) = match get_identifiers(from_ymd(y, m, d)?) {
         Ok(lit) => lit,
         Err(why) => return Err(why)
     };
