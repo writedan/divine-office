@@ -15,11 +15,11 @@ horarium/test.html
 !public/*
 #!react-frontend/**/**
 
-# rust support
+!backend/**
+*.DS_Store
+**/target/**
 
-!src/*
-!src/*/*
-!Cargo.toml
+# rust support
 
 # Added by cargo
 
