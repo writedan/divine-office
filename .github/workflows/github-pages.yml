@@ -21,13 +21,15 @@ jobs:
         targets: wasm32-unknown-unknown
 
     - name: Install wasm-bindgen-cli
-      run: cargo install wasm-bindgen-cli
+      run: cargo install wasm-pack
 
     - name: Build WASM
       run: |
         cd backend
-        cargo build --target wasm32-unknown-unknown --release
-        wasm-bindgen --target web --out-dir ../frontend/public target/wasm32-unknown-unknown/release/divine_office.wasm
+        wasm-pack build --target web --out-dir ../frontend/wasm
+
+    - name: Remove import.meta from divine_office.js
+      run: sed -i '/import.meta/d' frontend/wasm/divine_office.js
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
