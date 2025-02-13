@@ -23,7 +23,17 @@
         flex: 1;
       }
     </style>
-  </head>
+  
+<script defer>
+// A fix around routing problems in default React Native Expo exports
+APP_ROOT = window.location.pathname;
+console.log('APP_ROOT', APP_ROOT);
+
+const script = document.createElement('script');
+script.src = APP_ROOT + '_expo/static/js/web/entry-4e0d49838d1fb454de9fed4c84d2b857.js';
+document.head.appendChild(script);
+</script>
+</head>
 
   <body>
     <!-- Use static rendering with Expo Router to support running without JavaScript. -->
@@ -32,6 +42,6 @@
     </noscript>
     <!-- The root element for your Expo app. -->
     <div id="root"></div>
-  <script src="_expo/static/js/web/entry-8927617a5125ac77a312ee3c44bf2c0b.js" defer></script>
+  
 </body>
 </html>
