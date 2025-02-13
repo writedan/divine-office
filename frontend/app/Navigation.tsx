@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState } from 'react';
 const NavigationContext = createContext(undefined);
 
 export const NavigationProvider = ({ children }) => {
-  const [currentPage, setCurrentPage] = useState('install-cargo');
-  const [pageArgs, setPageArgs] = useState({});
+  const [currentPage, setCurrentPage] = useState('today');
+  const [pageArgs, setPageArgs] = useState({date: new Date()});
 
   const goto = (page, args={}) => {
     setCurrentPage(page);

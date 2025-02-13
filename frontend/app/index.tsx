@@ -82,22 +82,6 @@ const MainContent = () => {
 const NavBar = ({}) => {
   const { currentPage, goto } = useNavigation();
 
-  const [updateSplash, setUpdateSplash] = useState(null);
-
-  const checkUpdates = async () => {
-    const backendBehind = await window.electronAPI.getCommitDifference('https://github.com/writedan/divine-office', 'backend');
-    const frontendBehind = await window.electronAPI.getCommitDifference('https://github.com/writedan/divine-office-frontend', 'frontend');
-
-    setUpdateSplash((backendBehind.success && backendBehind.behind) + (frontendBehind.success && frontendBehind.behind));
-    if (!frontendBehind.success) {
-      setUpdateSplash('!');
-    }
-  };
-
-  useEffect(() => {
-    checkUpdates();
-  }, []);
-
   const NavItem = ({ type, icon, label, goto, isActive, badge }) => {
     const [isHovered, setIsHovered] = React.useState(false);
 

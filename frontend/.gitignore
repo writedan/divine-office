@@ -19,6 +19,8 @@ package-lock.json
 eslint.config.js
 tsconfig.app.json
 tsconfig.node.json
+.expo
+wasm/
 
 # Editor directories and files
 .vscode/*

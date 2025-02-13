@@ -2,6 +2,15 @@
   "expo": {
     "name": "Divine Office",
     "slug": "divine-office-fontend",
-    "version": "0.2.1"
+    "version": "0.2.1",
+    "plugins": [
+      "react-native-webassembly",
+      [
+        "expo-asset",
+          {
+            "assets": ["./wasm/divine_office.wasm"]
+          }
+      ]
+    ]
   }
 }
