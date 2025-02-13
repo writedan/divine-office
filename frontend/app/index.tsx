@@ -8,13 +8,8 @@ import { Geolocation } from './Geolocation';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-import CargoInstaller from './pages/CargoInstaller';
-import BackendInstaller from './pages/BackendInstaller';
-import StartServer from './pages/StartServer';
 import HoursPage from './pages/HoursPage';
-import UpdatePage from './pages/Updater';
 import CalendarPage from './pages/Calendar';
-import NpmInstaller from './pages/NpmInstaller';
 import HourPage from './pages/Hour';
 
 const App = () => {
@@ -44,28 +39,8 @@ const App = () => {
 const MainContent = () => {
   const { currentPage, pageArgs } = useNavigation();
 
-  if (currentPage == 'install-cargo') {
-    return <CargoInstaller />;
-  }
-
-  if (currentPage == 'install-npm') {
-    return <NpmInstaller />;
-  }
-
-  if (currentPage == 'install-backend') {
-    return <BackendInstaller />;
-  }
-
-  if (currentPage == 'start-backend') {
-    return <StartServer />;
-  }
-
   if (currentPage == 'today' && pageArgs.date) {
     return <HoursPage now={pageArgs.date} />;
-  }
-
-  if (currentPage == 'update') {
-    return <UpdatePage />;
   }
 
   if (currentPage == 'calendar' && pageArgs.today) {
@@ -130,28 +105,23 @@ const NavBar = ({}) => {
     );
   };
 
-  if (currentPage === 'install-cargo' || currentPage === 'install-backend') return null;
-
   return (
     <View style={styles.navBar}>
-      {currentPage != 'start-backend' && (
-        <>
-          <NavItem 
-            type="entypo" 
-            icon="calendar" 
-            label="Today" 
-            goto={() => goto('today', {date: new Date()})}
-            isActive={currentPage == 'today'}
-          />
-          <NavItem 
-            type="fontawesome" 
-            icon="calendar" 
-            label="Calendar" 
-            goto={() => goto('calendar', {today: new Date()})}
-            isActive={currentPage == 'calendar'}
-          />
-        </>
-      )}
+      <NavItem 
+        type="entypo" 
+        icon="calendar" 
+        label="Today" 
+        goto={() => goto('today', {date: new Date()})}
+        isActive={currentPage == 'today'}
+      />
+
+      <NavItem 
+        type="fontawesome" 
+        icon="calendar" 
+        label="Calendar" 
+        goto={() => goto('calendar', {today: new Date()})}
+        isActive={currentPage == 'calendar'}
+      />
     </View>
   );
 }

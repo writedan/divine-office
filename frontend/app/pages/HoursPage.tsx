@@ -109,6 +109,7 @@ const Hours = ({ now }) => {
 
   const renderRow = (left, right, goto) => (
     <Pressable
+      key={Math.random()}
       style={[
         hoveredRow === left && styles.hoveredRow
       ]}
@@ -169,6 +170,7 @@ const Hours = ({ now }) => {
         {tomorrow && (
           <View style={styles.tableContainer}>
             {renderRow('First Vespers', formatTime(hours.find(h => h.name === 'Vespers')?.time), () => goto('hour', {date: currentDate, hour: 'vespers'}))}
+
             {renderRow('First Compline', formatTime(hours.find(h => h.name === 'Compline')?.time), () => goto('hour', {date: currentDate, hour: 'compline'}))}
           </View>
         )}
