@@ -1,4 +1,4 @@
-use chrono::{NaiveDate, Weekday, Datelike};
+use chrono::{Datelike, NaiveDate, Weekday};
 
 pub trait Sunday {
     fn this_or_next_sunday(self) -> Option<NaiveDate>;
@@ -32,7 +32,7 @@ impl FullName for chrono::Weekday {
             Wed => "Wednesday",
             Thu => "Thursday",
             Fri => "Friday",
-            Sat => "Saturday"
+            Sat => "Saturday",
         }
     }
 }
@@ -65,7 +65,7 @@ impl Ordinal for u8 {
 
 impl Sunday for NaiveDate {
     fn this_or_next_sunday(self) -> Option<NaiveDate> {
-    	use Weekday::*;
+        use Weekday::*;
         let days_to_add = match self.weekday() {
             Mon => 6,
             Tue => 5,
@@ -73,7 +73,7 @@ impl Sunday for NaiveDate {
             Thu => 3,
             Fri => 2,
             Sat => 1,
-            Sun => 0
+            Sun => 0,
         };
 
         self.checked_add_signed(chrono::Duration::days(days_to_add))
@@ -88,7 +88,7 @@ impl Sunday for NaiveDate {
             Wed => 3,
             Thu => 4,
             Fri => 5,
-            Sat => 6
+            Sat => 6,
         };
 
         self.checked_sub_signed(chrono::Duration::days(days_to_sub))
@@ -126,7 +126,6 @@ impl Betwixt for NaiveDate {
         (d2 - d1).num_days()
     }
 }
-
 
 #[cfg(test)]
 mod tests {

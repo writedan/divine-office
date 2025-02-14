@@ -1,10 +1,10 @@
-mod timehelp;
+mod asset;
+mod compiler;
 mod kalendar;
+mod lexer;
 mod liturgy;
 mod parser;
-mod compiler;
-mod lexer;
-mod asset;
+mod timehelp;
 mod wasm;
 
 use wasm_bindgen::prelude::*;
@@ -22,7 +22,7 @@ pub fn get_identifier(year: i32, month: u32, day: u32) -> String {
 pub fn get_monthly_identifiers(year: i32, month: u32) -> String {
     match wasm::get_monthly_identifiers(year, month) {
         Ok(map) => serde_json::to_string(&map).unwrap(),
-        Err(err) => serde_json::to_string(&err).unwrap()
+        Err(err) => serde_json::to_string(&err).unwrap(),
     }
 }
 
@@ -30,6 +30,6 @@ pub fn get_monthly_identifiers(year: i32, month: u32) -> String {
 pub fn get_hour(year: i32, month: u32, day: u32, hour: &str) -> String {
     match wasm::get_hour(year, month, day, hour) {
         Ok(elements) => serde_json::to_string(&elements).unwrap(),
-        Err(err) => serde_json::to_string(&err).unwrap()
+        Err(err) => serde_json::to_string(&err).unwrap(),
     }
 }

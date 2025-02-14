@@ -1,5 +1,5 @@
-use chrono::{NaiveDate, Datelike};
-use crate::{kalendar, liturgy, compiler, parser};
+use crate::{compiler, kalendar, liturgy, parser};
+use chrono::{Datelike, NaiveDate};
 use std::collections::HashMap;
 
 type R<T> = Result<T, LiturgyError>;
@@ -13,19 +13,31 @@ impl From<String> for LiturgyError {
 fn from_ymd(y: i32, m: u32, d: u32) -> R<NaiveDate> {
     match NaiveDate::from_ymd_opt(y, m, d) {
         Some(date) => Ok(date),
-        None => Err(format!("Invalid date: {}-{}-{}.", y, m, d).into())
+        None => Err(format!("Invalid date: {}-{}-{}.", y, m, d).into()),
     }
 }
 
 fn get_identifiers(date: NaiveDate) -> R<(kalendar::Celebration, kalendar::Celebration)> {
     let today = match kalendar::get_celebration(date) {
         Some(kal) => kal,
-        None => return Err(format!("The supplied date {} is beyond the bounds of the Gregorian calendar.", date).into())
+        None => {
+            return Err(format!(
+                "The supplied date {} is beyond the bounds of the Gregorian calendar.",
+                date
+            )
+            .into())
+        }
     };
 
     let tomorrow = match kalendar::get_celebration(date + chrono::Days::new(1)) {
         Some(kal) => kal,
-        None => return Err(format!("The supplied date {} is beyond the bounds of the Gregorian calendar.", date + chrono::Days::new(1)).into())
+        None => {
+            return Err(format!(
+                "The supplied date {} is beyond the bounds of the Gregorian calendar.",
+                date + chrono::Days::new(1)
+            )
+            .into())
+        }
     };
 
     let today_vespers = !liturgy::first_vespers(&today, &tomorrow);
@@ -37,15 +49,15 @@ fn compile_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> Vec<compi
     compiler::compile_ast(parser::Parser::from_hour(propers))
 }
 
-pub fn get_identifier(y: i32, m: u32, d: u32) ->R<LiturgyInfo> {
+pub fn get_identifier(y: i32, m: u32, d: u32) -> R<LiturgyInfo> {
     let date = from_ymd(y, m, d)?;
 
     let (today, tomorrow) = get_identifiers(date)?;
     let today_vespers = !liturgy::first_vespers(&today, &tomorrow);
-    
+
     Ok(LiturgyInfo {
         today,
-        tomorrow: if today_vespers { None } else { Some(tomorrow) }
+        tomorrow: if today_vespers { None } else { Some(tomorrow) },
     })
 }
 
@@ -71,7 +83,7 @@ pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celeb
 pub fn get_hour(y: i32, m: u32, d: u32, hour: &str) -> R<Vec<compiler::Element>> {
     let (today, tomorrow) = match get_identifiers(from_ymd(y, m, d)?) {
         Ok(lit) => lit,
-        Err(why) => return Err(why)
+        Err(why) => return Err(why),
     };
 
     let lit = liturgy::resolve_hours(&today, &tomorrow);
@@ -85,17 +97,17 @@ pub fn get_hour(y: i32, m: u32, d: u32, hour: &str) -> R<Vec<compiler::Element>>
         "none" => Ok(compile_hour(lit.none)),
         "vespers" => Ok(compile_hour(lit.vespers)),
         "compline" => Ok(compile_hour(lit.compline)),
-        _ => Err(format!("An invalid hour \"{}\" was supplied.", hour).into())
+        _ => Err(format!("An invalid hour \"{}\" was supplied.", hour).into()),
     }
 }
 
 #[derive(serde::Serialize)]
 pub struct LiturgyError {
-    error: String
+    error: String,
 }
 
 #[derive(serde::Serialize)]
 pub struct LiturgyInfo {
     today: kalendar::Celebration,
-    tomorrow: Option<kalendar::Celebration>
+    tomorrow: Option<kalendar::Celebration>,
 }
