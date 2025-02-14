@@ -507,10 +507,12 @@ impl Preprocessor {
                                 }
                             };
 
-                            let re = regex::Regex::new(r"\r?\n").unwrap();
-                            let gabc = re.split(&gabc).collect::<Vec<_>>();
+                            return Token::RawGabc(gabc)
 
-                            return Token::Gabc(gabc[1].to_string().replace("<sp>*</sp>", ""));
+                            // let re = regex::Regex::new(r"\r?\n").unwrap();
+                            // let gabc = re.split(&gabc).collect::<Vec<_>>();
+
+                            // return Token::Gabc(gabc[1].to_string().replace("<sp>*</sp>", ""));
                         } else {
                             Token::RepeatAntiphon
                         }
