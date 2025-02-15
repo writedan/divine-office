@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ScrollView, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncCall from '../components/AsyncCall';
 import { useApi } from '../ApiControl';
@@ -25,13 +25,19 @@ const isColorDark = (hexColor) => {
   return luminance < 0.5;
 };
 
-const Calendar = ({ today }) => {
+const Calendar = ({ today, onDateSelect }) => {
   const [identifiers, setIdentifiers] = useState({});
   const [currentDate, setCurrentDate] = useState(today);
   const [reloadKey, setReloadKey] = useState(0);
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  
   const { getMonthCalendar } = useApi();
   const { goto } = useNavigation();
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
 
   const load = async () => {
     setIdentifiers(await getMonthCalendar(currentDate));
@@ -55,10 +61,60 @@ const Calendar = ({ today }) => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
   };
 
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+  const handleDateSelect = (year, month) => {
+    setCurrentDate(new Date(year, month));
+    setShowDatePicker(false);
+    setReloadKey(reloadKey + 1);
+  };
+
+  const DatePickerModal = () => {
+    const currentYear = currentDate.getFullYear();
+    const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
+
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showDatePicker}
+        onRequestClose={() => setShowDatePicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select Date</Text>
+            <ScrollView style={styles.modalScroll}>
+              {years.map(year => (
+                <View key={year}>
+                  <Text style={styles.yearHeader}>{year}</Text>
+                  <View style={styles.monthGrid}>
+                    {monthNames.map((month, index) => (
+                      <Pressable
+                        key={month}
+                        style={[
+                          styles.monthButton,
+                          currentDate.getFullYear() === year && 
+                          currentDate.getMonth() === index && 
+                          styles.selectedMonth
+                        ]}
+                        onPress={() => handleDateSelect(year, index)}
+                      >
+                        <Text style={styles.monthButtonText}>{month}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setShowDatePicker(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
@@ -79,7 +135,11 @@ const Calendar = ({ today }) => {
       days.push(
         <Pressable
           key={day}
-          onPress={() => goto('today', {date: new Date(currentDate.getFullYear(), currentDate.getMonth(), day) })}
+          onPress={() => {
+            const selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            goto('today', { date: selectedDate });
+            if (onDateSelect) onDateSelect(selectedDate);
+          }}
           style={[
             styles.dayCell,
             { backgroundColor: bgColor }
@@ -117,9 +177,12 @@ const Calendar = ({ today }) => {
             <Icon name="chevron-left" size={24} color="#000000" />
           </Pressable>
           
-          <Text style={styles.monthTitle}>
-            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </Text>
+          <Pressable onPress={() => setShowDatePicker(true)} style={styles.monthTitleButton}>
+            <Text style={styles.monthTitle}>
+              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </Text>
+            <Icon name="arrow-drop-down" size={24} color="#000000" />
+          </Pressable>
           
           <Pressable onPress={handleNextMonth} style={styles.navButton}>
             <Icon name="chevron-right" size={24} color="#000000" />
@@ -137,6 +200,8 @@ const Calendar = ({ today }) => {
         <ScrollView contentContainerStyle={styles.calendar}>
           {renderCalendar()}
         </ScrollView>
+
+        <DatePickerModal />
       </View>
     </AsyncCall>
   );
@@ -158,6 +223,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   navButton: {
+    padding: 8,
+  },
+  monthTitleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 8,
   },
   monthTitle: {
@@ -202,7 +272,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   dayName: {
-  	marginTop: 2,
+    marginTop: 2,
     fontSize: 16,
     fontWeight: '600',
     flex: 1
@@ -215,6 +285,65 @@ const styles = StyleSheet.create({
   },
   darkText: {
     color: '#000000',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '90%',
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalScroll: {
+    maxHeight: '80%',
+  },
+  yearHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  monthGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  monthButton: {
+    width: '30%',
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  selectedMonth: {
+    backgroundColor: '#0066cc',
+  },
+  monthButtonText: {
+    fontSize: 16,
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#0066cc',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
