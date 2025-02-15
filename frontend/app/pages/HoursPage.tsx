@@ -30,6 +30,10 @@ const Hours = ({ now }) => {
   const { lat: latitude, lon: longitude } = useGeolocation();
   const { goto } = useNavigation();
 
+  useEffect(() => {
+    console.log('tomorrow = ', tomorrow);
+  }, [tomorrow]);
+
   const load = async () => {
     const fetchLiturgicalData = async () => {
       const response = await getMetadata(currentDate);
@@ -65,6 +69,7 @@ const Hours = ({ now }) => {
   };
 
   const formatTime = (date) => {
+    if (!date) return null;
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
