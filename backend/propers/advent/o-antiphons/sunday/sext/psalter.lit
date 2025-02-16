@@ -1,0 +1,10 @@
+#antiphon "erunt-prava-in-directa"
+	#tone "1-ix" "cb4"
+	#psalm "118f"
+
+	#repeat-tone
+	#psalm "118g"
+
+	#repeat-tone
+	#psalm "118h"
+#repeat-antiphon

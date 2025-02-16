@@ -1,0 +1,10 @@
+#antiphon "egredietur-dominus"
+	#tone "4-iv" "c3"
+	#psalm "118i"
+
+	#repeat-tone
+	#psalm "118j"
+
+	#repeat-tone
+	#psalm "118k"
+#repeat-antiphon

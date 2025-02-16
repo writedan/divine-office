@@ -1,0 +1,10 @@
+#antiphon "dum-venerit-filius"
+	#tone "8-ii" "c3"
+	#psalm "118c"
+
+	#repeat-tone
+	#psalm "118d"
+
+	#repeat-tone
+	#psalm "118e"
+#repeat-antiphon
