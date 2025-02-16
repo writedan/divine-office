@@ -28,7 +28,7 @@ function removeImportMetaLine(filePath) {
     }
 }
 
-const targetPath = path.join(__dirname, 'backend', 'target', 'wasm32-unknown-unkown', 'release', 'divine_office.wasm');
+const targetPath = path.join(__dirname, 'backend', 'target', 'wasm32-unknown-unknown', 'release', 'deps', 'divine_office.wasm');
 if (fs.existsSync(targetPath)) {
     console.log('Deleting target/wasm32-unknown-unkown/release/divine_office.wasm directory...');
     fs.rmSync(targetPath, { recursive: true, force: true });
