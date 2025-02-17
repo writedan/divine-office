@@ -1,0 +1,10 @@
+#antiphon "prophete-predicaverunt"
+	#tone "1-v" "f3"
+	#psalm "118c"
+
+	#repeat-tone
+	#psalm "118d"
+
+	#repeat-tone
+	#psalm "118e"
+#repeat-antiphon
