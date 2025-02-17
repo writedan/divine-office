@@ -1,0 +1,36 @@
+#antiphon "ecce-dominus-noster-cum-virtute"
+	#tone "4-v" "c3"
+	#psalm "50"
+#repeat-antiphon
+
+#antiphon "emitte-agnum-domine"
+	#tone "4-iv" "c3"
+	#psalm "42"
+#repeat-antiphon
+
+#antiphon "ut-cognoscamus-domine"
+	#tone "4-iv" "c3"
+	#no-gloria
+	#psalm "62"
+
+	#repeat-antiphon
+	#psalm "66"
+#repeat-antiphon
+
+#antiphon "da-mercedem-domine"
+	#tone "4-v" "c3"
+	#psalm "isaiah-38"
+#repeat-antiphon
+
+#antiphon "lex-per-moysen"
+	#tone "1-v" "f3"
+	#no-gloria
+	#psalm "148"
+
+	#repeat-tone
+	#no-gloria
+	#psalm "149"
+
+	#repeat-tone
+	#psalm "150"
+#repeat-antiphon

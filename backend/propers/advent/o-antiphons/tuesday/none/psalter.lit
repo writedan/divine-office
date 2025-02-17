@@ -1,0 +1,10 @@
+#antiphon "lex-per-moysen"
+	#tone "1-v" "f3"
+	#psalm "118i"
+
+	#repeat-tone
+	#psalm "118j"
+
+	#repeat-tone
+	#psalm "118k"
+#repeat-antiphon
