@@ -1,0 +1,10 @@
+#antiphon "de-syon-veniet"
+	#tone "1-iv" "c4"
+	#psalm "118f"
+
+	#repeat-tone
+	#psalm "118g"
+
+	#repeat-tone
+	#psalm "118h"
+#repeat-antiphon
