@@ -1,0 +1,10 @@
+#antiphon "ego-autem-ad-dominum"
+	#tone "4-v" "c3"
+	#psalm "118i"
+
+	#repeat-tone
+	#psalm "118j"
+
+	#repeat-tone
+	#psalm "118k"
+#repeat-antiphon
