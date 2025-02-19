@@ -36,7 +36,7 @@ Ligatures=TeX
 \usepackage{microtype} % Improved typography
 \usepackage{lettrine} % Fancy chapter initials
 % Color and design
-\usepackage{xcolor}
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
 \definecolor{rubric}{RGB}{200,0,0} % Traditional red for rubrics
 \definecolor{pagecolor}{RGB}{245,240,220} % Slightly aged paper color
 % Table of contents styling
@@ -67,6 +67,13 @@ Ligatures=TeX
 \gresetspecial{*}{\textcolor{rubric}{\GreStarHeight{17}}}
 \usepackage{parskip}
 \newcommand{\import}[1]{\textbf{#1}}
+
+% ribbons
+\newcommand{\whiteribbon}[0]{\textcolor{black}{\textbf{white ribbon}} }%
+\newcommand{\greenribbon}[0]{\textcolor{ForestGreen}{\textbf{green ribbon}} }%
+\newcommand{\redribbon}[0]{\textcolor{red}{\textbf{red ribbon}} }%
+\newcommand{\blueribbon}[0]{\textcolor{blue}{\textbf{blue ribbon}} }%
+\newcommand{\goldribbon}[0]{\textcolor{DarkGoldenrod3}{\textbf{gold ribbon}} }%
 
 % Custom chapter and section styling with non-cumulative spacing
 \usepackage{titlesec}
@@ -128,19 +135,15 @@ Ligatures=TeX
 }
 \makeatother
 \begin{document}
-	\raggedbottom
-	\thispagestyle{empty}
 	\begin{titlepage}
-		\null
 		\vspace*{\fill}
 		\begin{center}
-			{\Huge\bfseries Common Service Book}\\[1cm]
+			{\Huge\bfseries The Common Service Book}\\[1cm]
 			{\Large Containing the Psalter of David}\par
 			{\Large and the Administration of the Sacraments.}
 			\vfill
 			{A. D. \textcolor{rubric}{MMXXV}}.
 		\end{center}
-		\vspace*{\fill}
 	\end{titlepage}
 
 	\clearpage
@@ -149,37 +152,19 @@ Ligatures=TeX
 	
 	\clearpage
 	
-	\chapter{Confessions of the Church}
+	\chapter{The Preface}
 	
-		\section{The Creed of Nicaea}
+		Dearest brethren in the Lord Jesus Christ: I could not count up in their exact number those highest blessings which have been heaped upon us by God and by which he has bound us to himself and rendered us obedient, even if I possessed one hundred tongues and one hundred mouths; from which blessings we are able to understand how deeply he has loved us, even though we are unworthy. Therefore, we are ungrateful and certainly unworthy of such great and magnificent benevolence on the part of our Lord if, in return for the many and so great benefits with which he has enriched us and which he has heaped upon us, and yet does not cease daily to adorn and laden us, we do not try to offer him the greatest thanks of which we are able. Accordingly, let us try to please him in this manner at least, since no other is allowed us, lest we should seem unmindful of his outstanding goodness toward us. 
 		
-			We believe in one God, the Father almighty, maker of all things visible and invisible. We believe in one Lord, Jesus Christ, the Son of God, begotten from the Father, only-begotten, that is, from the substance of the Father, God from God, light from light, true God from true God, begotten not made, of one substance with the Father, through Whom all things came into being, things in heaven and things on earth, Who because of us men and because of our salvation came down, and became incarnate and became man, and suffered, and rose again on the third day, and ascended into the heavens, and will come to judge the living and the dead. We believe in the Holy Spirit.
-			
-			But as for those who say, \enquote{There was when He was not}, and, \enquote{Before being born He was not}, and that His came into existence out of nothing, or who assert that the Son of God is of a different hypostasis or substance, or created, or is subject to alteration or change: these the catholic and apostolic Church anathematizes.
-			
-		\section{The Creed of Constantinople}
+		Let us therefore look up to him and worship him, let us earnestly sing his praises and his triumphs, let us sing with the angels \enquote{Glory to God in the highest}, who has opened for us the door to the heavenly Jerusalem, closed and bolted for so many ages before, motivated solely by his goodness. And it is in order that this might be done more easily in all the churches in this Christ's Kingdom that there has been published this book, in which the divine praises and heavenly songs have been set forth. Therefore, receive this book and embrace its incomparable treasure, and let nothing keep you from the divine services.
 		
-			We believe in one God the Father all-powerful, maker of heaven and earth, and of all things both seen and unseen. We believe in one Lord Jesus Christ, the only-begotten Son of God, begotten from the Father before all the ages, light from light, true God from true God, begotten not made, consubstantial with the Father, through whom all things came to be; for us men and for our salvation he came down from the heavens and became incarnate from the Holy Spirit and the virgin Mary, became human and was crucified on our behalf under Pontius Pilate; he suffered and was buried and rose up on the third day in accordance with the scriptures; and he went up into the heavens and is seated at the Father's right hand; he is coming again with glory to judge the living and the dead; his kingdom will have no end. We believe in the Spirit, the holy, the lordly and life-giving one, proceeding forth from the Father, co-worshiped the co-glorified with Father and Son, the one who spoke through the prophets; in one, holy, catholic, and apostolic church. We confess one baptism for the forigiving of sins. We look forward to a resurrection of the dead and life in the age to come. Amen.
-			
-		\section{The Definition of Chalcedon}
-		
-			Following the saintly fathers, we all with one voice teach the confession of one and the same Son, our Lord Jesus Christ: the same perfect in divinity and perfect in humanity, the same truly God and truly man, of a rational soul and a body; consubstantial with the Father as regards his divinity, and the same consubstantial with us as regards his humanity; like us in all respects except for sin; begotten before the ages from the Father as regards his divinity, and in the last days the same for us and for our salvation from Mary, the virgin God-bearer as regards his humanity; one and the same Christ, Son, Lord, only-begotten, acknowledged in two natures which undergo no confusion, no change, no division, no separation; at no point was the property of both natures taken away through the union, but rather the property of both natures is preserved and comes together into a single person and a single substituent being; he is not parted or divided into two persons, but is one and the same only-begotten Son, God, Word, Lord Jesus Christ, just as the prophets taught from the beginning about him, and as the Lord Jesus Christ himself instructed us, and as the creed of the fathers handed it down to us.
-			
-		\section{The Creed of Saint Athanasius}
+		Ready yourselves, all of you, for the divine praises, so that Christ, the greatest and the best, may be lauded, honored, hymned, celebrated, adored, glorified, and worshiped in all the churches of the saints.
 	
 	\part{The Divine Office}
-		
-		\chapter{The Ordinaries}
-			
-			\section{The Order of the Vigil}
-			
-				\doimport{commons/shared/usual-beginning.lit}
-				
-				\doimport{commons/shared/apostles-creed.lit}
-				
-				\doimport{commons/vigils/aperi.lit}
 				
 	\part{The Lectionary}
 	
 	\part{The Sacramentary}
+	
+	\part{The Confessions}
 \end{document}
