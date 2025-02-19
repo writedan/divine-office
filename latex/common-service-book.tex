@@ -1,0 +1,185 @@
+\documentclass[14pt,openany]{book}
+\usepackage{multicol}
+\usepackage{paracol}
+% Columned settings
+\setlength{\columnseprule}{0.025pt}
+\setlength{\columnsep}{1.5em}
+\setlength{\topskip}{7pt}
+
+\usepackage{enumitem}
+\usepackage{textcomp}
+\usepackage{csquotes}
+% Fonts and typography
+\usepackage{fontspec}
+\setmainfont{Libre Baskerville}[
+Scale=1.0,
+Ligatures=TeX
+]
+\usepackage[]{geometry}
+\geometry{
+	paperwidth=8.5in,
+	paperheight=11in,
+	inner=1.5cm,
+	outer=1cm,
+	top=1.5cm,
+	bottom=1.5cm,
+	headsep=0.5cm,
+	showframe=false
+}
+% Headers and footers - simplified to just page number at bottom
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+% Typography and text styling
+\usepackage{microtype} % Improved typography
+\usepackage{lettrine} % Fancy chapter initials
+% Color and design
+\usepackage{xcolor}
+\definecolor{rubric}{RGB}{200,0,0} % Traditional red for rubrics
+\definecolor{pagecolor}{RGB}{245,240,220} % Slightly aged paper color
+% Table of contents styling
+\usepackage{titletoc}
+\contentsmargin{0pt}
+\titlecontents{chapter}[0pt]
+{\addvspace{10pt}\bfseries}
+{\contentslabel{0pt}\hspace*{0pt}}
+{}
+{\hfill\contentspage}
+\usepackage{gregoriotex}
+\gredefsizedsymbol{GreCross}{greextra}{Cross}
+\gredefsizedsymbol{GreDagger}{greextra}{Dagger}
+\gredefsizedsymbol{GreCrossAlt}{greextra}{Cross.alt}
+\gredefsizedsymbol{GreStarHeight}{greextra}{StarHeight}
+\gredefsizedsymbol{greABar}{greextra}{ABar}
+\gredefsizedsymbol{greVBar}{greextra}{VBar}
+\gredefsizedsymbol{greRBar}{greextra}{RBar}
+\gresetspecial{r}{\textcolor{rubric}{\Rbar{}.}}
+\gresetspecial{v}{\textcolor{rubric}{\Vbar{}.}}
+\gresetspecial{a}{\textcolor{rubric}{\Abar{}.}}
+\gresetspecial{r/}{\textcolor{rubric}{\Rbar{}}}
+\gresetspecial{v/}{\textcolor{rubric}{\Vbar{}}}
+\gresetspecial{a/}{\textcolor{rubric}{\Abar{}}}
+\gresetspecial{+}{\textcolor{rubric}{\GreCross{17}}}
+\gresetspecial{1}{\textcolor{rubric}{\GreDagger{17}}}
+\gresetspecial{2}{\textcolor{rubric}{\GreCrossAlt{17}}}
+\gresetspecial{*}{\textcolor{rubric}{\GreStarHeight{17}}}
+\usepackage{parskip}
+\newcommand{\import}[1]{\textbf{#1}}
+
+% Custom chapter and section styling with non-cumulative spacing
+\usepackage{titlesec}
+\usepackage{etoolbox}
+
+% Custom chapter style - centered, red, uppercase, no numbering
+\titleformat{\chapter}[display]
+{\bfseries\centering}
+{}
+{0pt}
+{\color{rubric}\LARGE\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{12pt}{0pt}
+
+% Custom section style - centered, black, uppercase, no numbering
+\titleformat{\section}[display]
+{\bfseries\centering}
+{}
+{0pt}
+{\Large\MakeUppercase}
+\titlespacing*{\section}{0pt}{5pt}{10pt}
+
+% This patch prevents cumulative spacing when a section follows a chapter
+
+% This will eventually load up a Lua script using WASM to handle importation, parsing, and compilation of specified files.
+\newcommand{\doimport}[1]{IMPORT: \textbf{#1}}
+
+% Rubrication and notation
+\newcommand{\rubric}[1]{\textcolor{rubric}{\small\textparagraph \textit{#1}}}
+\newcommand{\liturgicaltext}[1]{\textit{#1}}
+% Ensure parts start on even-numbered (left-sided) pages
+\makeatletter
+\newcounter{thepartcounter}
+\setcounter{thepartcounter}{1}
+\renewcommand{\thethepartcounter}{\Roman{thepartcounter}}
+\renewcommand{\part}[1]{%
+	\clearpage
+	% If current page is odd, add a blank page to make next page even
+	\ifodd\c@page
+	\null
+	\thispagestyle{empty}
+	\clearpage
+	\fi
+	% Now we're on an even page
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\Huge \selectfont \textbf{PART \textcolor{rubric}{\thethepartcounter}.}}\par
+	\end{center}
+	\vspace*{\fill}
+	\stepcounter{thepartcounter}
+	\clearpage
+	% Now we're on the next (odd) page
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\Huge \selectfont \textbf{\MakeUppercase{#1}}}\par
+	\end{center}
+	\vspace*{\fill}
+}
+\makeatother
+\begin{document}
+	\raggedbottom
+	\thispagestyle{empty}
+	\begin{titlepage}
+		\null
+		\vspace*{\fill}
+		\begin{center}
+			{\Huge\bfseries Common Service Book}\\[1cm]
+			{\Large Containing the Psalter of David}\par
+			{\Large and the Administration of the Sacraments.}
+			\vfill
+			{A. D. \textcolor{rubric}{MMXXV}}.
+		\end{center}
+		\vspace*{\fill}
+	\end{titlepage}
+
+	\clearpage
+	
+	\tableofcontents
+	
+	\clearpage
+	
+	\chapter{Confessions of the Church}
+	
+		\section{The Creed of Nicaea}
+		
+			We believe in one God, the Father almighty, maker of all things visible and invisible. We believe in one Lord, Jesus Christ, the Son of God, begotten from the Father, only-begotten, that is, from the substance of the Father, God from God, light from light, true God from true God, begotten not made, of one substance with the Father, through Whom all things came into being, things in heaven and things on earth, Who because of us men and because of our salvation came down, and became incarnate and became man, and suffered, and rose again on the third day, and ascended into the heavens, and will come to judge the living and the dead. We believe in the Holy Spirit.
+			
+			But as for those who say, \enquote{There was when He was not}, and, \enquote{Before being born He was not}, and that His came into existence out of nothing, or who assert that the Son of God is of a different hypostasis or substance, or created, or is subject to alteration or change: these the catholic and apostolic Church anathematizes.
+			
+		\section{The Creed of Constantinople}
+		
+			We believe in one God the Father all-powerful, maker of heaven and earth, and of all things both seen and unseen. We believe in one Lord Jesus Christ, the only-begotten Son of God, begotten from the Father before all the ages, light from light, true God from true God, begotten not made, consubstantial with the Father, through whom all things came to be; for us men and for our salvation he came down from the heavens and became incarnate from the Holy Spirit and the virgin Mary, became human and was crucified on our behalf under Pontius Pilate; he suffered and was buried and rose up on the third day in accordance with the scriptures; and he went up into the heavens and is seated at the Father's right hand; he is coming again with glory to judge the living and the dead; his kingdom will have no end. We believe in the Spirit, the holy, the lordly and life-giving one, proceeding forth from the Father, co-worshiped the co-glorified with Father and Son, the one who spoke through the prophets; in one, holy, catholic, and apostolic church. We confess one baptism for the forigiving of sins. We look forward to a resurrection of the dead and life in the age to come. Amen.
+			
+		\section{The Definition of Chalcedon}
+		
+			Following the saintly fathers, we all with one voice teach the confession of one and the same Son, our Lord Jesus Christ: the same perfect in divinity and perfect in humanity, the same truly God and truly man, of a rational soul and a body; consubstantial with the Father as regards his divinity, and the same consubstantial with us as regards his humanity; like us in all respects except for sin; begotten before the ages from the Father as regards his divinity, and in the last days the same for us and for our salvation from Mary, the virgin God-bearer as regards his humanity; one and the same Christ, Son, Lord, only-begotten, acknowledged in two natures which undergo no confusion, no change, no division, no separation; at no point was the property of both natures taken away through the union, but rather the property of both natures is preserved and comes together into a single person and a single substituent being; he is not parted or divided into two persons, but is one and the same only-begotten Son, God, Word, Lord Jesus Christ, just as the prophets taught from the beginning about him, and as the Lord Jesus Christ himself instructed us, and as the creed of the fathers handed it down to us.
+			
+		\section{The Creed of Saint Athanasius}
+	
+	\part{The Divine Office}
+		
+		\chapter{The Ordinaries}
+			
+			\section{The Order of the Vigil}
+			
+				\doimport{commons/shared/usual-beginning.lit}
+				
+				\doimport{commons/shared/apostles-creed.lit}
+				
+				\doimport{commons/vigils/aperi.lit}
+				
+	\part{The Lectionary}
+	
+	\part{The Sacramentary}
+\end{document}
