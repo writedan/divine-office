@@ -266,17 +266,16 @@ fn resolve_tone(tone: &String) -> String {
     };
 
     match median {
-        "1" => "8".to_string(),
-        "6" => "8".to_string(),
+        "1" => "1".to_string(),
         "2" => match ending {
             Some(&"i") => "2".to_string(),
             Some(&"ii") => "8".to_string(),
             _ => tone.to_string(),
         },
         "3" => match ending {
-            Some(&"i") | Some(&"ii") | Some(&"iii") => "3a".to_string(),
-            Some(&"iv") | Some(&"v") => "3b".to_string(),
-            Some(&"vi") => "3c".to_string(),
+            Some(&"i") | Some(&"ii") | Some(&"iii") => "1".to_string(),
+            Some(&"iv") | Some(&"v") => "3a".to_string(),
+            Some(&"vi") => "3b".to_string(),
             _ => tone.to_string(),
         },
         "4" => match ending {
@@ -290,6 +289,7 @@ fn resolve_tone(tone: &String) -> String {
             Some(&"iii") => "8".to_string(),
             _ => tone.to_string(),
         },
+        "6" => "1".to_string(),
         _ => median.to_string(),
     }
 }
