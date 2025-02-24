@@ -38,5 +38,9 @@ executeCommand('wasm-pack build --target web --out-dir ../frontend/wasm', {
     cwd: path.join(__dirname, 'backend')
 });
 
+console.log('Copying into latex...');
+const copyPath = path.join(__dirname, 'backend', 'target', 'wasm32-unknown-unknown', 'release','divine_office.wasm');
+fs.copyFileSync(copyPath, path.join(__dirname, 'latex', 'divine_office.wasm'));
+
 const divineOfficePath = path.join(__dirname, 'frontend', 'wasm', 'divine_office.js');
 removeImportMetaLine(divineOfficePath);
