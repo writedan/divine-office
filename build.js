@@ -30,8 +30,10 @@ function removeImportMetaLine(filePath) {
 
 const targetPath = path.join(__dirname, 'backend', 'target', 'wasm32-unknown-unknown', 'release', 'deps', 'divine_office.wasm');
 if (fs.existsSync(targetPath)) {
-    console.log('Deleting target/wasm32-unknown-unkown/release/divine_office.wasm directory...');
+    console.log('Deleting', targetPath);
     fs.rmSync(targetPath, { recursive: true, force: true });
+} else {
+    console.log("No cached build found");
 }
 
 executeCommand('wasm-pack build --target web --out-dir ../frontend/wasm', {
