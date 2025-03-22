@@ -28,31 +28,6 @@ pub enum Element {
     Empty,
 }
 
-fn style_first_vowel(text: &str, sym: &str, style: &str) -> String {
-    if Vowel.is_match(text) {
-        format!(
-            "<{}>{}</{}>",
-            style,
-            Vowel
-                .replace(text, |caps: &regex::Captures| {
-                    format!("{}{}", caps[1].to_string(), sym.to_string())
-                })
-                .into_owned(),
-            style
-        )
-    } else {
-        format!(
-            "<{}>{}</{}>",
-            style,
-            Y.replace(text, |caps: &regex::Captures| {
-                format!("{}{}", caps[1].to_string(), sym.to_string())
-            })
-            .into_owned(),
-            style
-        )
-    }
-}
-
 pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Element> {
     let mut res = Vec::new();
 
