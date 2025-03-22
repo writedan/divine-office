@@ -26,7 +26,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                     Some(Penance::Vigil)
                 },
                 color: Color::Violet,
-                rank: Rank::StrongFeria,
+                rank: Rank::Eve,
                 identifiers,
             }
         }
@@ -86,7 +86,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 name: String::from("Sixth Day of the Nativity"),
                 penance: None,
                 color: Color::White,
-                rank: Rank::StrongFeria,
+                rank: Rank::Feria,
                 identifiers,
             }
         }
@@ -96,7 +96,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 name: String::from("Seventh Day of the Nativity"),
                 penance: None,
                 color: Color::White,
-                rank: Rank::StrongFeria,
+                rank: Rank::Feria,
                 identifiers,
             }
         }
@@ -116,7 +116,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 name: String::from("Octave of Saint Stephen"),
                 penance: None,
                 color: Color::Red,
-                rank: Rank::StrongFeria,
+                rank: Rank::Feria,
                 identifiers,
             }
         }
@@ -126,7 +126,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 name: String::from("Octave of Saint John"),
                 penance: None,
                 color: Color::White,
-                rank: Rank::StrongFeria,
+                rank: Rank::Feria,
                 identifiers,
             }
         }
@@ -136,7 +136,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 name: String::from("Octave of the Innocents"),
                 penance: None,
                 color: Color::Red,
-                rank: Rank::StrongFeria,
+                rank: Rank::Feria,
                 identifiers,
             }
         }
@@ -154,7 +154,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                     Some(Penance::Vigil)
                 },
                 color: Color::Violet,
-                rank: Rank::StrongFeria,
+                rank: Rank::Eve,
                 identifiers,
             }
         }
