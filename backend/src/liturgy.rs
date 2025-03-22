@@ -55,18 +55,18 @@ impl Identifier {
         lit
     }
 
-    fn verify_map(map: &mut HashMap<&'static str, PathBuf>) {
-        let mut to_remove = Vec::new();
-        for (key, value) in &*map {
-            if !value.exists() {
-                to_remove.push(key.to_owned());
-            }
-        }
+    // fn verify_map(map: &mut HashMap<&'static str, PathBuf>) {
+    //     let mut to_remove = Vec::new();
+    //     for (key, value) in &*map {
+    //         if !value.exists() {
+    //             to_remove.push(key.to_owned());
+    //         }
+    //     }
 
-        for key in to_remove.iter() {
-            map.remove(key);
-        }
-    }
+    //     for key in to_remove.iter() {
+    //         map.remove(key);
+    //     }
+    // }
 }
 
 #[derive(Debug)]
@@ -90,7 +90,7 @@ impl Liturgy {
     ) {
         for (key, value) in map2 {
             if !map1.contains_key(key) {
-                map1.insert(key.clone(), value.clone());
+                map1.insert(key, value.to_path_buf());
             }
         }
     }
@@ -144,7 +144,7 @@ pub fn resolve_hours(today: &Celebration, tomorrow: &Celebration) -> Liturgy {
         tomorrow_lit.extend(x);
     }
 
-    if (first_vespers) {
+    if first_vespers {
         lit.vespers = tomorrow_lit
             .first_vespers
             .expect(format!("expected to find first_vespers for tomorrow={:?}", tomorrow).as_str());
