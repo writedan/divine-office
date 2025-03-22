@@ -72,7 +72,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             } else {
                 Penance::Fasting
             }),
-            Rank::Feria,
+            Rank::Eve,
         ),
     };
 

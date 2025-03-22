@@ -49,7 +49,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             _ => Celebration {
                 name: format!("{} in the Paschal Octave", date.weekday().fullname()),
                 penance: None,
-                rank: Rank::StrongFeria,
+                rank: Rank::Feria,
                 color,
                 identifiers,
             },
@@ -116,7 +116,7 @@ fn pentecost(ly: &Kalendar, date: NaiveDate, identifiers: Vec<Identifier>) -> Ce
         Sat => Celebration {
             name: String::from("Ember Saturday of the Pentecost"),
             color,
-            rank: Rank::Feria,
+            rank: Rank::Eve,
             penance: Some(Penance::Vigil),
             identifiers,
         },

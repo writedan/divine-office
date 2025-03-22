@@ -26,7 +26,8 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
 fn holyweek(date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
     use Weekday::*;
-    let (color, penance, rank) = (Color::Violet, Some(Penance::Fasting), Rank::StrongFeria);
+    let (color, penance, rank) = (Color::Violet, Some(Penance::Fasting), Rank::Feria);
+    
     match date.weekday() {
         Sun => Celebration {
             name: String::from("Palm Sunday of the Passion"),
@@ -64,7 +65,7 @@ fn holyweek(date: NaiveDate, identifiers: Vec<Identifier>) -> Celebration {
             name: String::from("Holy Saturday of the Paschal Vigil"),
             color,
             penance: Some(Penance::Vigil),
-            rank,
+            rank: Rank::Eve,
             identifiers,
         },
     }
