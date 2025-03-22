@@ -40,8 +40,6 @@ fn get_identifiers(date: NaiveDate) -> R<(kalendar::Celebration, kalendar::Celeb
         }
     };
 
-    let today_vespers = !liturgy::first_vespers(&today, &tomorrow);
-
     Ok((today, tomorrow))
 }
 
@@ -65,7 +63,7 @@ pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celeb
     let first_day_of_month = from_ymd(y, m, 1)?;
     let next_month = first_day_of_month
         .with_month(m + 1)
-        .unwrap_or_else(|| NaiveDate::from_ymd(y + 1, 1, 1));
+        .unwrap_or_else(|| NaiveDate::from_ymd_opt(y + 1, 1, 1).unwrap());
     let days_in_month = (next_month - first_day_of_month).num_days();
 
     let mut month: HashMap<u32, kalendar::Celebration> = HashMap::new();

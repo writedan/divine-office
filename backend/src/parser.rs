@@ -107,7 +107,7 @@ impl Parser {
 
             Heading(text, level) => ASTNode::Node(Directive::Heading(text, level)),
 
-            IfInclude(key) => ASTNode::Node(Directive::Empty), // if-includes transform to nothing if their key is missing
+            IfInclude(_) => ASTNode::Node(Directive::Empty), // if-includes transform to nothing if their key is missing
 
             Include(key) => ASTNode::Node(Directive::Error(format!("Field not set: {}", key))), // includes transform to an error if they key is missing
 

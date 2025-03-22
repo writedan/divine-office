@@ -36,7 +36,7 @@ pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Element> {
             ASTNode::Node(dir) => res.push(compile_node(dir)),
             ASTNode::Tree(tree) => {
                 let tree = match tree.root {
-                    Some(ref root) => compile_tree(tree),
+                    Some(_) => compile_tree(tree),
                     None => compile_ast(tree),
                 };
 

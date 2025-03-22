@@ -44,8 +44,6 @@ fn commons(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 }
 
 fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
-    let day = iden.day.parse::<Weekday>().unwrap();
-
     let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
     map.insert(
@@ -498,8 +496,6 @@ fn vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 }
 
 fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
-    let day = iden.day.parse::<Weekday>().unwrap();
-
     let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
 
     map.insert(
