@@ -4,11 +4,13 @@ use chrono::{Datelike, NaiveDate, Weekday};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let distance = NaiveDate::days_since(ly.christmas, date);
-    let identifiers = vec![Identifier {
-        season: Season::Christmas,
-        week: String::from("0"),
-        day: distance.to_string(),
-    }];
+    let identifiers = vec![
+        Identifier {
+            season: Season::Christmas,
+            week: String::from("0"),
+            day: format!("{}-{}", distance, date.weekday().fullname()),
+        }
+    ];
 
     match distance {
         0 => {

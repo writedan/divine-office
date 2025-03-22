@@ -85,7 +85,9 @@ fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 }
 
 fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
-    HashMap::new()
+    let mut map = HashMap::new();
+
+    return map;
 }
 
 fn matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
