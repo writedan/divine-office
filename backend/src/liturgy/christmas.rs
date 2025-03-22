@@ -1,12 +1,10 @@
 use crate::kalendar::Identifier;
 use crate::liturgy::Liturgy;
 
-use crate::kalendar::Season::*;
 
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use chrono::{Weekday, Weekday::*};
 
 pub fn resolve(iden: &Identifier) -> Liturgy {
     Liturgy {

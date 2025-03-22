@@ -58,7 +58,7 @@ impl Parser {
             store.insert(key.to_string(), val.display().to_string());
         }
 
-        let mut preprocessor = Preprocessor::from_path(
+        let preprocessor = Preprocessor::from_path(
             match propers.get("order") {
                 Some(path) => path,
                 None => {
@@ -433,7 +433,7 @@ impl Preprocessor {
                             insertions.push((idx, new_tokens));
                             return Token::Empty;
                         } else if ext == "gabc" {
-                            return match (crate::lexer::read_file(&path)) {
+                            return match crate::lexer::read_file(&path) {
                                 Ok(gabc) => Token::RawGabc(gabc),
                                 Err(why) => Token::Error(format!(
                                     "Failed to resolve import {:?}: {}",
@@ -535,13 +535,13 @@ impl Preprocessor {
 
                             let gabc = gabc.split("%%").collect::<Vec<_>>();
 
-                            if (amount == "half") {
+                            if amount == "half" {
                                 return Token::Gabc(format!(
                                     "<sp>r</sp> {}",
                                     gabc[1].to_string().split("+(;)").collect::<Vec<_>>()[1]
                                         .to_string()
                                 ));
-                            } else if (amount == "full") {
+                            } else if amount == "full" {
                                 return Token::Gabc(format!("<sp>r</sp> {}", gabc[1].to_string()));
                             } else {
                                 return Token::Error(format!("Unknown repeat type {}", amount));

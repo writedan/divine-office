@@ -1,7 +1,6 @@
 use crate::kalendar::Identifier;
 use crate::liturgy::Liturgy;
 
-use crate::kalendar::Season::*;
 
 use std::collections::HashMap;
 use std::path::PathBuf;

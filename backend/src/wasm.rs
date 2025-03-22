@@ -64,7 +64,7 @@ pub fn get_identifier(y: i32, m: u32, d: u32) -> R<LiturgyInfo> {
 pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celebration>> {
     let first_day_of_month = from_ymd(y, m, 1)?;
     let next_month = first_day_of_month
-        .with_month((m + 1))
+        .with_month(m + 1)
         .unwrap_or_else(|| NaiveDate::from_ymd(y + 1, 1, 1));
     let days_in_month = (next_month - first_day_of_month).num_days();
 

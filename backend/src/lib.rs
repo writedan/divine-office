@@ -8,7 +8,6 @@ mod timehelp;
 mod wasm;
 
 use wasm_bindgen::prelude::*;
-use mlua::prelude::*;
 
 #[wasm_bindgen]
 pub fn get_identifier(year: i32, month: u32, day: u32) -> String {

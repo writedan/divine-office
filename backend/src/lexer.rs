@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::cell::RefCell;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::rc::Rc;
 
 lazy_static! {

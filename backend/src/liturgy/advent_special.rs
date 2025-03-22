@@ -6,7 +6,6 @@ use crate::kalendar::Season::*;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use chrono::{Weekday, Weekday::*};
 
 pub fn resolve(iden: &Identifier) -> Liturgy {
     // AdventSpecial identifiers have day in the form of e.g. "1-Saturday", "1" here indicating December 17 (and so one, until the 23 being "7" and "Saturday" indicating the day of the week)
