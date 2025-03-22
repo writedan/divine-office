@@ -122,7 +122,7 @@ impl Liturgy {
 }
 
 pub fn first_vespers(today: &Celebration, tomorrow: &Celebration) -> bool {
-    tomorrow.rank > today.rank && today.rank != StrongFeria && tomorrow.rank != StrongFeria
+    (tomorrow.rank > today.rank && today.rank != StrongFeria && tomorrow.rank != StrongFeria) || today.rank == Eve
 }
 
 pub fn resolve_hours(today: &Celebration, tomorrow: &Celebration) -> Liturgy {
@@ -148,6 +148,7 @@ pub fn resolve_hours(today: &Celebration, tomorrow: &Celebration) -> Liturgy {
         lit.vespers = tomorrow_lit
             .first_vespers
             .expect(format!("expected to find first_vespers for tomorrow={:?}", tomorrow).as_str());
+
         lit.compline = tomorrow_lit.first_compline.expect(
             format!(
                 "expected to find first_compline for tomorrow={:?}",

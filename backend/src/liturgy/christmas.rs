@@ -28,66 +28,11 @@ fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 }
 
 fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
-    let mut map = HashMap::new();
-
-    map.insert(
-        "order",
-        ["compline", "order", "ordinary.lit"].iter().collect(),
-    );
-    map.insert("psalter", ["compline", "christmas.lit"].iter().collect());
-    map.insert(
-        "chapter",
-        ["commons", "compline", "chapters", "ordinary.lit"]
-            .iter()
-            .collect(),
-    );
-    map.insert(
-        "hymn",
-        ["hymn", "te-lucis-ante-terminum", "ordinary.lit"]
-            .iter()
-            .collect(),
-    );
-    map.insert(
-        "versicle",
-        ["commons", "compline", "versicles", "ordinary.lit"]
-            .iter()
-            .collect(),
-    );
-    map.insert(
-        "canticle",
-        ["commons", "compline", "canticle", "christmas.lit"]
-            .iter()
-            .collect(),
-    );
-    map.insert(
-        "collect",
-        ["commons", "compline", "collect.lit"].iter().collect(),
-    );
-    map.insert(
-        "anthem",
-        [
-            "commons",
-            "compline",
-            "anthems",
-            "alma-redemptoris/christmas.lit",
-        ]
-        .iter()
-        .collect(),
-    );
-
-    map.insert("kyrie", ["commons", "kyrie", "ii.gabc"].iter().collect());
-    map.insert(
-        "benedicamus",
-        ["commons", "benedicamus", "ii.gabc"].iter().collect(),
-    );
-
-    return map;
+    HashMap::new()
 }
 
 fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
-    let mut map = HashMap::new();
-
-    return map;
+    HashMap::new()
 }
 
 fn matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {

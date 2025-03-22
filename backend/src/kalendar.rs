@@ -46,6 +46,7 @@ pub enum Color {
 
 #[derive(Eq, PartialEq, Hash, Debug, PartialOrd, serde::Serialize, Clone)]
 pub enum Rank {
+    Eve,
     Feria,
     StrongFeria, // cannot be superseded by anything
     Simplex,
