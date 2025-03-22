@@ -40,27 +40,27 @@ executeCommand('wasm-pack build --target web --out-dir ../frontend/wasm', {
     cwd: path.join(__dirname, 'backend')
 });
 
-console.log('Building for Lua...')
-executeCommand('cargo build --release --features lua_support', {
-    cwd: path.join(__dirname, 'backend')
-});
+// console.log('Building for Lua...')
+// executeCommand('cargo build --release --features lua_support', {
+//     cwd: path.join(__dirname, 'backend')
+// });
 
-// NOTE we assume linux/mac
-console.log('Building Lua-compatiable link');
-fs.copyFileSync(path.join(__dirname, 'backend', 'target', 'release', 'libdivine_office.dylib'), path.join(__dirname, 'latex', 'libdivine_office.dylib'));
-try {
-    fs.rmSync(path.join(__dirname, 'latex', 'divine_office.so'));
-    console.log('File deleted successfully.');
-} catch (err) {
-    if (err.code === 'ENOENT') {
-        console.log('File does not exist, nothing to delete.');
-    } else {
-        console.error('Error deleting file:', err);
-    }
-}
-executeCommand('ln -s ./libdivine_office.dylib ./divine_office.so', {
-    cwd: path.join(__dirname, 'latex')
-});
+// // NOTE we assume linux/mac
+// console.log('Building Lua-compatiable link');
+// fs.copyFileSync(path.join(__dirname, 'backend', 'target', 'release', 'libdivine_office.dylib'), path.join(__dirname, 'latex', 'libdivine_office.dylib'));
+// try {
+//     fs.rmSync(path.join(__dirname, 'latex', 'divine_office.so'));
+//     console.log('File deleted successfully.');
+// } catch (err) {
+//     if (err.code === 'ENOENT') {
+//         console.log('File does not exist, nothing to delete.');
+//     } else {
+//         console.error('Error deleting file:', err);
+//     }
+// }
+// executeCommand('ln -s ./libdivine_office.dylib ./divine_office.so', {
+//     cwd: path.join(__dirname, 'latex')
+// });
 
 const divineOfficePath = path.join(__dirname, 'frontend', 'wasm', 'divine_office.js');
 removeImportMetaLine(divineOfficePath);
