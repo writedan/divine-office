@@ -194,22 +194,14 @@ pub fn vigils(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
         }
     };
 
-    let LESSON_CODES: [&str; 9] = [
-        "lesson-1", "lesson-2", "lesson-3", "lesson-4", "lesson-5", "lesson-6", "lesson-7",
-        "lesson-8", "lesson-9",
-    ]; // necessary to avoid static reference dropping below
-
-    let path = iden.to_path();
-    for (i, &code) in LESSON_CODES.iter().enumerate() {
-        let mut lesson_path = path.clone();
-        lesson_path.push("vigils");
-        lesson_path.push("lessons");
-        lesson_path.push((i + 1).to_string());
-        lesson_path.set_extension("lit");
-        map.insert(code, lesson_path);
+    for n in 1..=9 {
+        map.insert(
+            Box::leak(format!("lesson-{}", n).into_boxed_str()),
+            iden.to_path().join("vigils").join("lessons").join(format!("{}.lit", n)),
+        );
     }
 
-    map.insert("gospel", path.join("gospel.lit"));
+    map.insert("gospel", iden.to_path().join("gospel.lit"));
 
     Some(map)
 }
