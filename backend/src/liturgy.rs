@@ -7,6 +7,7 @@ mod advent;
 /// O antiphons
 mod advent_special;
 mod christmas;
+mod prelent;
 mod commons;
 mod ordinary;
 
@@ -30,6 +31,7 @@ impl Identifier {
             Advent => advent::resolve(self),
             AdventSpecial => advent_special::resolve(self),
             Christmas => christmas::resolve(self),
+            PreLent(_) => prelent::resolve(self),
             _ => todo!("resolution of {} for {:?}", self.season.to_string(), self),
         };
 

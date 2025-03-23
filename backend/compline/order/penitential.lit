@@ -1,0 +1,53 @@
+#heading "Incipit"
+	#import "commons/shared/usual-beginning.lit"
+	#instruction "Then with hearable voice the officiant begins."
+	#gabc "(f3) <sp>v</sp> Turn(f) us(h) back,(h) O(h) God(h) of(h) our(h) sal(h)va(g)tion.(h) <sp>r</sp>(::) And(h) turn(h) a(h)way(h) Your(h) an(h)ger(h) from(g) us.(h)"
+
+	#gabc "(c3) <sp>v</sp> O(f) God,(h) <sp>+</sp>() be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
+
+	#gabc "(c3) <sp>a</sp> Glo(h)ry(h) be(h) to(h) the(h) Fa(h)ther,(h) and(h) to(h) the(h) Son:(h,) and(h) to(h) the(h) Ho(h)ly(h) Spir(g)it:(h;) as(h) He(h) was(h) in(h) the(h) be(h)gin(h)ning,(h) He(h) is(h) both(h) now(h) and(h) ev(g)er,(h,) and(h) un(h)to(h) the(h) a(h)ges(h) of(h) a(h)ges.(h) A(g)men.(h::) Praise(hv) be(hv) to(hv) You,(hv) O(g) Lord,(g) King(hv) of(hv) e(hv)ter(hv)nal(g) glo(fg)ry.(gv)"
+
+#heading "Psalter"
+	#include "psalter"
+
+#heading "Chapter"
+	#include "chapter"
+	#instruction "Them the officiant grants a blessing."
+	#import "commons/compline/benediction.gabc"
+	#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+	#include "responsory"
+
+#heading "Hymn"
+	#include "hymn"
+	#include "versicle"
+
+#heading "Canticle"
+	#include "canticle"
+
+#heading "Preces"
+	#include "kyrie"
+	#instruction "This prayer is made quietly."
+	#import "commons/shared/pater-noster.lit"
+	#import "commons/shared/confiteor.lit"
+	#import "commons/shared/invocation.lit"
+	#include "collect"
+	#gabc "(c3) <sp>r</sp> A(gh)men.(h)"
+
+#heading "Conclusion"
+	#import "commons/shared/conclusion.lit"
+
+#heading "Anthem"
+	#include "anthem"
+	
+#instruction "The officiant gives a final blessing."
+#gabc "(c3) The(h) al(h)migh(h)ty(h) and(h) mer(h)ci(h)ful(h) Lord,(h) <sp>+</sp>() the(h) Fa(h)ther,(h) and(h) the(h) Son,(h) and(h) the(h) Ho(h)ly(h) Spir(h)it,(h) bless(h) us(h) and(h) keep(h) us.(d)"
+
+#gabc "(c3) <sp>r</sp> Thanks(h) be(h) to(h) God.(h)"
+
+#instruction "These prayers are then made quietly to conclude the service."
+
+#import "commons/shared/pater-noster.lit"
+
+#import "commons/shared/ave-maria.lit"
+
+#import "commons/shared/apostles-creed.lit"

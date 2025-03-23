@@ -28,7 +28,7 @@ pub fn resolve(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
             "commons",
             "kyrie",
             match iden.season {
-                PostPentecost | PostEpiphany(_) | August | September | October | November => {
+                PreLent(_) | PostPentecost | PostEpiphany(_) | August | September | October | November => {
                     if day == Sun {
                         "xi.gabc"
                     } else {
@@ -55,7 +55,7 @@ pub fn resolve(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
             "commons",
             "benedicamus",
             match iden.season {
-                PostPentecost | PostEpiphany(_) | August | September | October | November => {
+                PreLent(_) | PostPentecost | PostEpiphany(_) | August | September | October | November => {
                     if day == Sun {
                         "xi.gabc"
                     } else {
