@@ -47,16 +47,7 @@ fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
         "hymn",
         [
             "hymn",
-            match day {
-                Sun => "lucis-creator-optime",
-                Mon => "immense-celi-conditor",
-                Tue => "telluris-ingens-conditor",
-                Wed => "celi-deus-sanctissime",
-                Thu => "magne-deus-potentie",
-                Fri => "plasmator-hominis",
-                Sat => "o-lux-beata-trinitas",
-            },
-
+            "o-lux-beata-trinitas",
             match iden.season {
                 PreLent(true) => "bvm.lit",
                 PreLent(false) => "ordinary.lit",
@@ -87,7 +78,7 @@ fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
         "canticle",
         iden.to_path().join("1st-vespers").join("magnificat.lit"),
     );
-
+    
     map.extend(commons(iden));
     return map;
 }

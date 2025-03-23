@@ -26,7 +26,7 @@
 	#instruction "This prayer is made quietly."
 	#import "commons/shared/pater-noster.lit"
 
-	#include "penitential-psalm"
+	#import "commons/shared/penitential-psalm.lit"
 
 	#import "commons/shared/invocation.lit"
 	#include "collect"
