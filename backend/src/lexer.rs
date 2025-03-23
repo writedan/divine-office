@@ -123,7 +123,7 @@ where
 {
     let file = match crate::asset::Asset::get(&path.as_ref().to_string_lossy()) {
         Some(file) => file.data,
-        None => return Err(format!("No such file exists")),
+        None => return Err(format!("No such file exists: {:?}", path)),
     };
 
     match std::str::from_utf8(file.as_ref()) {
