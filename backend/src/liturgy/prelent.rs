@@ -146,7 +146,21 @@ fn compline(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
 }
 
 fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
-    HashMap::new()
+    let mut map = HashMap::new();
+    let vigils = crate::liturgy::commons::vigils(iden).unwrap();
+    let day = iden.day.parse::<Weekday>().unwrap();
+
+    map.extend(vigils);
+    map.extend(commons(iden));
+    map.extend(crate::liturgy::ordinary::resolve(iden).vigils);
+
+    map.insert("order", ["vigils", "order", match day {
+            Sun => "penitential-sunday.lit",
+            _ => "penitential-feria.lit"
+        }
+    ].iter().collect());
+
+    return map;
 }
 
 fn matins(iden: &Identifier) -> HashMap<&'static str, PathBuf> {

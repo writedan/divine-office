@@ -56,7 +56,7 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
             "invitatory",
             match day {
                 Sun => match iden.season {
-                    PostPentecost | PostEpiphany(_) => "preoccupemus.lit",
+                    PreLent(_) | PostPentecost | PostEpiphany(_) => "preoccupemus.lit",
                     August => "laudemus-jesum-christum.lit",
                     September => "laudemus-nomen-domini.lit",
                     October => "adaperiat-dominus.lit",
@@ -81,7 +81,7 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
             "hymn",
             match day {
                 Sun => match iden.season {
-                    PostEpiphany(_) => "primo-dierum-omnium",
+                    PreLent(_) | PostEpiphany(_) => "primo-dierum-omnium",
                     PostPentecost | August | September | October | November => "nocte-surgentes",
                     _ => panic!("illegal season {:?}", iden.season),
                 },
@@ -92,7 +92,11 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
                 Fri => "tu-trinitatis-unitas",
                 Sat => "summe-deus-clementie",
             },
-            "ordinary.lit",
+            match iden.season {
+                PreLent(true) | PostEpiphany(true) => "bvm.lit",
+                PreLent(false) | PostEpiphany(false) | PostPentecost | August | September | October | November => "ordinary.lit",
+                _ => panic!("illegal season {:?}", iden.season)
+            }
         ]
         .iter()
         .collect(),
