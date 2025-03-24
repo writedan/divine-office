@@ -57,16 +57,16 @@ pub fn resolve(iden: &Identifier) -> Option<HashMap<&'static str, PathBuf>> {
             match iden.season {
                 PreLent(_) | PostPentecost | PostEpiphany(_) | August | September | October | November => {
                     if day == Sun {
-                        "xi.gabc"
+                        "sunday.gabc"
                     } else {
-                        "xvi.gabc"
+                        "feria.gabc"
                     }
                 }
-                Advent => {
+                Advent | Lent => {
                     if day == Sun {
-                        "xvii.gabc"
+                        "advent.gabc"
                     } else {
-                        "xviii.gabc"
+                        "feria.gabc"
                     }
                 }
                 _ => todo!("benedicamus for {:?}", iden.season),

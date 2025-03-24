@@ -3,9 +3,7 @@
 	#instruction "Then with hearable voice the officiant begins."
 	#gabc "(f3) <sp>v</sp> Turn(f) us(h) back,(h) O(h) God(h) of(h) our(h) sal(h)va(g)tion.(h) <sp>r</sp>(::) And(h) turn(h) a(h)way(h) Your(h) an(h)ger(h) from(g) us.(h)"
 
-	#gabc "(c3) <sp>v</sp> O(f) God,(h) <sp>+</sp>() be(h) at(h)ten(h)tive(h) un(g)to(h) help(i)ing(h) me.(h) <sp>r</sp>(::) O(h) Lord,(h) make(h) haste(h) to(h) help(g) me.(h)"
-
-	#gabc "(c3) <sp>a</sp> Glo(h)ry(h) be(h) to(h) the(h) Fa(h)ther,(h) and(h) to(h) the(h) Son:(h,) and(h) to(h) the(h) Ho(h)ly(h) Spir(g)it:(h;) as(h) He(h) was(h) in(h) the(h) be(h)gin(h)ning,(h) He(h) is(h) both(h) now(h) and(h) ev(g)er,(h,) and(h) un(h)to(h) the(h) a(h)ges(h) of(h) a(h)ges.(h) A(g)men.(h::) Praise(hv) be(hv) to(hv) You,(hv) O(g) Lord,(g) King(hv) of(hv) e(hv)ter(hv)nal(g) glo(fg)ry.(gv)"
+	#import "commons/shared/penitential-opening.lit"
 
 #heading "Psalter"
 	#include "psalter"

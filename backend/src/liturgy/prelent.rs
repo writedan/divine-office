@@ -78,6 +78,8 @@ fn first_vespers(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
         "canticle",
         iden.to_path().join("1st-vespers").join("magnificat.lit"),
     );
+
+    map.insert("penitential-psalm", ["commons", "vespers", "penitential-psalm.lit"].iter().collect());
     
     map.extend(commons(iden));
     return map;
