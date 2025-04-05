@@ -7,8 +7,25 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let identifiers = vec![
         Identifier {
             season: Season::Christmas,
-            week: String::from("0"),
-            day: format!("{}-{}", distance, date.weekday().fullname()),
+            week: match distance {
+                0 => String::from("christmas-eve"),
+                1 => String::from("christmas-day"),
+                2..=7 => String::from("christmas-octave"),
+                8 => String::from("circumcision"),
+                9..=11 => String::from("post-octave"),
+                12..=13 => String::from("epiphany"),
+                _ => String::from("christmastide")
+            },
+            day: match distance {
+                0 => date.weekday().fullname().to_string(),
+                1 => String::from(""),
+                2..=7 => format!("{}", distance - 1),
+                8 => String::from(""),
+                9..=11 => format!("{}", distance - 8),
+                12 => String::from("eve"),
+                13 => String::from("day"),
+                _ => date.weekday().fullname().to_string()
+            },
         }
     ];
 
