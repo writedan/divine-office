@@ -24,3 +24,6 @@ opt-level = 'z'
 
 [features]
 lua_support = []
+
+[target.'cfg(target_os = "windows")'.build-dependencies]
+vcpkg = "0.2"

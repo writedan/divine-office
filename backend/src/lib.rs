@@ -53,6 +53,10 @@ fn divine_office(lua: &mlua::Lua) -> mlua::prelude::LuaResult<mlua::prelude::Lua
     exports.set("parse", lua.create_function(|_, path: String| {
         Ok(serde_json::to_string(&compiler::compile_ast(parser::Parser::from_file(path.into()))).unwrap())
     })?)?;
+
+    exports.set("read", lua.create_function(|_, path: String| {
+        Ok(lexer::read_file(path))
+    })?)?;
     
     Ok(exports)
 }
