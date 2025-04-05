@@ -98,7 +98,7 @@ Ligatures=TeX
 % This patch prevents cumulative spacing when a section follows a chapter
 
 % This will eventually load up a Lua script using WASM to handle importation, parsing, and compilation of specified files.
-\newcommand{\doimport}[1]{IMPORT: \textbf{#1}}
+\newcommand{\doimport}[1]{IMPORT: \textbf{../backend/#1}}
 
 % Rubrication and notation
 \newcommand{\rubric}[1]{\textcolor{rubric}{\small\textparagraph \textit{#1}}}
@@ -163,14 +163,78 @@ Ligatures=TeX
 		
 	\part{The Divine Office}
 	
-		\chapter{The Order of the Vigil}
+		\chapter{Sunday Psalter}
 		
-		\chapter{The Order of Matins and Vespers}
+			\section{At First Vespers}
+			
+				\doimport{vespers/saturday.lit}
 		
-		\chapter{The Order of the Daytime Hours}
+			\section{At the Vigil}
+			
+			\section{At Matins}
+			
+			\section{At Terce}
+			
+			\section{At Sext}
+			
+			\section{At None}
+			
+			\section{At Vespers}
+			
+			\section{At Compline}
+			
+		\chapter{Monday Psalter}
 		
-		\chapter{The Order of Compline}
-				
+			\section{At the Vigil}
+			
+			\section{At Matins}
+			
+			\section{At Terce}
+			
+			\section{At Sext}
+			
+			\section{At None}
+			
+			\section{At Vespers}
+			
+		\chapter{Tuesday Psalter}
+		
+			\section{At the Vigil}
+			
+			\section{At Matins}
+			
+			\section{At Vespers}
+			
+		\chapter{Wednesday Psalter}
+		
+			\section{At the Vigil}
+			
+			\section{At Matins}
+			
+			\section{At Vespers}
+			
+		\chapter{Thursday Psalter}
+		
+			\section{At the Vigil}
+			
+			\section{At Matins}
+			
+			\section{At Vespers}
+			
+		\chapter{Friday Psalter}
+		
+			\section{At the Vigil}
+			
+			\section{At Matins}
+			
+			\section{At Vespers}
+			
+		\chapter{Saturday Psalter}
+		
+			\section{At the Vigil}
+			
+			\section{At Matins}
+
 	\part{The Lectionary}
 	
 	\part{The Sacramentary}
