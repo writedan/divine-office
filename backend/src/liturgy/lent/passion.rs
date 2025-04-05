@@ -100,6 +100,7 @@ mod triduum {
 
     pub fn vigils(iden: &Identifier) -> HashMap<&'static str,PathBuf> {
         let mut map: HashMap<&'static str, PathBuf> = HashMap::new();
+        map.insert("order", ["vigils", "order", "triduum.lit"].iter().collect());
         return map;
     }
 
