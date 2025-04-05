@@ -50,6 +50,28 @@ pub struct Parser {
 }
 
 impl Parser {
+    #[cfg(feature = "lua_support")]
+    pub fn from_file(path: std::path::PathBuf) -> ASTree<Directive> {
+        let preprocessor = Preprocessor::from_path(path.as_path(), HashMap::new());
+        let mut base = ASTree::<Directive>::new();
+
+        if let Ok(mut preprocessor) = preprocessor {
+            preprocessor.preprocess();
+            let mut parser = Parser {
+                resumables: HashMap::new(),
+                iter: preprocessor.iter()
+            };
+            base.add_node(ASTNode::Tree(parser.parse_tokens()));
+        } else if let Err(why) = preprocessor {
+            base.add_node(ASTNode::Node(Directive::Error(format!(
+                "Failed to initialize preprocessor: {}",
+                why
+            ))));
+        }
+
+        base
+    }
+
     pub fn from_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> ASTree<Directive> {
         let mut base = ASTree::<Directive>::new();
 
