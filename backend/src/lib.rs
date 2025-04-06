@@ -35,7 +35,7 @@ pub fn get_hour(year: i32, month: u32, day: u32, hour: &str) -> String {
 
 #[cfg(feature = "lua_support")]
 #[mlua::lua_module]
-fn divine_office(lua: &Lua) -> LuaResult<LuaTable> {
+fn divine_office(lua: &mlua::Lua) -> mlua::prelude::LuaResult<mlua::prelude::LuaTable> {
     let exports = lua.create_table()?;
     
     exports.set("get_identifier", lua.create_function(|_, (year, month, day): (i32, u32, u32)| {
@@ -48,6 +48,14 @@ fn divine_office(lua: &Lua) -> LuaResult<LuaTable> {
     
     exports.set("get_hour", lua.create_function(|_, (year, month, day, hour): (i32, u32, u32, String)| {
         Ok(get_hour(year, month, day, &hour))
+    })?)?;
+
+    exports.set("parse", lua.create_function(|_, path: String| {
+        Ok(serde_json::to_string(&compiler::compile_ast(parser::Parser::from_file(path.into()))).unwrap())
+    })?)?;
+
+    exports.set("read", lua.create_function(|_, path: String| {
+        Ok(lexer::read_file(path))
     })?)?;
     
     Ok(exports)

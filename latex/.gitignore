@@ -307,5 +307,11 @@ TSWLatexianTemp*
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
 
-# wasm
+# wasm / lua
 *.wasm
+*.dll
+*.d
+*.so
+*.exp
+*.lib
+*.pdb

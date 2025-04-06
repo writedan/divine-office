@@ -1,6 +1,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 function executeCommand(command, options = {}) {
     try {
@@ -40,27 +41,37 @@ executeCommand('wasm-pack build --target web --out-dir ../frontend/wasm', {
     cwd: path.join(__dirname, 'backend')
 });
 
+// const isWindows = os.platform() === 'win32';
+// console.log(`Detected platform: ${isWindows ? 'Windows' : 'Unix/Mac'}`);
+
 // console.log('Building for Lua...')
-// executeCommand('cargo build --release --features lua_support', {
+// executeCommand('cargo build --release --features lua_support --target i686-pc-windows-msvc', {
 //     cwd: path.join(__dirname, 'backend')
 // });
 
-// // NOTE we assume linux/mac
-// console.log('Building Lua-compatiable link');
-// fs.copyFileSync(path.join(__dirname, 'backend', 'target', 'release', 'libdivine_office.dylib'), path.join(__dirname, 'latex', 'libdivine_office.dylib'));
-// try {
-//     fs.rmSync(path.join(__dirname, 'latex', 'divine_office.so'));
-//     console.log('File deleted successfully.');
-// } catch (err) {
-//     if (err.code === 'ENOENT') {
-//         console.log('File does not exist, nothing to delete.');
-//     } else {
-//         console.error('Error deleting file:', err);
-//     }
-// }
-// executeCommand('ln -s ./libdivine_office.dylib ./divine_office.so', {
+// console.log('Building Lua-compatible link');
+
+// if (isWindows) {
+//   const sourceFile = path.join(__dirname, 'backend', 'target', 'i686-pc-windows-msvc', 'release', 'divine_office.dll');
+//   const destFile = path.join(__dirname, 'latex', 'divine_office.dll');
+  
+//   fs.copyFileSync(sourceFile, destFile);
+//   console.log('DLL file copied successfully');
+  
+//   fs.copyFileSync(destFile, path.join(__dirname, 'latex', 'divine_office.so'));
+//   console.log('Added .so compatibility file');
+// } else {
+//   const sourceFile = path.join(__dirname, 'backend', 'target', 'release', 'libdivine_office.dylib');
+//   const destFile = path.join(__dirname, 'latex', 'libdivine_office.dylib');
+  
+//   fs.copyFileSync(sourceFile, destFile);
+//   console.log('Dylib file copied successfully');
+  
+//   executeCommand('ln -s ./libdivine_office.dylib ./divine_office.so', {
 //     cwd: path.join(__dirname, 'latex')
-// });
+//   });
+//   console.log('Symbolic link created');
+// }
 
 const divineOfficePath = path.join(__dirname, 'frontend', 'wasm', 'divine_office.js');
 removeImportMetaLine(divineOfficePath);
