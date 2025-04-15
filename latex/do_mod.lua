@@ -1,5 +1,5 @@
 -- debug_module.lua
-local function try_load()
+function try_load()
     local status, result = pcall(function()
         return require("divine_office")
     end)
@@ -8,13 +8,13 @@ local function try_load()
         print("SUCCESS: Module loaded!")
         return result
     else
-        print("FAILURE: " .. tostring(result))
+        error("FAILURE: " .. tostring(result))
         
         -- Try to get OS error information
         local dll_path = "./divine_office.dll"
         local f = io.open(dll_path, "rb")
         if not f then
-            print("File cannot be opened: " .. dll_path)
+            error("File cannot be opened: " .. dll_path)
         else
             print("File exists and can be opened")
             local header = f:read(4)
@@ -33,10 +33,28 @@ local function try_load()
     end
 end
 
-print("Lua version: " .. _VERSION)
-print("Architecture: " .. (jit and jit.arch or (_SIZEOF_LONG == 8 and "64-bit" or "32-bit")))
-print("Package path: " .. package.path)
-print("Package cpath: " .. package.cpath)
-print("Current directory: " .. (io.popen("cd"):read("*l") or "unknown"))
+function string:endswith(suffix)
+    return self:sub(-#suffix) == suffix
+end
 
-try_load()
+mod = require("divine_office")
+cjson = require("cjson")
+
+function process(elements)
+    return "\\textbf{Unable to parse" .. elements .. "}"
+end
+
+function domod(file_path)
+    if file_path:endswith(".gabc") then
+        return "\\textbf{Cannot support GABC files}"
+    elseif file_path:endswith(".lit") then
+        return "" .. mod
+        --return "\\textbf{Cannot support LIT files}"
+    else
+        return "\\textbf{Cannot handle " .. file_path .. "}"
+    end
+end
+
+return {
+    domod = domod
+}

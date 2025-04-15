@@ -41,6 +41,8 @@ Ligatures=TeX
 \definecolor{pagecolor}{RGB}{245,240,220} % Slightly aged paper color
 % Table of contents styling
 \usepackage{titletoc}
+\usepackage{luacode}
+
 \contentsmargin{0pt}
 \titlecontents{chapter}[0pt]
 {\addvspace{10pt}\bfseries}
@@ -135,6 +137,33 @@ Ligatures=TeX
 }
 \makeatother
 
+\begin{luacode*}
+	-- First define how modules are loaded
+	package.preload['divine_office'] = function()
+	return require("divine_office")
+	end
+	
+	package.preload['cjson'] = function()
+	return require("cjson")
+	end
+	
+	-- Load the divine_latex module
+	divine_latex = require("do_mod")
+	
+	if not divine_latex then
+	error("failed to load divine office module")
+	end
+	
+	-- Define the function to be called from LaTeX
+	function do_liturgical_module(file_path)
+	tex.print(divine_latex.domod(file_path))
+	end
+\end{luacode*}
+
+\newcommand{\domod}[1]{%
+	\luadirect{do_liturgical_module("#1")}%
+}
+
 \begin{document}
 	\begin{titlepage}
 		\vspace*{\fill}
@@ -163,77 +192,9 @@ Ligatures=TeX
 		
 	\part{The Divine Office}
 	
-		\chapter{Sunday Psalter}
+		\chapter{Preparation for Mass}
 		
-			\section{At First Vespers}
-			
-				\doimport{vespers/saturday.lit}
-		
-			\section{At the Vigil}
-			
-			\section{At Matins}
-			
-			\section{At Terce}
-			
-			\section{At Sext}
-			
-			\section{At None}
-			
-			\section{At Vespers}
-			
-			\section{At Compline}
-			
-		\chapter{Monday Psalter}
-		
-			\section{At the Vigil}
-			
-			\section{At Matins}
-			
-			\section{At Terce}
-			
-			\section{At Sext}
-			
-			\section{At None}
-			
-			\section{At Vespers}
-			
-		\chapter{Tuesday Psalter}
-		
-			\section{At the Vigil}
-			
-			\section{At Matins}
-			
-			\section{At Vespers}
-			
-		\chapter{Wednesday Psalter}
-		
-			\section{At the Vigil}
-			
-			\section{At Matins}
-			
-			\section{At Vespers}
-			
-		\chapter{Thursday Psalter}
-		
-			\section{At the Vigil}
-			
-			\section{At Matins}
-			
-			\section{At Vespers}
-			
-		\chapter{Friday Psalter}
-		
-			\section{At the Vigil}
-			
-			\section{At Matins}
-			
-			\section{At Vespers}
-			
-		\chapter{Saturday Psalter}
-		
-			\section{At the Vigil}
-			
-			\section{At Matins}
+			\domod{vespers/friday.lit}
 
 	\part{The Lectionary}
 	
