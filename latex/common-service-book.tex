@@ -42,6 +42,7 @@ Ligatures=TeX
 % Table of contents styling
 \usepackage{titletoc}
 \usepackage{luacode}
+\usepackage{luapackageloader}
 
 \contentsmargin{0pt}
 \titlecontents{chapter}[0pt]
@@ -138,25 +139,14 @@ Ligatures=TeX
 \makeatother
 
 \begin{luacode*}
-	-- First define how modules are loaded
-	package.preload['divine_office'] = function()
-	return require("divine_office")
-	end
-	
-	package.preload['cjson'] = function()
-	return require("cjson")
-	end
-	
 	-- Load the divine_latex module
+	--package.path = "./?.lua;" .. package.path  -- Make sure module can be found
+	--package.preload['divine_office'] = require "divine_office"
 	divine_latex = require("do_mod")
 	
-	if not divine_latex then
-	error("failed to load divine office module")
-	end
-	
-	-- Define the function to be called from LaTeX
+	-- Define a function to be called from LaTeX
 	function do_liturgical_module(file_path)
-	tex.print(divine_latex.domod(file_path))
+		tex.print(divine_latex.domod(file_path))
 	end
 \end{luacode*}
 
