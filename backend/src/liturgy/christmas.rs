@@ -99,6 +99,8 @@ fn vigils(iden: &Identifier) -> HashMap<&'static str, PathBuf> {
         _ => panic!("Unknown christmas week {:?}", iden.week)
     };
 
+    map.insert("collect", iden.to_path().join("collect.lit"));
+
     map
 }
 
