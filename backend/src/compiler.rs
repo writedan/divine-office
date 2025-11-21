@@ -118,7 +118,8 @@ fn compile_node(node: Directive) -> Element {
 
         Directive::Hymn(hymn) => {
             let mut buffer = format!(
-                "initial-style: 1;\nannotation: Hymn.;\ncentering-scheme: english;\n%%\n({})",
+                "initial-style: 1;\nannotation: Hymn.;\nannotation: {}.;\ncentering-scheme: english;\n%%\n({})",
+                hymn.tone,
                 hymn.clef
             );
             for stanza_idx in 0..(hymn.verses.len() / hymn.melody.len()) {

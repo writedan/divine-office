@@ -1,7 +1,0 @@
-#gabc "(c3) <sp>v</sp> O(h) Lord,(h) hear(h) my(f) prayer.(g) <sp>r</sp>(::) And(h) let(h) my(h) cry(h) come(h) un(h)to(f) You.(f) "
-
-#begin-box
-	#instruction "If the officiant is a priest or deacon, he adds:"
-
-	#gabc "(c3) <sp>v</sp> The(h) Lord(h) be(h) with(h) you.(f) <sp>r</sp>(::) And(h) with(h) your(h) spir(h)it.(f) <c>D.</c>(::) Let(h) us(g) pray.(h)"
-#end

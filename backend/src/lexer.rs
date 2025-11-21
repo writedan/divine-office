@@ -29,8 +29,8 @@ pub enum Token {
     /// Indicates the beginning of a `div.boxed` element.
     BeginBox,
 
-    /// Indicates the beginning of a hymn.
-    BeginHymn,
+    /// Indicates the beginning of a hymn with a given tone.
+    BeginHymn(String),
 
     /// Indicates a section which is not printed until a request to resume it comes in, providing for non-linear documents. The argument is the name whereby it can be resumed.
     BeginResumable(String),
@@ -169,7 +169,7 @@ impl Lexer {
 
                 ("begin-box", 0) => Token::BeginBox,
 
-                ("begin-hymn", 0) => Token::BeginHymn,
+                ("begin-hymn", 1) => Token::BeginHymn(args[0].to_owned()),
 
                 ("begin-resumable", 1) => Token::BeginResumable(args[0].to_owned()),
 

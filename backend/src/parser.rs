@@ -8,6 +8,7 @@ use std::collections::HashMap;
 #[derive(Debug, Clone)]
 pub struct Hymn {
     pub clef: String,
+    pub tone: String,
     /// Corresponds to a `Vec<Melody>` since melodies are expressed as vector of individual neumes.
     pub melody: Vec<Vec<String>>,
     /// Corresponds to a `Vec<Verse>` since verses are expressed as a vector of individual syllables.
@@ -115,7 +116,7 @@ impl Parser {
         match token {
             BeginBox => self.read_box(),
 
-            BeginHymn => self.read_hymn(),
+            BeginHymn(tone) => self.read_hymn(tone),
 
             BeginResumable(key) => {
                 let tree = self.read_resumable();
@@ -199,7 +200,7 @@ impl Parser {
         ASTNode::Node(Directive::Error(format!("Box began without termination")))
     }
 
-    fn read_hymn(&mut self) -> ASTNode<Directive> {
+    fn read_hymn(&mut self, tone: String) -> ASTNode<Directive> {
         let mut melody: Vec<Vec<String>> = Vec::new();
         let mut verses: Vec<Vec<Vec<String>>> = Vec::new();
         let mut clef = String::new();
@@ -271,6 +272,7 @@ impl Parser {
             melody,
             verses: verses.into_iter().flatten().collect::<Vec<_>>(),
             clef,
+            tone,
             amen,
         }))
     }
@@ -278,42 +280,38 @@ impl Parser {
 
 /// A helper method to transform tones to their stress-patterns.
 fn resolve_tone(tone: &String) -> String {
-    let parts = tone.split('-').collect::<Vec<&str>>();
-    let median = parts[0];
-    let ending = parts.get(1);
-
-    let tone = match ending {
-        Some(s) => format!("{}-{}", median, s),
-        None => median.to_string(),
-    };
-
-    match median {
-        "1" => "1".to_string(),
-        "2" => match ending {
-            Some(&"i") => "2".to_string(),
-            Some(&"ii") => "8".to_string(),
-            _ => tone.to_string(),
-        },
-        "3" => match ending {
-            Some(&"i") | Some(&"ii") | Some(&"iii") => "1".to_string(),
-            Some(&"iv") | Some(&"v") => "3a".to_string(),
-            Some(&"vi") => "3b".to_string(),
-            _ => tone.to_string(),
-        },
-        "4" => match ending {
-            Some(&"i") | Some(&"ii") | Some(&"iii") | Some(&"iv") | Some(&"v") => "4a".to_string(),
-            Some(&"vi") => "4b".to_string(),
-            Some(&"vii") | Some(&"viii") | Some(&"ix") => "4c".to_string(),
-            _ => tone.to_string(),
-        },
-        "5" => match ending {
-            Some(&"i") | Some(&"ii") => "5".to_string(),
-            Some(&"iii") => "8".to_string(),
-            _ => tone.to_string(),
-        },
-        "6" => "1".to_string(),
-        _ => median.to_string(),
-    }
+    match tone.as_str() {
+        "1a" => "1",    // tone 1
+        "1a2" => "1",
+        "1d" => "1",
+        "1d2" => "1",
+        "1d3" => "1",
+        "1f" => "1",
+        "1g" => "1",
+        "1g2" => "1",
+        "1g3" => "1",
+        "2d" => "2",    // tone 2 (2* undecided)
+        "3b" => "3",    // tone 3
+        "3a" => "3",
+        "3g" => "3",
+        "3a2" => "3",
+        "4a" => "4-i",  // tone 4 (4* considered 4e)
+        "4g" => "4-ii",
+        "4e" => "4-iii",
+        "4*a" => "4-ii",// irregular tone
+        "5a" => "5",    // tone 5
+        "5a2" => "5",
+        "6f" => "6",    // tone 6
+        "6c" => "6",
+        "7d" => "7",    // tone 7
+        "7c" => "7",
+        "7c2" => "7",
+        "7a" => "7",
+        "8c" => "8",    // tone 8
+        "8g" => "8",
+        "8g2" => "8",
+        _ => tone
+    }.to_string()
 }
 
 /// The processor expands certain tokens so as to ease the work of the parser.
