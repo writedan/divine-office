@@ -1,22 +1,7 @@
-use crate::parser::ast::*;
-use crate::parser::Directive;
+use crate::parser::Expr;
+use crate::preprocessor::Preprocessor;
 
-use lazy_static::lazy_static;
-use regex::Regex;
-
-use serde::Serialize;
-
-lazy_static! {
-    static ref SmallPrint: Regex = Regex::new(r"\{([^{}]*)\}").unwrap();
-    static ref Vowel: Regex = Regex::new(r"([aeiouAEIOU])").unwrap();
-    static ref Y: Regex = Regex::new(r"([yY])").unwrap();
-    static ref Intone: Regex = Regex::new(r"\(([^()]*)\)").unwrap();
-    static ref Flex: Regex = Regex::new(r"\^([^^]*)\^").unwrap();
-    static ref Mediant: Regex = Regex::new(r"\~([^~]*)\~").unwrap();
-    static ref Accent: Regex = Regex::new(r"\`([^`]*)\`").unwrap();
-}
-
-#[derive(Serialize, PartialEq)]
+#[derive(serde::Serialize, Debug, PartialEq)]
 pub enum Element {
     Box(Vec<Element>),
     Text(String),
@@ -28,150 +13,204 @@ pub enum Element {
     Empty,
 }
 
-pub fn compile_ast(tree: ASTree<Directive>) -> Vec<Element> {
-    let mut res = Vec::new();
+pub fn compile_exprs(exprs: Vec<Expr>) -> Vec<Element> {
+    let preprocessor = Preprocessor::new();
+    let preprocessed = preprocessor.preprocess(exprs);
 
-    for child in tree.children() {
-        match child {
-            ASTNode::Node(dir) => res.push(compile_node(dir)),
-            ASTNode::Tree(tree) => {
-                let tree = match tree.root {
-                    Some(_) => compile_tree(tree),
-                    None => compile_ast(tree),
-                };
-
-                res.extend(clear_empty(tree));
-            }
+    let mut out = Vec::new();
+    for item in preprocessed {
+        match item {
+            Ok(expr) => out.push(compile_expr(expr)),
+            Err(why) => out.push(Element::Error(why)),
         }
     }
-
-    res
+    out
 }
 
-fn clear_empty(vec: Vec<Element>) -> Vec<Element> {
-    vec.into_iter().filter(|e| e != &Element::Empty).collect()
-}
-
-fn compile_dispatch(node: ASTNode<Directive>) -> Vec<Element> {
-    match node {
-        ASTNode::Node(directive) => vec![compile_node(directive)],
-        ASTNode::Tree(tree) => clear_empty(compile_tree(tree)),
+fn compile_expr(expr: Expr) -> Element {
+    match expr {
+        Expr::String(s) => Element::Text(s),
+        Expr::List(vals) => compile_list(vals),
+        Expr::Symbol(s) => Element::Error(format!("Unexpected symbol: {:?}", s)),
+        _ => Element::Error(format!("Unexpected expression: {:?}", expr)),
     }
 }
 
-fn compile_tree(tree: ASTree<Directive>) -> Vec<Element> {
-    match tree.root {
-        Some(Directive::Box) => {
-            let mut cont = Vec::new();
-            for node in tree.children() {
-                cont.extend(clear_empty(compile_dispatch(node)));
-            }
+fn compile_list(exprs: Vec<Expr>) -> Element {
+    if exprs.is_empty() {
+        return Element::Empty;
+    }
 
-            vec![Element::Box(clear_empty(cont))]
-        }
+    let head = &exprs[0];
 
-        None => {
-            let mut cont = Vec::new();
-            for node in tree.children() {
-                cont.extend(clear_empty(compile_dispatch(node)));
-            }
+    match head {
+        Expr::Symbol(sym) => match sym.as_str() {
+            "instr"    => compile_instr(&exprs[1..]),
+            "box"      => compile_box(&exprs[1..]),
+            "heading"  => compile_heading(&exprs[1..]),
+            "title"    => compile_title(&exprs[1..]),
+            "raw-gabc" => compile_raw_gabc(&exprs[1..]),
+            _ => Element::Error(format!("Unknown function: {}", sym)),
+        },
 
-            clear_empty(cont)
-        }
-
-        _ => vec![compile_node(Directive::Error(format!(
-            "Unsupported tree root directive {:?}",
-            tree.root
-        )))],
+        other => Element::Error(format!(
+            "List must begin with a symbol, got {:?}",
+            other
+        )),
     }
 }
 
-fn compile_node(node: Directive) -> Element {
-    match node {
-        Directive::Text(text) => {
-            // let text = text.replace('*', "<span class='symbol'>*</span><br/>&nbsp;&nbsp;&nbsp;&nbsp;")
-            // .replace("+++", "<span class='symbol'>✠</span>")
-            // .replace('+', "<span class='symbol'>+</span><br/>");
+fn compile_instr(args: &[Expr]) -> Element { if args.len() != 1 { return Element::Error(format!("instr expects 1 argument, got {:?}", args)); } match &args[0] { Expr::String(s) => Element::Instruction(s.clone()), other => Element::Error(format!("instr: expected string, got {:?}", other)), } }
 
-            // let text = SmallPrint.replace_all(&text, "<span class='instr'>$1</span>");
+fn compile_box(args: &[Expr]) -> Element {
+    let mut items = Vec::new();
+    for a in args {
+        items.push(compile_expr(a.clone()));
+    }
+    Element::Box(items)
+}
 
-            // let text = Intone.replace_all(&text, |caps: &regex::Captures| {
-            // 	style_first_vowel(&caps[1], "\u{030A}", "span")
-            // });
+fn compile_heading(args: &[Expr]) -> Element {
+    // TODO: implement fully
+    if args.len() != 2 {
+        return Element::Error("heading expects (text level)".into());
+    }
+    let text = match &args[0] {
+        Expr::String(s) => s.clone(),
+        other => return Element::Error(format!("heading: expected text, got {:?}", other)),
+    };
+    let level = match &args[1] {
+        Expr::Number(n) => *n as u8,
+        other => return Element::Error(format!("heading: expected integer, got {:?}", other)),
+    };
+    Element::Heading(text, level)
+}
 
-            // let text = Flex.replace_all(&text, |caps: &regex::Captures| {
-            // 	style_first_vowel(&caps[1], "\u{0302}", "i")
-            // });
+fn compile_title(args: &[Expr]) -> Element {
+    if args.len() != 1 {
+        return Element::Error("title expects 1 argument".into());
+    }
+    match &args[0] {
+        Expr::String(s) => Element::Title(s.clone()),
+        other => Element::Error(format!("title: expected string, got {:?}", other)),
+    }
+}
 
-            // let text = Mediant.replace_all(&text, |caps: &regex::Captures| {
-            // 	style_first_vowel(&caps[1], "\u{0303}", "u")
-            // });
+fn compile_raw_gabc(args: &[Expr]) -> Element {
+    if args.len() != 1 {
+        return Element::Error("raw-gabc expects 1 argument".into());
+    }
+    match &args[0] {
+        Expr::String(s) => Element::RawGabc(s.clone()),
+        other => Element::Error(format!("raw-gabc: expected string, got {:?}", other)),
+    }
+}
 
-            // let text = Accent.replace_all(&text, |caps: &regex::Captures| {
-            // 	style_first_vowel(&caps[1], "\u{0301}", "b")
-            // });
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::lexer::Lexer;
+    use crate::parser::Parser;
 
-            Element::Text(text)
-        }
+    fn run(text: &str) -> Vec<Element> {
+        let mut lexer = Lexer::from_str(text);
+        let tokens = lexer.tokenize().unwrap();
+        let mut parser = Parser::new(tokens);
+        let exprs = parser.parse().unwrap();
+        compile_exprs(exprs)
+    }
 
-        Directive::Heading(text, level) => Element::Heading(text, level),
+    #[test]
+    fn test_compile_instr_string_literal() {
+        let result = run("(instr \"hello\")");
+        assert_eq!(result, vec![Element::Instruction("hello".to_string())]);
+    }
 
-        Directive::Hymn(hymn) => {
-            let mut buffer = format!(
-                "initial-style: 1;\nannotation: Hymn.;\nannotation: {}.;\ncentering-scheme: english;\n%%\n({})",
-                hymn.tone,
-                hymn.clef
-            );
-            for stanza_idx in 0..(hymn.verses.len() / hymn.melody.len()) {
-                for verse_idx in 0..hymn.melody.len() {
-                    let verse = &hymn.verses[hymn.verse_idx(stanza_idx, verse_idx)];
+    #[test]
+    fn test_compile_instr_symbol_resolves_via_preprocessor() {
+        let result = run("(instr test-var)");
+        assert_eq!(
+            result,
+            vec![Element::Instruction("This is a test variable.".into())]
+        );
+    }
 
-                    if verse_idx == 0 && stanza_idx > 0 {
-                        buffer = format!("{} (::) {}. ", buffer, stanza_idx + 1);
-                    }
+    #[test]
+    fn test_compile_instr_wrong_arg_count() {
+        let result = run("(instr \"a\" \"b\")");
+        assert!(matches!(result[0], Element::Error(_)));
+    }
 
-                    for (idx, syllable) in verse.into_iter().enumerate() {
-                        let continuous = syllable.ends_with('-');
-                        let syllable = if continuous {
-                            syllable[0..syllable.len() - 1].to_string()
-                        } else {
-                            format!("{} ", syllable)
-                        };
-                        buffer = format!("{}{}({})", buffer, syllable, hymn.melody[verse_idx][idx]);
-                    }
+    #[test]
+    fn test_compile_title() {
+        let result = run("(title \"My Title\")");
+        assert_eq!(result, vec![Element::Title("My Title".into())]);
+    }
 
-                    if verse_idx == hymn.melody.len() - 1 {
-                        continue;
-                    }
+    #[test]
+    fn test_compile_title_error_non_string() {
+        let result = run("(title 123)");
+        assert!(matches!(result[0], Element::Error(_)));
+    }
 
-                    buffer = format!(
-                        "{} {}({})",
-                        buffer,
-                        if stanza_idx == 0 && verse_idx == 0 {
-                            "<sp>*</sp>"
-                        } else {
-                            ""
-                        },
-                        if verse_idx % 2 == 0 { "," } else { ";" }
-                    );
-                }
-            }
+    #[test]
+    fn test_compile_heading() {
+        let result = run("(heading \"Chapter 1\" 2)");
+        assert_eq!(result, vec![Element::Heading("Chapter 1".into(), 2)]);
+    }
 
-            buffer = format!("{} (::) A({})men.({})", buffer, hymn.amen.0, hymn.amen.1);
+    #[test]
+    fn test_compile_heading_wrong_types() {
+        let result = run("(heading 123 2)");
+        assert!(matches!(result[0], Element::Error(_)));
+    }
 
-            compile_node(Directive::RawGabc(buffer))
-        }
+    #[test]
+    fn test_compile_box() {
+        let result = run("(box \"a\" \"b\" \"c\" (instr \"test\"))");
+        assert_eq!(
+            result,
+            vec![Element::Box(vec![
+                Element::Text("a".into()),
+                Element::Text("b".into()),
+                Element::Text("c".into()),
+                Element::Instruction("test".into())
+            ])]
+        );
+    }
 
-        Directive::Instruction(text) => Element::Instruction(text),
+    #[test]
+    fn test_compile_box_nested() {
+        let result = run("(box (title \"X\") (instr \"y\"))");
+        assert_eq!(
+            result,
+            vec![Element::Box(vec![
+                Element::Title("X".into()),
+                Element::Instruction("y".into())
+            ])]
+        );
+    }
 
-        Directive::RawGabc(text) => Element::RawGabc(text),
+    #[test]
+    fn test_compile_raw_gabc() {
+        let result = run(r#"(raw-gabc "c4 d e f")"#);
+        assert_eq!(result, vec![Element::RawGabc("c4 d e f".into())]);
+    }
 
-        Directive::Title(text) => Element::Title(text),
+    #[test]
+    fn test_unknown_function() {
+        let result = run("(florp \"x\")");
+        assert!(matches!(result[0], Element::Error(_)));
+    }
 
-        Directive::Error(why) => Element::Error(why),
-
-        Directive::Empty => Element::Empty,
-
-        _ => compile_node(Directive::Error(format!("Unsupported node {:?}", node))),
+    #[test]
+    fn test_preprocessor_expands_inside_box() {
+        let result = run("(box test-var)");
+        assert_eq!(
+            result,
+            vec![Element::Box(vec![Element::Text(
+                "This is a test variable.".into()
+            )])]
+        );
     }
 }
