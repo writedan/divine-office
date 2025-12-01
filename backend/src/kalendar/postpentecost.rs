@@ -176,7 +176,7 @@ mod tests {
             let sundays_after_epiphany =
                 NaiveDate::weeks_since(ly.epiphany_sunday, ly.septuagesima);
 
-            assert!((sundays_after_pentecost - 24) <= (6 - sundays_after_epiphany), "year {} had {} sundays after pentecost and {} after epiphany\ngiving {} sundays after epiphany to be resumed", x, sundays_after_pentecost, sundays_after_epiphany, sundays_after_pentecost - 24);
+            assert!((sundays_after_pentecost - 24) <= (6 - sundays_after_epiphany), "year {} had {} sundays after pentecost and {} after epiphany giving {} sundays after epiphany to be resumed", x, sundays_after_pentecost, sundays_after_epiphany, sundays_after_pentecost - 24);
         }
     }
 }
