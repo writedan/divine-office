@@ -4,200 +4,82 @@ use chrono::{Datelike, NaiveDate, Weekday};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let distance = NaiveDate::days_since(ly.christmas, date);
-    let identifiers = vec![
-        Identifier {
-            season: Season::Christmas,
-            week: match distance {
-                0 => String::from("christmas-eve"),
-                1 => String::from("christmas-day"),
-                2..=7 => String::from("christmas-octave"),
-                8 => String::from("circumcision"),
-                9..=11 => String::from("post-octave"),
-                12..=13 => String::from("epiphany"),
-                _ => String::from("christmastide")
+    let weekday = date.weekday();
+    let is_sunday = weekday == Weekday::Sun;
+    
+    let identifiers = vec![Identifier {
+        season: Season::Christmas,
+        week: match distance {
+            0 => String::from("christmas-eve"),
+            1 => String::from("christmas-day"),
+            2..=7 => String::from("christmas-octave"),
+            8 => String::from("circumcision"),
+            9..=11 => String::from("post-octave"),
+            12..=13 => String::from("epiphany"),
+            _ => String::from("christmastide"),
+        },
+        day: match distance {
+            0 => weekday.fullname().to_string(),
+            1 => String::from(""),
+            2..=7 => format!("{}", distance - 1),
+            8 => String::from(""),
+            9..=11 => format!("{}", distance - 8),
+            12 => String::from("eve"),
+            13 => String::from("day"),
+            _ => weekday.fullname().to_string(),
+        },
+        weekday
+    }];
+
+    let (name, color, penance, rank) = match distance {
+        0 => (
+            if is_sunday {
+                "Eve of the Nativity on Sunday"
+            } else {
+                "Eve of the Nativity"
+            }.to_string(),
+            Color::Violet,
+            if is_sunday { None } else { Some(Penance::Vigil) },
+            Rank::Eve,
+        ),
+        1 => ("Nativity of the Lord".to_string(), Color::White, None, Rank::Triplex),
+        2 => ("Saint Stephen, Protomartyr".to_string(), Color::Red, None, Rank::Duplex),
+        3 => ("Saint John, Apostle and Evangelist".to_string(), Color::White, None, Rank::Duplex),
+        4 => ("Holy Innocents, Martyrs".to_string(), Color::Violet, None, Rank::Duplex),
+        5 => ("Saint Thomas Becket, Bishop and Martyr".to_string(), Color::Red, None, Rank::Duplex),
+        6 => ("Sixth Day of the Nativity".to_string(), Color::White, None, Rank::Feria),
+        7 => ("Seventh Day of the Nativity".to_string(), Color::White, None, Rank::Feria),
+        8 => ("Circumcision of the Lord".to_string(), Color::White, None, Rank::Triplex),
+        9 => ("Octave of Saint Stephen".to_string(), Color::Red, None, Rank::Feria),
+        10 => ("Octave of Saint John".to_string(), Color::White, None, Rank::Feria),
+        11 => ("Octave of the Innocents".to_string(), Color::Red, None, Rank::Feria),
+        12 => (
+            if is_sunday {
+                "Eve of the Epiphany on Sunday"
+            } else {
+                "Eve of the Epiphany"
+            }.to_string(),
+            Color::Violet,
+            if is_sunday { None } else { Some(Penance::Vigil) },
+            Rank::Eve,
+        ),
+        13 => ("Epiphany of the Lord".to_string(), Color::White, None, Rank::Triplex),
+        _ => (
+            format!("{} in Christmastide", weekday.fullname()),
+            Color::White,
+            match weekday {
+                Weekday::Wed | Weekday::Fri => Some(Penance::Abstinence),
+                _ => None,
             },
-            day: match distance {
-                0 => date.weekday().fullname().to_string(),
-                1 => String::from(""),
-                2..=7 => format!("{}", distance - 1),
-                8 => String::from(""),
-                9..=11 => format!("{}", distance - 8),
-                12 => String::from("eve"),
-                13 => String::from("day"),
-                _ => date.weekday().fullname().to_string()
-            },
-        }
-    ];
-
-    match distance {
-        0 => {
-            return Celebration {
-                name: if date.weekday() == Weekday::Sun {
-                    String::from("Eve of the Nativity on Sunday")
-                } else {
-                    String::from("Eve of the Nativity")
-                },
-                penance: if date.weekday() == Weekday::Sun {
-                    None
-                } else {
-                    Some(Penance::Vigil)
-                },
-                color: Color::Violet,
-                rank: Rank::Eve,
-                identifiers,
-            }
-        }
-
-        1 => {
-            return Celebration {
-                name: String::from("Nativity of the Lord"),
-                penance: None,
-                color: Color::White,
-                rank: Rank::Triplex,
-                identifiers,
-            }
-        }
-
-        2 => {
-            return Celebration {
-                name: String::from("Saint Stephen, Protomartyr"),
-                penance: None,
-                color: Color::Red,
-                rank: Rank::Duplex,
-                identifiers,
-            }
-        }
-
-        3 => {
-            return Celebration {
-                name: String::from("Saint John, Apostle and Evangelist"),
-                penance: None,
-                color: Color::White,
-                rank: Rank::Duplex,
-                identifiers,
-            }
-        }
-
-        4 => {
-            return Celebration {
-                name: String::from("Holy Innocents, Martyrs"),
-                penance: None,
-                color: Color::Violet,
-                rank: Rank::Duplex,
-                identifiers,
-            }
-        }
-
-        5 => {
-            return Celebration {
-                name: String::from("Saint Thomas Becket, Bishop and Martyr"),
-                penance: None,
-                color: Color::Red,
-                rank: Rank::Duplex,
-                identifiers,
-            }
-        }
-
-        6 => {
-            return Celebration {
-                name: String::from("Sixth Day of the Nativity"),
-                penance: None,
-                color: Color::White,
-                rank: Rank::Feria,
-                identifiers,
-            }
-        }
-
-        7 => {
-            return Celebration {
-                name: String::from("Seventh Day of the Nativity"),
-                penance: None,
-                color: Color::White,
-                rank: Rank::Feria,
-                identifiers,
-            }
-        }
-
-        8 => {
-            return Celebration {
-                name: String::from("Circumcision of the Lord"),
-                penance: None,
-                color: Color::White,
-                rank: Rank::Triplex,
-                identifiers,
-            }
-        }
-
-        9 => {
-            return Celebration {
-                name: String::from("Octave of Saint Stephen"),
-                penance: None,
-                color: Color::Red,
-                rank: Rank::Feria,
-                identifiers,
-            }
-        }
-
-        10 => {
-            return Celebration {
-                name: String::from("Octave of Saint John"),
-                penance: None,
-                color: Color::White,
-                rank: Rank::Feria,
-                identifiers,
-            }
-        }
-
-        11 => {
-            return Celebration {
-                name: String::from("Octave of the Innocents"),
-                penance: None,
-                color: Color::Red,
-                rank: Rank::Feria,
-                identifiers,
-            }
-        }
-
-        12 => {
-            return Celebration {
-                name: if date.weekday() == Weekday::Sun {
-                    String::from("Eve of the Epiphany on Sunday")
-                } else {
-                    String::from("Eve of the Epiphany")
-                },
-                penance: if date.weekday() == Weekday::Sun {
-                    None
-                } else {
-                    Some(Penance::Vigil)
-                },
-                color: Color::Violet,
-                rank: Rank::Eve,
-                identifiers,
-            }
-        }
-
-        13 => {
-            return Celebration {
-                name: String::from("Epiphany of the Lord"),
-                penance: None,
-                color: Color::White,
-                rank: Rank::Triplex,
-                identifiers,
-            }
-        }
-
-        _ => {}
-    }
+            Rank::Feria,
+        ),
+    };
 
     Celebration {
-        name: format!("{} in Christmastide", date.weekday().fullname()),
-        penance: match date.weekday() {
-            Weekday::Wed => Some(Penance::Abstinence),
-            Weekday::Fri => Some(Penance::Abstinence),
-            _ => None,
-        },
-        color: Color::White,
-        rank: Rank::Feria,
+        name,
+        color,
+        penance,
+        rank,
         identifiers,
     }
 }

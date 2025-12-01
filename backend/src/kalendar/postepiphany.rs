@@ -4,36 +4,33 @@ use chrono::{Datelike, NaiveDate, Weekday};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     use Weekday::*;
-
     let week_num = (NaiveDate::weeks_since(ly.epiphany_sunday, date) + 1) as u8;
-
+    let weekday = date.weekday();
+    let weekday_name = weekday.fullname();
+    
     let identifiers = vec![Identifier {
         season: Season::PostEpiphany(date <= ly.purification),
         week: week_num.to_string(),
-        day: String::from(date.weekday().fullname()),
+        day: String::from(weekday_name),
+        weekday,
     }];
-
-    let (name, rank) = match date.weekday() {
+    
+    let (name, rank) = match weekday {
         Sun => (
             format!("{} Sunday after Epiphany", week_num.ordinal()),
             Rank::Sunday,
         ),
         _ => (
-            format!(
-                "{} in the {} Week after Epiphany",
-                date.weekday().fullname(),
-                week_num.ordinal()
-            ),
+            format!("{} in the {} Week after Epiphany", weekday_name, week_num.ordinal()),
             Rank::Feria,
         ),
     };
-
-    let penance = match date.weekday() {
-        Wed => Some(Penance::Abstinence),
-        Fri => Some(Penance::Abstinence),
+    
+    let penance = match weekday {
+        Wed | Fri => Some(Penance::Abstinence),
         _ => None,
     };
-
+    
     Celebration {
         name,
         penance,
