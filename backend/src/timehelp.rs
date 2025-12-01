@@ -136,7 +136,6 @@ mod tests {
         let d1 = NaiveDate::from_ymd(2024, 1, 1).prev_sunday().unwrap();
         let mut d2 = d1.next_sunday().unwrap();
         for x in 1..=52 {
-            println!("{:?} weeks since {:?} = {}", d2, d1, x);
             assert_eq!(NaiveDate::weeks_since(d1, d2), x);
             d2 = d2.next_sunday().unwrap();
         }
