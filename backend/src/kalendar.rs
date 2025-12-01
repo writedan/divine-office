@@ -8,6 +8,7 @@ mod postpentecost;
 
 use chrono::{NaiveDate, Weekday, Datelike};
 use crate::timehelp::{Sunday, Betwixt};
+use std::cmp::Ordering;
 
 /// The kalendar provides the liturgical identifiers for a given Gregorian date. The fields of its struct are used as sentiels to get the correct identifier. A kalendar is created from a year which indicates the liturgical year, not the calendar year. Thus a kalendar runs from November or December of its specified year to that of the following year.
 pub struct Kalendar {
@@ -42,6 +43,7 @@ pub struct Kalendar {
 }
 
 /// Penance describes both the fasting rules of the day and when Mass may be said that day.
+#[derive(Eq, PartialEq)]
 pub enum Penance {
 	/// Abstinence means refraining from meat, dairy, and eggs. Mass is after Terce.
 	Abstinence, 
@@ -53,6 +55,7 @@ pub enum Penance {
 	Vigil
 }
 
+#[derive(Eq, PartialEq)]
 pub enum Color {
     White,
     Blue,
@@ -63,6 +66,7 @@ pub enum Color {
     Rose,
 }
 
+#[derive(PartialEq, PartialOrd, Eq)]
 pub enum Rank {
     Eve,
     Feria,
@@ -77,7 +81,7 @@ pub enum Rank {
     Triplex,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Season {
     Advent,
     Christmas,
@@ -95,6 +99,7 @@ pub enum Season {
 }
 
 /// A liturgical identifier supplies all information necessary to generate a particular office and Mass.
+#[derive(Eq, PartialEq)]
 pub struct Identifier {
     pub season: Season,
     /// The week of the season this office occurs in. "Week of the season" is particular to each season.
@@ -106,12 +111,34 @@ pub struct Identifier {
 }
 
 /// A celebration is the actual liturgical day. The liturgical day has one name, one penance, one color, and one rank, but may be composed out of multiple identifiers. In this case the first identifier has the right of way and subsequent identifiers can only add what is not defined in the first identifier.
+#[derive(Eq, PartialEq)]
 pub struct Celebration {
     pub name: String,
     pub penance: Option<Penance>,
     pub color: Color,
     pub rank: Rank,
     identifiers: Vec<Identifier>,
+}
+
+impl Ord for Celebration {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let r1 = &self.rank;
+        let r2 = &other.rank;
+
+        if *r1 > *r2 {
+            Ordering::Greater
+        } else if *r2 > *r1 {
+            Ordering::Less
+        } else {
+            Ordering::Equal
+        }
+    }
+}
+
+impl PartialOrd for Celebration {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.rank.partial_cmp(&other.rank)
+    }
 }
 
 impl ToString for Season {
@@ -214,5 +241,27 @@ impl Kalendar {
 	    // This panic should be unreachable unless there is something wrong with our internal code.
 	}
 
-	
+	/// Returns the temporal celebration for the given date. There can only be one temporal celebration for any given date.
+	fn get_temporal(&self, date: NaiveDate) -> Celebration {
+        match self.get_season(date) {
+            Season::Advent => advent::get_celebration(self, date),
+            Season::Christmas => christmas::get_celebration(self, date),
+            Season::PostEpiphany(_) => postepiphany::get_celebration(self, date),
+            Season::PreLent(_) => prelent::get_celebration(self, date),
+            Season::Lent => lent::get_celebration(self, date),
+            Season::Easter => easter::get_celebration(self, date),
+            Season::PostPentecost => postpentecost::get_celebration(self, date),
+            _ => panic!(
+                "{:?} should not be returned from Kalendar.get_season.",
+                self.get_season(date)
+            ),
+        }
+    }
+
+    /// Returns all celebrations for the given date and sorts them in order of rank.
+    pub fn get_celebrations(&self, date: NaiveDate) -> Vec<Celebration> {
+        let mut vec = vec![self.get_temporal(date)];
+        vec.sort();
+        vec
+    }
 }
