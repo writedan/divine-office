@@ -8,7 +8,20 @@ pub enum Value {
     Boolean(bool),
     Symbol(String),
     List(Vec<Value>),
+    Function(Vec<String>, Vec<Expr>),
     Nil,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Element {
+    Box(Vec<Element>),
+    Text(String),
+    Heading(String, u8),
+    Instruction(String),
+    RawGabc(String),
+    Title(String),
+    Error(String),
+    Empty,
 }
 
 impl Value {
@@ -23,6 +36,7 @@ impl Value {
                 let items: Vec<String> = values.iter().map(|v| v.to_string()).collect();
                 format!("({})", items.join(" "))
             }
+            Value::Function(_, _) => "<function>".to_string(),
             Value::Nil => "()".to_string(),
         }
     }
@@ -33,16 +47,40 @@ impl Value {
             _ => true,
         }
     }
+
+    pub fn as_string(&self) -> Option<String> {
+        match self {
+            Value::String(s) => Some(s.clone()),
+            _ => None,
+        }
+    }
+
+    pub fn as_number(&self) -> Option<f64> {
+        match self {
+            Value::Number(n) => Some(*n),
+            _ => None,
+        }
+    }
 }
 
+#[derive(Clone)]
 pub struct Environment {
     bindings: HashMap<String, Value>,
+    parent: Option<Box<Environment>>,
 }
 
 impl Environment {
     pub fn new() -> Self {
         Environment {
             bindings: HashMap::new(),
+            parent: None,
+        }
+    }
+
+    pub fn with_parent(parent: Environment) -> Self {
+        Environment {
+            bindings: HashMap::new(),
+            parent: Some(Box::new(parent)),
         }
     }
 
@@ -51,20 +89,20 @@ impl Environment {
     }
 
     pub fn get(&self, name: &str) -> Option<&Value> {
-        self.bindings.get(name)
+        self.bindings.get(name).or_else(|| {
+            self.parent.as_ref().and_then(|p| p.get(name))
+        })
     }
 }
 
 pub struct Runtime {
     env: Environment,
-    returned_values: Vec<Value>,
 }
 
 impl Runtime {
     pub fn new() -> Self {
         Runtime {
             env: Environment::new(),
-            returned_values: Vec::new(),
         }
     }
 
@@ -91,9 +129,9 @@ impl Runtime {
                 if let Some(Expr::Symbol(op)) = elements.first() {
                     match op.as_str() {
                         "let" => self.eval_let(&elements[1..]),
+                        "defun" => self.eval_defun(&elements[1..]),
                         "eq" => self.eval_eq(&elements[1..]),
                         "if" => self.eval_if(&elements[1..]),
-                        "return" => self.eval_return(&elements[1..]),
                         "quote" => self.eval_quote(&elements[1..]),
                         "+" => self.eval_arithmetic(&elements[1..], |a, b| a + b),
                         "-" => self.eval_arithmetic(&elements[1..], |a, b| a - b),
@@ -117,6 +155,148 @@ impl Runtime {
         }
     }
 
+    pub fn eval_to_element(&mut self, expr: &Expr) -> Element {
+        match expr {
+            Expr::List(elements) if !elements.is_empty() => {
+                if let Some(Expr::Symbol(op)) = elements.first() {
+                    match op.as_str() {
+                        "box" => self.eval_box(&elements[1..]),
+                        "text" => self.eval_text(&elements[1..]),
+                        "heading" => self.eval_heading(&elements[1..]),
+                        "instruction" => self.eval_instruction(&elements[1..]),
+                        "raw-gabc" => self.eval_raw_gabc(&elements[1..]),
+                        "title" => self.eval_title(&elements[1..]),
+                        "if" => self.eval_if_element(&elements[1..]),
+                        "let" | "defun" => {
+                            match self.eval(expr) {
+                                Ok(_) => Element::Empty,
+                                Err(e) => Element::Error(e),
+                            }
+                        }
+                        _ => {
+                            match self.eval(expr) {
+                                Ok(_) => Element::Empty,
+                                Err(e) => Element::Error(e),
+                            }
+                        }
+                    }
+                } else {
+                    Element::Error("List must start with a symbol".to_string())
+                }
+            }
+            _ => {
+                match self.eval(expr) {
+                    Ok(_) => Element::Empty,
+                    Err(e) => Element::Error(e),
+                }
+            }
+        }
+    }
+
+    fn eval_box(&mut self, args: &[Expr]) -> Element {
+        let mut children = Vec::new();
+        
+        for arg in args {
+            let element = self.eval_to_element(arg);
+            children.push(element);
+        }
+        
+        Element::Box(children)
+    }
+
+    fn eval_text(&mut self, args: &[Expr]) -> Element {
+        if args.is_empty() {
+            return Element::Error("text requires at least 1 argument".to_string());
+        }
+
+        let mut text_parts = Vec::new();
+        
+        for arg in args {
+            match self.eval(arg) {
+                Ok(val) => text_parts.push(val.to_string()),
+                Err(e) => return Element::Error(e),
+            }
+        }
+        
+        Element::Text(text_parts.join(" "))
+    }
+
+    fn eval_heading(&mut self, args: &[Expr]) -> Element {
+        if args.len() != 2 {
+            return Element::Error("heading requires exactly 2 arguments: (heading <text> <level>)".to_string());
+        }
+
+        let text = match self.eval(&args[0]) {
+            Ok(val) => val.to_string(),
+            Err(e) => return Element::Error(e),
+        };
+
+        let level = match self.eval(&args[1]) {
+            Ok(Value::Number(n)) => {
+                if n >= 1.0 && n <= 6.0 {
+                    n as u8
+                } else {
+                    return Element::Error("heading level must be between 1 and 6".to_string());
+                }
+            }
+            Ok(_) => return Element::Error("heading level must be a number".to_string()),
+            Err(e) => return Element::Error(e),
+        };
+
+        Element::Heading(text, level)
+    }
+
+    fn eval_instruction(&mut self, args: &[Expr]) -> Element {
+        if args.is_empty() {
+            return Element::Error("instruction requires at least 1 argument".to_string());
+        }
+
+        let mut instruction_parts = Vec::new();
+        
+        for arg in args {
+            match self.eval(arg) {
+                Ok(val) => instruction_parts.push(val.to_string()),
+                Err(e) => return Element::Error(e),
+            }
+        }
+        
+        Element::Instruction(instruction_parts.join(" "))
+    }
+
+    fn eval_raw_gabc(&mut self, args: &[Expr]) -> Element {
+        if args.is_empty() {
+            return Element::Error("raw-gabc requires at least 1 argument".to_string());
+        }
+
+        let mut gabc_parts = Vec::new();
+        
+        for arg in args {
+            match self.eval(arg) {
+                Ok(val) => gabc_parts.push(val.to_string()),
+                Err(e) => return Element::Error(e),
+            }
+        }
+        
+        Element::RawGabc(gabc_parts.join(" "))
+    }
+
+    fn eval_title(&mut self, args: &[Expr]) -> Element {
+        if args.is_empty() {
+            return Element::Error("title requires at least 1 argument".to_string());
+        }
+
+        let mut title_parts = Vec::new();
+        
+        for arg in args {
+            match self.eval(arg) {
+                Ok(val) => title_parts.push(val.to_string()),
+                Err(e) => return Element::Error(e),
+            }
+        }
+        
+        Element::Title(title_parts.join(" "))
+    }
+
     fn eval_let(&mut self, args: &[Expr]) -> Result<Value, String> {
         if args.len() != 2 {
             return Err("let requires exactly 2 arguments: (let <symbol> <value>)".to_string());
@@ -130,6 +310,40 @@ impl Runtime {
         let value = self.eval(&args[1])?;
         self.env.define(name, value.clone());
         Ok(value)
+    }
+
+    fn eval_defun(&mut self, args: &[Expr]) -> Result<Value, String> {
+        if args.len() != 2 {
+            return Err("defun requires exactly 2 arguments: (defun (<name> <params>...) <body>...)".to_string());
+        }
+
+        let (name, params) = match &args[0] {
+            Expr::List(sig) if !sig.is_empty() => {
+                let name = match &sig[0] {
+                    Expr::Symbol(s) => s.clone(),
+                    _ => return Err("Function name must be a symbol".to_string()),
+                };
+                
+                let mut param_names = Vec::new();
+                for param in &sig[1..] {
+                    match param {
+                        Expr::Symbol(s) => param_names.push(s.clone()),
+                        _ => return Err("Function parameters must be symbols".to_string()),
+                    }
+                }
+                
+                (name, param_names)
+            }
+            _ => return Err("First argument to defun must be a list (name params...)".to_string()),
+        };
+
+        let body = match &args[1] {
+            expr => vec![expr.clone()],
+        };
+
+        let function = Value::Function(params, body);
+        self.env.define(name.clone(), function.clone());
+        Ok(function)
     }
 
     fn eval_eq(&mut self, args: &[Expr]) -> Result<Value, String> {
@@ -157,14 +371,21 @@ impl Runtime {
         }
     }
 
-    fn eval_return(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() != 1 {
-            return Err("return requires exactly 1 argument".to_string());
+    fn eval_if_element(&mut self, args: &[Expr]) -> Element {
+        if args.len() != 3 {
+            return Element::Error("if requires exactly 3 arguments: (if <cond> <then> <else>)".to_string());
         }
 
-        let value = self.eval(&args[0])?;
-        self.returned_values.push(value.clone());
-        Ok(value)
+        let condition = match self.eval(&args[0]) {
+            Ok(val) => val,
+            Err(e) => return Element::Error(e),
+        };
+        
+        if condition.is_truthy() {
+            self.eval_to_element(&args[1])
+        } else {
+            self.eval_to_element(&args[2])
+        }
     }
 
     fn eval_quote(&mut self, args: &[Expr]) -> Result<Value, String> {
@@ -265,18 +486,51 @@ impl Runtime {
     }
 
     fn eval_application(&mut self, elements: &[Expr]) -> Result<Value, String> {
-        Err(format!("Unknown function or special form: {:?}", elements[0]))
-    }
-
-    pub fn run(&mut self, exprs: Vec<Expr>) -> Result<Vec<Value>, String> {
-        for expr in exprs {
-            self.eval(&expr)?;
+        let func_val = self.eval(&elements[0])?;
+        
+        match func_val {
+            Value::Function(params, body) => {
+                let mut args = Vec::new();
+                for arg_expr in &elements[1..] {
+                    args.push(self.eval(arg_expr)?);
+                }
+                
+                if args.len() != params.len() {
+                    return Err(format!(
+                        "Function expects {} arguments, got {}",
+                        params.len(),
+                        args.len()
+                    ));
+                }
+                
+                let mut new_env = Environment::with_parent(self.env.clone());
+                for (param, arg) in params.iter().zip(args.iter()) {
+                    new_env.define(param.clone(), arg.clone());
+                }
+                
+                let old_env = std::mem::replace(&mut self.env, new_env);
+                
+                let mut result = Value::Nil;
+                for expr in &body {
+                    result = self.eval(expr)?;
+                }
+                
+                self.env = old_env;
+                Ok(result)
+            }
+            _ => Err(format!("Cannot apply non-function: {:?}", elements[0])),
         }
-        Ok(self.returned_values.clone())
     }
 
-    pub fn get_returned_values(&self) -> &Vec<Value> {
-        &self.returned_values
+    pub fn run(&mut self, exprs: Vec<Expr>) -> Vec<Element> {
+        let mut elements = Vec::new();
+        
+        for expr in exprs {
+            let element = self.eval_to_element(&expr);
+            elements.push(element);
+        }
+        
+        elements
     }
 }
 
@@ -286,7 +540,14 @@ mod tests {
     use crate::lexer::Lexer;
     use crate::parser::Parser;
 
-    fn eval_str(input: &str) -> Result<Vec<Value>, String> {
+    fn parse_str(input: &str) -> Vec<Expr> {
+    	let mut lexer = Lexer::from_str(input);
+        let tokens = lexer.tokenize().unwrap();
+        let mut parser = Parser::new(tokens);
+        parser.parse().unwrap()
+    }
+
+    fn eval_str(input: &str) -> Vec<Element> {
         let mut lexer = Lexer::from_str(input);
         let tokens = lexer.tokenize().unwrap();
         let mut parser = Parser::new(tokens);
@@ -296,114 +557,208 @@ mod tests {
     }
 
     #[test]
-    fn test_let() {
-        let mut lexer = Lexer::from_str("(let x 40)");
-        let tokens = lexer.tokenize().unwrap();
-        let mut parser = Parser::new(tokens);
-        let exprs = parser.parse().unwrap();
-        let mut runtime = Runtime::new();
-        runtime.run(exprs).unwrap();
-        assert_eq!(runtime.env.get("x"), Some(&Value::Number(40.0)));
+    fn test_text() {
+        let elements = eval_str(r#"(text "Hello World")"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Text(s) => assert_eq!(s, "Hello World"),
+            _ => panic!("Expected Text element"),
+        }
     }
 
     #[test]
-    fn test_let_and_eq() {
-        let mut lexer = Lexer::from_str("(let x 40) (return (eq x 40))");
-        let tokens = lexer.tokenize().unwrap();
-        let mut parser = Parser::new(tokens);
-        let exprs = parser.parse().unwrap();
-        let mut runtime = Runtime::new();
-        let results = runtime.run(exprs).unwrap();
-        assert_eq!(results.len(), 1);
-        assert_eq!(results[0], Value::Boolean(true));
+    fn test_text_with_expression() {
+        let elements = eval_str(r#"(let x 42) (text "The answer is" x)"#);
+        assert_eq!(elements.len(), 2);
+        match &elements[1] {
+            Element::Text(s) => assert_eq!(s, "The answer is 42"),
+            _ => panic!("Expected Text element"),
+        }
     }
 
     #[test]
-    fn test_if_true() {
-        let results = eval_str("(return (if #t 1 2))").unwrap();
-        assert_eq!(results[0], Value::Number(1.0));
+    fn test_heading() {
+        let elements = eval_str(r#"(heading "Chapter 1" 1)"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Heading(text, level) => {
+                assert_eq!(text, "Chapter 1");
+                assert_eq!(*level, 1);
+            }
+            _ => panic!("Expected Heading element"),
+        }
     }
 
     #[test]
-    fn test_if_false() {
-        let results = eval_str("(return (if #f 1 2))").unwrap();
-        assert_eq!(results[0], Value::Number(2.0));
+    fn test_box() {
+        let elements = eval_str(r#"(box (text "First") (text "Second"))"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Box(children) => {
+                assert_eq!(children.len(), 2);
+                match &children[0] {
+                    Element::Text(s) => assert_eq!(s, "First"),
+                    _ => panic!("Expected Text element"),
+                }
+                match &children[1] {
+                    Element::Text(s) => assert_eq!(s, "Second"),
+                    _ => panic!("Expected Text element"),
+                }
+            }
+            _ => panic!("Expected Box element"),
+        }
     }
 
     #[test]
-    fn test_if_with_expression() {
-        let results = eval_str("(let x 40) (return (if (eq x 40) 100 200))").unwrap();
-        assert_eq!(results[0], Value::Number(100.0));
+    fn test_nested_box() {
+        let elements = eval_str(r#"(box (box (text "Nested")) (text "Top"))"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Box(children) => {
+                assert_eq!(children.len(), 2);
+                match &children[0] {
+                    Element::Box(nested) => {
+                        assert_eq!(nested.len(), 1);
+                        match &nested[0] {
+                            Element::Text(s) => assert_eq!(s, "Nested"),
+                            _ => panic!("Expected Text element"),
+                        }
+                    }
+                    _ => panic!("Expected Box element"),
+                }
+            }
+            _ => panic!("Expected Box element"),
+        }
     }
 
     #[test]
-    fn test_arithmetic() {
-        let results = eval_str("(return (+ 1 2 3))").unwrap();
-        assert_eq!(results[0], Value::Number(6.0));
+    fn test_instruction() {
+        let elements = eval_str(r#"(instruction "Stand for the Gospel")"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Instruction(s) => assert_eq!(s, "Stand for the Gospel"),
+            _ => panic!("Expected Instruction element"),
+        }
     }
 
     #[test]
-    fn test_nested_arithmetic() {
-        let results = eval_str("(return (* (+ 1 2) (- 5 2)))").unwrap();
-        assert_eq!(results[0], Value::Number(9.0));
+    fn test_title() {
+        let elements = eval_str(r#"(title "Mass of the Holy Spirit")"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Title(s) => assert_eq!(s, "Mass of the Holy Spirit"),
+            _ => panic!("Expected Title element"),
+        }
     }
 
     #[test]
-    fn test_comparison() {
-        let results = eval_str("(return (< 1 2))").unwrap();
-        assert_eq!(results[0], Value::Boolean(true));
+    fn test_raw_gabc() {
+        let elements = eval_str(r#"(raw-gabc "c4 (g) Al(g)le(f)lu(gh)ia")"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::RawGabc(s) => assert_eq!(s, "c4 (g) Al(g)le(f)lu(gh)ia"),
+            _ => panic!("Expected RawGabc element"),
+        }
+    }
+
+    #[test]
+    fn test_conditional_element() {
+        let elements = eval_str(r#"(let x 1) (if (eq x 1) (text "One") (text "Not One"))"#);
+        assert_eq!(elements.len(), 2);
+        match &elements[1] {
+            Element::Text(s) => assert_eq!(s, "One"),
+            _ => panic!("Expected Text element"),
+        }
+    }
+
+    #[test]
+    fn test_error_handling() {
+        let elements = eval_str(r#"(heading "Test")"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Error(_) => {},
+            _ => panic!("Expected Error element"),
+        }
+    }
+
+    #[test]
+    fn test_mixed_statements() {
+        let elements = eval_str(r#"
+            (let title-text "My Document")
+            (title title-text)
+            (heading "Section 1" 1)
+            (text "This is some text")
+            (box (text "Boxed text"))
+        "#);
         
-        let results = eval_str("(return (> 1 2))").unwrap();
-        assert_eq!(results[0], Value::Boolean(false));
-    }
-
-    #[test]
-    fn test_complex_expression() {
-        let results = eval_str("(let x 10) (let y 20) (return (if (< x y) (+ x y) (* x y)))").unwrap();
-        assert_eq!(results[0], Value::Number(30.0));
-    }
-
-    #[test]
-    fn test_string_operations() {
-        let results = eval_str(r#"(let greeting "hello") (return (eq greeting "hello"))"#).unwrap();
-        assert_eq!(results[0], Value::Boolean(true));
-    }
-
-    #[test]
-    fn test_logical_and() {
-        let results = eval_str("(return (and #t #t #t))").unwrap();
-        assert_eq!(results[0], Value::Boolean(true));
+        match &elements[0] {
+            Element::Empty => {},
+            _ => panic!("Expected Empty element for let statement"),
+        }
         
-        let results = eval_str("(return (and #t #f #t))").unwrap();
-        assert_eq!(results[0], Value::Boolean(false));
+        match &elements[1] {
+            Element::Title(s) => assert_eq!(s, "My Document"),
+            _ => panic!("Expected Title element"),
+        }
+        
+        match &elements[2] {
+            Element::Heading(text, level) => {
+                assert_eq!(text, "Section 1");
+                assert_eq!(*level, 1);
+            }
+            _ => panic!("Expected Heading element"),
+        }
     }
 
     #[test]
-    fn test_logical_or() {
-        let results = eval_str("(return (or #f #f #t))").unwrap();
-        assert_eq!(results[0], Value::Boolean(true));
+    fn test_computation_in_text() {
+        let elements = eval_str(r#"(text "2 + 2 =" (+ 2 2))"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Text(s) => assert_eq!(s, "2 + 2 = 4"),
+            _ => panic!("Expected Text element"),
+        }
     }
 
     #[test]
-    fn test_not() {
-        let results = eval_str("(return (not #t))").unwrap();
-        assert_eq!(results[0], Value::Boolean(false));
+    fn test_undefined_symbol_error() {
+        let elements = eval_str(r#"(text undefined-var)"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Error(e) => assert!(e.contains("Undefined symbol")),
+            _ => panic!("Expected Error element"),
+        }
     }
 
     #[test]
-    fn test_multiple_returns() {
-        let results = eval_str("(return 1) (return 2) (return 3)").unwrap();
-        assert_eq!(results.len(), 3);
-        assert_eq!(results[0], Value::Number(1.0));
-        assert_eq!(results[1], Value::Number(2.0));
-        assert_eq!(results[2], Value::Number(3.0));
+    fn test_error_in_box_child() {
+        let elements = eval_str(r#"(box (text "Good") (text undefined-var) (text "Also Good"))"#);
+        assert_eq!(elements.len(), 1);
+        match &elements[0] {
+            Element::Box(children) => {
+                assert_eq!(children.len(), 3);
+                match &children[0] {
+                    Element::Text(s) => assert_eq!(s, "Good"),
+                    _ => panic!("Expected Text element"),
+                }
+                match &children[1] {
+                    Element::Error(e) => assert!(e.contains("Undefined symbol")),
+                    _ => panic!("Expected Error element"),
+                }
+                match &children[2] {
+                    Element::Text(s) => assert_eq!(s, "Also Good"),
+                    _ => panic!("Expected Text element"),
+                }
+            }
+            _ => panic!("Expected Box element"),
+        }
     }
 
     #[test]
-    fn test_execution_continues_after_return() {
-        let results = eval_str("(let x 10) (return x) (let x 20) (return x)").unwrap();
-        assert_eq!(results.len(), 2);
-        assert_eq!(results[0], Value::Number(10.0));
-        assert_eq!(results[1], Value::Number(20.0));
+    fn test_defined_function() {
+    	let mut runtime = Runtime::new();
+    	runtime.run(parse_str("(defun (square x) (* x x))"));
+    	let out = runtime.run(parse_str("(text (square 2))"));
+    	assert_eq!(out, vec![Element::Text(String::from("4"))]);
     }
 }
