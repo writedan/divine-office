@@ -1,6 +1,6 @@
 use crate::lexer::{Lexer, Token};
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize)]
 pub enum Expr {
     /// Number literal
     Number(f64),
