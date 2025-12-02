@@ -2,14 +2,14 @@ use std::collections::HashMap;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct GabcFile {
-    headers: HashMap<String, String>,
+    headers: Vec<(String, String)>,
     body: String,
 }
 
 impl GabcFile {
     /// Parse a GABC file from a string
     pub fn new(content: &str) -> Result<Self, String> {
-        let mut headers = HashMap::new();
+        let mut headers = Vec::new();
         let mut lines = content.lines();
         let mut body_lines = Vec::new();
         let mut in_body = false;
@@ -17,7 +17,7 @@ impl GabcFile {
         for line in lines {
             let trimmed = line.trim();
             
-            if trimmed.is_empty() && !in_body {
+            if trimmed == "%%" && !in_body {
                 in_body = true;
                 continue;
             }
@@ -25,8 +25,13 @@ impl GabcFile {
             if !in_body {
                 if let Some(colon_pos) = trimmed.find(':') {
                     let key = trimmed[..colon_pos].trim().to_string();
-                    let value = trimmed[colon_pos + 1..].trim().to_string();
-                    headers.insert(key, value);
+                    let rest = &trimmed[colon_pos + 1..];
+                    let value = if let Some(semicolon_pos) = rest.find(';') {
+                        rest[..semicolon_pos].trim().to_string()
+                    } else {
+                        rest.trim().to_string()
+                    };
+                    headers.push((key, value));
                 }
             } else {
                 body_lines.push(line);
@@ -38,23 +43,30 @@ impl GabcFile {
         Ok(GabcFile { headers, body })
     }
 
-    /// Get a header attribute by key
+    /// Get a header attribute by key (returns the most recent value)
     pub fn get_header(&self, key: &str) -> Option<&str> {
-        self.headers.get(key).map(|s| s.as_str())
+        self.headers.iter()
+            .rev()
+            .find(|(k, _)| k == key)
+            .map(|(_, v)| v.as_str())
     }
 
-    /// Set a header attribute
+    /// Set a header attribute (adds a new entry)
     pub fn set_header(&mut self, key: impl Into<String>, value: impl Into<String>) {
-        self.headers.insert(key.into(), value.into());
+        self.headers.push((key.into(), value.into()));
     }
 
     /// Remove a header attribute
     pub fn remove_header(&mut self, key: &str) -> Option<String> {
-        self.headers.remove(key)
+        if let Some(pos) = self.headers.iter().rposition(|(k, _)| k == key) {
+            Some(self.headers.remove(pos).1)
+        } else {
+            None
+        }
     }
 
     /// Get all headers
-    pub fn headers(&self) -> &HashMap<String, String> {
+    pub fn headers(&self) -> &[(String, String)] {
         &self.headers
     }
 
@@ -103,16 +115,11 @@ impl GabcFile {
     pub fn to_string(&self) -> String {
         let mut output = String::new();
 
-        let mut keys: Vec<_> = self.headers.keys().collect();
-        keys.sort();
-
-        for key in keys {
-            if let Some(value) = self.headers.get(key) {
-                output.push_str(&format!("{}: {}\n", key, value));
-            }
+        for (key, value) in &self.headers {
+            output.push_str(&format!("{}: {};\n", key, value));
         }
 
-        output.push('\n');
+        output.push_str("%%\n");
 
         output.push_str(&self.body);
 
@@ -126,11 +133,11 @@ mod tests {
 
     #[test]
     fn test_parse_gabc() {
-        let gabc_content = r#"name: Kyrie XVI
-office-part: Kyrie
-mode: 1
-book: Graduale Romanum
-
+        let gabc_content = r#"name: Kyrie XVI;
+office-part: Kyrie;
+mode: 1;
+book: Graduale Romanum;
+%%
 (c4) KY(f)ri(gfg)e(h.) *() e(ixjvIH'GhvF'E)lé(ghg')i(g)son.(f.) <i>bis</i>(::)"#;
 
         let gabc = GabcFile::new(gabc_content).unwrap();
@@ -142,8 +149,8 @@ book: Graduale Romanum
 
     #[test]
     fn test_extract_text() {
-        let gabc_content = r#"name: Test
-
+        let gabc_content = r#"name: Test;
+%%
 (c4) KY(f)ri(gfg)e(h.) *() e(ixjvIH'GhvF'E)lé(ghg')i(g)son.(f.) <i>bis</i>(::)"#;
 
         let gabc = GabcFile::new(gabc_content).unwrap();
@@ -154,9 +161,9 @@ book: Graduale Romanum
 
     #[test]
     fn test_set_header() {
-        let gabc_content = r#"name: Original
-mode: 1
-
+        let gabc_content = r#"name: Original;
+mode: 1;
+%%
 (c4) Test(f)"#;
 
         let mut gabc = GabcFile::new(gabc_content).unwrap();
@@ -170,8 +177,8 @@ mode: 1
 
     #[test]
     fn test_preserve_spaces() {
-        let gabc_content = r#"name: Test
-
+        let gabc_content = r#"name: Test;
+%%
 (c4) First(f)  word(g)   with(h)    spaces(i)"#;
 
         let gabc = GabcFile::new(gabc_content).unwrap();
@@ -182,16 +189,17 @@ mode: 1
 
     #[test]
     fn test_to_string() {
-        let gabc_content = r#"name: Test
-mode: 1
-
+        let gabc_content = r#"name: Test;
+mode: 1;
+%%
 (c4) Test(f)"#;
 
         let gabc = GabcFile::new(gabc_content).unwrap();
         let serialized = gabc.to_string();
 
-        assert!(serialized.contains("mode: 1"));
-        assert!(serialized.contains("name: Test"));
+        assert!(serialized.contains("mode: 1;"));
+        assert!(serialized.contains("name: Test;"));
+        assert!(serialized.contains("%%"));
         assert!(serialized.contains("(c4) Test(f)"));
     }
 }
