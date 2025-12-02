@@ -1,8 +1,8 @@
 use crate::wasm::read_file;
 use crate::lexer::Lexer;
 use crate::parser::{Parser, Expr};
+use crate::gabc::GabcFile;
 use std::collections::HashMap;
-use gabc_parser::GabcFile;
 use std::rc::Rc;
 use std::cell::RefCell;
 
@@ -19,7 +19,8 @@ pub enum Value {
     // compiler values
     // emitting anything else is a architectural error
     Error(String),
-    RawGabc(String),
+    RawGabc(GabcFile),
+    Title(String)
 }
 
 impl Value {
@@ -27,7 +28,8 @@ impl Value {
         match self {
             Value::Number(n) => n.to_string(),
             Value::String(s) => s.clone(),
-            Value::RawGabc(s) => s.clone(),
+            Value::RawGabc(f) => f.to_string(),
+            Value::Title(s) => s.clone(),
             Value::Boolean(true) => "#t".into(),
             Value::Boolean(false) => "#f".into(),
             Value::Symbol(s) => s.clone(),
@@ -174,15 +176,39 @@ impl Runtime {
                 "not" => self.eval_not(&list[1..]),
 
                 "cat" => self.eval_cat(&list[1..]),
+                "is-num" => self.eval_is_num(&list[1..]),
 
                 "raw-gabc" => self.eval_raw_gabc(&list[1..]),
                 "gabc-attr" => self.eval_gabc_attr(&list[1..]),
+
+                "title" => self.eval_title(&list[1..]),
 
                 _ => self.eval_application(list),
             };
         }
 
         self.eval_application(list)
+    }
+
+    fn eval_is_num(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 1 {
+    		return Err("is-num requires exactly one argument".into());
+    	}
+
+    	let value = self.eval(&args[0])?;
+    	match value {
+    		Value::Number(_) => Ok(Value::Boolean(true)),
+    		_ => Ok(Value::Boolean(false))
+    	}
+    }
+
+    fn eval_title(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 1 {
+    		return Err("title requires exactly one argument".into());
+    	}
+
+    	let value = self.eval(&args[0])?.to_string();
+    	Ok(Value::Title(value))
     }
 
     fn eval_return(&mut self, args: &[Expr]) -> Result<Value, String> {
@@ -213,15 +239,13 @@ impl Runtime {
     		return Err("gabc-attr requires exactly two arguments: (gabc-attr <gabc> <attribute>)".into());
     	}
 
-    	let binding = self.eval(&args[0])?.to_string();
-    	let gabc = GabcFile::new(&binding);
+    	let gabc = match self.eval(&args[0])? {
+    		Value::RawGabc(f) => f,
+    		_ => return Err(format!("gabc-attr requires first argument to be GABC"))
+    	};
     	let attr = self.eval(&args[1])?.to_string();
 
-    	let value = gabc
-	        .attributes
-	        .iter()
-	        .find(|(key, _)| *key == attr)
-	        .map(|(_, val)| *val);
+    	let value = gabc.get_header(&attr);
 
 	    match value {
 	        Some(val) => Ok(Value::String(val.to_string())),
@@ -234,7 +258,7 @@ impl Runtime {
     		return Err("raw-gabc requires exactly one argument".into());
     	}
 
-    	Ok(Value::RawGabc(self.eval(&args[0])?.to_string()))
+    	Ok(Value::RawGabc(GabcFile::new(&self.eval(&args[0])?.to_string())?))
     }
 
     fn eval_import(&mut self, args: &[Expr]) -> Result<Value, String> {
