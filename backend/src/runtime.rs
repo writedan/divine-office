@@ -1,4 +1,5 @@
-use crate::parser::Expr;
+use crate::lexer::Lexer;
+use crate::parser::{Parser, Expr};
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -14,6 +15,7 @@ pub enum Value {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Element {
+	Group(Vec<Element>),
     Box(Vec<Element>),
     Text(String),
     Heading(String, u8),
@@ -160,6 +162,7 @@ impl Runtime {
             Expr::List(elements) if !elements.is_empty() => {
                 if let Some(Expr::Symbol(op)) = elements.first() {
                     match op.as_str() {
+                    	"load" => self.eval_load(&elements[1..]),
                         "box" => self.eval_box(&elements[1..]),
                         "text" => self.eval_text(&elements[1..]),
                         "heading" => self.eval_heading(&elements[1..]),
@@ -191,6 +194,41 @@ impl Runtime {
                 }
             }
         }
+    }
+
+    fn eval_load(&mut self, args: &[Expr]) -> Element {
+    	if args.len() != 1 {
+    		return Element::Error("load requires exactly 1 argument: (load <file>)".to_string());
+    	}
+
+    	let path = match self.eval(&args[0]) {
+    		Ok(val) => val.to_string(),
+    		Err(e) => return Element::Error(e)
+    	};
+
+    	let mut lexer = match Lexer::from_file(path) {
+    		Ok(lexer) => lexer,
+    		Err(e) => return Element::Error(e)
+    	};
+
+    	let tokens = match lexer.tokenize() {
+    		Ok(tokens) => tokens,
+    		Err(e) => return Element::Error(e)
+    	};
+
+    	let mut parser = Parser::new(tokens);
+    	let exprs = match parser.parse() {
+    		Ok(exprs) => exprs,
+    		Err(e) => return Element::Error(e)
+    	};
+
+    	let mut children = Vec::new();
+    	for expr in exprs {
+    		let element = self.eval_to_element(&expr);
+    		children.push(element);
+    	}
+
+    	Element::Group(children)
     }
 
     fn eval_box(&mut self, args: &[Expr]) -> Element {
@@ -527,10 +565,21 @@ impl Runtime {
         
         for expr in exprs {
             let element = self.eval_to_element(&expr);
-            elements.push(element);
+            self.flatten_element(element, &mut elements);
         }
         
         elements
+    }
+
+    fn flatten_element(&self, element: Element, output: &mut Vec<Element>) {
+        match element {
+            Element::Group(children) => {
+                for child in children {
+                    self.flatten_element(child, output);
+                }
+            }
+            other => output.push(other),
+        }
     }
 }
 
