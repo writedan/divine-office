@@ -1,3 +1,4 @@
+use crate::wasm::read_file;
 use crate::lexer::Lexer;
 use crate::parser::{Parser, Expr};
 use std::collections::HashMap;
@@ -130,6 +131,7 @@ impl Runtime {
 
                 if let Some(Expr::Symbol(op)) = elements.first() {
                     match op.as_str() {
+                    	"import" => self.eval_import(&elements[1..]),
                         "let" => self.eval_let(&elements[1..]),
                         "defun" => self.eval_defun(&elements[1..]),
                         "eq" => self.eval_eq(&elements[1..]),
@@ -170,7 +172,7 @@ impl Runtime {
                         "raw-gabc" => self.eval_raw_gabc(&elements[1..]),
                         "title" => self.eval_title(&elements[1..]),
                         "if" => self.eval_if_element(&elements[1..]),
-                        "let" | "defun" => {
+                        "let" | "defun" | "import" => {
                             match self.eval(expr) {
                                 Ok(_) => Element::Empty,
                                 Err(e) => Element::Error(e),
@@ -194,6 +196,15 @@ impl Runtime {
                 }
             }
         }
+    }
+
+    fn eval_import(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 1 {
+    		return Err("import requires exactly 1 argument: (import <file>)".to_string());
+    	}
+
+    	let path = self.eval(&args[0])?.to_string();
+    	Ok(Value::String(read_file(path)?))
     }
 
     fn eval_load(&mut self, args: &[Expr]) -> Element {
