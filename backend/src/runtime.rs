@@ -23,7 +23,10 @@ pub enum Value {
     // emitting anything else is a architectural error
     Error(String),
     RawGabc(GabcFile),
-    Title(String)
+    Title(String),
+    Box(Vec<Value>),
+    Instruction(String),
+    Heading(String, u8)
 }
 
 impl Serialize for Value {
@@ -81,6 +84,21 @@ impl Serialize for Value {
                 let mut map = serializer.serialize_map(Some(1))?;
                 map.serialize_entry("Title", t)?;
                 map.end()
+            },
+            Value::Box(b) => {
+            	let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Box", b)?;
+                map.end()
+            },
+            Value::Instruction(s) => {
+            	let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Instruction", s)?;
+                map.end()
+            },
+            Value::Heading(s, n) => {
+            	let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Heading", &(s, n))?;
+                map.end()
             }
         }
     }
@@ -103,6 +121,12 @@ impl Value {
             Value::Function(_, _) => "<function>".into(),
             Value::Nil => "()".into(),
             Value::Error(e) => format!("Error: {}", e),
+            Value::Box(vals) => {
+            	let items: Vec<_> = vals.iter().map(|v| v.to_string()).collect();
+                format!("[{}]", items.join(" "))
+            },
+            Value::Instruction(s) => s.clone(),
+            Value::Heading(s, _) => s.clone()
         }
     }
 
@@ -247,12 +271,48 @@ impl Runtime {
                 "set-gabc-attr" => self.eval_set_gabc_attr(&list[1..]),
 
                 "title" => self.eval_title(&list[1..]),
+                "box" => self.eval_box(&list[1..]),
+                "instr" => self.eval_instr(&list[1..]),
+                "heading" => self.eval_heading(&list[1..]),
 
                 _ => self.eval_application(list),
             };
         }
 
         self.eval_application(list)
+    }
+
+    fn eval_heading(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 2 {
+    		return Err("heading requires exactly two arguments: (heading <text> <level>)".into());
+    	}
+
+    	let text = self.eval(&args[0])?.to_string();
+    	let level = match self.eval(&args[1])? {
+    		Value::Number(n) => n,
+    		_ => return Err("Second argument to heading must be numeric".into())
+    	};
+
+    	Ok(Value::Heading(text, level as u8))
+    }
+
+    fn eval_instr(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 1 {
+    		return Err("instr requires exactly one argument".into());
+    	}
+
+    	let value = self.eval(&args[0])?.to_string();
+    	Ok(Value::Instruction(value))
+    }
+
+    fn eval_box(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	let mut out = Vec::new();
+    	for arg in args {
+    		let val = self.eval(arg)?;
+    		out.push(val);
+    	}
+
+    	Ok(Value::Box(out))
     }
 
     fn eval_gabc_annotate(&mut self, args: &[Expr]) -> Result<Value, String> {
