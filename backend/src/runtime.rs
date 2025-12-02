@@ -6,6 +6,9 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
 
+use serde::{Serialize, Serializer};
+use serde::ser::SerializeMap;
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
     Number(f64),
@@ -21,6 +24,66 @@ pub enum Value {
     Error(String),
     RawGabc(GabcFile),
     Title(String)
+}
+
+impl Serialize for Value {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match self {
+            Value::Number(n) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Number", n)?;
+                map.end()
+            }
+            Value::String(s) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("String", s)?;
+                map.end()
+            }
+            Value::Boolean(b) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Boolean", b)?;
+                map.end()
+            }
+            Value::Symbol(s) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Symbol", s)?;
+                map.end()
+            }
+            Value::List(l) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("List", l)?;
+                map.end()
+            }
+            Value::Function(params, body) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Function", &(params, body))?;
+                map.end()
+            }
+            Value::Nil => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Nil", &())?;
+                map.end()
+            }
+            Value::Error(e) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Error", e)?;
+                map.end()
+            }
+            Value::RawGabc(gabc) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("RawGabc", &gabc.to_string())?;
+                map.end()
+            }
+            Value::Title(t) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Title", t)?;
+                map.end()
+            }
+        }
+    }
 }
 
 impl Value {
