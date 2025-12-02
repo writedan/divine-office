@@ -2,6 +2,9 @@ use crate::wasm::read_file;
 use crate::lexer::Lexer;
 use crate::parser::{Parser, Expr};
 use std::collections::HashMap;
+use gabc_parser::GabcFile;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
@@ -12,7 +15,11 @@ pub enum Value {
     List(Vec<Value>),
     Function(Vec<String>, Vec<Expr>),
     Nil,
-    Error(String)
+
+    // compiler values
+    // emitting anything else is a architectural error
+    Error(String),
+    RawGabc(String),
 }
 
 impl Value {
@@ -20,6 +27,7 @@ impl Value {
         match self {
             Value::Number(n) => n.to_string(),
             Value::String(s) => s.clone(),
+            Value::RawGabc(s) => s.clone(),
             Value::Boolean(true) => "#t".into(),
             Value::Boolean(false) => "#f".into(),
             Value::Symbol(s) => s.clone(),
@@ -29,7 +37,7 @@ impl Value {
             }
             Value::Function(_, _) => "<function>".into(),
             Value::Nil => "()".into(),
-            Value::Error(e) => format!("Error: {}", e)
+            Value::Error(e) => format!("Error: {}", e),
         }
     }
 
@@ -52,41 +60,45 @@ impl Value {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug)]
 pub struct Environment {
-    bindings: HashMap<String, Value>,
-    parent: Option<Box<Environment>>,
+    pub bindings: HashMap<String, Value>,
+    pub parent: Option<Rc<RefCell<Environment>>>,
 }
 
 impl Environment {
-    pub fn new() -> Self {
-        Self {
+    pub fn new() -> Rc<RefCell<Self>> {
+        Rc::new(RefCell::new(Self {
             bindings: HashMap::new(),
             parent: None,
-        }
+        }))
     }
 
-    pub fn with_parent(parent: Environment) -> Self {
-        Self {
+    pub fn with_parent(parent: Rc<RefCell<Environment>>) -> Rc<RefCell<Self>> {
+        Rc::new(RefCell::new(Self {
             bindings: HashMap::new(),
-            parent: Some(Box::new(parent)),
-        }
+            parent: Some(parent),
+        }))
     }
 
     pub fn define(&mut self, name: String, value: Value) {
         self.bindings.insert(name, value);
     }
 
-    pub fn get(&self, name: &str) -> Option<&Value> {
-        self.bindings
-            .get(name)
-            .or_else(|| self.parent.as_ref().and_then(|p| p.get(name)))
+    pub fn get(&self, name: &str) -> Option<Value> {
+        if let Some(v) = self.bindings.get(name) {
+            return Some(v.clone());
+        }
+        if let Some(parent) = &self.parent {
+            return parent.borrow().get(name);
+        }
+        None
     }
 }
 
 pub struct Runtime {
-    env: Environment,
-    pub output: Vec<Value>, 
+    env: Rc<RefCell<Environment>>,
+    pub output: Vec<Value>,
 }
 
 impl Runtime {
@@ -97,6 +109,18 @@ impl Runtime {
         }
     }
 
+    fn root_env(&self) -> Rc<RefCell<Environment>> {
+	    fn go(env: &Rc<RefCell<Environment>>) -> Rc<RefCell<Environment>> {
+	        let parent = env.borrow().parent.clone();
+	        match parent {
+	            Some(p) => go(&p),
+	            None => Rc::clone(env),
+	        }
+	    }
+
+	    go(&self.env)
+	}
+
     pub fn eval(&mut self, expr: &Expr) -> Result<Value, String> {
         match expr {
             Expr::Number(n) => Ok(Value::Number(*n)),
@@ -106,8 +130,8 @@ impl Runtime {
 
             Expr::Symbol(s) => self
                 .env
+                .borrow()
                 .get(s)
-                .cloned()
                 .ok_or_else(|| format!("Undefined symbol: {}", s)),
 
             Expr::Quote(inner) => self.quote_to_value(inner),
@@ -152,6 +176,7 @@ impl Runtime {
                 "cat" => self.eval_cat(&list[1..]),
 
                 "raw-gabc" => self.eval_raw_gabc(&list[1..]),
+                "gabc-attr" => self.eval_gabc_attr(&list[1..]),
 
                 _ => self.eval_application(list),
             };
@@ -183,13 +208,33 @@ impl Runtime {
     	Ok(Value::String(out))
     }
 
+    fn eval_gabc_attr(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 2 {
+    		return Err("gabc-attr requires exactly two arguments: (gabc-attr <gabc> <attribute>)".into());
+    	}
+
+    	let binding = self.eval(&args[0])?.to_string();
+    	let gabc = GabcFile::new(&binding);
+    	let attr = self.eval(&args[1])?.to_string();
+
+    	let value = gabc
+	        .attributes
+	        .iter()
+	        .find(|(key, _)| *key == attr)
+	        .map(|(_, val)| *val);
+
+	    match value {
+	        Some(val) => Ok(Value::String(val.to_string())),
+	        None => Ok(Value::Nil),
+	    }
+    }
+
     fn eval_raw_gabc(&mut self, args: &[Expr]) -> Result<Value, String> {
     	if args.len() != 1 {
     		return Err("raw-gabc requires exactly one argument".into());
     	}
 
-    	let path = self.eval(&args[0])?.to_string();
-    	Ok(Value::String(path))
+    	Ok(Value::RawGabc(self.eval(&args[0])?.to_string()))
     }
 
     fn eval_import(&mut self, args: &[Expr]) -> Result<Value, String> {
@@ -201,19 +246,20 @@ impl Runtime {
     }
 
     fn eval_let(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() != 2 {
-            return Err("let requires (let <symbol> <value>)".into());
-        }
+	    if args.len() != 2 {
+	        return Err("let requires (let <symbol> <value>)".into());
+	    }
 
-        let name = match &args[0] {
-            Expr::Symbol(s) => s.clone(),
-            _ => return Err("let name must be a symbol".into()),
-        };
+	    let name = match &args[0] {
+	        Expr::Symbol(s) => s.clone(),
+	        _ => return Err("let name must be a symbol".into()),
+	    };
 
-        let val = self.eval(&args[1])?;
-        self.env.define(name.clone(), val.clone());
-        Ok(val)
-    }
+	    let val = self.eval(&args[1])?;
+	    self.root_env().borrow_mut().define(name.clone(), val.clone());
+	    Ok(val)
+	}
+
 
     fn eval_defun(&mut self, args: &[Expr]) -> Result<Value, String> {
         if args.len() < 2 {
@@ -245,7 +291,7 @@ impl Runtime {
 
         let fun = Value::Function(params, body);
 
-        self.env.define(fname.clone(), fun.clone());
+        self.env.borrow_mut().define(fname.clone(), fun.clone());
         Ok(fun)
     }
 
@@ -374,13 +420,17 @@ impl Runtime {
                     ));
                 }
 
-                let mut new_env = Environment::with_parent(self.env.clone());
-                for (param, arg) in params.iter().zip(list[1..].iter()) {
-                    new_env.define(param.clone(), self.eval(arg)?);
-                }
+                let new_env = Environment::with_parent(Rc::clone(&self.env));
+            	{
+            		let mut env_mut = new_env.borrow_mut();
+	            	for (param, arg) in params.iter().zip(list[1..].iter()) {
+	                    env_mut.define(param.clone(), self.eval(arg)?);
+	            	}
+    	        }
 
-                let old_env = std::mem::replace(&mut self.env, new_env);
+                let old_env = Rc::clone(&self.env);
 
+                self.env = new_env;
                 let mut result = Value::Nil;
                 for expr in &body {
                     result = self.eval(expr)?;
