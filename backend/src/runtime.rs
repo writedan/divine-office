@@ -180,6 +180,8 @@ impl Runtime {
 
                 "raw-gabc" => self.eval_raw_gabc(&list[1..]),
                 "gabc-attr" => self.eval_gabc_attr(&list[1..]),
+                "gabc-annotate" => self.eval_gabc_annotate(&list[1..]),
+                "set-gabc-attr" => self.eval_set_gabc_attr(&list[1..]),
 
                 "title" => self.eval_title(&list[1..]),
 
@@ -188,6 +190,39 @@ impl Runtime {
         }
 
         self.eval_application(list)
+    }
+
+    fn eval_gabc_annotate(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 2 {
+    		return Err("gabc-annotate requires exactly two arguments: (gabc-annotate <gabc> <value>".into());
+    	}
+
+    	let mut gabc = match self.eval(&args[0])? {
+    		Value::RawGabc(f) => f,
+    		_ => return Err(format!("gabc-annotate requires first argument to be GABC"))
+    	};
+
+    	let val = self.eval(&args[1])?.to_string();
+
+    	gabc.set_header("annotation", val);
+    	Ok(Value::RawGabc(gabc))
+    }
+
+    fn eval_set_gabc_attr(&mut self, args: &[Expr]) -> Result<Value, String> {
+    	if args.len() != 3 {
+    		return Err("set-gabc-attr requires exactly three arguments: (set-gabc-attr <gabc> <attribute> <value>".into());
+    	}
+
+    	let mut gabc = match self.eval(&args[0])? {
+    		Value::RawGabc(f) => f,
+    		_ => return Err(format!("set-gabc-attr requires first argument to be GABC"))
+    	};
+
+    	let attr = self.eval(&args[1])?.to_string();
+    	let val = self.eval(&args[2])?.to_string();
+
+    	gabc.set_header(attr, val);
+    	Ok(Value::RawGabc(gabc))
     }
 
     fn eval_is_num(&mut self, args: &[Expr]) -> Result<Value, String> {
