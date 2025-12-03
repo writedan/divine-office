@@ -1,15 +1,10 @@
-use crate::wasm::read_file;
-use crate::lexer::Lexer;
-use crate::parser::{Parser, Expr};
+use crate::parser::Expr;
 use crate::gabc::GabcFile;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
 
-use serde::{Serialize, Serializer};
-use serde::ser::SerializeMap;
-
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Clone, Debug)]
 pub enum Value {
     Number(f64),
     String(String),
@@ -17,91 +12,10 @@ pub enum Value {
     Symbol(String),
     List(Vec<Value>),
     Function(Vec<String>, Vec<Expr>),
+    Native(fn(Rc<RefCell<Runtime>>, Vec<Expr>) -> Result<Value, String>),
     Nil,
-
-    // compiler values
-    // emitting anything else is a architectural error
     Error(String),
-    RawGabc(GabcFile),
-    Title(String),
-    Box(Vec<Value>),
-    Instruction(String),
-    Heading(String, u8)
-}
-
-impl Serialize for Value {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        match self {
-            Value::Number(n) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Number", n)?;
-                map.end()
-            }
-            Value::String(s) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("String", s)?;
-                map.end()
-            }
-            Value::Boolean(b) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Boolean", b)?;
-                map.end()
-            }
-            Value::Symbol(s) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Symbol", s)?;
-                map.end()
-            }
-            Value::List(l) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("List", l)?;
-                map.end()
-            }
-            Value::Function(params, body) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Function", &(params, body))?;
-                map.end()
-            }
-            Value::Nil => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Nil", &())?;
-                map.end()
-            }
-            Value::Error(e) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Error", e)?;
-                map.end()
-            }
-            Value::RawGabc(gabc) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("RawGabc", &gabc.to_string())?;
-                map.end()
-            }
-            Value::Title(t) => {
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Title", t)?;
-                map.end()
-            },
-            Value::Box(b) => {
-            	let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Box", b)?;
-                map.end()
-            },
-            Value::Instruction(s) => {
-            	let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Instruction", s)?;
-                map.end()
-            },
-            Value::Heading(s, n) => {
-            	let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry("Heading", &(s, n))?;
-                map.end()
-            }
-        }
-    }
+    Gabc(GabcFile),
 }
 
 impl Value {
@@ -109,8 +23,6 @@ impl Value {
         match self {
             Value::Number(n) => n.to_string(),
             Value::String(s) => s.clone(),
-            Value::RawGabc(f) => f.to_string(),
-            Value::Title(s) => s.clone(),
             Value::Boolean(true) => "#t".into(),
             Value::Boolean(false) => "#f".into(),
             Value::Symbol(s) => s.clone(),
@@ -119,59 +31,194 @@ impl Value {
                 format!("({})", items.join(" "))
             }
             Value::Function(_, _) => "<function>".into(),
+            Value::Native(_) => "<native>".into(),
             Value::Nil => "()".into(),
             Value::Error(e) => format!("Error: {}", e),
-            Value::Box(vals) => {
-            	let items: Vec<_> = vals.iter().map(|v| v.to_string()).collect();
-                format!("[{}]", items.join(" "))
-            },
-            Value::Instruction(s) => s.clone(),
-            Value::Heading(s, _) => s.clone()
+            Value::Gabc(g) => g.to_string(),
         }
     }
 
     pub fn is_truthy(&self) -> bool {
-        !matches!(self, Value::Boolean(false) | Value::Nil)
+    	match self {
+    		Value::Boolean(b) => *b,
+    		Value::List(vals) => vals.len() > 0,
+    		Value::Nil => false,
+    		_ => true
+    	}
     }
 
-    pub fn as_string(&self) -> Option<String> {
-        match self {
-            Value::String(s) => Some(s.clone()),
-            _ => None,
-        }
-    }
-
-    pub fn as_number(&self) -> Option<f64> {
-        match self {
-            Value::Number(n) => Some(*n),
-            _ => None,
-        }
+    pub fn is_numeric(&self) -> bool {
+    	match self {
+    		Value::Number(_) => true,
+    		_ => false
+    	}
     }
 }
 
-#[derive(Debug)]
-pub struct Environment {
-    pub bindings: HashMap<String, Value>,
-    pub parent: Option<Rc<RefCell<Environment>>>,
+pub struct Runtime {
+    parent: Option<Rc<RefCell<Runtime>>>,
+    bindings: HashMap<String, Value>,
+    yields: Vec<Value>
 }
 
-impl Environment {
+impl Runtime {
     pub fn new() -> Rc<RefCell<Self>> {
-        Rc::new(RefCell::new(Self {
-            bindings: HashMap::new(),
+        let rt = Rc::new(RefCell::new(Self {
             parent: None,
-        }))
-    }
-
-    pub fn with_parent(parent: Rc<RefCell<Environment>>) -> Rc<RefCell<Self>> {
-        Rc::new(RefCell::new(Self {
             bindings: HashMap::new(),
+            yields: Vec::new()
+        }));
+
+        {
+            let rt_clone = Rc::clone(&rt);
+            rt.borrow_mut().define("fun".into(), Value::Native(|env, args| {
+	    		if args.is_empty() {
+			        return Err("fun requires (fun (<params>...) <body>...)".into());
+			    }
+
+			    let params = match &args[0] {
+			        Expr::List(ps) => ps.iter()
+			            .map(|p| match p {
+			                Expr::Symbol(s) => Ok(s.clone()),
+			                other => Err(format!("Lambda parameters must be symbols, got {:?}", other)),
+			            })
+			            .collect::<Result<Vec<_>, _>>()?,
+			        other => return Err(format!("Lambda parameters must be a list, got {:?}", other)),
+			    };
+
+			    let body: Vec<Expr> = args[1..].to_vec();
+			    Ok(Value::Function(params, body))
+			}));
+
+            rt.borrow_mut().define("let".into(), Value::Native(|env, args| {
+                if args.len() != 2 {
+                    return Err("let requires (let <name> <value>)".into());
+                }
+                let name = match &args[0] {
+                    Expr::Symbol(s) => s.clone(),
+                    other => return Err(format!("Variable name must be symbol, got {:?}", other)),
+                };
+                let val = Runtime::eval(Rc::clone(&env), &args[1])?;
+                env.borrow_mut().define(name, val.clone());
+
+                Ok(val)
+            }));
+
+            rt.borrow_mut().define("export".into(), Value::Native(|env, args| {
+                for arg in args {
+                    match arg {
+                        Expr::Symbol(ref s) => {
+                            let val = Runtime::eval(Rc::clone(&env), &arg)?;
+                            Runtime::root(&env).borrow_mut().define(s.clone(), val);
+                        }
+                        other => return Err(format!("Arguments must be symbol, got {:?}", other)),
+                    }
+                }
+
+                Ok(Value::Nil)
+            }));
+        }
+
+        rt.borrow_mut().define("return".into(), Value::Native(|env, args| {
+        	let mut out = Vec::new();
+        	for arg in args {
+        		let val = match Runtime::eval(Rc::clone(&env), &arg) {
+        			Ok(val) => val,
+        			Err(why) => Value::Error(format!("Error while evaluating {}: {}", arg, why))
+        		};
+
+        		match val {
+        			// This code will prevent returns of lists, instead flattening out the structure entirely. It is commented out since this applies to any function return, not merely the highest-level. Rather, serialization will flatten lists at compile-time.
+
+        			// Value::List(ref values) => {
+        			// 	out.extend(values.clone());
+        			// 	env.borrow_mut().yields.extend(values.clone());
+        			// },
+
+        			ref other => {
+        				out.push(other.clone());
+        				env.borrow_mut().yields.push(other.clone());
+        			}
+        		}
+        	}
+
+        	Ok(Value::List(out))
+        }));
+
+        rt.borrow_mut().define("if".into(), Value::Native(|env, args| {
+        	if args.len() != 3 {
+	            return Err("if requires 3 arguments: (if (cond) (then) (else))".into());
+	        }
+
+	        if Runtime::eval(Rc::clone(&env), &args[0])?.is_truthy() {
+	            Runtime::eval(Rc::clone(&env), &args[1])
+	        } else {
+	            Runtime::eval(Rc::clone(&env), &args[2])
+	        }
+        }));
+
+        rt.borrow_mut().define("val".into(), Value::Native(|env, args| {
+        	if args.len() != 1 {
+	            return Err("val requires 1 argument: (val <variable>".into());
+	        }
+
+
+	        match Runtime::eval(Rc::clone(&env), &args[0])? {
+	        	Value::Symbol(s) => {
+	        		match env.borrow().get(&s) {
+	        			Some(val) => Ok(val),
+	        			None => Ok(Value::Nil)
+	        		}
+	        	},
+	        	other => return Err(format!("val requires a symbol, got {:?}", other))
+	        }
+        }));
+
+        rt.borrow_mut().define("is-num".into(), Value::Native(|env, args| {
+        	if args.len() != 1 {
+	            return Err("is-num requires 1 argument: (is-num <value>".into());
+	        }
+
+	        Ok(Value::Boolean(Runtime::eval(Rc::clone(&env), &args[0])?.is_numeric()))
+        }));
+
+        rt.borrow_mut().define("import".into(), Value::Native(|env, args| {
+        	if args.len() != 1 {
+	            return Err("import requires 1 argument: (import <file>".into());
+	        }
+
+	        let path = Runtime::eval(Rc::clone(&env), &args[0])?.to_string();
+	        match crate::wasm::read_file(&path) {
+	        	Ok(val) => Ok(Value::String(val)),
+	        	Err(why) => Err(format!("Error reading file {}: {}", path, why))
+	        }
+        }));
+
+        rt.borrow_mut().define("cat".into(), Value::Native(|env, args| {
+        	let mut out = String::new();
+        	for arg in args {
+        		out.push_str(Runtime::eval(Rc::clone(&env), &arg)?.to_string().as_str());
+        	}
+
+        	Ok(Value::String(out))
+        }));
+
+        rt
+    }
+
+    pub fn with_parent(parent: Rc<RefCell<Self>>) -> Rc<RefCell<Self>> {
+        Rc::new(RefCell::new(Self {
             parent: Some(parent),
+            bindings: HashMap::new(),
+            yields: Vec::new()
         }))
     }
 
-    pub fn define(&mut self, name: String, value: Value) {
-        self.bindings.insert(name, value);
+    pub fn root(env: &Rc<RefCell<Self>>) -> Rc<RefCell<Self>> {
+        match &env.borrow().parent {
+            Some(parent) => Runtime::root(parent),
+            None => Rc::clone(env),
+        }
     }
 
     pub fn get(&self, name: &str) -> Option<Value> {
@@ -183,325 +230,68 @@ impl Environment {
         }
         None
     }
-}
 
-pub struct Runtime {
-    env: Rc<RefCell<Environment>>,
-    pub output: Vec<Value>,
-}
-
-impl Runtime {
-    pub fn new() -> Self {
-        Self {
-            env: Environment::new(),
-            output: Vec::new(),
-        }
+    pub fn define(&mut self, name: String, value: Value) {
+        self.bindings.insert(name, value);
     }
 
-    fn root_env(&self) -> Rc<RefCell<Environment>> {
-	    fn go(env: &Rc<RefCell<Environment>>) -> Rc<RefCell<Environment>> {
-	        let parent = env.borrow().parent.clone();
-	        match parent {
-	            Some(p) => go(&p),
-	            None => Rc::clone(env),
-	        }
-	    }
-
-	    go(&self.env)
-	}
-
-    pub fn eval(&mut self, expr: &Expr) -> Result<Value, String> {
+    pub fn eval(env: Rc<RefCell<Self>>, expr: &Expr) -> Result<Value, String> {
         match expr {
             Expr::Number(n) => Ok(Value::Number(*n)),
             Expr::String(s) => Ok(Value::String(s.clone())),
             Expr::Boolean(b) => Ok(Value::Boolean(*b)),
+            Expr::Symbol(s) => env.borrow().get(s).ok_or_else(|| format!("Undefined symbol: {}", s)),
+            Expr::Quote(inner) => env.borrow().quote_to_value(inner),
+            Expr::List(list) => Self::eval_list(env, list),
             Expr::Nil => Ok(Value::Nil),
-
-            Expr::Symbol(s) => self
-                .env
-                .borrow()
-                .get(s)
-                .ok_or_else(|| format!("Undefined symbol: {}", s)),
-
-            Expr::Quote(inner) => self.quote_to_value(inner),
-
-            Expr::List(list) => self.eval_list(list),
-
-            _ => Err(format!("Cannot evaluate expression: {:?}", expr)),
+            _ => Err(format!("Cannot evaluate expression {:?}", expr)),
         }
     }
 
-    fn eval_list(&mut self, list: &[Expr]) -> Result<Value, String> {
+    fn eval_list(env: Rc<RefCell<Self>>, list: &[Expr]) -> Result<Value, String> {
         if list.is_empty() {
             return Ok(Value::Nil);
         }
 
-        if let Expr::Symbol(op) = &list[0] {
-            return match op.as_str() {
-            	"return" => self.eval_return(&list[1..]),
-                "import" => self.eval_import(&list[1..]),
+        let func = Self::eval(Rc::clone(&env), &list[0])?;
+        let args: Vec<Expr> = list[1..].to_vec();
 
-                "let" => self.eval_let(&list[1..]),
-                "defun" => self.eval_defun(&list[1..]),
-
-                "eq" => self.eval_eq(&list[1..]),
-                "if" => self.eval_if(&list[1..]),
-                "quote" => self.eval_quote(&list[1..]),
-
-                "+" => self.eval_arith(&list[1..], |a, b| a + b),
-                "-" => self.eval_arith(&list[1..], |a, b| a - b),
-                "*" => self.eval_arith(&list[1..], |a, b| a * b),
-                "/" => self.eval_arith(&list[1..], |a, b| a / b),
-
-                "<" => self.eval_cmp(&list[1..], |a, b| a < b),
-                ">" => self.eval_cmp(&list[1..], |a, b| a > b),
-                "<=" => self.eval_cmp(&list[1..], |a, b| a <= b),
-                ">=" => self.eval_cmp(&list[1..], |a, b| a >= b),
-
-                "and" => self.eval_and(&list[1..]),
-                "or" => self.eval_or(&list[1..]),
-                "not" => self.eval_not(&list[1..]),
-
-                "cat" => self.eval_cat(&list[1..]),
-                "is-num" => self.eval_is_num(&list[1..]),
-
-                "raw-gabc" => self.eval_raw_gabc(&list[1..]),
-                "gabc-attr" => self.eval_gabc_attr(&list[1..]),
-                "gabc-annotate" => self.eval_gabc_annotate(&list[1..]),
-                "set-gabc-attr" => self.eval_set_gabc_attr(&list[1..]),
-
-                "title" => self.eval_title(&list[1..]),
-                "box" => self.eval_box(&list[1..]),
-                "instr" => self.eval_instr(&list[1..]),
-                "heading" => self.eval_heading(&list[1..]),
-
-                _ => self.eval_application(list),
-            };
-        }
-
-        self.eval_application(list)
-    }
-
-    fn eval_heading(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 2 {
-    		return Err("heading requires exactly two arguments: (heading <text> <level>)".into());
-    	}
-
-    	let text = self.eval(&args[0])?.to_string();
-    	let level = match self.eval(&args[1])? {
-    		Value::Number(n) => n,
-    		_ => return Err("Second argument to heading must be numeric".into())
-    	};
-
-    	Ok(Value::Heading(text, level as u8))
-    }
-
-    fn eval_instr(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 1 {
-    		return Err("instr requires exactly one argument".into());
-    	}
-
-    	let value = self.eval(&args[0])?.to_string();
-    	Ok(Value::Instruction(value))
-    }
-
-    fn eval_box(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	let mut out = Vec::new();
-    	for arg in args {
-    		let val = self.eval(arg)?;
-    		out.push(val);
-    	}
-
-    	Ok(Value::Box(out))
-    }
-
-    fn eval_gabc_annotate(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 2 {
-    		return Err("gabc-annotate requires exactly two arguments: (gabc-annotate <gabc> <value>".into());
-    	}
-
-    	let mut gabc = match self.eval(&args[0])? {
-    		Value::RawGabc(f) => f,
-    		_ => return Err(format!("gabc-annotate requires first argument to be GABC"))
-    	};
-
-    	let val = self.eval(&args[1])?.to_string();
-
-    	gabc.set_header("annotation", val);
-    	Ok(Value::RawGabc(gabc))
-    }
-
-    fn eval_set_gabc_attr(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 3 {
-    		return Err("set-gabc-attr requires exactly three arguments: (set-gabc-attr <gabc> <attribute> <value>".into());
-    	}
-
-    	let mut gabc = match self.eval(&args[0])? {
-    		Value::RawGabc(f) => f,
-    		_ => return Err(format!("set-gabc-attr requires first argument to be GABC"))
-    	};
-
-    	let attr = self.eval(&args[1])?.to_string();
-    	let val = self.eval(&args[2])?.to_string();
-
-    	gabc.set_header(attr, val);
-    	Ok(Value::RawGabc(gabc))
-    }
-
-    fn eval_is_num(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 1 {
-    		return Err("is-num requires exactly one argument".into());
-    	}
-
-    	let value = self.eval(&args[0])?;
-    	match value {
-    		Value::Number(_) => Ok(Value::Boolean(true)),
-    		_ => Ok(Value::Boolean(false))
-    	}
-    }
-
-    fn eval_title(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 1 {
-    		return Err("title requires exactly one argument".into());
-    	}
-
-    	let value = self.eval(&args[0])?.to_string();
-    	Ok(Value::Title(value))
-    }
-
-    fn eval_return(&mut self, args: &[Expr]) -> Result<Value, String> {
-	    let mut values = Vec::new();
-	    for expr in args {
-	        let val = self.eval(expr)?;
-	        values.push(val.clone());
-	        self.output.push(val); 
-	    }
-
-	    Ok(Value::List(values))
-	}
-
-
-    fn eval_cat(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	let mut out = String::new();
-
-    	for arg in args {
-    		let val = self.eval(arg)?;
-    		out.push_str(&val.to_string());
-    	}
-
-    	Ok(Value::String(out))
-    }
-
-    fn eval_gabc_attr(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 2 {
-    		return Err("gabc-attr requires exactly two arguments: (gabc-attr <gabc> <attribute>)".into());
-    	}
-
-    	let gabc = match self.eval(&args[0])? {
-    		Value::RawGabc(f) => f,
-    		_ => return Err(format!("gabc-attr requires first argument to be GABC"))
-    	};
-    	let attr = self.eval(&args[1])?.to_string();
-
-    	let value = gabc.get_header(&attr);
-
-	    match value {
-	        Some(val) => Ok(Value::String(val.to_string())),
-	        None => Ok(Value::Nil),
-	    }
-    }
-
-    fn eval_raw_gabc(&mut self, args: &[Expr]) -> Result<Value, String> {
-    	if args.len() != 1 {
-    		return Err("raw-gabc requires exactly one argument".into());
-    	}
-
-    	Ok(Value::RawGabc(GabcFile::new(&self.eval(&args[0])?.to_string())?))
-    }
-
-    fn eval_import(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() != 1 {
-            return Err("import requires exactly one argument".into());
-        }
-        let path = self.eval(&args[0])?.to_string();
-        Ok(Value::String(read_file(path)?))
-    }
-
-    fn eval_let(&mut self, args: &[Expr]) -> Result<Value, String> {
-	    if args.len() != 2 {
-	        return Err("let requires (let <symbol> <value>)".into());
-	    }
-
-	    let name = match &args[0] {
-	        Expr::Symbol(s) => s.clone(),
-	        _ => return Err("let name must be a symbol".into()),
-	    };
-
-	    let val = self.eval(&args[1])?;
-	    self.root_env().borrow_mut().define(name.clone(), val.clone());
-	    Ok(val)
-	}
-
-
-    fn eval_defun(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() < 2 {
-            return Err("defun requires (defun (<name> <params>...) <body>...)" .into());
-        }
-
-        // parse signature (name + params)
-        let (fname, params) = match &args[0] {
-            Expr::List(sig) if !sig.is_empty() => {
-                let name = match &sig[0] {
-                    Expr::Symbol(s) => s.clone(),
-                    _ => return Err("Function name must be symbol".into()),
-                };
-
-                let mut ps = Vec::new();
-                for p in &sig[1..] {
-                    match p {
-                        Expr::Symbol(s) => ps.push(s.clone()),
-                        _ => return Err("Function parameters must be symbols".into()),
-                    }
+        match func {
+            Value::Native(f) => f(Rc::clone(&env), args),
+            Value::Function(params, body) => Self::eval_function(env, list, params, body),
+            other => {
+                let mut evaluated = vec![other];
+                for expr in &args {
+                    evaluated.push(Self::eval(Rc::clone(&env), expr)?);
                 }
-                (name, ps)
+                Ok(Value::List(evaluated))
             }
-            _ => return Err("defun signature must be (name params...)".into()),
-        };
-
-        // allow multiple body expressions directly:
-        let body: Vec<Expr> = args[1..].iter().cloned().collect();
-
-        let fun = Value::Function(params, body);
-
-        self.env.borrow_mut().define(fname.clone(), fun.clone());
-        Ok(fun)
-    }
-
-    fn eval_eq(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() != 2 {
-            return Err("eq requires 2 arguments".into());
-        }
-        let a = self.eval(&args[0])?;
-        let b = self.eval(&args[1])?;
-        Ok(Value::Boolean(a == b))
-    }
-
-    fn eval_if(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() != 3 {
-            return Err("if requires 3 arguments".into());
-        }
-        if self.eval(&args[0])?.is_truthy() {
-            self.eval(&args[1])
-        } else {
-            self.eval(&args[2])
         }
     }
 
-    fn eval_quote(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() != 1 {
-            return Err("quote requires 1 argument".into());
+    fn eval_function(env: Rc<RefCell<Self>>, list: &[Expr], params: Vec<String>, body: Vec<Expr>) -> Result<Value, String> {
+    	if params.len() != list.len() - 1 {
+            return Err(format!(
+                "Function expects {} args, got {}",
+                params.len(),
+                list.len() - 1
+            ));
         }
-        self.quote_to_value(&args[0])
+
+    	let new_env = Runtime::with_parent(Rc::clone(&env));
+    	{
+    		let mut env_mut = new_env.borrow_mut();
+        	for (param, arg) in params.iter().zip(list[1..].iter()) {
+                env_mut.define(param.clone(), Runtime::eval(Rc::clone(&new_env), arg)?);
+        	}
+    	}
+
+    	for expr in &body {
+            Runtime::eval(Rc::clone(&new_env), expr)?;
+        }
+
+        let yields = new_env.borrow().yields.clone();
+    	Ok(Value::List(yields))
     }
 
     fn quote_to_value(&self, expr: &Expr) -> Result<Value, String> {
@@ -511,140 +301,22 @@ impl Runtime {
             Expr::Boolean(b) => Ok(Value::Boolean(*b)),
             Expr::Symbol(s) => Ok(Value::Symbol(s.clone())),
             Expr::Nil => Ok(Value::Nil),
-
             Expr::List(xs) => {
-                let mut vals = Vec::new();
-                for x in xs {
-                    vals.push(self.quote_to_value(x)?);
-                }
-                Ok(Value::List(vals))
+                let vals: Result<Vec<_>, _> = xs.iter().map(|x| self.quote_to_value(x)).collect();
+                Ok(Value::List(vals?))
             }
-
-            _ => Err("Cannot quote this expression type".into()),
+            _ => Err(format!("Cannot quote this expression: {:?}", expr)),
         }
     }
 
-    fn eval_arith<F>(&mut self, args: &[Expr], op: F) -> Result<Value, String>
-    where
-        F: Fn(f64, f64) -> f64,
-    {
-        if args.is_empty() {
-            return Err("Arithmetic requires at least 1 argument".into());
+    pub fn run(env: Rc<RefCell<Self>>, exprs: Vec<Expr>) -> Vec<Value> {
+        for expr in exprs {
+            match Self::eval(Rc::clone(&env), &expr) {
+                Ok(val) => {},
+                Err(why) => env.borrow_mut().yields.push(Value::Error(format!("Error evaluating {}: {}", expr, why)))
+            };
         }
 
-        let mut result = match self.eval(&args[0])? {
-            Value::Number(n) => n,
-            _ => return Err("Arithmetic operands must be numbers".into()),
-        };
-
-        for a in &args[1..] {
-            match self.eval(a)? {
-                Value::Number(n) => result = op(result, n),
-                _ => return Err("Arithmetic operands must be numbers".into()),
-            }
-        }
-
-        Ok(Value::Number(result))
+        env.borrow().yields.clone()
     }
-
-    fn eval_cmp<F>(&mut self, args: &[Expr], op: F) -> Result<Value, String>
-    where
-        F: Fn(f64, f64) -> bool,
-    {
-        if args.len() != 2 {
-            return Err("Comparison requires 2 arguments".into());
-        }
-
-        let a = self.eval(&args[0])?;
-        let b = self.eval(&args[1])?;
-
-        match (a, b) {
-            (Value::Number(x), Value::Number(y)) => Ok(Value::Boolean(op(x, y))),
-            _ => Err("Comparison requires numbers".into()),
-        }
-    }
-
-    fn eval_and(&mut self, args: &[Expr]) -> Result<Value, String> {
-        for a in args {
-            if !self.eval(a)?.is_truthy() {
-                return Ok(Value::Boolean(false));
-            }
-        }
-        Ok(Value::Boolean(true))
-    }
-
-    fn eval_or(&mut self, args: &[Expr]) -> Result<Value, String> {
-        for a in args {
-            if self.eval(a)?.is_truthy() {
-                return Ok(Value::Boolean(true));
-            }
-        }
-        Ok(Value::Boolean(false))
-    }
-
-    fn eval_not(&mut self, args: &[Expr]) -> Result<Value, String> {
-        if args.len() != 1 {
-            return Err("not requires 1 argument".into());
-        }
-        Ok(Value::Boolean(!self.eval(&args[0])?.is_truthy()))
-    }
-
-    fn eval_application(&mut self, list: &[Expr]) -> Result<Value, String> {
-        let func = self.eval(&list[0])?;
-
-        match func {
-            Value::Function(params, body) => {
-                if params.len() != list.len() - 1 {
-                    return Err(format!(
-                        "Function expects {} args, got {}",
-                        params.len(),
-                        list.len() - 1
-                    ));
-                }
-
-                let new_env = Environment::with_parent(Rc::clone(&self.env));
-            	{
-            		let mut env_mut = new_env.borrow_mut();
-	            	for (param, arg) in params.iter().zip(list[1..].iter()) {
-	                    env_mut.define(param.clone(), self.eval(arg)?);
-	            	}
-    	        }
-
-                let old_env = Rc::clone(&self.env);
-
-                self.env = new_env;
-                let mut result = Value::Nil;
-                for expr in &body {
-                    result = self.eval(expr)?;
-                }
-
-                self.env = old_env;
-                Ok(result)
-            }
-
-            _ => Err(format!("Attempted to call a non-function: {:?}", func)),
-        }
-    }
-     /// Evaluates a sequence of expressions. If an error occurs, a Value::Error is pushed for that expression.
-    pub fn run(&mut self, exprs: Vec<Expr>) -> Vec<Value> {
-	    let mut results = Vec::new();
-
-	    for expr in exprs {
-	        match self.eval(&expr) {
-	            Ok(v) => {
-	                if let Value::List(vals) = &v {
-	                    for val in vals {
-	                        results.push(val.clone());
-	                    }
-	                }
-	            }
-	            Err(e) => {
-	                results.push(Value::Error(e));
-	            }
-	        }
-	    }
-
-	    results
-	}
-
 }
