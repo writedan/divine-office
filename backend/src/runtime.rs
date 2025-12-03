@@ -266,7 +266,7 @@ impl Runtime {
 	        let path = Runtime::eval(Rc::clone(&env), &args[0])?.to_string();
 	        match crate::wasm::read_file(&path) {
 	        	Ok(val) => Ok(Value::String(val)),
-	        	Err(why) => Err(format!("Error reading file {}: {}", path, why))
+	        	Err(why) => Err(format!("Error reading file \"{}\": {}", path, why))
 	        }
         }));
 
@@ -322,7 +322,7 @@ impl Runtime {
 
         	let mut gabc = match Runtime::eval(Rc::clone(&env), &args[0])? {
         		Value::Gabc(g) => g,
-        		other => return Err(format!("gabc-attr expects GABC, got {:?}", other))
+        		other => return Err(format!("gabc-attr expects GABC, got {:?}", other.to_string()))
         	};
 
         	let attr = Runtime::eval(Rc::clone(&env), &args[1])?.to_string();
@@ -373,7 +373,7 @@ impl Runtime {
             Expr::Quote(inner) => env.borrow().quote_to_value(inner),
             Expr::List(list) => Self::eval_list(env, list),
             Expr::Nil => Ok(Value::Nil),
-            _ => Err(format!("Cannot evaluate expression {:?}", expr)),
+            _ => Err(format!("Cannot evaluate expression {}", expr)),
         }
     }
 
@@ -434,7 +434,7 @@ impl Runtime {
                 let vals: Result<Vec<_>, _> = xs.iter().map(|x| self.quote_to_value(x)).collect();
                 Ok(Value::List(vals?))
             }
-            _ => Err(format!("Cannot quote this expression: {:?}", expr)),
+            _ => Err(format!("Cannot quote this expression: {}", expr)),
         }
     }
 
