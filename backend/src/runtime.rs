@@ -3,6 +3,8 @@ use crate::gabc::GabcFile;
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
+use serde::{Serialize, Serializer};
+use serde::ser::{SerializeMap, SerializeSeq};
 
 #[derive(Clone, Debug)]
 pub enum Value {
@@ -14,8 +16,75 @@ pub enum Value {
     Function(Vec<String>, Vec<Expr>),
     Native(fn(Rc<RefCell<Runtime>>, Vec<Expr>) -> Result<Value, String>),
     Nil,
+
+    // these are the compiler values which can be safely returned
     Error(String),
     Gabc(GabcFile),
+    Title(String),
+    Instruction(String),
+    Box(Vec<Value>),
+    Heading(String, u8)
+}
+
+impl Serialize for Value {
+	fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+		match self {
+			Value::List(vals) => {
+                fn flatten<'a>(v: &'a Value, out: &mut Vec<&'a Value>) {
+                    match v {
+                        Value::List(inner) => {
+                            for x in inner {
+                                flatten(x, out);
+                            }
+                        }
+                        other => out.push(other)
+                    }
+                }
+
+                let mut flat: Vec<&Value> = Vec::new();
+                for v in vals { flatten(v, &mut flat); }
+
+                let mut seq = serializer.serialize_seq(Some(flat.len()))?;
+                for v in flat { seq.serialize_element(v)?; }
+                seq.end()
+            },
+			Value::Gabc(g) => {
+				let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("RawGabc", &g.to_string())?;
+                map.end()
+			},
+			Value::Error(e) => {
+				let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Error", &e)?;
+                map.end()
+			},
+			Value::Title(s) => {
+				let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Title", &s)?;
+                map.end()
+			},
+			Value::Instruction(s) => {
+				let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Instruction", &s)?;
+                map.end()
+			},
+			Value::Box(vals) => {
+				let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Box", &vals)?;
+                map.end()
+			},
+			Value::Heading(s, n) => {
+				let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Heading", &(s, n))?;
+                map.end()
+			}
+			_ => panic!("Serialization is not supported for {:?}", self)
+		}
+
+	}
 }
 
 impl Value {
@@ -35,6 +104,13 @@ impl Value {
             Value::Nil => "()".into(),
             Value::Error(e) => format!("Error: {}", e),
             Value::Gabc(g) => g.to_string(),
+            Value::Title(s) => s.clone(),
+            Value::Instruction(s) => s.clone(),
+            Value::Box(vals) => {
+            	let items: Vec<_> = vals.iter().map(|v| v.to_string()).collect();
+                format!("[{}]", items.join(" "))
+            },
+            Value::Heading(s, _) => s.clone()
         }
     }
 
@@ -201,6 +277,59 @@ impl Runtime {
         	}
 
         	Ok(Value::String(out))
+        }));
+
+        rt.borrow_mut().define("title".into(), Value::Native(|env, args| {
+        	if args.len() != 1 {
+	            return Err("title requires 1 argument.".into());
+	        }
+
+	        Ok(Value::Title(Runtime::eval(Rc::clone(&env), &args[0])?.to_string()))
+        }));
+
+        rt.borrow_mut().define("raw-gabc".into(), Value::Native(|env, args| {
+        	if args.len() != 1 {
+	            return Err("raw-gabc requires 1 argument.".into());
+	        }
+
+	        Ok(Value::Gabc(GabcFile::new(&Runtime::eval(Rc::clone(&env), &args[0])?.to_string())?))
+        }));
+
+        rt.borrow_mut().define("gabc-attr".into(), Value::Native(|env, args| {
+        	if args.len() != 2 {
+        		return Err("gabc-attr requires two arguments: (gabc-attr <gabc> <attr>)".into());
+        	}
+
+        	let gabc = match Runtime::eval(Rc::clone(&env), &args[0])? {
+        		Value::Gabc(g) => g,
+        		other => return Err(format!("gabc-attr expects GABC, got {:?}", other))
+        	};
+
+        	let attr = Runtime::eval(Rc::clone(&env), &args[1])?.to_string();
+
+        	Ok(
+        		match gabc.get_header(&attr) {
+        			Some(val) => Value::String(val.to_string()),
+        			None => Value::Nil
+        		}
+        	)
+        }));
+
+        rt.borrow_mut().define("set-gabc-attr".into(), Value::Native(|env, args| {
+        	if args.len() != 3 {
+        		return Err("set-gabc-attr requires three arguments: (set-gabc-attr <gabc> <attr> <value>)".into());
+        	}
+
+        	let mut gabc = match Runtime::eval(Rc::clone(&env), &args[0])? {
+        		Value::Gabc(g) => g,
+        		other => return Err(format!("gabc-attr expects GABC, got {:?}", other))
+        	};
+
+        	let attr = Runtime::eval(Rc::clone(&env), &args[1])?.to_string();
+        	let value = Runtime::eval(Rc::clone(&env), &args[2])?.to_string();
+
+        	gabc.set_header(attr, value);
+        	Ok(Value::Gabc(gabc))
         }));
 
         rt
