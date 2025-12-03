@@ -139,10 +139,9 @@ impl Parser {
     }
 }
 
-impl Expr {
-    /// Pretty-prints the expression
-    pub fn to_string(&self) -> String {
-        match self {
+impl std::fmt::Display for Expr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> { 
+        write!(f, "{}", match self {
             Expr::Number(n) => n.to_string(),
             Expr::String(s) => format!("\"{}\"", s),
             Expr::Boolean(true) => "#t".to_string(),
@@ -157,9 +156,11 @@ impl Expr {
             Expr::Unquote(expr) => format!(",{}", expr.to_string()),
             Expr::UnquoteSplicing(expr) => format!(",@{}", expr.to_string()),
             Expr::Nil => "()".to_string(),
-        }
+        })
     }
+}
 
+impl Expr {
     /// Checks if the expression is a list
     pub fn is_list(&self) -> bool {
         matches!(self, Expr::List(_))
