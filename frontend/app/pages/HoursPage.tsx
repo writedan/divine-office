@@ -74,6 +74,7 @@ const Hours = ({ now }) => {
   };
 
   const roundToNearest15 = (date) => {
+    return date;
     const ms = 1000 * 60 * 15;
     return new Date(Math.round(date.getTime() / ms) * ms);
   };
