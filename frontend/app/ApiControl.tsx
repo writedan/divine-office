@@ -50,6 +50,13 @@ export const ApiControl = ({ children }) => {
     });
   };
 
+  const hasFirstVespers = (today, tomorrow) => {
+    return runAsync(() => {
+      if (!wasmModule) throw new Error('WASM module not initialized');
+      return JSON.parse(wasmModule.has_first_vespers(today, tomorrow));
+    })
+  };
+
   const operationQueue = [];
   const MAX_CONCURRENT_OPERATIONS = 3;
   let activeOperations = 0;
@@ -98,7 +105,7 @@ export const ApiControl = ({ children }) => {
         getMetadata: (date) => queueOperation(() => getMetadata(date)),
         getMonthCalendar: (date) => queueOperation(() => getMonthCalendar(date)),
         getElements: (date, hour) => queueOperation(() => getElements(date, hour)),
-        hasFirstVespers: (today, tomorrow) => true
+        hasFirstVespers: (today, tomorrow) => queueOperation(() => hasFirstVespers(today, tomorrow))
       }}>
         {children}
       </ApiContext.Provider>
