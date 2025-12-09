@@ -5,15 +5,12 @@ edition = "2021"
 rust-version = "1.56"
 
 [dependencies]
-chrono = "0.4"
+chrono = { version = "0.4", features = ["serde"] }
 computus = { version = "1.1", features = ["chrono"] }
 serde = { version = "1.0", features = ["derive"] }
-rust-embed = { version = "8.4.0", features=["include-exclude"] }
+rust-embed = { version = "8.4.0", features = ["include-exclude"] }
 wasm-bindgen = "0.2.87"
 serde_json = "1.0.138"
-
-[lib]
-crate-type = ["cdylib"]
 
 [profile.release]
 lto = true
