@@ -40,13 +40,10 @@ export const ApiControl = ({ children }) => {
     });
   };
 
-  const getElements = (date, hour) => {
+  const getElements = (celebration, hour) => {
     return runAsync(() => {
       if (!wasmModule) throw new Error('WASM module not initialized');
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1);
-      const day = String(date.getDate());
-      return JSON.parse(wasmModule.get_hour(year, month, day, hour));
+      return JSON.parse(wasmModule.get_hour(JSON.stringify(celebration), hour));
     });
   };
 

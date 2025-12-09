@@ -25,7 +25,7 @@ const Hours = ({ now }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalOptions, setModalOptions] = useState([]);
   const [modalKey, setModalKey] = useState(null);
-  
+
   const { getMetadata, hasFirstVespers } = useApi();
   const { lat: latitude, lon: longitude } = useGeolocation();
   const { goto } = useNavigation();
@@ -37,39 +37,29 @@ const Hours = ({ now }) => {
 
   const loadInitialData = async () => {
     const start = new Date(now);
-    start.setDate(start.getDate());
     const end = new Date(now);
     end.setDate(end.getDate() + 7);
-    
-    const newRows = [];
-    const current = new Date(start);
-    let isFirst = true;
-    
-    while (current <= end) {
-      const dateEntries = await buildRowsForDate(new Date(current), isFirst);
-      newRows.push(...dateEntries);
-      current.setDate(current.getDate() + 1);
-      isFirst = false;
-    }
-    
-    setRows(newRows);
+
+    await loadDateRange(start, end, 'down');
     setStartDate(start);
     setEndDate(end);
   };
 
-  const loadDateRange = async (start, end) => {
+  const loadDateRange = async (start, end, direction) => {
+    if (loading) return;
     setLoading(true);
+
     const newRows = [];
-    
-    const current = new Date(start);
+    let current = new Date(start);
+
     while (current <= end) {
       const dateRows = await buildRowsForDate(new Date(current), false);
       newRows.push(...dateRows);
       current.setDate(current.getDate() + 1);
     }
-    
+
     setRows(prev => {
-      const combined = [...prev, ...newRows];
+      const combined = direction === 'up' ? [...newRows, ...prev] : [...prev, ...newRows];
       return combined.sort((a, b) => {
         if (a.calendarDate.getTime() !== b.calendarDate.getTime()) {
           return a.calendarDate - b.calendarDate;
@@ -77,100 +67,102 @@ const Hours = ({ now }) => {
         return a.hourIndex - b.hourIndex;
       });
     });
+
     setLoading(false);
   };
 
   const buildRowsForDate = async (date, isFirstDate = false) => {
-  const response = await getMetadata(date);
-  const todayLiturgical = response[0] || [];
-  const tomorrowLiturgical = response[1] || [];
+    const response = await getMetadata(date);
+    const todayLiturgical = response[0] || [];
+    const tomorrowLiturgical = response[1] || [];
 
-  const hours = calculateHours(date);
-  const rows = [];
-  const dateKey = date.toDateString();
+    const hours = calculateHours(date);
+    const rows = [];
+    const dateKey = date.toDateString();
 
-  const vigilsKey = `${dateKey}-vigils`;
-  const vespersKey = `${dateKey}-vespers`;
+    const vigilsKey = `${dateKey}-vigils`;
+    const vespersKey = `${dateKey}-vespers`;
 
-  const selectedToday = selectedLiturgicalDays[vigilsKey] || todayLiturgical[0];
-  const selectedTomorrow = selectedLiturgicalDays[vespersKey] || tomorrowLiturgical[0];
+    const selectedToday = selectedLiturgicalDays[vigilsKey] || todayLiturgical[0];
+    const selectedTomorrow = selectedLiturgicalDays[vespersKey] || tomorrowLiturgical[0];
 
-  const tomorrowBeginsAtVespers = await hasFirstVespers(selectedToday, selectedTomorrow);
+    const tomorrowBeginsAtVespers = await hasFirstVespers(selectedToday, selectedTomorrow);
 
-  const yesterday = new Date(date);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayKey = yesterday.toDateString();
-  const yesterdayVigilsKey = `${yesterdayKey}-vigils`;
-  const yesterdayVespersKey = `${yesterdayKey}-vespers`;
-  
-  const yesterdayLiturgicalResponse = await getMetadata(yesterday);
-  const yesterdayLiturgical = yesterdayLiturgicalResponse[0] || []; // yesterday's tomorrowLiturgical is today
-  const selectedYesterday = selectedLiturgicalDays[yesterdayVespersKey] || yesterdayLiturgical[0];
-  
-  const todayHasFirstVespers = await hasFirstVespers(
-    selectedYesterday,  
-    selectedToday       
-  );
+    const yesterday = new Date(date);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayKey = yesterday.toDateString();
+    const yesterdayVigilsKey = `${yesterdayKey}-vigils`;
+    const yesterdayLiturgicalResponse = await getMetadata(yesterday);
+    const yesterdayLiturgical = yesterdayLiturgicalResponse[0] || [];
+    const selectedYesterday = selectedLiturgicalDays[yesterdayVigilsKey] || yesterdayLiturgical[0];
 
-  const fastingLiturgicalDay = selectedToday;
+    const todayHasFirstVespers = await hasFirstVespers(selectedYesterday, selectedToday);
 
-  hours.forEach((hour, index) => {
-    const row = {
-      calendarDate: new Date(date),
-      hour: hour,
-      hourIndex: index,
-      liturgicalDayOptions: null,
-      liturgicalDayKey: null,
-      fastingLiturgicalDay: index === 0 ? fastingLiturgicalDay : null,
-    };
+    const fastingLiturgicalDay = selectedToday;
 
-    if (isFirstDate && hour.name === 'Vigils') {
-      const key = vigilsKey;
-      row.liturgicalDayOptions = todayLiturgical;
-      row.liturgicalDayKey = key;
+    hours.forEach((hour, index) => {
+      const row = {
+        calendarDate: new Date(date),
+        hour: {
+          key: hour.name.toLowerCase(),
+          ...hour
+        },
+        hourIndex: index,
+        liturgicalDayOptions: null,
+        liturgicalDay: selectedToday,
+        fastingLiturgicalDay: index === 0 ? fastingLiturgicalDay : null,
+      };
 
-      if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
-        setSelectedLiturgicalDays(prev => ({
-          ...prev,
-          [key]: todayLiturgical[0]
-        }));
+      if (isFirstDate && hour.name === 'Vigils') {
+        const key = vigilsKey;
+        row.liturgicalDayOptions = todayLiturgical;
+        row.liturgicalDayKey = key;
+
+        if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
+          setSelectedLiturgicalDays(prev => ({
+            ...prev,
+            [key]: todayLiturgical[0]
+          }));
+        }
       }
-    }
-    else if (hour.name === 'Vespers' && tomorrowBeginsAtVespers) {
-      const key = vespersKey;
-      row.liturgicalDayOptions = tomorrowLiturgical;
-      row.liturgicalDayKey = key;
-      row.hourLabel = 'First Vespers';
+      else if (hour.name === 'Vespers' && tomorrowBeginsAtVespers) {
+        const key = vespersKey;
+        row.liturgicalDayOptions = tomorrowLiturgical;
+        row.liturgicalDayKey = key;
+        row.hourLabel = 'First Vespers';
+        row.hour.key = 'first-vespers';
+        row.liturgicalDay = selectedTomorrow;
 
-      if (!selectedLiturgicalDays[key] && tomorrowLiturgical.length > 0) {
-        setSelectedLiturgicalDays(prev => ({
-          ...prev,
-          [key]: tomorrowLiturgical[0]
-        }));
+        if (!selectedLiturgicalDays[key] && tomorrowLiturgical.length > 0) {
+          setSelectedLiturgicalDays(prev => ({
+            ...prev,
+            [key]: tomorrowLiturgical[0]
+          }));
+        }
       }
-    }
-    else if (hour.name === 'Vigils' && !isFirstDate && !todayHasFirstVespers) {
-      const key = vigilsKey;
-      row.liturgicalDayOptions = todayLiturgical;
-      row.liturgicalDayKey = key;
+      else if (hour.name === 'Vigils' && !isFirstDate && !todayHasFirstVespers) {
+        const key = vigilsKey;
+        row.liturgicalDayOptions = todayLiturgical;
+        row.liturgicalDayKey = key;
 
-      if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
-        setSelectedLiturgicalDays(prev => ({
-          ...prev,
-          [key]: todayLiturgical[0]
-        }));
+        if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
+          setSelectedLiturgicalDays(prev => ({
+            ...prev,
+            [key]: todayLiturgical[0]
+          }));
+        }
       }
-    }
-    else if (hour.name === 'Compline' && tomorrowBeginsAtVespers) {
-      row.hourLabel = 'First Compline';
-    }
+      else if (hour.name === 'Compline' && tomorrowBeginsAtVespers) {
+        row.hourLabel = 'First Compline';
+        row.hour.key = 'first-compline';
+        row.liturgicalDay = selectedTomorrow;
+      }
 
-    rows.push(row);
-  });
+      rows.push(row);
+    });
 
-  return rows;
-};
-
+    return rows;
+  };
 
   const calculateHours = (date) => {
     const times = SunCalc.getTimes(date, latitude, longitude);
@@ -195,27 +187,28 @@ const Hours = ({ now }) => {
 
   const loadMore = async (direction) => {
     if (loading) return;
-    
     if (direction === 'up') {
       const newStart = new Date(startDate);
-      newStart.setDate(newStart.getDate());
-      await loadDateRange(newStart, startDate);
+      newStart.setDate(newStart.getDate() - 7);
+      await loadDateRange(newStart, new Date(startDate), 'up');
       setStartDate(newStart);
+      // Optionally adjust scroll to maintain position
+      scrollViewRef.current.scrollTo({ y: 7 * 200, animated: false });
     } else {
       const newEnd = new Date(endDate);
       newEnd.setDate(newEnd.getDate() + 7);
-      await loadDateRange(endDate, newEn);
+      await loadDateRange(new Date(endDate), newEnd, 'down');
       setEndDate(newEnd);
     }
   };
 
-  const handleScroll = (event) => {
-    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-    
+  const handleScroll = ({ nativeEvent }) => {
+    const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
+
     if (contentOffset.y < 200) {
       loadMore('up');
     }
-    
+
     if (contentOffset.y + layoutMeasurement.height > contentSize.height - 200) {
       loadMore('down');
     }
@@ -246,43 +239,27 @@ const Hours = ({ now }) => {
 
   const renderPenanceMessage = (penance) => {
     if (penance === null) {
-      return {
-        short: 'No penance.',
-        long: 'Meat and fish may be taken at dinner.'
-      };
+      return { short: 'No penance.', long: 'Meat and fish may be taken at dinner.' };
     } else if (penance === 'Abstinence') {
-      return {
-        short: 'Abstinence.',
-        long: 'Refrain from meat, dairy, and eggs.'
-      };
+      return { short: 'Abstinence.', long: 'Refrain from meat, dairy, and eggs.' };
     } else if (penance === 'Fasting' || penance === 'Vigil') {
-      return {
-        short: 'Fasting.',
-        long: 'Refrain from meat, fish, oil, wine, dairy, and eggs.'
-      };
+      return { short: 'Fasting.', long: 'Refrain from meat, fish, oil, wine, dairy, and eggs.' };
     }
     return { short: '', long: '' };
   };
 
   const groupedRows = rows.reduce((acc, row) => {
     const dateKey = row.calendarDate.toDateString();
-    if (!acc[dateKey]) {
-      acc[dateKey] = {
-        date: row.calendarDate,
-        rows: []
-      };
-    }
+    if (!acc[dateKey]) acc[dateKey] = { date: row.calendarDate, rows: [] };
     acc[dateKey].rows.push(row);
     return acc;
   }, {});
 
-  const sortedDateKeys = Object.keys(groupedRows).sort((a, b) => {
-    return groupedRows[a].date - groupedRows[b].date;
-  });
+  const sortedDateKeys = Object.keys(groupedRows).sort((a, b) => groupedRows[a].date - groupedRows[b].date);
 
   return (
     <View style={styles.container}>
-      <ScrollView 
+      <ScrollView
         ref={scrollViewRef}
         onScroll={handleScroll}
         scrollEventThrottle={400}
@@ -291,7 +268,7 @@ const Hours = ({ now }) => {
           {sortedDateKeys.map(dateKey => {
             const dateRows = groupedRows[dateKey].rows;
             const date = groupedRows[dateKey].date;
-            
+
             return (
               <View key={dateKey} style={styles.dateSection}>
                 <View style={styles.dateColumn}>
@@ -318,7 +295,7 @@ const Hours = ({ now }) => {
                         >
                           {selectedLiturgicalDays[row.liturgicalDayKey] && (
                             <View style={styles.liturgicalContent}>
-                              <Text 
+                              <Text
                                 style={[
                                   styles.liturgicalName,
                                   { color: colors[selectedLiturgicalDays[row.liturgicalDayKey].color] || colors.Black },
@@ -334,21 +311,13 @@ const Hours = ({ now }) => {
                       )}
 
                       <Pressable
-                        style={[
-                          styles.hourRow,
-                          hoveredRow === `${dateKey}-${idx}` && styles.hoveredRow
-                        ]}
+                        style={[styles.hourRow, hoveredRow === `${dateKey}-${idx}` && styles.hoveredRow]}
                         onHoverIn={() => setHoveredRow(`${dateKey}-${idx}`)}
                         onHoverOut={() => setHoveredRow(null)}
-                        onPress={() => goto('hour', {
-                          date: row.calendarDate,
-                          hour: row.hour.name.toLowerCase()
-                        })}
+                        onPress={() => goto('hour', { celebration: row.liturgicalDay, hour: row.hour.key })}
                       >
                         <View style={styles.hourInfo}>
-                          <Text style={styles.hourName}>
-                            {row.hourLabel || row.hour.name}
-                          </Text>
+                          <Text style={styles.hourName}>{row.hourLabel || row.hour.name}</Text>
                           <Text style={styles.hourTime}>{formatTime(row.hour.time)}</Text>
                         </View>
                       </Pressable>
@@ -358,7 +327,7 @@ const Hours = ({ now }) => {
               </View>
             );
           })}
-          
+
           {loading && (
             <View style={styles.loadingContainer}>
               <Text style={styles.loadingText}>Loading...</Text>
@@ -369,7 +338,7 @@ const Hours = ({ now }) => {
 
       <Modal
         visible={showModal}
-        transparent={true}
+        transparent
         animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
@@ -377,22 +346,11 @@ const Hours = ({ now }) => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Liturgical Day</Text>
             {modalOptions.map((day, idx) => (
-              <Pressable
-                key={idx}
-                style={styles.modalOption}
-                onPress={() => selectLiturgicalDay(day)}
-              >
-                <Text 
-                  style={[
-                    styles.modalOptionText,
-                    { color: colors[day.color] || colors.Black }
-                  ]}
-                >
+              <Pressable key={idx} style={styles.modalOption} onPress={() => selectLiturgicalDay(day)}>
+                <Text style={[styles.modalOptionText, { color: colors[day.color] || colors.Black }]}>
                   {day.name}
                 </Text>
-                <Text style={styles.modalOptionPenance}>
-                  {day.rank}
-                </Text>
+                <Text style={styles.modalOptionPenance}>{day.rank}</Text>
               </Pressable>
             ))}
           </View>
@@ -403,17 +361,9 @@ const Hours = ({ now }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f1e8',
-  },
-  contentContainer: {
-    padding: 20,
-  },
-  dateSection: {
-    flexDirection: 'row',
-    marginBottom: 2,
-  },
+  container: { flex: 1, backgroundColor: '#f5f1e8' },
+  contentContainer: { padding: 20 },
+  dateSection: { flexDirection: 'row', marginBottom: 2 },
   dateColumn: {
     width: 180,
     backgroundColor: '#f9f6f0',
@@ -423,117 +373,29 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: '#d1c7b7',
   },
-  dateText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4a3c31',
-    textAlign: 'center',
-  },
-  fastingInfo: {
-    marginTop: 12,
-    paddingTop: 12,
-    width: '100%',
-  },
-  fastingTitle: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#4a3c31',
-    textAlign: 'center',
-    marginBottom: 6,
-  },
-  fastingDetail: {
-    fontSize: 11,
-    color: '#6b5d52',
-    textAlign: 'center',
-    lineHeight: 16,
-  },
-  hoursColumn: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  rowContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#e8e0d5',
-  },
-  hourRow: {
-    padding: 12,
-  },
-  hoveredRow: {
-    backgroundColor: '#f4f0f8',
-  },
-  hourInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  hourName: {
-    fontSize: 16,
-    color: '#4a3c31',
-    fontWeight: '500',
-  },
-  hourTime: {
-    fontSize: 14,
-    color: '#6b5d52',
-  },
-  liturgicalDayRow: {
-    padding: 12,
-    backgroundColor: '#faf8f5',
-    borderTopWidth: 1,
-    borderTopColor: '#e8e0d5',
-  },
-  liturgicalContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  liturgicalName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  whiteTextOutline: {
-    WebkitTextStroke: '1px black',
-  },
-  loadingContainer: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  loadingText: {
-    fontSize: 14,
-    color: '#6b5d52',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 20,
-    minWidth: 300,
-    maxWidth: 400,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#4a3c31',
-  },
-  modalOption: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e8e0d5',
-  },
-  modalOptionText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  modalOptionPenance: {
-    fontSize: 12,
-    color: '#6b5d52',
-    fontStyle: 'italic',
-  },
+  dateText: { fontSize: 16, fontWeight: '600', color: '#4a3c31', textAlign: 'center' },
+  fastingInfo: { marginTop: 12, paddingTop: 12, width: '100%' },
+  fastingTitle: { fontSize: 13, fontWeight: 'bold', color: '#4a3c31', textAlign: 'center', marginBottom: 6 },
+  fastingDetail: { fontSize: 11, color: '#6b5d52', textAlign: 'center', lineHeight: 16 },
+  hoursColumn: { flex: 1, backgroundColor: '#fff' },
+  rowContainer: { borderBottomWidth: 1, borderBottomColor: '#e8e0d5' },
+  hourRow: { padding: 12 },
+  hoveredRow: { backgroundColor: '#f4f0f8' },
+  hourInfo: { flexDirection: 'row', justifyContent: 'space-between' },
+  hourName: { fontSize: 16, color: '#4a3c31', fontWeight: '500' },
+  hourTime: { fontSize: 14, color: '#6b5d52' },
+  liturgicalDayRow: { padding: 12, backgroundColor: '#faf8f5', borderTopWidth: 1, borderTopColor: '#e8e0d5' },
+  liturgicalContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  liturgicalName: { fontSize: 18, fontWeight: 'bold' },
+  whiteTextOutline: { WebkitTextStroke: '1px black' },
+  loadingContainer: { padding: 20, alignItems: 'center' },
+  loadingText: { fontSize: 14, color: '#6b5d52' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: '#fff', borderRadius: 8, padding: 20, minWidth: 300, maxWidth: 400 },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, color: '#4a3c31' },
+  modalOption: { padding: 15, borderBottomWidth: 1, borderBottomColor: '#e8e0d5' },
+  modalOptionText: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
+  modalOptionPenance: { fontSize: 12, color: '#6b5d52', fontStyle: 'italic' },
 });
 
 export default Hours;

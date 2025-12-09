@@ -13,16 +13,20 @@ const Flex = /\^([^^]*)\^/g;
 const Mediant = /\~([^~]*)\~/g;
 const Accent = /\`([^`]*)\`/g;
 
-const Hour = ({ date, hour }) => {
+const Hour = ({ celebration, hour }) => {
   const [reloadKey, setReloadKey] = useState(0);
   const [elements, setElements] = useState([]);
   const { getElements } = useApi();
 
+  useEffect(() => {
+    console.log("elements", elements);
+  }, [elements])
+
   const load = async () => {
-    setElements(await getElements(date, hour));
+    setElements(await getElements(celebration, hour));
   };
 
-  const convertElements = (elements) =>
+  const convertElements = (elements) => 
     elements.map((e, index) => (
       <View key={index} style={{ marginBottom: 8 }}>
         {convertElement(e)}

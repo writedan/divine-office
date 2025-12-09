@@ -36,11 +36,12 @@ export const Geolocation = ({ children }) => {
   useEffect(() => console.log('[Geolocation]', geolocation), [geolocation]);
 
   return (
-    <AsyncCall call={load} message={'Fetching geolocation'}>
-      <GeolocationContext.Provider value={geolocation || { lat: 0, lon: 0 }}>
+    <GeolocationContext.Provider value={geolocation || { lat: 0, lon: 0 }}>
+      <AsyncCall call={load} message={'Fetching geolocation'}>
         {children}
-      </GeolocationContext.Provider>
-    </AsyncCall>
+      </AsyncCall>
+    </GeolocationContext.Provider>
+
   );
 };
 

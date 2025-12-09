@@ -47,8 +47,8 @@ const MainContent = () => {
     return <CalendarPage today={pageArgs.today} />;
   }
 
-  if (currentPage == 'hour' && pageArgs.date && pageArgs.hour) {
-    return <HourPage date={pageArgs.date} hour={pageArgs.hour} />;
+  if (currentPage == 'hour' && pageArgs.celebration && pageArgs.hour) {
+    return <HourPage celebration={pageArgs.celebration} hour={pageArgs.hour} />;
   }
 
   return <Text>Requested page "{currentPage}" with args {JSON.stringify(pageArgs)} but no such identifier is registered.</Text>;
