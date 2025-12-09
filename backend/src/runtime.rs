@@ -146,7 +146,6 @@ impl Runtime {
         }));
 
         {
-            let rt_clone = Rc::clone(&rt);
             rt.borrow_mut().define("fun".into(), Value::Native(|env, args| {
 	    		if args.is_empty() {
 			        return Err("fun requires (fun (<params>...) <body>...)".into());
@@ -330,6 +329,14 @@ impl Runtime {
 
         	gabc.set_header(attr, value);
         	Ok(Value::Gabc(gabc))
+        }));
+
+        rt.borrow_mut().define("not".into(), Value::Native(|env, args| {
+        	if args.len() != 1 {
+        		return Err("not requires one argument".into());
+        	}
+
+        	Ok(Value::Boolean(!Runtime::eval(Rc::clone(&env), &args[0])?.is_truthy()))
         }));
 
         rt
