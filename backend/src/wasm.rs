@@ -1,72 +1,44 @@
-use crate::{compiler, kalendar, liturgy, parser};
-use chrono::{Datelike, NaiveDate};
+use crate::{kalendar, runtime, lexer, parser};
+use lexer::Lexer;
+use parser::Parser;
+use runtime::Runtime;
+use chrono::{NaiveDate, Datelike};
 use std::collections::HashMap;
+use std::rc::Rc;
 
-type R<T> = Result<T, LiturgyError>;
+type R<T> = Result <T, String>;
 
-impl From<String> for LiturgyError {
-    fn from(error: String) -> Self {
-        LiturgyError { error }
+pub fn read_file<P>(path: P) -> R<String>
+where
+    P: AsRef<std::path::Path> + std::fmt::Debug,
+{
+    let file = match crate::asset::Asset::get(&path.as_ref().to_string_lossy()) {
+        Some(file) => file.data,
+        None => return Err(format!("No such file exists: {:?}", path)),
+    };
+
+    match std::str::from_utf8(file.as_ref()) {
+        Ok(string) => Ok(string.to_string()),
+        Err(why) => Err(why.to_string()),
     }
 }
 
-fn from_ymd(y: i32, m: u32, d: u32) -> R<NaiveDate> {
-    match NaiveDate::from_ymd_opt(y, m, d) {
-        Some(date) => Ok(date),
-        None => Err(format!("Invalid date: {}-{}-{}.", y, m, d).into()),
-    }
-}
-
-fn get_identifiers(date: NaiveDate) -> R<(kalendar::Celebration, kalendar::Celebration)> {
-    let today = match kalendar::get_celebration(date) {
-        Some(kal) => kal,
-        None => {
-            return Err(format!(
-                "The supplied date {} is beyond the bounds of the Gregorian calendar.",
-                date
-            )
-            .into())
-        }
-    };
-
-    let tomorrow = match kalendar::get_celebration(date + chrono::Days::new(1)) {
-        Some(kal) => kal,
-        None => {
-            return Err(format!(
-                "The supplied date {} is beyond the bounds of the Gregorian calendar.",
-                date + chrono::Days::new(1)
-            )
-            .into())
-        }
-    };
+pub fn get_identifiers(date: NaiveDate) -> R<(Vec<kalendar::Celebration>, Vec<kalendar::Celebration>)> {
+    let kalendar = kalendar::Kalendar::from_date(date).ok_or_else(|| format!("Provided date {:?} is beyond the bounds of the Gregorian calendar.", date))?;
+    let today = kalendar.get_celebrations(date)?;
+    let tomorrow = kalendar.get_celebrations(date + chrono::Days::new(1))?;
 
     Ok((today, tomorrow))
 }
 
-fn compile_hour(propers: HashMap<&'static str, std::path::PathBuf>) -> Vec<compiler::Element> {
-    compiler::compile_ast(parser::Parser::from_hour(propers))
-}
-
-pub fn get_identifier(y: i32, m: u32, d: u32) -> R<LiturgyInfo> {
-    let date = from_ymd(y, m, d)?;
-
-    let (today, tomorrow) = get_identifiers(date)?;
-    let today_vespers = !liturgy::first_vespers(&today, &tomorrow);
-
-    Ok(LiturgyInfo {
-        today,
-        tomorrow: if today_vespers { None } else { Some(tomorrow) },
-    })
-}
-
-pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celebration>> {
+pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, Vec<kalendar::Celebration>>> {
     let first_day_of_month = from_ymd(y, m, 1)?;
     let next_month = first_day_of_month
         .with_month(m + 1)
         .unwrap_or_else(|| NaiveDate::from_ymd_opt(y + 1, 1, 1).unwrap());
     let days_in_month = (next_month - first_day_of_month).num_days();
 
-    let mut month: HashMap<u32, kalendar::Celebration> = HashMap::new();
+    let mut month: HashMap<u32, Vec<kalendar::Celebration>> = HashMap::new();
 
     for day in 1..=days_in_month {
         let date = from_ymd(y, m, day as u32)?;
@@ -78,34 +50,44 @@ pub fn get_monthly_identifiers(y: i32, m: u32) -> R<HashMap<u32, kalendar::Celeb
     Ok(month)
 }
 
-pub fn get_hour(y: i32, m: u32, d: u32, hour: &str) -> R<Vec<compiler::Element>> {
-    let (today, tomorrow) = match get_identifiers(from_ymd(y, m, d)?) {
-        Ok(lit) => lit,
-        Err(why) => return Err(why),
+pub fn get_hour(celebration: kalendar::Celebration, hour: &str) -> R<Vec<runtime::Value>> {
+    use runtime::Value;
+
+    let runtime = Runtime::new();
+
+    for iden in celebration.identifiers {
+        runtime.borrow_mut().define("propers".into(), Value::String(iden.to_path().display().to_string()));
+        runtime.borrow_mut().define("iden.season".into(), Value::String(iden.season.as_str().to_string().to_lowercase()));
+        runtime.borrow_mut().define("iden.weekday".into(), Value::String(iden.weekday.to_string()));
+        runtime.borrow_mut().define("iden.day".into(), Value::String(iden.day.to_lowercase()));
+        runtime.borrow_mut().define("iden.week".into(), Value::String(iden.week.to_lowercase()));
+
+        let mut lexer = Lexer::from_file(iden.season.to_path().join(hour.to_owned() + ".lit"))?;
+        let tokens = lexer.tokenize()?;
+        let mut parser = Parser::new(tokens);
+        let exprs = parser.parse()?;
+        Runtime::run(Rc::clone(&runtime), exprs); // value isnt immediately useful to us
+    }
+
+    let ordo = match runtime.borrow().get("order".into()) {
+        Some(s) => s,
+        None => return Err("Field \"order\" was not set.".into())
     };
 
-    let lit = liturgy::resolve_hours(&today, &tomorrow);
-
-    match hour {
-        "vigils" => Ok(compile_hour(lit.vigils)),
-        "matins" => Ok(compile_hour(lit.matins)),
-        "prime" => Ok(compile_hour(lit.prime)),
-        "terce" => Ok(compile_hour(lit.terce)),
-        "sext" => Ok(compile_hour(lit.sext)),
-        "none" => Ok(compile_hour(lit.none)),
-        "vespers" => Ok(compile_hour(lit.vespers)),
-        "compline" => Ok(compile_hour(lit.compline)),
-        _ => Err(format!("An invalid hour \"{}\" was supplied.", hour).into()),
-    }
+    let mut lexer = Lexer::from_file(ordo.to_string())?;
+    let tokens = lexer.tokenize()?;
+    let mut parser = Parser::new(tokens);
+    let exprs = parser.parse()?;
+    Ok(Runtime::run(Rc::clone(&runtime), exprs))
 }
 
-#[derive(serde::Serialize)]
-pub struct LiturgyError {
-    error: String,
+pub fn get_exprs(input: String) -> R<Vec<parser::Expr>> {
+    let mut lexer = Lexer::from_str(input.as_str());
+        let tokens = lexer.tokenize()?;
+        let mut parser = Parser::new(tokens);
+        parser.parse()
 }
 
-#[derive(serde::Serialize)]
-pub struct LiturgyInfo {
-    today: kalendar::Celebration,
-    tomorrow: Option<kalendar::Celebration>,
+pub fn from_ymd(year: i32, month: u32, day: u32) -> R<NaiveDate> {
+    NaiveDate::from_ymd_opt(year, month, day).ok_or_else(|| format!("Provided date {}-{}-{} is invalid.", year, month, day))
 }
