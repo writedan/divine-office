@@ -391,7 +391,7 @@ const Hours = ({ now }) => {
                   {day.name}
                 </Text>
                 <Text style={styles.modalOptionPenance}>
-                  {renderPenanceMessage(day.penance).long}
+                  {day.rank}
                 </Text>
               </Pressable>
             ))}
