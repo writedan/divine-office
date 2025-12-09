@@ -39,3 +39,9 @@ pub fn get_hour(celebration: &str, hour: &str) -> String {
         Err(err) => serde_json::to_string(&err).unwrap(),
     }
 }
+
+#[wasm_bindgen]
+pub fn has_first_vespers(today: &str, tomorrow: &str) -> bool {
+    let (today, tomorrow) = (serde_json::from_str(today).unwrap(), serde_json::from_str(tomorrow).unwrap());
+    wasm::has_first_vespers(today, tomorrow)
+}
