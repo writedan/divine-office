@@ -34,7 +34,7 @@ pub struct Kalendar {
 }
 
 /// Penance describes both the fasting rules of the day and when Mass may be said that day.
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, serde::Serialize)]
 pub enum Penance {
     /// Abstinence means refraining from meat, dairy, and eggs. Mass is after Terce.
     Abstinence,
@@ -44,7 +44,7 @@ pub enum Penance {
     Vigil,
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, serde::Serialize)]
 pub enum Color {
     White,
     Blue,
@@ -55,7 +55,7 @@ pub enum Color {
     Rose,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord, serde::Serialize)]
 pub enum Rank {
     Eve,
     Feria,
@@ -69,7 +69,7 @@ pub enum Rank {
     Triplex,
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, serde::Serialize)]
 pub enum Season {
     Advent,
     Christmas,
@@ -87,7 +87,7 @@ pub enum Season {
 }
 
 /// A liturgical identifier supplies all information necessary to generate a particular office and Mass.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Clone, serde::Serialize)]
 pub struct Identifier {
     pub season: Season,
     /// The week of the season this office occurs in. "Week of the season" is particular to each season.
@@ -99,7 +99,7 @@ pub struct Identifier {
 }
 
 /// A celebration is the actual liturgical day. The liturgical day has one name, one penance, one color, and one rank, but may be composed out of multiple identifiers. In this case the first identifier has the right of way and subsequent identifiers can only add what is not defined in the first identifier.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Clone, serde::Serialize)]
 pub struct Celebration {
     pub name: String,
     pub penance: Option<Penance>,
@@ -205,9 +205,9 @@ impl Kalendar {
     }
 
     /// Returns the temporal celebration for the given date. There can only be one temporal celebration for any given date.
-    fn get_temporal(&self, date: NaiveDate) -> Celebration {
+    fn get_temporal(&self, date: NaiveDate) -> Result<Celebration, String> {
         use Season::*;
-        match self.get_season(date) {
+        let celebration = match self.get_season(date) {
             Advent => advent::get_celebration(self, date),
             Christmas => christmas::get_celebration(self, date),
             PostEpiphany(_) => postepiphany::get_celebration(self, date),
@@ -215,14 +215,16 @@ impl Kalendar {
             Lent => lent::get_celebration(self, date),
             Easter => easter::get_celebration(self, date),
             PostPentecost => postpentecost::get_celebration(self, date),
-            season => panic!("{:?} should not be returned from Kalendar.get_season.", season),
-        }
+            season => return Err(format!("{:?} should not be returned from Kalendar.get_season.", season)),
+        };
+
+        Ok(celebration)
     }
 
     /// Returns all celebrations for the given date and sorts them in order of rank.
-    pub fn get_celebrations(&self, date: NaiveDate) -> Vec<Celebration> {
-        let mut celebrations = vec![self.get_temporal(date)];
+    pub fn get_celebrations(&self, date: NaiveDate) -> Result<Vec<Celebration>, String> {
+        let mut celebrations = vec![self.get_temporal(date)?];
         celebrations.sort();
-        celebrations
+        Ok(celebrations)
     }
 }
