@@ -27,7 +27,7 @@ export const ApiControl = ({ children }) => {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1);
       const day = String(date.getDate());
-      return JSON.parse(wasmModule.get_identifier(year, month, day));
+      return JSON.parse(wasmModule.get_identifiers(year, month, day));
     });
   };
 
@@ -97,7 +97,8 @@ export const ApiControl = ({ children }) => {
       <ApiContext.Provider value={{ 
         getMetadata: (date) => queueOperation(() => getMetadata(date)),
         getMonthCalendar: (date) => queueOperation(() => getMonthCalendar(date)),
-        getElements: (date, hour) => queueOperation(() => getElements(date, hour))
+        getElements: (date, hour) => queueOperation(() => getElements(date, hour)),
+        hasFirstVespers: (today, tomorrow) => true
       }}>
         {children}
       </ApiContext.Provider>
