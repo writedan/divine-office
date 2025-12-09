@@ -354,7 +354,8 @@ impl Runtime {
             let file = Runtime::eval(Rc::clone(&env), &args[0])?.to_string();
             let file = wasm::read_file(file)?;
             let exprs = wasm::get_exprs(file)?;
-            Ok(Value::List(Runtime::run(Rc::clone(&env), exprs)))
+            let new_env = Runtime::with_parent(Rc::clone(&env));
+            Ok(Value::List(Runtime::run(Rc::clone(&new_env), exprs)))
         }));
 
         rt.borrow_mut().define(">=".into(), Value::Native(|env, args| {
@@ -467,6 +468,42 @@ impl Runtime {
             }
             
             Ok(Value::Nil)
+        }));
+
+        rt.borrow_mut().define("gabc".into(), Value::Native(|env, args| {
+            let mut out = Vec::new();
+            for arg in args {
+                let val = Runtime::eval(Rc::clone(&env), &arg)?.to_string();
+                out.push(Value::Gabc(GabcFile::new(format!("initial-style: 0;\ncentering-scheme: english;\n%%\n{}", val).as_str())?));
+            }
+
+            Ok(Value::List(out)) 
+        }));
+
+        rt.borrow_mut().define("instruction".into(), Value::Native(|env, args| {
+            let mut out = Vec::new();
+            for arg in args {
+                let val = Runtime::eval(Rc::clone(&env), &arg)?.to_string();
+                out.push(Value::Instruction(val));
+            }
+
+            Ok(Value::List(out))
+        }));
+
+        rt.borrow_mut().define("heading".into(), Value::Native(|env, args| {
+            if args.len() < 1 || args.len() > 2 {
+                return Err("heading requires at least one argument: (heading <text> [size])".into());
+            }
+
+            let text = Runtime::eval(Rc::clone(&env), &args[0])?.to_string();
+            let level = if args.len() == 1 { 1.0 } else { 
+                match Runtime::eval(Rc::clone(&env), &args[1])? {
+                    Value::Number(n) => n,
+                    other => return Err(format!("Second argunebt to heading must be numeric, got {:?}", other))
+                }
+            };
+
+            Ok(Value::Heading(text, level as u8))
         }));
 
         rt
