@@ -137,6 +137,15 @@ impl Season {
             November => "november",
         }
     }
+
+    /// Returns the path to the file which instantiates everything necessary.
+    pub fn to_path(&self) -> std::path::PathBuf {
+        [
+            "liturgy",
+            self.as_str(),
+            ".lit"
+        ].iter().collect()
+    }
 }
 
 impl ToString for Season {
