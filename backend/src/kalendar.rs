@@ -236,3 +236,16 @@ impl Kalendar {
         Ok(celebrations)
     }
 }
+
+impl Identifier {
+    pub fn to_path(&self) -> PathBuf {
+        [
+            "propers".to_string(),
+            self.season.to_string(),
+            self.week.to_lowercase(),
+            self.day.to_lowercase(),
+        ]
+        .iter()
+        .collect()
+    }
+}
