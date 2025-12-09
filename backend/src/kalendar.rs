@@ -142,8 +142,7 @@ impl Season {
     pub fn to_path(&self) -> std::path::PathBuf {
         [
             "liturgy",
-            self.as_str(),
-            ".lit"
+            &(self.as_str().to_owned() + ".lit"),
         ].iter().collect()
     }
 }
