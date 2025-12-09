@@ -344,6 +344,131 @@ impl Runtime {
         	Ok(Value::Boolean(!Runtime::eval(Rc::clone(&env), &args[0])?.is_truthy()))
         }));
 
+        rt.borrow_mut().define("load".into(), Value::Native(|env, args| {
+            use crate::wasm;
+
+            if args.len() != 1 {
+                return Err("load requires one argument".into());
+            }
+
+            let file = Runtime::eval(Rc::clone(&env), &args[0])?.to_string();
+            let file = wasm::read_file(file)?;
+            let exprs = wasm::get_exprs(file)?;
+            Ok(Value::List(Runtime::run(Rc::clone(&env), exprs)))
+        }));
+
+        rt.borrow_mut().define(">=".into(), Value::Native(|env, args| {
+            if args.len() != 2 {
+                return Err(">= requires 2 arguments: (>= <a> <b>)".into());
+            }
+            
+            let a = Runtime::eval(Rc::clone(&env), &args[0])?;
+            let b = Runtime::eval(Rc::clone(&env), &args[1])?;
+            
+            match (a, b) {
+                (Value::Number(x), Value::Number(y)) => Ok(Value::Boolean(x >= y)),
+                _ => Err(">= requires numeric arguments".into())
+            }
+        }));
+
+        rt.borrow_mut().define("as-num".into(), Value::Native(|env, args| {
+            if args.len() != 1 {
+                return Err("as-num requires 1 argument: (as-num <value>)".into());
+            }
+            
+            let val = Runtime::eval(Rc::clone(&env), &args[0])?;
+            
+            match val {
+                Value::Number(n) => Ok(Value::Number(n)),
+                Value::String(s) => {
+                    s.parse::<f64>()
+                        .map(Value::Number)
+                        .map_err(|_| format!("Cannot convert '{}' to number", s))
+                }
+                other => Err(format!("Cannot convert {:?} to number", other))
+            }
+        }));
+
+        rt.borrow_mut().define("match".into(), Value::Native(|env, args| {
+            if args.len() < 2 {
+                return Err("match requires at least 2 arguments: (match <value> <case>...)".into());
+            }
+            
+            let match_val = Runtime::eval(Rc::clone(&env), &args[0])?;
+            
+            for case_expr in &args[1..] {
+                match case_expr {
+                    Expr::List(case_parts) if !case_parts.is_empty() => {
+                        if let Expr::Symbol(s) = &case_parts[0] {
+                            if s != "case" {
+                                return Err(format!("Expected 'case', got '{}'", s));
+                            }
+                        } else {
+                            return Err("Match body must contain case expressions".into());
+                        }
+                        
+                        if case_parts.len() < 2 {
+                            return Err("case requires at least a pattern: (case <pattern> <body>...)".into());
+                        }
+                        
+                        let pattern = &case_parts[1];
+                        let matched = match pattern {
+                            Expr::Quote(inner) => {
+                                if let Expr::Symbol(sym) = &**inner {
+                                    // bind the symbol to match_val in the current environment
+                                    env.borrow_mut().define(sym.clone(), match_val.clone());
+                                    
+                                    let mut result = Value::Nil;
+                                    for expr in &case_parts[2..] {
+                                        result = Runtime::eval(Rc::clone(&env), expr)?;
+                                    }
+
+                                    return Ok(result);
+                                } else {
+                                    return Err("Quoted pattern must be a symbol".into());
+                                }
+                            },
+
+                            Expr::String(s) => {
+                                if let Value::String(ref val_str) = match_val {
+                                    val_str == s
+                                } else {
+                                    false
+                                }
+                            },
+
+                            Expr::List(patterns) => {
+                                let mut any_match = false;
+                                for pat in patterns {
+                                    if let Expr::String(s) = pat {
+                                        if let Value::String(ref val_str) = match_val {
+                                            if val_str == s {
+                                                any_match = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                any_match
+                            }
+                            other => return Err(format!("Invalid case pattern: {:?}", other))
+                        };
+                        
+                        if matched {
+                            let mut result = Value::Nil;
+                            for expr in &case_parts[2..] {
+                                result = Runtime::eval(Rc::clone(&env), expr)?;
+                            }
+                            return Ok(result);
+                        }
+                    }
+                    other => return Err(format!("Match body must be case expressions, got {:?}", other))
+                }
+            }
+            
+            Ok(Value::Nil)
+        }));
+
         rt
     }
 
