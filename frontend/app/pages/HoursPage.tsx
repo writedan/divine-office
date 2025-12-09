@@ -37,7 +37,7 @@ const Hours = ({ now }) => {
 
   const loadInitialData = async () => {
     const start = new Date(now);
-    start.setDate(start.getDate() - 7);
+    start.setDate(start.getDate());
     const end = new Date(now);
     end.setDate(end.getDate() + 7);
     
@@ -81,77 +81,96 @@ const Hours = ({ now }) => {
   };
 
   const buildRowsForDate = async (date, isFirstDate = false) => {
-    const response = await getMetadata(date);
-    const todayLiturgical = response[0] || [];
-    const tomorrowLiturgical = response[1] || [];
-    
-    const hours = calculateHours(date);
-    const rows = [];
-    
-    const dateKey = date.toDateString();
-    
-    const tomorrowBeginsAtVespers = hasFirstVespers(todayLiturgical, tomorrowLiturgical);
-    
-    // determine which liturgical day controls fasting for this calendar date
-    // fasting is determined by the liturgical day active at Vigils
-    const fastingLiturgicalDay = todayLiturgical.length > 0 ? todayLiturgical[0] : null;
-    
-    hours.forEach((hour, index) => {
-      const row = {
-        calendarDate: new Date(date),
-        hour: hour,
-        hourIndex: index,
-        liturgicalDayOptions: null,
-        liturgicalDayKey: null,
-        fastingLiturgicalDay: index === 0 ? fastingLiturgicalDay : null, 
-      };
-      
-      if (isFirstDate && hour.name === 'Vigils') {
-        const key = `${dateKey}-vigils`;
-        row.liturgicalDayOptions = todayLiturgical;
-        row.liturgicalDayKey = key;
-        
-        if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
-          setSelectedLiturgicalDays(prev => ({
-            ...prev,
-            [key]: todayLiturgical[0]
-          }));
-        }
+  const response = await getMetadata(date);
+  const todayLiturgical = response[0] || [];
+  const tomorrowLiturgical = response[1] || [];
+
+  const hours = calculateHours(date);
+  const rows = [];
+  const dateKey = date.toDateString();
+
+  const vigilsKey = `${dateKey}-vigils`;
+  const vespersKey = `${dateKey}-vespers`;
+
+  const selectedToday = selectedLiturgicalDays[vigilsKey] || todayLiturgical[0];
+  const selectedTomorrow = selectedLiturgicalDays[vespersKey] || tomorrowLiturgical[0];
+
+  const tomorrowBeginsAtVespers = await hasFirstVespers(selectedToday, selectedTomorrow);
+
+  const yesterday = new Date(date);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayKey = yesterday.toDateString();
+  const yesterdayVigilsKey = `${yesterdayKey}-vigils`;
+  const yesterdayVespersKey = `${yesterdayKey}-vespers`;
+  
+  const yesterdayLiturgicalResponse = await getMetadata(yesterday);
+  const yesterdayLiturgical = yesterdayLiturgicalResponse[0] || []; // yesterday's tomorrowLiturgical is today
+  const selectedYesterday = selectedLiturgicalDays[yesterdayVespersKey] || yesterdayLiturgical[0];
+  
+  const todayHasFirstVespers = await hasFirstVespers(
+    selectedYesterday,  
+    selectedToday       
+  );
+
+  const fastingLiturgicalDay = selectedToday;
+
+  hours.forEach((hour, index) => {
+    const row = {
+      calendarDate: new Date(date),
+      hour: hour,
+      hourIndex: index,
+      liturgicalDayOptions: null,
+      liturgicalDayKey: null,
+      fastingLiturgicalDay: index === 0 ? fastingLiturgicalDay : null,
+    };
+
+    if (isFirstDate && hour.name === 'Vigils') {
+      const key = vigilsKey;
+      row.liturgicalDayOptions = todayLiturgical;
+      row.liturgicalDayKey = key;
+
+      if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
+        setSelectedLiturgicalDays(prev => ({
+          ...prev,
+          [key]: todayLiturgical[0]
+        }));
       }
-      else if (hour.name === 'Vespers' && tomorrowBeginsAtVespers) {
-        const key = `${dateKey}-vespers`;
-        row.liturgicalDayOptions = tomorrowLiturgical;
-        row.liturgicalDayKey = key;
-        row.hourLabel = 'First Vespers';
-        
-        if (!selectedLiturgicalDays[key] && tomorrowLiturgical.length > 0) {
-          setSelectedLiturgicalDays(prev => ({
-            ...prev,
-            [key]: tomorrowLiturgical[0]
-          }));
-        }
+    }
+    else if (hour.name === 'Vespers' && tomorrowBeginsAtVespers) {
+      const key = vespersKey;
+      row.liturgicalDayOptions = tomorrowLiturgical;
+      row.liturgicalDayKey = key;
+      row.hourLabel = 'First Vespers';
+
+      if (!selectedLiturgicalDays[key] && tomorrowLiturgical.length > 0) {
+        setSelectedLiturgicalDays(prev => ({
+          ...prev,
+          [key]: tomorrowLiturgical[0]
+        }));
       }
-      else if (hour.name === 'Vigils' && !tomorrowBeginsAtVespers && !isFirstDate) {
-        const key = `${dateKey}-vigils`;
-        row.liturgicalDayOptions = todayLiturgical;
-        row.liturgicalDayKey = key;
-        
-        if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
-          setSelectedLiturgicalDays(prev => ({
-            ...prev,
-            [key]: todayLiturgical[0]
-          }));
-        }
+    }
+    else if (hour.name === 'Vigils' && !isFirstDate && !todayHasFirstVespers) {
+      const key = vigilsKey;
+      row.liturgicalDayOptions = todayLiturgical;
+      row.liturgicalDayKey = key;
+
+      if (!selectedLiturgicalDays[key] && todayLiturgical.length > 0) {
+        setSelectedLiturgicalDays(prev => ({
+          ...prev,
+          [key]: todayLiturgical[0]
+        }));
       }
-      else if (hour.name === 'Compline' && tomorrowBeginsAtVespers) {
-        row.hourLabel = 'First Compline';
-      }
-      
-      rows.push(row);
-    });
-    
-    return rows;
-  };
+    }
+    else if (hour.name === 'Compline' && tomorrowBeginsAtVespers) {
+      row.hourLabel = 'First Compline';
+    }
+
+    rows.push(row);
+  });
+
+  return rows;
+};
+
 
   const calculateHours = (date) => {
     const times = SunCalc.getTimes(date, latitude, longitude);
@@ -179,13 +198,13 @@ const Hours = ({ now }) => {
     
     if (direction === 'up') {
       const newStart = new Date(startDate);
-      newStart.setDate(newStart.getDate() - 7);
+      newStart.setDate(newStart.getDate());
       await loadDateRange(newStart, startDate);
       setStartDate(newStart);
     } else {
       const newEnd = new Date(endDate);
       newEnd.setDate(newEnd.getDate() + 7);
-      await loadDateRange(endDate, newEnd);
+      await loadDateRange(endDate, newEn);
       setEndDate(newEnd);
     }
   };

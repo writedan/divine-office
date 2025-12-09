@@ -53,7 +53,7 @@ export const ApiControl = ({ children }) => {
   const hasFirstVespers = (today, tomorrow) => {
     return runAsync(() => {
       if (!wasmModule) throw new Error('WASM module not initialized');
-      return JSON.parse(wasmModule.has_first_vespers(today, tomorrow));
+      return wasmModule.has_first_vespers(JSON.stringify(today), JSON.stringify(tomorrow));
     })
   };
 
