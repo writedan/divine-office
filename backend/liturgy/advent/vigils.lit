@@ -1,0 +1,36 @@
+(load "master.lit")
+(load "liturgy/vigils/ordinary.lit")
+
+(match iden.weekday
+	(case "Sun"
+		(let order "vigils/order/sunday.lit")
+		(let invitatory "invitatory/regem-venturum-dominum/sunday.lit")
+		(let psalter "vigils/sunday.lit")
+	)
+	(case 'other
+		(let order "vigils/order/feria.lit")
+		(let invitatory "invitatory/regem-venturum-dominum/feria.lit")
+		(let psalter (cat "vigils/" iden.day ".lit"))
+	)
+)
+
+(if (>= (as-num iden.week) 3)
+	(let invitatory "invitatory/prope-est-jam-dominus.lit")
+	() ;; Prope est jam Dominus is used from the 3rd Sunday onwards, including feria
+)
+
+(let hymn "hymn/verbum-supernum-prodiens/advent.lit")
+
+(let versicle-1 (cat 
+	"commons/vigils/" 
+	(match iden.weekday
+		(case ("Sun" "Mon" "Thu") "1st-nocturn")
+		(case ("Tue" "Fri") "2nd-nocturn")
+		(case ("Wed" "Sat") "3rd-nocturn")
+	) 
+	"/versicles/advent.lit"
+))
+(let versicle-2 "commons/vigils/2nd-nocturn/versicles/advent.lit")
+(let versicle-3 "commons/vigils/3rd-nocturn/versicles/advent.lit")
+
+(export order invitatory psalter hymn versicle-1 versicle-2 versicle-3)

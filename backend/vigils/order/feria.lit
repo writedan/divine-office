@@ -1,0 +1,13 @@
+(return
+	(heading "Invitatory")
+	(load "commons/shared/usual-beginning.lit")
+	(import "commons/shared/apostles-creed.txt")
+	(load "commons/vigils/aperi.lit")
+	(load invitatory)
+
+	(heading "Incipit")
+	(load "commons/shared/ordinary-opening.lit")
+
+	(heading "Hymn")
+	(load hymn)
+)

@@ -1,0 +1,4 @@
+(return 
+	(instruction "Then with hearable voice the officiant begins thrice.")
+	(gabc "(f3) <sp>v</sp> O(h) Lord,(h) You(h) shall(h) o(h)pen(h) my(g) lips.(h) <sp>r</sp>(::) And(h) my(h) mouth(h) shall(h) de(h)clare(h) Your(g) praise.(h) <c>iii.</c>")
+)

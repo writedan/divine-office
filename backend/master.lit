@@ -1,0 +1,41 @@
+;; This file provides definition for the functions used throughout all liturgical generators.
+
+(let antiphon (fun (x)
+    (let last-antiphon x)
+    (let gabc (raw-gabc (import (cat "antiphons/" x ".gabc"))))
+    (let current-tone (gabc-attr gabc "mode"))
+    (let gabc (set-gabc-attr gabc "annotation" "Ant."))
+    (let gabc (set-gabc-attr gabc "annotation" (cat current-tone ".")))
+    (export last-antiphon current-tone)
+    (return 
+    	(title (cat (gabc-attr gabc "name")))
+    	gabc
+    )
+))
+
+(let psalm (fun (x)
+	(return 
+		(if (is-num x)
+			(title (cat "Psalm " x)) ;; if numeric, prepend psalm and return title
+			() ;; otherwise, do nothing. title must be handled by the "psalm"
+		)
+
+		(raw-gabc (import (cat "tones/" current-tone ".gabc"))) 
+		(import (cat "psalms/" x "/" current-tone ".lit"))
+	)
+))
+
+(let repeat-antiphon (fun ()
+	(let gabc (raw-gabc (import (cat "antiphons/" last-antiphon ".gabc"))))
+	(let gabc (set-gabc-attr gabc "initial-lines" 0))
+	(return gabc)
+))
+
+(let quiet-antiphon (fun (x)
+	(let last-antiphon x)
+	(return (repeat-antiphon))
+))
+
+(let lesson (fun (n)
+	(return (import (cat propers "lessons/" n ".lit")))
+))
