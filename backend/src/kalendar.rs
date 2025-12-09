@@ -34,7 +34,7 @@ pub struct Kalendar {
 }
 
 /// Penance describes both the fasting rules of the day and when Mass may be said that day.
-#[derive(Debug, Clone, Copy, Eq, PartialEq, serde::Serialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Penance {
     /// Abstinence means refraining from meat, dairy, and eggs. Mass is after Terce.
     Abstinence,
@@ -44,7 +44,7 @@ pub enum Penance {
     Vigil,
 }
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq, serde::Serialize)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Color {
     White,
     Blue,
@@ -55,7 +55,7 @@ pub enum Color {
     Rose,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord, serde::Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord, serde::Serialize, serde::Deserialize)]
 pub enum Rank {
     Eve,
     Feria,
@@ -69,7 +69,7 @@ pub enum Rank {
     Triplex,
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq, serde::Serialize)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum Season {
     Advent,
     Christmas,
@@ -87,7 +87,7 @@ pub enum Season {
 }
 
 /// A liturgical identifier supplies all information necessary to generate a particular office and Mass.
-#[derive(Debug, Eq, PartialEq, Clone, serde::Serialize)]
+#[derive(Debug, Eq, PartialEq, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Identifier {
     pub season: Season,
     /// The week of the season this office occurs in. "Week of the season" is particular to each season.
@@ -99,7 +99,7 @@ pub struct Identifier {
 }
 
 /// A celebration is the actual liturgical day. The liturgical day has one name, one penance, one color, and one rank, but may be composed out of multiple identifiers. In this case the first identifier has the right of way and subsequent identifiers can only add what is not defined in the first identifier.
-#[derive(Debug, Eq, PartialEq, Clone, serde::Serialize)]
+#[derive(Debug, Eq, PartialEq, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Celebration {
     pub name: String,
     pub penance: Option<Penance>,
