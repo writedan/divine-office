@@ -80,7 +80,12 @@ impl Serialize for Value {
 				let mut map = serializer.serialize_map(Some(1))?;
                 map.serialize_entry("Heading", &(s, n))?;
                 map.end()
-			}
+			},
+            Value::String(s) => {
+                let mut map = serializer.serialize_map(Some(1))?;
+                map.serialize_entry("Text", &s)?;
+                map.end()
+            }
 			_ => panic!("Serialization is not supported for {:?}", self)
 		}
 
