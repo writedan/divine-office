@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
     borderRightColor: '#d1c7b7',
   },
   dateText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     color: '#4a3c31',
     textAlign: 'center',
