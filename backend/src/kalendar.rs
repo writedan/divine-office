@@ -238,7 +238,7 @@ impl Kalendar {
 }
 
 impl Identifier {
-    pub fn to_path(&self) -> PathBuf {
+    pub fn to_path(&self) -> std::path::PathBuf {
         [
             "propers".to_string(),
             self.season.to_string(),
