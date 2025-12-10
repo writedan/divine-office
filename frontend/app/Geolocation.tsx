@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import AsyncCall from './components/AsyncCall';
+import { View } from 'react-native';
 
 const GeolocationContext = createContext(undefined);
 
@@ -8,6 +9,7 @@ export const Geolocation = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
 
   const load = async () => {
+    console.log("load");
     if (loaded) return;
 
     if (!navigator.geolocation) {
@@ -17,26 +19,30 @@ export const Geolocation = ({ children }) => {
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setGeolocation({
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-        });
-        setLoaded(true);
-      },
-      (error) => {
-        console.error('Error fetching geolocation:', error);
-        setGeolocation({ lat: 0, lon: 0 });
-        setLoaded(true);
-      }
-    );
+    await new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setGeolocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+          setLoaded(true);
+          resolve();
+        },
+        (error) => {
+          console.error('Error fetching geolocation:', error);
+          setGeolocation({ lat: 0, lon: 0 });
+          setLoaded(true);
+          resolve();
+        }
+      );
+    });
   };
 
   useEffect(() => console.log('[Geolocation]', geolocation), [geolocation]);
 
   return (
-    <GeolocationContext.Provider value={geolocation || { lat: 0, lon: 0 }}>
+    <GeolocationContext.Provider value={geolocation || {}}>
       <AsyncCall call={load} message={'Fetching geolocation'}>
         {children}
       </AsyncCall>
