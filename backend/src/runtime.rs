@@ -546,7 +546,6 @@ impl Runtime {
             Expr::Symbol(s) => env.borrow().get(s).ok_or_else(|| format!("Undefined symbol: {}", s)),
             Expr::Quote(inner) => env.borrow().quote_to_value(inner),
             Expr::List(list) => Self::eval_list(env, list),
-            Expr::Nil => Ok(Value::Nil),
             _ => Err(format!("Cannot evaluate expression {}", expr)),
         }
     }
@@ -603,7 +602,6 @@ impl Runtime {
             Expr::String(s) => Ok(Value::String(s.clone())),
             Expr::Boolean(b) => Ok(Value::Boolean(*b)),
             Expr::Symbol(s) => Ok(Value::Symbol(s.clone())),
-            Expr::Nil => Ok(Value::Nil),
             Expr::List(xs) => {
                 let vals: Result<Vec<_>, _> = xs.iter().map(|x| self.quote_to_value(x)).collect();
                 Ok(Value::List(vals?))

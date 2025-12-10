@@ -20,8 +20,6 @@ pub enum Expr {
     Unquote(Box<Expr>),
     /// Unquote-splicing expression
     UnquoteSplicing(Box<Expr>),
-    /// Nil/empty list
-    Nil,
 }
 
 pub struct Parser {
@@ -155,7 +153,6 @@ impl std::fmt::Display for Expr {
             Expr::Quasiquote(expr) => format!("`{}", expr.to_string()),
             Expr::Unquote(expr) => format!(",{}", expr.to_string()),
             Expr::UnquoteSplicing(expr) => format!(",@{}", expr.to_string()),
-            Expr::Nil => "()".to_string(),
         })
     }
 }
