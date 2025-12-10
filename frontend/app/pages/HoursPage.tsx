@@ -113,7 +113,7 @@ const Hours = ({ now }) => {
         fastingLiturgicalDay: index === 0 ? fastingLiturgicalDay : null,
       };
 
-      if (isFirstDate && hour.name === 'Vigils') {
+      if (isFirstDate && hour.name === 'Nocturns') {
         const key = vigilsKey;
         row.liturgicalDayOptions = todayLiturgical;
         row.liturgicalDayKey = key;
@@ -140,7 +140,7 @@ const Hours = ({ now }) => {
           }));
         }
       }
-      else if (hour.name === 'Vigils' && !isFirstDate && !todayHasFirstVespers) {
+      else if (hour.name === 'Nocturns' && !isFirstDate && !todayHasFirstVespers) {
         const key = vigilsKey;
         row.liturgicalDayOptions = todayLiturgical;
         row.liturgicalDayKey = key;
@@ -174,7 +174,7 @@ const Hours = ({ now }) => {
     };
 
     return [
-      { name: 'Vigils', time: times.nadir },
+      { name: 'Nocturns', time: times.nadir },
       { name: 'Matins', time: times.dawn },
       { name: 'Prime', time: addSunlightHours(times.sunrise, 1 / 12) },
       { name: 'Terce', time: addSunlightHours(times.sunrise, 3 / 12) },
