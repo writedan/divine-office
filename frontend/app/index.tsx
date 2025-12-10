@@ -22,12 +22,9 @@ const App = () => {
               <View style={styles.header}>
                 <Text style={styles.title}>Divine Office</Text>
               </View>
-
               <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
                 <MainContent />
               </ScrollView>
-
-              <NavBar />
             </View>
           </NavigationProvider>
         </ApiControl>
