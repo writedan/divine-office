@@ -8,7 +8,7 @@ impl GabcFile {
     /// Parse a GABC file from a string
     pub fn new(content: &str) -> Result<Self, String> {
         let mut headers = Vec::new();
-        let mut lines = content.lines();
+        let lines = content.lines();
         let mut body_lines = Vec::new();
         let mut in_body = false;
 
