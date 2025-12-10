@@ -57,7 +57,7 @@ pub enum Color {
     Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord, serde::Serialize, serde::Deserialize,
 )]
 pub enum Rank {
-    Eve,
+    Vigil,
     Feria,
     /// A strong feria cannot be superseded by any other celebration.
     StrongFeria,

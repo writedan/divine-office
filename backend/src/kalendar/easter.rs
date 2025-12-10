@@ -77,7 +77,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Feria,
         ),
         (6, Wed) => (
-            "Eve of the Ascension".to_string(),
+            "Vigil of the Ascension".to_string(),
             Color::Violet,
             Some(Penance::Vigil),
             Rank::Feria,
@@ -125,7 +125,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Feria,
         ),
         (7, Sat) => (
-            "Eve of Pentecost".to_string(),
+            "Vigil of Pentecost".to_string(),
             Color::White,
             Some(Penance::Vigil),
             Rank::Feria,
@@ -154,7 +154,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             "Ember Saturday of the Pentecost".to_string(),
             Color::Red,
             Some(Penance::Vigil),
-            Rank::Eve,
+            Rank::Vigil,
         ),
 
         _ => panic!("Requested easter week {}; only 8 exist", week_num),

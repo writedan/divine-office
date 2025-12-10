@@ -116,5 +116,5 @@ pub fn from_ymd(year: i32, month: u32, day: u32) -> R<NaiveDate> {
 pub fn has_first_vespers(today: kalendar::Celebration, tomorrow: kalendar::Celebration) -> bool {
     use kalendar::Rank::*;
     (tomorrow.rank > today.rank && today.rank != StrongFeria && tomorrow.rank != StrongFeria)
-        || today.rank == Eve
+        || today.rank == Vigil
 }

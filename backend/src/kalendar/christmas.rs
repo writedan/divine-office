@@ -34,9 +34,9 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let (name, color, penance, rank) = match distance {
         0 => (
             if is_sunday {
-                "Eve of the Nativity on Sunday"
+                "Vigil of the Nativity on Sunday"
             } else {
-                "Eve of the Nativity"
+                "Vigil of the Nativity"
             }
             .to_string(),
             Color::Violet,
@@ -45,7 +45,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             } else {
                 Some(Penance::Vigil)
             },
-            Rank::Eve,
+            Rank::Vigil,
         ),
         1 => (
             "Nativity of the Lord".to_string(),
@@ -115,9 +115,9 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
         ),
         12 => (
             if is_sunday {
-                "Eve of the Epiphany on Sunday"
+                "Vigil of the Epiphany on Sunday"
             } else {
-                "Eve of the Epiphany"
+                "Vigil of the Epiphany"
             }
             .to_string(),
             Color::Violet,
@@ -126,7 +126,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             } else {
                 Some(Penance::Vigil)
             },
-            Rank::Eve,
+            Rank::Vigil,
         ),
         13 => (
             "Epiphany of the Lord".to_string(),

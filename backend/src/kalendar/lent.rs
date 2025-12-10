@@ -119,10 +119,10 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Feria,
         ),
         (6, Sat) => (
-            "Saturday of the Paschal Vigil".to_string(),
+            "Vigil of Passover".to_string(),
             Color::Violet,
             Some(Penance::Vigil),
-            Rank::Eve,
+            Rank::Vigil,
         ),
 
         _ => panic!(

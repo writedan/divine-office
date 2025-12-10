@@ -40,7 +40,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 Penance::Fasting
             };
 
-            (name, Color::Violet, Some(penance), if is_ember_week { Rank::Eve } else { Rank::Feria })
+            (name, Color::Violet, Some(penance), if is_ember_week { Rank::Vigil } else { Rank::Feria })
         }
 
         _ => {
