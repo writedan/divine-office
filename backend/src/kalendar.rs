@@ -25,8 +25,6 @@ pub struct Kalendar {
     /// 46 days before Easter.
     ash_wednesday: NaiveDate,
     easter: NaiveDate,
-    /// 40 days after Easter.
-    ascension: NaiveDate,
     /// 50 days after Easter.
     pentecost: NaiveDate,
     /// The first Sunday in Advent of the following liturgical year.
@@ -176,7 +174,6 @@ impl Kalendar {
             septuagesima: easter.checked_sub_days(Days::new(63))?,
             ash_wednesday: easter.checked_sub_days(Days::new(46))?,
             easter,
-            ascension: easter.checked_add_days(Days::new(40))?,
             pentecost: easter.checked_add_days(Days::new(49))?,
             next_advent: NaiveDate::from_ymd_opt(year + 1, 11, 27)?.this_or_next_sunday()?,
         })
