@@ -66,7 +66,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             format!("{} Sunday in Lent", week_num.ordinal()),
             Color::Violet,
             Some(Penance::Abstinence),
-            Rank::Feria,
+            Rank::StrongSunday,
         ),
         (2..=4, _) => (
             format!(
