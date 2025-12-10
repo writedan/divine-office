@@ -157,6 +157,7 @@ impl std::fmt::Display for Expr {
     }
 }
 
+#[cfg(test)]
 impl Expr {
     /// Checks if the expression is a list
     pub fn is_list(&self) -> bool {
@@ -188,6 +189,7 @@ impl Expr {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::lexer::Lexer;
 
     #[test]
     fn test_parse_number() {
