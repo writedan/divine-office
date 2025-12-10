@@ -7,11 +7,15 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let weekday = date.weekday();
     let weekday_name = weekday.fullname();
     let is_ember_week = week_num == 3;
-    
+
     let (name, color, penance, rank) = match weekday {
         Weekday::Sun => (
             format!("{} Sunday of Advent", week_num.ordinal()),
-            if is_ember_week { Color::Rose } else { Color::Violet },
+            if is_ember_week {
+                Color::Rose
+            } else {
+                Color::Violet
+            },
             None,
             Rank::StrongSunday,
         ),
@@ -37,7 +41,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             };
 
             (name, Color::Violet, Some(penance), Rank::Eve)
-        },
+        }
 
         _ => {
             let penance = match weekday {
@@ -46,31 +50,35 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             };
 
             (
-                format!("{} in the {} Week of Advent", weekday_name, week_num.ordinal()),
+                format!(
+                    "{} in the {} Week of Advent",
+                    weekday_name,
+                    week_num.ordinal()
+                ),
                 Color::Violet,
                 penance,
                 Rank::Feria,
             )
         }
     };
-    
+
     let mut identifiers = vec![Identifier {
         season: Season::Advent,
         week: week_num.to_string(),
         day: String::from(weekday_name),
-        weekday
+        weekday,
     }];
-    
+
     let o_wisdom = NaiveDate::from_ymd_opt(date.year(), 12, 17).unwrap();
     if date >= o_wisdom {
         identifiers.push(Identifier {
             season: Season::Advent,
             week: String::from("o-antiphons"),
             day: (NaiveDate::days_since(o_wisdom, date) + 1).to_string(),
-            weekday
+            weekday,
         });
     }
-    
+
     Celebration {
         name,
         color,

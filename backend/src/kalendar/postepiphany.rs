@@ -7,30 +7,34 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let week_num = (NaiveDate::weeks_since(ly.epiphany_sunday, date) + 1) as u8;
     let weekday = date.weekday();
     let weekday_name = weekday.fullname();
-    
+
     let identifiers = vec![Identifier {
         season: Season::PostEpiphany(date <= ly.purification),
         week: week_num.to_string(),
         day: String::from(weekday_name),
         weekday,
     }];
-    
+
     let (name, rank) = match weekday {
         Sun => (
             format!("{} Sunday after Epiphany", week_num.ordinal()),
             Rank::Sunday,
         ),
         _ => (
-            format!("{} in the {} Week after Epiphany", weekday_name, week_num.ordinal()),
+            format!(
+                "{} in the {} Week after Epiphany",
+                weekday_name,
+                week_num.ordinal()
+            ),
             Rank::Feria,
         ),
     };
-    
+
     let penance = match weekday {
         Wed | Fri => Some(Penance::Abstinence),
         _ => None,
     };
-    
+
     Celebration {
         name,
         penance,

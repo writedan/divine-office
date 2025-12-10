@@ -1,13 +1,13 @@
 mod advent;
 mod christmas;
-mod postepiphany;
-mod prelent;
-mod lent;
 mod easter;
+mod lent;
+mod postepiphany;
 mod postpentecost;
+mod prelent;
 
-use chrono::{Days, Datelike, NaiveDate, Weekday};
 use crate::timehelp::{Betwixt, Sunday};
+use chrono::{Datelike, Days, NaiveDate, Weekday};
 use std::cmp::Ordering;
 
 /// The kalendar provides the liturgical identifiers for a given Gregorian date. The fields of its struct are used as sentinels to get the correct identifier. A kalendar is created from a year which indicates the liturgical year, not the calendar year. Thus a kalendar runs from November or December of its specified year to that of the following year.
@@ -53,7 +53,9 @@ pub enum Color {
     Rose,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord, serde::Serialize, serde::Deserialize)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Ord, serde::Serialize, serde::Deserialize,
+)]
 pub enum Rank {
     Eve,
     Feria,
@@ -138,10 +140,7 @@ impl Season {
 
     /// Returns the path to the file which instantiates everything necessary.
     pub fn to_path(&self) -> std::path::PathBuf {
-        [
-            "liturgy",
-            self.as_str(),
-        ].iter().collect()
+        ["liturgy", self.as_str()].iter().collect()
     }
 }
 
@@ -165,7 +164,7 @@ impl Kalendar {
     /// Generates a liturgical calendar for the given liturgical year.
     pub fn from_year(year: i32) -> Option<Kalendar> {
         let easter = computus::gregorian_naive(year + 1).ok()?;
-        
+
         Some(Kalendar {
             advent: NaiveDate::from_ymd_opt(year, 11, 27)?.this_or_next_sunday()?,
             christmas: NaiveDate::from_ymd_opt(year, 12, 24)?,
@@ -182,21 +181,29 @@ impl Kalendar {
     /// Once a kalendar is instantiated we can query it for the season of a given date.
     fn get_season(&self, date: NaiveDate) -> Season {
         let first_of = self.purification.min(self.septuagesima);
-        
+
         let pentecost_sunday = self.pentecost.next_sunday().unwrap();
-        
+
         let seasons = [
             (Season::Advent, self.advent, self.christmas),
             (Season::Christmas, self.christmas, self.epiphany_sunday),
             (Season::PostEpiphany(true), self.epiphany_sunday, first_of),
             (Season::PreLent(true), self.septuagesima, self.purification),
-            (Season::PreLent(false), self.septuagesima, self.ash_wednesday),
-            (Season::PostEpiphany(false), self.purification, self.septuagesima),
+            (
+                Season::PreLent(false),
+                self.septuagesima,
+                self.ash_wednesday,
+            ),
+            (
+                Season::PostEpiphany(false),
+                self.purification,
+                self.septuagesima,
+            ),
             (Season::Lent, self.ash_wednesday, self.easter),
             (Season::Easter, self.easter, pentecost_sunday),
             (Season::PostPentecost, pentecost_sunday, self.next_advent),
         ];
-        
+
         seasons
             .iter()
             .find(|(_, start, end)| date.is_between(*start, *end))
@@ -220,7 +227,12 @@ impl Kalendar {
             Lent => lent::get_celebration(self, date),
             Easter => easter::get_celebration(self, date),
             PostPentecost => postpentecost::get_celebration(self, date),
-            season => return Err(format!("{:?} should not be returned from Kalendar.get_season.", season)),
+            season => {
+                return Err(format!(
+                    "{:?} should not be returned from Kalendar.get_season.",
+                    season
+                ))
+            }
         };
 
         Ok(celebration)

@@ -45,11 +45,11 @@ impl Lexer {
 
     /// Creates a lexer from a file
     pub fn from_file<P>(path: P) -> Result<Self, String>
-	where
-	    P: AsRef<std::path::Path> + std::fmt::Debug,
-	{
-		Ok(Lexer::from_str(crate::wasm::read_file(path)?.as_str()))
-	}
+    where
+        P: AsRef<std::path::Path> + std::fmt::Debug,
+    {
+        Ok(Lexer::from_str(crate::wasm::read_file(path)?.as_str()))
+    }
 
     /// Gets the next character without consuming it
     fn peek(&self) -> Option<char> {
@@ -99,7 +99,7 @@ impl Lexer {
     fn read_string(&mut self) -> Result<String, String> {
         self.advance(); // consume opening quote
         let mut result = String::new();
-        
+
         while let Some(ch) = self.advance() {
             match ch {
                 '"' => return Ok(result),
@@ -118,14 +118,14 @@ impl Lexer {
                 _ => result.push(ch),
             }
         }
-        
+
         Err("Unterminated string".to_string())
     }
 
     /// Reads a number
     fn read_number(&mut self) -> f64 {
         let mut num_str = String::new();
-        
+
         while let Some(ch) = self.peek() {
             if ch.is_numeric() || ch == '.' || ch == '-' || ch == '+' || ch == 'e' || ch == 'E' {
                 num_str.push(ch);
@@ -134,14 +134,14 @@ impl Lexer {
                 break;
             }
         }
-        
+
         num_str.parse().unwrap_or(0.0)
     }
 
     /// Reads a symbol or keyword
     fn read_symbol(&mut self) -> String {
         let mut symbol = String::new();
-        
+
         while let Some(ch) = self.peek() {
             if Self::is_delimiter(ch) {
                 break;
@@ -149,7 +149,7 @@ impl Lexer {
             symbol.push(ch);
             self.advance();
         }
-        
+
         symbol
     }
 
@@ -162,7 +162,7 @@ impl Lexer {
     pub fn next_token(&mut self) -> Option<Result<Token, String>> {
         loop {
             self.skip_whitespace();
-            
+
             // If we're at the end of the line, try to load the next one
             if self.pos >= self.current_line.len() {
                 if !self.load_next_line() {
@@ -172,7 +172,7 @@ impl Lexer {
             }
 
             self.skip_comment();
-            
+
             // Check again after skipping comments
             if self.pos >= self.current_line.len() {
                 continue;
@@ -235,7 +235,9 @@ impl Lexer {
 
     /// Helper to check if the next character after current is numeric
     fn peek_is_numeric(&self) -> bool {
-        self.current_line.chars().nth(self.pos + 1)
+        self.current_line
+            .chars()
+            .nth(self.pos + 1)
             .map(|ch| ch.is_numeric())
             .unwrap_or(false)
     }
@@ -243,11 +245,11 @@ impl Lexer {
     /// Collects all tokens into a vector
     pub fn tokenize(&mut self) -> Result<Vec<Token>, String> {
         let mut tokens = Vec::new();
-        
+
         while let Some(token_result) = self.next_token() {
             tokens.push(token_result?);
         }
-        
+
         Ok(tokens)
     }
 }
@@ -260,21 +262,24 @@ mod tests {
     fn test_basic_tokens() {
         let mut lexer = Lexer::from_str("(define x 42)");
         let tokens = lexer.tokenize().unwrap();
-        
-        assert_eq!(tokens, vec![
-            Token::OpenParentheses,
-            Token::Symbol("define".to_string()),
-            Token::Symbol("x".to_string()),
-            Token::Number(42.0),
-            Token::CloseParentheses,
-        ]);
+
+        assert_eq!(
+            tokens,
+            vec![
+                Token::OpenParentheses,
+                Token::Symbol("define".to_string()),
+                Token::Symbol("x".to_string()),
+                Token::Number(42.0),
+                Token::CloseParentheses,
+            ]
+        );
     }
 
     #[test]
     fn test_strings() {
         let mut lexer = Lexer::from_str(r#"(print "hello world")"#);
         let tokens = lexer.tokenize().unwrap();
-        
+
         assert!(matches!(tokens[2], Token::String(_)));
     }
 
@@ -282,18 +287,15 @@ mod tests {
     fn test_booleans() {
         let mut lexer = Lexer::from_str("#t #f");
         let tokens = lexer.tokenize().unwrap();
-        
-        assert_eq!(tokens, vec![
-            Token::Boolean(true),
-            Token::Boolean(false),
-        ]);
+
+        assert_eq!(tokens, vec![Token::Boolean(true), Token::Boolean(false),]);
     }
 
     #[test]
     fn test_quote() {
         let mut lexer = Lexer::from_str("'(1 2 3)");
         let tokens = lexer.tokenize().unwrap();
-        
+
         assert_eq!(tokens[0], Token::Quote);
     }
 }

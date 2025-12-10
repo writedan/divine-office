@@ -6,7 +6,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let distance = NaiveDate::days_since(ly.christmas, date);
     let weekday = date.weekday();
     let is_sunday = weekday == Weekday::Sun;
-    
+
     let identifiers = vec![Identifier {
         season: Season::Christmas,
         week: match distance {
@@ -28,7 +28,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             13 => String::from("day"),
             _ => weekday.fullname().to_string(),
         },
-        weekday
+        weekday,
     }];
 
     let (name, color, penance, rank) = match distance {
@@ -37,33 +37,103 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 "Eve of the Nativity on Sunday"
             } else {
                 "Eve of the Nativity"
-            }.to_string(),
+            }
+            .to_string(),
             Color::Violet,
-            if is_sunday { None } else { Some(Penance::Vigil) },
+            if is_sunday {
+                None
+            } else {
+                Some(Penance::Vigil)
+            },
             Rank::Eve,
         ),
-        1 => ("Nativity of the Lord".to_string(), Color::White, None, Rank::Triplex),
-        2 => ("Saint Stephen, Protomartyr".to_string(), Color::Red, None, Rank::Duplex),
-        3 => ("Saint John, Apostle and Evangelist".to_string(), Color::White, None, Rank::Duplex),
-        4 => ("Holy Innocents, Martyrs".to_string(), Color::Violet, None, Rank::Duplex),
-        5 => ("Saint Thomas Becket, Bishop and Martyr".to_string(), Color::Red, None, Rank::Duplex),
-        6 => ("Sixth Day of the Nativity".to_string(), Color::White, None, Rank::Feria),
-        7 => ("Seventh Day of the Nativity".to_string(), Color::White, None, Rank::Feria),
-        8 => ("Circumcision of the Lord".to_string(), Color::White, None, Rank::Triplex),
-        9 => ("Octave of Saint Stephen".to_string(), Color::Red, None, Rank::Feria),
-        10 => ("Octave of Saint John".to_string(), Color::White, None, Rank::Feria),
-        11 => ("Octave of the Innocents".to_string(), Color::Red, None, Rank::Feria),
+        1 => (
+            "Nativity of the Lord".to_string(),
+            Color::White,
+            None,
+            Rank::Triplex,
+        ),
+        2 => (
+            "Saint Stephen, Protomartyr".to_string(),
+            Color::Red,
+            None,
+            Rank::Duplex,
+        ),
+        3 => (
+            "Saint John, Apostle and Evangelist".to_string(),
+            Color::White,
+            None,
+            Rank::Duplex,
+        ),
+        4 => (
+            "Holy Innocents, Martyrs".to_string(),
+            Color::Violet,
+            None,
+            Rank::Duplex,
+        ),
+        5 => (
+            "Saint Thomas Becket, Bishop and Martyr".to_string(),
+            Color::Red,
+            None,
+            Rank::Duplex,
+        ),
+        6 => (
+            "Sixth Day of the Nativity".to_string(),
+            Color::White,
+            None,
+            Rank::Feria,
+        ),
+        7 => (
+            "Seventh Day of the Nativity".to_string(),
+            Color::White,
+            None,
+            Rank::Feria,
+        ),
+        8 => (
+            "Circumcision of the Lord".to_string(),
+            Color::White,
+            None,
+            Rank::Triplex,
+        ),
+        9 => (
+            "Octave of Saint Stephen".to_string(),
+            Color::Red,
+            None,
+            Rank::Feria,
+        ),
+        10 => (
+            "Octave of Saint John".to_string(),
+            Color::White,
+            None,
+            Rank::Feria,
+        ),
+        11 => (
+            "Octave of the Innocents".to_string(),
+            Color::Red,
+            None,
+            Rank::Feria,
+        ),
         12 => (
             if is_sunday {
                 "Eve of the Epiphany on Sunday"
             } else {
                 "Eve of the Epiphany"
-            }.to_string(),
+            }
+            .to_string(),
             Color::Violet,
-            if is_sunday { None } else { Some(Penance::Vigil) },
+            if is_sunday {
+                None
+            } else {
+                Some(Penance::Vigil)
+            },
             Rank::Eve,
         ),
-        13 => ("Epiphany of the Lord".to_string(), Color::White, None, Rank::Triplex),
+        13 => (
+            "Epiphany of the Lord".to_string(),
+            Color::White,
+            None,
+            Rank::Triplex,
+        ),
         _ => (
             format!("{} in Christmastide", weekday.fullname()),
             Color::White,

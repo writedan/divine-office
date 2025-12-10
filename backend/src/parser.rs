@@ -138,22 +138,26 @@ impl Parser {
 }
 
 impl std::fmt::Display for Expr {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> { 
-        write!(f, "{}", match self {
-            Expr::Number(n) => n.to_string(),
-            Expr::String(s) => format!("\"{}\"", s),
-            Expr::Boolean(true) => "#t".to_string(),
-            Expr::Boolean(false) => "#f".to_string(),
-            Expr::Symbol(s) => s.clone(),
-            Expr::List(exprs) => {
-                let items: Vec<String> = exprs.iter().map(|e| e.to_string()).collect();
-                format!("({})", items.join(" "))
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(
+            f,
+            "{}",
+            match self {
+                Expr::Number(n) => n.to_string(),
+                Expr::String(s) => format!("\"{}\"", s),
+                Expr::Boolean(true) => "#t".to_string(),
+                Expr::Boolean(false) => "#f".to_string(),
+                Expr::Symbol(s) => s.clone(),
+                Expr::List(exprs) => {
+                    let items: Vec<String> = exprs.iter().map(|e| e.to_string()).collect();
+                    format!("({})", items.join(" "))
+                }
+                Expr::Quote(expr) => format!("'{}", expr.to_string()),
+                Expr::Quasiquote(expr) => format!("`{}", expr.to_string()),
+                Expr::Unquote(expr) => format!(",{}", expr.to_string()),
+                Expr::UnquoteSplicing(expr) => format!(",@{}", expr.to_string()),
             }
-            Expr::Quote(expr) => format!("'{}", expr.to_string()),
-            Expr::Quasiquote(expr) => format!("`{}", expr.to_string()),
-            Expr::Unquote(expr) => format!(",{}", expr.to_string()),
-            Expr::UnquoteSplicing(expr) => format!(",@{}", expr.to_string()),
-        })
+        )
     }
 }
 
@@ -215,7 +219,7 @@ mod tests {
         let tokens = lexer.tokenize().unwrap();
         let mut parser = Parser::new(tokens);
         let expr = parser.parse_expr().unwrap();
-        
+
         match expr {
             Expr::List(elements) => {
                 assert_eq!(elements.len(), 3);
@@ -233,7 +237,7 @@ mod tests {
         let tokens = lexer.tokenize().unwrap();
         let mut parser = Parser::new(tokens);
         let expr = parser.parse_expr().unwrap();
-        
+
         match expr {
             Expr::List(elements) => {
                 assert_eq!(elements.len(), 3);
@@ -251,7 +255,7 @@ mod tests {
         let tokens = lexer.tokenize().unwrap();
         let mut parser = Parser::new(tokens);
         let expr = parser.parse_expr().unwrap();
-        
+
         match expr {
             Expr::Quote(inner) => {
                 assert!(inner.is_list());

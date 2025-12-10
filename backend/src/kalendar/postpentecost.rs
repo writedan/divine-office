@@ -16,7 +16,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
 
     let weekday = date.weekday();
     let weekday_name = weekday.fullname();
-    
+
     let mut identifiers = vec![Identifier {
         season: if (24..28).contains(&week_num) {
             Season::PostEpiphany(date <= ly.purification)
@@ -29,14 +29,14 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             week_num.to_string()
         },
         day: String::from(weekday_name),
-        weekday
+        weekday,
     }];
 
     let aug_sunday = NaiveDate::from_ymd_opt(date.year(), 7, 28)
         .unwrap()
         .next_sunday()
         .unwrap();
-    
+
     if date < aug_sunday {
         let (name, rank) = match weekday {
             Sun => (
@@ -44,7 +44,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
                 Rank::Sunday,
             ),
             _ => (
-                format!("{} in the {} Week after Pentecost", weekday_name, week_num.ordinal()),
+                format!(
+                    "{} in the {} Week after Pentecost",
+                    weekday_name,
+                    week_num.ordinal()
+                ),
                 Rank::Feria,
             ),
         };
@@ -111,21 +115,32 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     let is_ember_day = month == "September" && month_week_num == 3;
 
     let name = match (week_num, weekday) {
-        (28, Sun) => format!("Last Sunday after Pentecost and {} in {}", month_week_num.ordinal(), month),
+        (28, Sun) => format!(
+            "Last Sunday after Pentecost and {} in {}",
+            month_week_num.ordinal(),
+            month
+        ),
         (28, _) => format!(
             "{} in the Last Week after Pentecost and {} in {}",
-            weekday_name, month_week_num.ordinal(), month
+            weekday_name,
+            month_week_num.ordinal(),
+            month
         ),
         (_, Sun) => format!(
             "{} Sunday after Pentecost and {} in {}",
-            week_num.ordinal(), month_week_num.ordinal(), month
+            week_num.ordinal(),
+            month_week_num.ordinal(),
+            month
         ),
         (_, Wed | Fri | Sat) if is_ember_day => {
             format!("Ember {} of September", weekday_name)
         }
         (_, _) => format!(
             "{} in the {} Week after Pentecost and {} in {}",
-            weekday_name, week_num.ordinal(), month_week_num.ordinal(), month
+            weekday_name,
+            week_num.ordinal(),
+            month_week_num.ordinal(),
+            month
         ),
     };
 
@@ -151,7 +166,7 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
         season: month_season,
         week: month_week_num.to_string(),
         day: String::from(weekday_name),
-        weekday
+        weekday,
     });
 
     Celebration {

@@ -14,7 +14,7 @@ impl GabcFile {
 
         for line in lines {
             let trimmed = line.trim();
-            
+
             if trimmed == "%%" && !in_body {
                 in_body = true;
                 continue;
@@ -43,7 +43,8 @@ impl GabcFile {
 
     /// Get a header attribute by key (returns the most recent value)
     pub fn get_header(&self, key: &str) -> Option<&str> {
-        self.headers.iter()
+        self.headers
+            .iter()
             .rev()
             .find(|(k, _)| k == key)
             .map(|(_, v)| v.as_str())
@@ -86,14 +87,15 @@ impl GabcFile {
                     paren_content.clear();
                 }
                 ')' => {
-                    let is_clef = paren_content.chars().all(|c| {
-                        c.is_ascii_digit() || matches!(c, 'c' | 'f' | 'b')
-                    }) && !paren_content.is_empty();
-                    
+                    let is_clef = paren_content
+                        .chars()
+                        .all(|c| c.is_ascii_digit() || matches!(c, 'c' | 'f' | 'b'))
+                        && !paren_content.is_empty();
+
                     if !is_clef && paren_content.is_empty() {
                         result.push_str("()");
                     }
-                    
+
                     in_notation = false;
                     paren_content.clear();
                 }

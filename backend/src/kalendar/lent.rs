@@ -11,11 +11,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
         season: Season::Lent,
         week: week_num.to_string(),
         day: String::from(weekday_name),
-        weekday
+        weekday,
     }];
 
     use Weekday::*;
-    
+
     let (name, color, penance, rank) = match (week_num, weekday) {
         // Quinquagesima (week 0)
         (0, Wed) => (
@@ -51,7 +51,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Feria,
         ),
         (1, _) => (
-            format!("{} in the {} Week of Lent", weekday_name, week_num.ordinal()),
+            format!(
+                "{} in the {} Week of Lent",
+                weekday_name,
+                week_num.ordinal()
+            ),
             Color::Violet,
             Some(Penance::Fasting),
             Rank::Feria,
@@ -65,7 +69,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Feria,
         ),
         (2..=4, _) => (
-            format!("{} in the {} Week of Lent", weekday_name, week_num.ordinal()),
+            format!(
+                "{} in the {} Week of Lent",
+                weekday_name,
+                week_num.ordinal()
+            ),
             Color::Violet,
             Some(Penance::Fasting),
             Rank::Feria,
@@ -117,7 +125,10 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Eve,
         ),
 
-        _ => panic!("There are only 6 weeks of Lent, requested week {}", week_num),
+        _ => panic!(
+            "There are only 6 weeks of Lent, requested week {}",
+            week_num
+        ),
     };
 
     Celebration {

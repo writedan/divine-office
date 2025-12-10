@@ -4,16 +4,16 @@ use chrono::{Datelike, NaiveDate, Weekday};
 
 pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
     use Weekday::*;
-    
+
     let week_num = (NaiveDate::weeks_since(ly.easter, date) + 1) as u8;
     let weekday = date.weekday();
     let weekday_name = weekday.fullname();
-    
+
     let identifiers = vec![Identifier {
         season: Season::Easter,
         week: week_num.to_string(),
         day: String::from(weekday_name),
-        weekday
+        weekday,
     }];
 
     let (name, color, penance, rank) = match (week_num, weekday) {
@@ -39,13 +39,21 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Sunday,
         ),
         (2..=5, Wed | Fri) => (
-            format!("{} in the {} Week after Passover", weekday_name, (week_num - 1).ordinal()),
+            format!(
+                "{} in the {} Week after Passover",
+                weekday_name,
+                (week_num - 1).ordinal()
+            ),
             Color::White,
             Some(Penance::Abstinence),
             Rank::Feria,
         ),
         (2..=5, _) => (
-            format!("{} in the {} Week after Passover", weekday_name, (week_num - 1).ordinal()),
+            format!(
+                "{} in the {} Week after Passover",
+                weekday_name,
+                (week_num - 1).ordinal()
+            ),
             Color::White,
             None,
             Rank::Feria,
@@ -59,7 +67,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Sunday,
         ),
         (6, Mon | Tue) => (
-            format!("{} in the {} Week after Passover", weekday_name, (week_num - 1).ordinal()),
+            format!(
+                "{} in the {} Week after Passover",
+                weekday_name,
+                (week_num - 1).ordinal()
+            ),
             Color::White,
             None,
             Rank::Feria,
@@ -103,7 +115,11 @@ pub fn get_celebration(ly: &Kalendar, date: NaiveDate) -> Celebration {
             Rank::Duplex,
         ),
         (7, Fri) => (
-            format!("{} in the {} Week after Passover", weekday_name, (week_num - 1).ordinal()),
+            format!(
+                "{} in the {} Week after Passover",
+                weekday_name,
+                (week_num - 1).ordinal()
+            ),
             Color::White,
             Some(Penance::Abstinence),
             Rank::Feria,

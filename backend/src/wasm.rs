@@ -1,12 +1,12 @@
-use crate::{kalendar, runtime, lexer, parser};
+use crate::{kalendar, lexer, parser, runtime};
+use chrono::{Datelike, NaiveDate};
 use lexer::Lexer;
 use parser::Parser;
 use runtime::Runtime;
-use chrono::{NaiveDate, Datelike};
 use std::collections::HashMap;
 use std::rc::Rc;
 
-type R<T> = Result <T, String>;
+type R<T> = Result<T, String>;
 
 pub fn read_file<P>(path: P) -> R<String>
 where
@@ -23,8 +23,15 @@ where
     }
 }
 
-pub fn get_identifiers(date: NaiveDate) -> R<(Vec<kalendar::Celebration>, Vec<kalendar::Celebration>)> {
-    let kalendar = kalendar::Kalendar::from_date(date).ok_or_else(|| format!("Provided date {:?} is beyond the bounds of the Gregorian calendar.", date))?;
+pub fn get_identifiers(
+    date: NaiveDate,
+) -> R<(Vec<kalendar::Celebration>, Vec<kalendar::Celebration>)> {
+    let kalendar = kalendar::Kalendar::from_date(date).ok_or_else(|| {
+        format!(
+            "Provided date {:?} is beyond the bounds of the Gregorian calendar.",
+            date
+        )
+    })?;
     let today = kalendar.get_celebrations(date)?;
     let tomorrow = kalendar.get_celebrations(date + chrono::Days::new(1))?;
 
@@ -56,11 +63,24 @@ pub fn get_hour(celebration: kalendar::Celebration, hour: &str) -> R<Vec<runtime
     let runtime = Runtime::new();
 
     for iden in celebration.identifiers {
-        runtime.borrow_mut().define("propers".into(), Value::String(iden.to_path().display().to_string()));
-        runtime.borrow_mut().define("iden.season".into(), Value::String(iden.season.as_str().to_string().to_lowercase()));
-        runtime.borrow_mut().define("iden.weekday".into(), Value::String(iden.weekday.to_string()));
-        runtime.borrow_mut().define("iden.day".into(), Value::String(iden.day.to_lowercase()));
-        runtime.borrow_mut().define("iden.week".into(), Value::String(iden.week.to_lowercase()));
+        runtime.borrow_mut().define(
+            "propers".into(),
+            Value::String(iden.to_path().display().to_string()),
+        );
+        runtime.borrow_mut().define(
+            "iden.season".into(),
+            Value::String(iden.season.as_str().to_string().to_lowercase()),
+        );
+        runtime.borrow_mut().define(
+            "iden.weekday".into(),
+            Value::String(iden.weekday.to_string()),
+        );
+        runtime
+            .borrow_mut()
+            .define("iden.day".into(), Value::String(iden.day.to_lowercase()));
+        runtime
+            .borrow_mut()
+            .define("iden.week".into(), Value::String(iden.week.to_lowercase()));
 
         let mut lexer = Lexer::from_file(iden.season.to_path().join(hour.to_owned() + ".lit"))?;
         let tokens = lexer.tokenize()?;
@@ -71,7 +91,7 @@ pub fn get_hour(celebration: kalendar::Celebration, hour: &str) -> R<Vec<runtime
 
     let ordo = match runtime.borrow().get("order".into()) {
         Some(s) => s,
-        None => return Err("Field \"order\" was not set.".into())
+        None => return Err("Field \"order\" was not set.".into()),
     };
 
     let mut lexer = Lexer::from_file(ordo.to_string())?;
@@ -83,16 +103,18 @@ pub fn get_hour(celebration: kalendar::Celebration, hour: &str) -> R<Vec<runtime
 
 pub fn get_exprs(input: String) -> R<Vec<parser::Expr>> {
     let mut lexer = Lexer::from_str(input.as_str());
-        let tokens = lexer.tokenize()?;
-        let mut parser = Parser::new(tokens);
-        parser.parse()
+    let tokens = lexer.tokenize()?;
+    let mut parser = Parser::new(tokens);
+    parser.parse()
 }
 
 pub fn from_ymd(year: i32, month: u32, day: u32) -> R<NaiveDate> {
-    NaiveDate::from_ymd_opt(year, month, day).ok_or_else(|| format!("Provided date {}-{}-{} is invalid.", year, month, day))
+    NaiveDate::from_ymd_opt(year, month, day)
+        .ok_or_else(|| format!("Provided date {}-{}-{} is invalid.", year, month, day))
 }
 
 pub fn has_first_vespers(today: kalendar::Celebration, tomorrow: kalendar::Celebration) -> bool {
     use kalendar::Rank::*;
-    (tomorrow.rank > today.rank && today.rank != StrongFeria && tomorrow.rank != StrongFeria) || today.rank == Eve
+    (tomorrow.rank > today.rank && today.rank != StrongFeria && tomorrow.rank != StrongFeria)
+        || today.rank == Eve
 }
