@@ -151,7 +151,7 @@ impl Runtime {
         }));
 
         {
-            rt.borrow_mut().define("fun".into(), Value::Native(|env, args| {
+            rt.borrow_mut().define("fun".into(), Value::Native(|_, args| {
 	    		if args.is_empty() {
 			        return Err("fun requires (fun (<params>...) <body>...)".into());
 			    }
@@ -615,7 +615,7 @@ impl Runtime {
     pub fn run(env: Rc<RefCell<Self>>, exprs: Vec<Expr>) -> Vec<Value> {
         for expr in exprs {
             match Self::eval(Rc::clone(&env), &expr) {
-                Ok(val) => {},
+                Ok(_) => {},
                 Err(why) => env.borrow_mut().yields.push(Value::Error(format!("Error evaluating {}: {}", expr, why)))
             };
         }
