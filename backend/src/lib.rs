@@ -54,3 +54,8 @@ pub fn has_first_vespers(today: &str, tomorrow: &str) -> bool {
     );
     wasm::has_first_vespers(today, tomorrow)
 }
+
+#[wasm_bindgen(start)]
+pub fn start() {
+    console_error_panic_hook::set_once(); // converts panics to console.error
+}
