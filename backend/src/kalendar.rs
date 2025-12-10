@@ -210,7 +210,8 @@ impl Kalendar {
             .map(|(season, _, _)| *season)
             .unwrap_or_else(|| {
                 panic!(
-                    "Requested season of a date beyond the bounds of liturgical year {}.",
+                    "Requested season of a date ({}) beyond the bounds of liturgical year {}.",
+                    date,
                     self.advent.year()
                 )
             })
