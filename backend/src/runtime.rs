@@ -6,7 +6,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Value {
     Number(f64),
     String(String),
@@ -608,6 +608,37 @@ impl Runtime {
                 Ok(Value::Heading(text, level as u8))
             }),
         );
+
+        rt.borrow_mut().define("or".into(), Value::Native(|env, args| {
+            for arg in args {
+                let val = Runtime::eval(Rc::clone(&env), &arg)?;
+                if val.is_truthy() {
+                    return Ok(Value::Boolean(true));
+                }
+            }
+
+            Ok(Value::Boolean(false))
+        }));
+
+        rt.borrow_mut().define("=".into(), Value::Native(|env, args| {
+            let mut iter = args.iter();
+
+            let first_expr = match iter.next() {
+                Some(expr) => expr,
+                None => return Ok(Value::Boolean(true)),
+            };
+
+            let first = Runtime::eval(Rc::clone(&env), first_expr)?;
+
+            for expr in iter {
+                let val = Runtime::eval(Rc::clone(&env), expr)?;
+                if val != first {
+                    return Ok(Value::Boolean(false));
+                }
+            }
+
+            Ok(Value::Boolean(true))
+        }));
 
         rt
     }
